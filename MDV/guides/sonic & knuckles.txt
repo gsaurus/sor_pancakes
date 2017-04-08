@@ -1,0 +1,14 @@
+compressed:	yes
+embedded:	no
+0 1 2 4 8 10 20 40 80 ff fe fc f8 f0 e0 c0
+size:	5
+base:	f0000
+offset:	1d7
+pitch:	-1
+little endian:	yes
+global ptrs:	no
+order: pitch size address redundancy
+max size:	-1
+
+banks: 1
+f0088	31

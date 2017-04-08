@@ -1,0 +1,14 @@
+compressed:	yes
+embedded:	no
+0 1 2 4 8 10 20 40 -80 -1 -2 -4 -8 -10 -20 -40
+size:	12
+base:	-1
+offset:	-1
+pitch:	-1
+little endian:	yes
+global ptrs:	no
+order: address size redundancy pitch
+max size:	727A
+
+banks: 1
+78D86	22

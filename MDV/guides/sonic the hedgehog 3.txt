@@ -1,0 +1,61 @@
+compressed:	yes
+embedded:	no
+0 1 2 4 8 10 20 40 80 ff fe fc f8 f0 e0 c0
+size:	5
+base:	e0000
+offset:	1d7
+pitch:	-1
+little endian:	yes
+global ptrs:	no
+order: pitch size address redundancy
+max size:	6000
+
+banks: 1
+e0088	26
+
+
+compressed:	yes
+embedded:	no
+0 1 2 4 8 10 20 40 80 ff fe fc f8 f0 e0 c0
+size:	5
+base:	e8000
+offset:	1d7
+pitch:	-1
+little endian:	yes
+global ptrs:	no
+order: pitch size address redundancy
+max size:	-1
+
+banks: 1
+e810A	41
+
+
+compressed:	yes
+embedded:	no
+0 1 2 4 8 10 20 40 80 ff fe fc f8 f0 e0 c0
+size:	5
+base:	f0000
+offset:	1d7
+pitch:	-1
+little endian:	yes
+global ptrs:	no
+order: pitch size address redundancy
+max size:	28e0
+
+banks: 1
+f0141	6
+
+compressed:	yes
+embedded:	no
+0 1 2 4 8 10 20 40 80 ff fe fc f8 f0 e0 c0
+size:	5
+base:	f0000
+offset:	28e0
+pitch:	-1
+little endian:	yes
+global ptrs:	no
+order: pitch size address redundancy
+max size:	747b
+
+banks: 1
+f015F	18
