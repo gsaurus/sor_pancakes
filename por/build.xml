@@ -7,9 +7,15 @@
 <!-- the Compile on Save feature is turned off for the project. -->
 <!-- You can turn off the Compile on Save (or Deploy on Save) setting -->
 <!-- in the project's Project Properties dialog box.-->
-<project name="PalettesOfRage" default="default" basedir=".">
+<project name="Palettes Of Rage" default="default" basedir=".">
     <description>Builds, tests, and runs the project PalettesOfRage.</description>
     <import file="nbproject/build-impl.xml"/>
+	
+	<target name="-post-compile">
+		<copy todir="${dist.dir}/guides">
+			<fileset dir="guides"/>
+		</copy>        
+	</target>
     <!--
 
     There exist several targets which are by default empty and which can be 

@@ -967,7 +967,7 @@ public class Gui extends javax.swing.JFrame implements ActionListener, TheListen
             this.setIconImage(icon);
         } catch (IOException ex) { /* Ignore */ }
         
-        timer = new Timer(1,this);
+        timer = new Timer(16,this);
     }
     
     private void postInitComponents(){

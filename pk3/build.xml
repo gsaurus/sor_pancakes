@@ -10,7 +10,20 @@
 <project name="PK3" default="default" basedir=".">
     <description>Builds, tests, and runs the project PK3.</description>
     <import file="nbproject/build-impl.xml"/>
-    <!--
+    
+	<target name="-post-compile">
+		<copy todir="${dist.dir}/data">
+			<fileset dir="data"/>
+		</copy>  
+		<copy todir="${dist.dir}/images">
+			<fileset dir="images"/>
+		</copy>
+		<copy todir="${dist.dir}/resizers">
+			<fileset dir="resizers"/>
+		</copy>
+	</target>
+	
+	<!--
 
     There exist several targets which are by default empty and which can be 
     used for execution of your tasks. These targets are usually executed 

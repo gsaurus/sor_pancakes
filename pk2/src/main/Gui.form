@@ -364,6 +364,7 @@
   <SyntheticProperties>
     <SyntheticProperty name="menuBar" type="java.lang.String" value="jMenuBar1"/>
     <SyntheticProperty name="formSizePolicy" type="int" value="1"/>
+    <SyntheticProperty name="generateCenter" type="boolean" value="false"/>
   </SyntheticProperties>
   <Events>
     <EventHandler event="mouseWheelMoved" listener="java.awt.event.MouseWheelListener" parameters="java.awt.event.MouseWheelEvent" handler="formMouseWheelMoved"/>
@@ -403,7 +404,7 @@
                   <Group type="103" groupAlignment="0" max="-2" attributes="0">
                       <Group type="102" attributes="0">
                           <Group type="103" groupAlignment="0" attributes="0">
-                              <Component id="characterPanel1" pref="0" max="32767" attributes="0"/>
+                              <Component id="characterPanel1" max="32767" attributes="0"/>
                               <Component id="overridePanel" max="32767" attributes="0"/>
                           </Group>
                           <EmptySpace max="-2" attributes="0"/>
@@ -1236,8 +1237,8 @@
                           </Group>
                           <EmptySpace min="-2" max="-2" attributes="0"/>
                           <Group type="103" groupAlignment="0" attributes="0">
-                              <Component id="colorPanel3" pref="33" max="32767" attributes="0"/>
-                              <Component id="colorPanel11" pref="33" max="32767" attributes="0"/>
+                              <Component id="colorPanel3" pref="37" max="32767" attributes="0"/>
+                              <Component id="colorPanel11" pref="37" max="32767" attributes="0"/>
                           </Group>
                           <EmptySpace min="-2" max="-2" attributes="0"/>
                           <Group type="103" groupAlignment="0" attributes="0">
@@ -1280,7 +1281,7 @@
                               <Component id="colorPanel8" alignment="0" min="-2" max="-2" attributes="0"/>
                               <Component id="colorPanel1" min="-2" max="-2" attributes="0"/>
                           </Group>
-                          <EmptySpace max="32767" attributes="0"/>
+                          <EmptySpace pref="13" max="32767" attributes="0"/>
                           <Group type="103" groupAlignment="0" attributes="0">
                               <Component id="colorPanel10" alignment="1" min="-2" max="-2" attributes="0"/>
                               <Component id="colorPanel11" alignment="1" min="-2" max="-2" attributes="0"/>
