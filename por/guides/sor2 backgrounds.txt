@@ -1,0 +1,163 @@
+0
+Level 1-1.1 A
+    A600
+    sor2/1.png
+Level 1-1.1 B
+    A620
+    sor2/2.png
+Level 1-1.2 A
+    A640
+    sor2/3.png
+Level 1-1.2 B (unused)
+    A660
+    -
+Level 1-1.3 A
+    A680
+    sor2/5.png
+Level 1-1.3 B (car)
+    A6a0
+    sor2/6.png
+Level 1-2 A
+    A6c0
+    sor2/7.png
+Level 1-2 B
+    A6e0
+    sor2/8.png
+Level 1-3 A
+    A700
+    sor2/9.png
+Level 1-3 B
+    A720
+    sor2/10.png
+Level 2-1 A
+    A740
+    sor2/11.png
+Level 2-1 B
+    A760
+    sor2/12.png
+Level 2-2 A
+    A780
+    sor2/13.png
+Level 2-2 B
+    A7a0
+    sor2/14.png
+Level 2-3 A (?)
+    A7c0
+    -
+Level 2-3 B (?)
+    A7e0
+    -
+Level 3-1 A (?)
+    A800
+    -
+Level 3-1 B
+    A820
+    sor2/18.png
+Level 3-2 A
+    A840
+    sor2/19.png
+Level 3-2 B
+    A860
+    sor2/20.png
+Level 3-3 A
+    A880
+    sor2/21.png
+Level 3-3 B
+    A8a0
+    sor2/22.png
+Level 3-4 A
+    A8c0
+    sor2/23.png
+Level 3-4 B
+    A8e0
+    sor2/24.png
+Level 4-1 A
+    A900
+    sor2/25.png
+Level 4-1 B
+    A920
+    sor2/26.png
+Level 4-2 A
+    A940
+    sor2/27.png
+Level 4-2 B
+    A960
+    sor2/28.png
+Level 4-3 A
+    A980
+    sor2/29.png
+Level 4-3 B
+    A9a0
+    sor2/30.png
+Level 4-4 A
+    A9c0
+    sor2/31.png
+Level 4-4 B
+    A9e0
+    sor2/32.png
+Level 5-1 A
+    Aa00
+    sor2/33.png
+Level 5-1 B (nearly unused)
+    AA20
+    -
+Level 5-2 A
+    AA40
+    sor2/35.png
+Level 5-2 B
+    AA60
+    sor2/36.png
+Level 6-1 A
+    AA80
+    sor2/37.png
+Level 6-1 B
+    AAa0
+    sor2/38.png
+Level 6-2 A
+    AAc0
+    sor2/39.png
+Level 6-2 B
+    AAe0
+    sor2/40.png
+Level 7-1 A
+    Ab00
+    sor2/41.png
+Level 7-1 B
+    Ab20
+    sor2/42.png
+Level 7-2.1 A
+    Ab40
+    sor2/43.png
+Level 7-2.1 B
+    Ab60
+    sor2/44.png
+Level 7-2.2 A
+    Ab80
+    sor2/43.png
+Level 7-2.2 B
+    Aba0
+    sor2/44.png
+Level 7-2.3 A
+    Abc0
+    sor2/43.png
+Level 7-2.3 B
+    Abe0
+    sor2/44.png
+???? A
+    Ac00
+    -
+???? B
+    Ac20
+    -
+Level 8-1 A
+    Ac40
+    sor2/51.png
+Level 8-1 B
+    Ac60
+    sor2/52.png
+Level 8-2 A
+    Ac80
+    sor2/53.png
+Level 8-2 B
+    Aca0
+    sor2/54.png

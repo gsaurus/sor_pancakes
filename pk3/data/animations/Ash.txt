@@ -1,0 +1,84 @@
+Standing no WP
+Walk
+Jump
+<unused>
+Grab front
+Grab back
+Being front grabbed
+Being back grabbed
+Being grab hit
+Being hit
+Knocked down
+Lying down
+Stand up
+Shocked
+Pick
+Land from jump
+Thrown/Slammed 1
+Fall (Respawn)
+Thrown/Slammed 2
+Thrown/Slammed 3
+Thrown/Slammed 4
+Thrown/Slammed 5
+Thrown/Slammed 6 (?)
+Thrown/Slammed 7
+Thrown/Slammed 8 (?)
+Thrown/Slammed 9
+Bike hit
+Run
+<unused>
+Roll 1
+Roll 2
+Bike 2
+Bike 3
+Bike 4
+Bike 5
+Bike 6
+Front slam
+Back throw
+<unused>
+<unused>
+<unused>
+Punch
+3rd punch
+Combo end 1
+Combo end 2
+Grab laugh 1
+Grab laugh 2
+Def Special
+Off Special
+Blitz
+Back attack
+Grab forward end
+<unused>
+<unused>
+<unused>
+<unused>
+<unused>
+<unused>
+<unused>
+<unused>
+<unused>
+<unused>
+<unused>
+<unused>
+<unused>
+<unused>
+<unused>
+<unused>
+<unused>
+1 Star (unused)
+2 Star (unused)
+3 Star (unused)
+<unused>
+<unused>
+Recover on elevator
+Trapped
+Bike attack 1
+Bike attack 2
+Bike attack 3
+Bike attack 4
+<unused>
+<unused>
+<unused>
+<unused>

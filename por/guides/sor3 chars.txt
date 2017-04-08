@@ -1,0 +1,244 @@
+1
+Portraits 1
+    269590
+    sor3/bk3 portraits.png
+Portraits 2
+    2460b8
+    sor3/bk3 portraits.png
+In-game default
+    7B0C
+    sor3/sor3 default.png
+Disco alt 1
+    36cec
+    sor3/sor3 default.png
+Disco alt 2
+    36d0c
+    sor3/sor3 default.png
+Disco alt 3
+    36d2c
+    sor3/sor3 default.png
+P1 Select screen
+    269550
+    sor3/sor3 default.png
+P2 Select screen
+    48784
+    sor3/sor3 default.png
+Ash boss
+    2316d8
+    sor3/sor3 default.png
+Roo boss
+    231de0
+    sor3/sor3 default.png
+Mona & Lisa
+    1A95A
+    sor3/monalisa.png
+Robot Axel 1
+    18D32
+    sor3/sor3 default.png
+Robot Axel 2
+    18D52
+    sor3/sor3 default.png
+Robot Axel 3
+    18D72
+    sor3/sor3 default.png
+Robot Axel 4
+    18D92
+    sor3/sor3 default.png
+Robot Axel 5
+    18Db2
+    sor3/sor3 default.png
+Yamato 1
+    2316BC
+    sor3/yamato.png
+Yamato 2
+    16a3a
+    sor3/yamato.png
+Yamato 3
+    16a5a
+    sor3/yamato.png
+Yamato 4
+    16a7a
+    sor3/yamato.png
+Robot X
+    231750
+    sor3/x.png
+Jet
+    23176E
+    sor3/jet.png
+Shiva boss
+    19492
+    sor3/sor3 default.png
+Robot Y / Neo X
+    20E76
+    sor3/y.png
+?
+    2316F6
+    sor3/sor3 default.png
+Alt 1
+    23178c
+    sor3/sor3 default.png
+Alt 2
+    2317AA
+    sor3/sor3 default.png
+Alt 3
+    2317C8
+    sor3/sor3 default.png
+Alt 4
+    2317E6
+    sor3/sor3 default.png
+Alt 5
+    231804
+    sor3/sor3 default.png
+Alt 6
+    231822
+    sor3/sor3 default.png
+Alt 7
+    231840
+    sor3/sor3 default.png
+Alt 8
+    23185E
+    sor3/sor3 default.png
+Alt 9
+    23187C
+    sor3/sor3 default.png
+Alt 10
+    23189A
+    sor3/sor3 default.png
+Alt 11
+    2318B8
+    sor3/sor3 default.png
+Alt 12
+    2318D6
+    sor3/sor3 default.png
+Alt 13
+    2318F4
+    sor3/sor3 default.png
+Alt 14
+    231912
+    sor3/sor3 default.png
+Alt 15
+    231930
+    sor3/sor3 default.png
+Alt 16
+    23194E
+    sor3/sor3 default.png
+Alt 17
+    23196C
+    sor3/sor3 default.png
+Alt 18
+    23198A
+    sor3/sor3 default.png
+Alt 19
+    2319A8
+    sor3/sor3 default.png
+Alt 20
+    2319C6
+    sor3/sor3 default.png
+Alt 21
+    2319E4
+    sor3/sor3 default.png
+Alt 22
+    231A02
+    sor3/sor3 default.png
+Alt 23
+    231A20
+    sor3/sor3 default.png
+Alt 24
+    231A3E
+    sor3/sor3 default.png
+Alt 25
+    231A5C
+    sor3/sor3 default.png
+Alt 26
+    231A7A
+    sor3/sor3 default.png
+Alt 27
+    231A98
+    sor3/sor3 default.png
+Alt 28
+    231AB6
+    sor3/sor3 default.png
+Alt 29
+    231AD4
+    sor3/sor3 default.png
+Alt 30
+    231AF2
+    sor3/sor3 default.png
+Alt 31
+    231B10
+    sor3/sor3 default.png
+Alt 32
+    231B2E
+    sor3/sor3 default.png
+Alt 33
+    231B4C
+    sor3/sor3 default.png
+Alt 34
+    231B6A
+    sor3/sor3 default.png
+Alt 35
+    231B88
+    sor3/sor3 default.png
+Alt 36
+    231BA6
+    sor3/sor3 default.png
+Alt 37
+    231BC4
+    sor3/sor3 default.png
+Alt 38
+    231BE2
+    sor3/sor3 default.png
+Alt 39
+    231C00
+    sor3/sor3 default.png
+Alt 40
+    231C1E
+    sor3/sor3 default.png
+Alt 41
+    231C3C
+    sor3/sor3 default.png
+Alt 42
+    231C5A
+    sor3/sor3 default.png
+Alt 43
+    231C78
+    sor3/sor3 default.png
+Alt 44
+    231C96
+    sor3/sor3 default.png
+Alt 45
+    231CB4
+    sor3/sor3 default.png
+Alt 46
+    231CD2
+    sor3/sor3 default.png
+Alt 47
+    231CF0
+    sor3/sor3 default.png
+Alt 48
+    231D0E
+    sor3/sor3 default.png
+Alt 49
+    231D2C
+    sor3/sor3 default.png
+Alt 50
+    231D4A
+    sor3/sor3 default.png
+Alt 51
+    231D68
+    sor3/sor3 default.png
+Alt 52
+    231D86
+    sor3/sor3 default.png
+Alt 53
+    231DA4
+    sor3/sor3 default.png
+Alt 54
+    231DC2
+    sor3/sor3 default.png
+Alt 55
+    231DFE
+    sor3/sor3 default.png
+Alt 56
+    231E1c
+    sor3/sor3 default.png

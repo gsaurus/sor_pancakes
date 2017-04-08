@@ -1,0 +1,214 @@
+0
+Default 1
+    1fa0a0
+    sor2/normal.png
+Default 2
+    1fa0d0
+    sor2/normal.png
+Default 3
+    1fa100
+    sor2/normal.png
+Default 4
+    1fa130
+    sor2/normal.png
+Default 5
+    1fa160
+    sor2/normal.png
+Default 6
+    1fa190
+    sor2/normal.png
+Default 7
+    1fa1c0
+    sor2/normal.png
+Default 8
+    1fa1f0
+    sor2/normal.png
+Default 9
+    1fa220
+    sor2/normal.png
+Default 10
+    1fa250
+    sor2/normal.png
+Default 11
+    1fa280
+    sor2/normal.png
+Default 12
+    1fa2b0
+    sor2/normal.png
+Default 13
+    1fa2e0
+    sor2/normal.png
+Default 14
+    1fa310
+    sor2/normal.png
+Default 15
+    1fa340
+    sor2/normal.png
+Default 16
+    1fa370
+    sor2/normal.png
+Default 17
+    1fa3a0
+    sor2/normal.png
+Default 18
+    1fa3d0
+    sor2/normal.png
+Default 19
+    1fa400
+    sor2/normal.png
+Default 20
+    1fa430
+    sor2/normal.png
+Alt lvl1-1 (street thugs)
+    1EFB8C
+    sor2/normal.png
+Alt lvl1-2 (bar thugs part1)
+    1EFBAE
+    sor2/normal.png
+ALt lvl2-1A (bridge)
+    1EFBD0
+    sor2/normal.png
+ALt lvl2-1B (bikers)
+    1EFBF2
+    sor2/normal.png
+ALt lvl2-1C (bikers, [ext])
+    1EFC14
+    sor2/normal.png
+ALt lvl2-1D (truck entrace)
+    1EFC36
+    sor2/normal.png
+Alt lvl2-2 truck bikers & kickboxer/hakuyo & exit punks
+    1FA790
+    sor2/normal.png
+ALt lvl 3-1 (arcade entrace & inside arcade)
+    1FA7c0
+    sor2/normal.png
+ALt lvl 3-3 (going to pirates A)
+    1FA7f0
+    sor2/normal.png
+ALt lvl 3-4 (going to pirates B)
+    1FA820
+    sor2/normal.png
+ALt lvl 3-5 (pirates - ninja & punks)
+    1FA850
+    sor2/normal.png
+ALt lvl 3-7 (alien full- signal & punks)
+    1FA880
+    sor2/normal.png
+ALt lvl 4-1A (signal & knife punks)
+    1FA8b0
+    sor2/normal.png
+ALt lvl 4-1B (punks & hakuyo)
+    1FA8e0
+    sor2/normal.png
+ALt lvl 4-2 (stadium all: signal, punks, electras & bongos!)
+    1FA910
+    sor2/normal.png
+ALt lvl 4-3A - punks & hakuyo
+    1FA970
+    sor2/normal.png
+ALt lvl 4-3B,C - some punks only
+    1FA940
+    sor2/normal.png
+ALt lvl 5-1 - punks with knife & bongo, possible hakuyo
+    1FA9a0
+    sor2/normal.png
+ALt lvl 5-3A currently unused (jet punks)
+    1FA9d0
+    sor2/normal.png
+ALt lvl 5-3B bikers & ninjas
+    1FAa00
+    sor2/normal.png
+ALt lvl 6-1A punks & ninjas
+    1FAa30
+    sor2/normal.png
+ALt lvl 6-1B kickboxers (removed punks)
+    1FAa60
+    sor2/normal.png
+ALt lvl 6-2A signals & possible hakuyos
+    1FAa90
+    sor2/normal.png
+ALt lvl 6-2B bikers, motorbikers, bongos, electras
+    1FAac0
+    sor2/normal.png
+ALt lvl 7-1A punks, bongos
+    1FAaf0
+    sor2/normal.png
+ALt lvl 7-1B punks & bikers
+    1FAb20
+    sor2/normal.png
+ALt lvl 7-1C ninjas & electras + 2A signals & punks
+    1FAb50
+    sor2/normal.png
+ALt lvl 7-2B punks & jets
+    1FAb80
+    sor2/normal.png
+ALt lvl 7-2C ninjas & hakuyos
+    1FAbb0
+    sor2/normal.png
+ALt lvl 7-2E bikers & kickboxers
+    1FAbe0
+    sor2/normal.png
+ALt lvl 7-2F bots
+    1FAc10
+    sor2/normal.png    
+Alternative Max
+    1091a
+    sor2/normal.png
+Alternative Axel
+    1093a
+    sor2/normal.png
+Alternative Blaze
+    1095a
+    sor2/normal.png
+Alternative Skate
+    1097a
+    sor2/normal.png
+Portraits
+    7540
+    sor2/portraits.png
+Light Portraits
+    7560
+    sor2/portraits.png
+Jack 1
+    14ab6
+    sor2/jack.png
+Jack 2 (Beano)
+    14622
+    sor2/jack.png
+Jack 3 (Soya)
+    14644
+    sor2/jack.png
+Barbon 1
+    14FF4
+    sor2/barbon.png
+Barbon 2 (Wayne)
+    15016
+    sor2/barbon.png
+Barbon 3 (Vulture)
+    15038
+    sor2/barbon.png
+Zanza 1
+    1843a
+    sor2/zanza.png
+Zanza 2 (Souther)
+    177FA
+    sor2/zanza.png
+Zanza 3 (Nail)
+    177D8
+    sor2/zanza.png
+Abadede 1
+    12BAA
+    sor2/abadede.png
+Abadede 2 (Z.Kusanor)
+    12BCC
+    sor2/abadede.png
+R.Bear 1
+    11FD8
+    sor2/rbear.png
+R.Bear 2 (Bear Jr)
+    11FFA
+    sor2/rbear.png
+Mr.X
+    1E844
+    sor2/mrx.png

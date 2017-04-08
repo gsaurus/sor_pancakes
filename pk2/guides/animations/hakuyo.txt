@@ -1,0 +1,29 @@
+Standing
+Walk
+walk (backwards?)
+jump
+stand in 1 leg
+unused
+Being front grabbed
+Being back grabbed
+Being grab hit
+Being hit
+Knocked down
+Lying down
+Stand up
+slow stand up?
+fall?
+unused
+unused
+unused
+Front slammed Max
+Back slammed Axel
+Back slammed Max
+Front slammed Blaze
+Thrown by Max
+????
+double punch
+hard punch
+fire punch
+high kick
+jump kick

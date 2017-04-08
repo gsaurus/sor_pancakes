@@ -1,0 +1,50 @@
+Standing
+Walk
+Jump
+Vault
+Grab front
+Grab back
+Being front grabbed
+Being back grabbed
+Being grab hit
+Being hit
+Knocked down
+Lying down
+Stand up
+Shocked
+Pick
+Land from jump
+Land from jump kick
+Fall?
+Front slammed Max
+Back slammed Axel
+Back slammed Max
+Front slammed Blaze
+Thrown by max
+????
+Throw front to back
+Back slam
+Static jump attack
+Jump forward attack
+Jump down attack
+Normal punch
+3rd punch
+Combo end A
+Combo end B
+Grab knee
+Grab combo end
+Def special
+Blitz
+Offspecial
+Back attack
+front slam
+unused throw
+unused throw
+Use knife
+Use pipe
+Unused?
+Use sword
+Use kunai?
+Unused?
+Unused?
+Combo end (hold B)

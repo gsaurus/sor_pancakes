@@ -1,0 +1,959 @@
+PK_LOADCUES
+PK_HITCOLLISIONS
+PK_ATKCOLLISIONS
+PK_WEAPONS
+42
+
+Ash Player
+PK_PALETTE
+0
+84
+animations/Ash.txt
+
+
+Shiva Player
+PK_PALETTE
+0
+84
+animations/Shiva.txt
+
+
+Zan
+PK_PALETTE
+0
+88
+animations/Zan.txt
+
+
+Axel
+PK_PALETTE
+0
+96
+animations/Axel.txt
+
+Blaze
+PK_PALETTE
+0
+88
+animations/Blaze.txt
+
+Skate
+PK_PALETTE
+0
+88
+animations/Skate.txt
+
+Roo (Victy)
+PK_PALETTE
+0
+88
+animations/Roo.txt
+
+Max
+PK_PALETTE
+0
+88
+animations/Axel.txt
+
+Adam
+PK_PALETTE
+0
+88
+animations/Axel.txt
+
+Galsia
+PK_PALETTE
+PK_GALSIAS
+46
+-
+
+
+Donovan
+PK_PALETTE
+PK_GALSIAS
+49
+-
+
+Signal
+PK_PALETTE
+PK_SIGNALS
+39
+-
+
+Storm
+PK_PALETTE
+PK_STORM00 PK_STORM01  
+36
+-
+
+Bongo
+PK_PALETTE
+PK_BONGO
+43
+-
+
+PBot
+PK_PALETTE
+PBOT0
+67
+-
+
+Storm (2)
+PK_PALETTE
+PK_STORM02 PK_STORM03
+36
+-
+
+Electra
+PK_PALETTE
+PK_ELECTRA
+51
+-
+
+Zack
+PK_PALETTE
+PK_GOLDIE0
+38
+-
+
+Goldie
+PK_PALETTE
+PK_GOLDIE0
+40
+-
+
+Chiba
+PK_PALETTE
+PK_CHIBA
+52
+-
+
+Chiba (2)
+PK_PALETTE
+PK_CHIBA
+52
+-
+
+Chiba (3)
+PK_PALETTE
+PK_CHIBA
+52
+-
+
+McBride
+PK_PALETTE
+PK_MCBRIDE
+51
+-
+
+McLean
+PK_PALETTE
+PK_MCBRIDE
+51
+-
+
+McLeod
+PK_PALETTE
+PK_MCBRIDE
+51
+-
+
+Soozie
+PK_PALETTE
+PK_SOOZIE0
+38
+-
+
+Tiger
+PK_PALETTE
+PK_TIGER
+52
+-
+
+Robot X
+PK_PALETTE
+PK_ROBOT00 PK_ROBOT01
+46
+-
+
+Donovan Bulldozer
+PK_PALETTE
+PK_BULLDOZER
+18
+-
+
+Robot Axel (Break)
+19ba4
+0
+95
+-
+
+Robot X (2)
+231C16
+PK_ROBOT00 PK_RoBOT01
+46
+-
+
+Mona
+1B790
+0
+36
+-
+
+Lisa
+1B790
+PK_MONALISA0
+49
+-
+
+Ash sub-boss
+231BA2
+0
+37
+-
+
+Yamoto
+231B86
+15f206 17ebc6 1a09b8 19fdb0
+55
+-
+
+Shiva Boss
+231BDE
+16f332
+47
+-
+
+Jet
+231C34
+PK_ROCKET0 PK_JET PK_ROCKET1 PK_ROCKET2
+49
+-
+
+Rocket
+PK_PALETTE
+PK_ROCKET0 PK_JET PK_ROCKET1 PK_ROCKET2
+48
+-
+
+Roo sub-boss (Victy)
+2322a6
+0
+88
+-
+
+Robot Y (Neo-X)
+21BE2
+0
+43
+-
+
+Bruce
+PK_PALETTE
+PK_BRUCE
+60
+-
+
+
+
+
+Chicken
+PK_PALETTE
+23A60C
+1
+-
+
+Cash
+PK_PALETTE
+23A75A
+1
+-
+
+Gold
+PK_PALETTE
+23A75A
+1
+-
+
+1Up
+PK_PALETTE
+23A75A
+1
+-
+
+Apple
+PK_PALETTE
+23A60C
+1
+-
+
+Knife
+PK_PALETTE
+23AF1C
+9
+-
+
+Pipe
+PK_PALETTE
+23AA20
+9
+-
+
+Sword
+PK_PALETTE
+23A8B8
+9
+-
+
+Kunai
+PK_PALETTE
+23ABA2
+9
+-
+
+Grenade
+PK_PALETTE
+23BEA2
+9
+-
+
+Baseball bat
+PK_PALETTE
+23AC48
+9
+-
+
+Wooden plank
+PK_PALETTE
+23ADD8
+9
+-
+
+???? 1
+PK_PALETTE
+200000
+1
+-
+
+Player Bike 2
+PK_PALETTE
+20B56A 20C652 20740E 206B4C
+1
+-
+
+Wooden Crate 3
+PK_PALETTE
+26D24E
+2
+-
+
+Life Buoy 4
+PK_PALETTE
+26D72E
+1
+-
+
+Metal Drum 5
+PK_PALETTE
+26DA80
+2
+-
+
+Barrier 6
+PK_PALETTE
+26DF4A
+1
+-
+
+Table 7
+PK_PALETTE
+26E2AE
+2
+-
+
+Wooden Box 8
+PK_PALETTE
+26E576
+2
+-
+
+Lantern 9
+PK_PALETTE
+26E9E2
+2
+-
+
+Deposit Box 10
+PK_PALETTE
+26EE16
+2
+-
+
+
+Mr X Bust 11
+PK_PALETTE
+26F2BE
+3
+-
+
+Metal Container 12
+PK_PALETTE
+26F6CC
+2
+-
+Barrel 13
+PK_PALETTE
+2702F0
+2
+-
+
+Bin 14
+PK_PALETTE
+26FF34
+2
+-
+
+Statue 15
+PK_PALETTE
+26FAC6
+2
+-
+
+Light Ball
+PK_PALETTE
+23BBB6
+9
+-
+
+Explosion 16
+PK_PALETTE
+23BEA2 20C652 20740E 206B4C
+7
+-
+
+Explosion 17
+PK_PALETTE
+23BBB6 20C652 20740E 206B4C
+1
+-
+
+Biker (3)
+PK_PALETTE
+20B56A 20C652 20740E 206B4C
+36
+-
+
+???? 19
+PK_PALETTE
+20B56A 20C652 20740E 206B4C
+1
+-
+
+Mona (2)
+1B790
+0
+36
+-
+
+Lisa (2)
+1B790
+18E446
+49
+-
+
+Yamoto (2)
+231B86
+15f206 17ebc6 1a09b8 19fdb0
+55
+-
+
+Robot X (3)
+231C16
+19fdb0 17ebc6 1a09b8
+46
+-
+
+Robot X (4)
+231C16
+19fdb0 17ebc6 1a09b8
+46
+-
+
+
+Robot X (5)
+231C16
+19fdb0 17ebc6 1a09b8
+46
+-
+
+
+Robot X (6)
+231C16
+19fdb0 17ebc6 1a09b8
+46
+-
+
+
+Robot X (7)
+231C16
+19fdb0 17ebc6 1a09b8
+46
+-
+
+
+Explosion 28
+PK_PALETTE
+23BEA2
+7
+-
+
+
+BARE 29
+2F8234
+2F2276 2F1F8E 2F18D8
+5
+-
+
+Pillar 30
+2A3C68
+29EBE6
+1
+-
+
+Yamoto Secret Door 1 31
+2A3C68
+2A1576
+1
+-
+
+Yamoto Secret Door 2 32
+2A3C68
+2A1576
+1
+-
+
+Spotlight 33
+PK_PALETTE
+2904FC
+1
+-
+
+ScrapPaper 34
+264858
+-2E17B8
+2
+-
+
+Soda Can 35
+264858
+-2E1838
+2
+-
+
+???? 36
+PK_PALETTE
+-2E1938
+1
+-
+
+???? 37
+PK_PALETTE
+-2E1A38
+1
+-
+
+???? 38
+PK_PALETTE
+23BDDE
+2
+-
+
+???? 39
+29D304
+2948EA
+1
+-
+
+???? 40
+PK_PALETTE
+200000
+1
+-
+
+???? 41
+PK_PALETTE
+200000
+1
+-
+
+???? 42
+PK_PALETTE
+200000
+1
+-
+
+Shark 43
+PK_PALETTE
+29032E
+3
+-
+
+Bottle 44
+PK_PALETTE
+29067A
+7
+-
+
+Bush 45
+PK_PALETTE
+204306
+2
+-
+
+???? 46
+PK_PALETTE
+29073C
+1
+-
+
+???? 47
+PK_PALETTE
+200000
+1
+-
+
+???? 48
+PK_PALETTE
+200000
+1
+-
+
+???? 49
+PK_PALETTE
+200000
+1
+-
+
+???? 50
+PK_PALETTE
+200000
+1
+-
+
+???? 51
+PK_PALETTE
+200000
+1
+-
+
+???? 52
+PK_PALETTE
+200000
+1
+-
+
+???? 53
+PK_PALETTE
+200000
+1
+-
+
+???? 54
+PK_PALETTE
+200000
+1
+-
+
+???? 55
+PK_PALETTE
+200000
+1
+-
+
+???? 56
+PK_PALETTE
+200000
+1
+-
+
+???? 57
+PK_PALETTE
+200000
+1
+-
+
+???? 58
+PK_PALETTE
+200000
+1
+-
+
+Switch 59
+PK_PALETTE
+2B3BAA
+1
+-
+
+???? 60
+PK_PALETTE
+200000
+1
+-
+
+???? 61
+PK_PALETTE
+200000
+1
+-
+
+???? 62
+PK_PALETTE
+200000
+1
+-
+
+???? 63
+PK_PALETTE
+200000
+1
+-
+
+???? 64
+PK_PALETTE
+200000
+1
+-
+
+???? 65
+PK_PALETTE
+200000
+1
+-
+
+???? 66
+PK_PALETTE
+200000
+1
+-
+
+???? 67
+PK_PALETTE
+200000
+1
+-
+
+???? 68
+PK_PALETTE
+200000
+1
+-
+
+???? 69
+PK_PALETTE
+200000
+1
+-
+
+???? 70
+PK_PALETTE
+200000
+1
+-
+
+???? 71
+PK_PALETTE
+200000
+1
+-
+
+???? 72
+PK_PALETTE
+200000
+1
+-
+
+???? 73
+PK_PALETTE
+200000
+1
+-
+
+???? 74
+PK_PALETTE
+200000
+1
+-
+
+???? 75
+PK_PALETTE
+200000
+1
+-
+
+???? 76
+PK_PALETTE
+200000
+1
+-
+
+???? 77
+PK_PALETTE
+200000
+1
+-
+
+???? 78
+PK_PALETTE
+200000
+1
+-
+
+???? 79
+PK_PALETTE
+200000
+1
+-
+
+General 80
+PK_PALETTE
+2B3DB4
+8
+-
+
+???? 81
+PK_PALETTE
+200000
+1
+-
+
+???? 82
+PK_PALETTE
+200000
+1
+-
+
+Helicopter 83
+PK_PALETTE
+2BDD7C
+1
+-
+
+???? 84
+PK_PALETTE
+200000
+1
+-
+
+???? 85
+PK_PALETTE
+200000
+1
+-
+
+Countdown Screen 86
+PK_PALETTE
+2D1940
+9
+-
+
+Debris 87
+PK_PALETTE
+2AD4CE
+5
+-
+
+Debris 88
+PK_PALETTE
+200000
+7
+-
+
+???? 89
+PK_PALETTE
+200000
+1
+-
+
+???? 90
+PK_PALETTE
+200000
+1
+-
+
+???? 91
+PK_PALETTE
+200000
+1
+-
+
+???? 92
+PK_PALETTE
+200000
+1
+-
+
+Helicopter 93
+PK_PALETTE
+26932C
+1
+-
+
+Letter 94
+PK_PALETTE
+290816
+2
+-
+
+???? 95
+PK_PALETTE
+200000
+1
+-
+
+???? 96
+PK_PALETTE
+200000
+1
+-
+
+Falling Metal Barrel 97
+PK_PALETTE
+200000
+1
+-
+
+???? 98
+PK_PALETTE
+200000
+1
+-
+
+???? 99
+PK_PALETTE
+200000
+1
+-
+
+???? 100
+PK_PALETTE
+200000
+1
+-
+
+???? 101
+PK_PALETTE
+200000
+1
+-
+
+???? 102
+PK_PALETTE
+200000
+1
+-
+
+???? 103
+PK_PALETTE
+200000
+1
+-

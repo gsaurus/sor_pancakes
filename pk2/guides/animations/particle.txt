@@ -1,0 +1,29 @@
+Standing
+small jump
+high jump
+fall
+unused
+unused
+Being front grabbed
+Being back grabbed
+Being grab hit
+Being hit
+Knocked down
+Lying down
+Stand up
+suicide?
+chain piece
+spikeball
+laser
+unused
+Front slammed Max
+Back slammed Axel
+Back slammed Max
+Front slammed Blaze
+Thrown by Max
+????
+spikeball attack?
+spikeball attack?
+fire laser
+spikeball attack?
+electrocution

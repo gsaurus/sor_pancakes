@@ -1,0 +1,250 @@
+1
+Default
+    115AE
+    sor1/default.png
+Select Screen
+    71f30
+    sor1/default.png
+
+
+Galsia 1
+	1fae8
+	sor1/galsia.png
+Galsia 1 (b)
+	1fafa
+	sor1/galsia.png
+Galsia 2
+	1fb10
+	sor1/galsia.png
+Galsia 2 (b)
+	1fb22
+	sor1/galsia.png
+Galsia 3
+	1fb38
+	sor1/galsia.png
+Galsia 3 (b)
+	1fb4a
+	sor1/galsia.png
+
+Signal 1
+	1fb60
+	sor1/signal.png
+Signal 1 (b)
+	1fb72
+	sor1/signal.png
+Signal 2
+	1fb88
+	sor1/signal.png
+Signal 2 (b)
+	1fb9a
+	sor1/signal.png
+Signal 3
+	1fbb0
+	sor1/signal.png
+Signal 3 (b)
+	1fbc2
+	sor1/signal.png
+
+Hakuyo 1
+	1fbd8
+	sor1/hakuyo.png
+Hakuyo 1 (b)
+	1fbea
+	sor1/hakuyo.png
+Hakuyo 2
+	1fc00
+	sor1/hakuyo.png
+Hakuyo 2 (b)
+	1fc12
+	sor1/hakuyo.png
+Hakuyo 3
+	1fc28
+	sor1/hakuyo.png
+Hakuyo 3 (b)
+	1fc3a
+	sor1/hakuyo.png
+
+nora & jack 1
+    1FC4C
+    sor1/norajack.png
+nora & jack 2
+    1FC58
+    sor1/norajack.png
+nora & jack 3
+    1FC64
+    sor1/norajack.png
+
+Souther 1
+	2f44e
+	sor1/souther.png
+Souther 2 (unused)
+	2f46a
+	sor1/souther.png
+Souther 3
+	2f486
+	sor1/souther.png
+Antonio 1
+	2f4a2
+	sor1/antonio.png
+Antonio 2
+	2f4c0
+	sor1/antonio.png
+Bongo 1
+	2f4de
+	sor1/bongo.png
+Bongo 2
+	2f4fa
+	sor1/bongo.png
+Bongo 3
+	2f516
+	sor1/bongo.png
+Twins 1
+	2f532
+	sor1/default.png
+Twins 2
+	2f546
+	sor1/default.png
+
+
+Abadede 1
+	3513C
+	sor1/abadede.png
+Abadede 2
+	3514E
+	sor1/abadede.png
+Abadede 3
+	35160
+	sor1/abadede.png
+
+
+Mr. X
+	35172
+	sor1/mrx.png
+
+Stage 1-a
+    6002A
+    sor1/stage1-a.png
+Stage 1-b
+    6003a
+    sor1/stage1-b.png
+Stage 2-a
+    62aF0
+    sor1/stage2-a.png
+Stage 2-b
+    62b02
+    sor1/stage2-b.png
+Stage 3-a
+    641d2
+    sor1/stage3-a.png
+Stage 3-b
+    641e0
+    sor1/stage3-b.png
+Stage 4-a
+    65ca4
+    sor1/stage4-a.png
+Stage 4-b
+    65cb0
+    sor1/stage4-b.png
+Stage 5-a
+    670D2
+    sor1/stage5-a.png
+Stage 5-b
+    670e4
+    sor1/stage5-b.png
+Stage 6-a
+    685c0
+    sor1/stage6-a.png
+Stage 6-b
+    685d0
+    sor1/stage6-b.png
+Stage 7-a
+    69BF2
+    sor1/stage7-a.png
+Stage 7-b
+    69c02
+    sor1/stage7-b.png
+Stage 8-a
+    6b0ec
+    sor1/stage8-a.png
+Stage 8-b
+    6b0f8
+    sor1/stage8-b.png
+
+Intro 1
+    3F2CA
+    sor1/default.png
+#1
+    3F2E6
+    sor1/default.png
+Intro Axel & Adam
+    3F33E
+    sor1/default.png
+Intro Blaze
+    3F35C
+    sor1/default.png
+Intro "Streets of"
+    3F37A
+    sor1/default.png
+Intro "Rage"
+    3F382
+    sor1/default.png
+Intro 2
+    3F39C
+    sor1/default.png
+#2
+    3F3B2
+    sor1/default.png
+#3
+    3F3D0
+    sor1/default.png
+#4
+    3F3EE
+    sor1/default.png
+#5
+    3F40C
+    sor1/default.png
+#6
+    3F42A
+    sor1/default.png
+#7
+    3f448
+    sor1/default.png
+#8
+    3f460
+    sor1/default.png
+#9
+    3f470
+    sor1/default.png
+#10
+    3f48e
+    sor1/default.png
+#11
+    3f49e
+    sor1/default.png
+#12
+    3f4a6
+    sor1/default.png
+#13
+    3f4b6
+    sor1/default.png
+#14
+    3f4be
+    sor1/default.png
+#15
+    3f4e8
+    sor1/default.png
+#16
+    3F4FE
+    sor1/default.png
+#17
+    3F53E
+    sor1/default.png
+#18
+    3F556
+    sor1/default.png
+#19
+    3F5B6
+    sor1/default.png
+#20
+    3f460
+    sor1/default.png
