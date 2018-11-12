@@ -1,0 +1,39 @@
+00 - Standing
+02 - Walk
+04 - Walk (backwards?)
+06 - Crouched down
+08 - Grab front
+0A - Grab back
+0C - Being front grabbed
+0E - Being back grabbed
+10 - Being grab hit
+12 - Being hit
+14 - Knocked down
+16 - Lying down
+18 - Stand up
+1A - unused?
+1C - pick weapon
+1E - unused?
+20 - jump
+22 - shuriken
+24 - Front slammed Max
+26 - Back slammed Axel
+28 - Back slammed Max
+2A - Front slammed Blaze
+2C - Thrown by Max
+2E - ????
+30 - throw
+32 - rolling WP attack
+34 - ???
+36 - low kick + WP
+38 - throw 3 shurikens
+3A - punch
+3C - hard punch
+3E - jump down attack
+40 - rolling shuriken
+42 - weapon attack 1
+44 - weapon attack 2
+46 - weapon attack 3
+48 - low kick
+4A - evasive move
+4C - hanging

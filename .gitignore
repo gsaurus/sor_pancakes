@@ -13,3 +13,4 @@ hs_err_pid*
 #build artifacts
 */build/
 */dist/
+/SoR2_LevelEditor/nbproject/private/

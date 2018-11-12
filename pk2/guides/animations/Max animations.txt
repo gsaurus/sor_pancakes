@@ -1,0 +1,50 @@
+02 - Standing
+04 - Walk
+06 - Jump
+08 - Grab jump
+0A - Grab front
+0C - Grab back
+0E - Being back grabbed
+10 - Being front grabbed
+12 - Being grab hit
+14 - Being hit
+16 - Knocked down
+18 - Lying down
+1A - Stand up
+1C - Shocked
+1E - Pick
+20 - Land from jump
+22 - Land from jump kick
+24 - Fall?
+26 - Front slamed by max
+28 - Back slamed by axel
+2A - Back slamed by max
+2C - Front slamed by blaze
+2E - Thrown by max
+30 - Max's Atomic Drop
+32 - Front slam
+34 - Back slam
+36 - Static jump attack
+38 - Jump forward attack
+3A - Jump down attack
+3C - Normal punch
+3E - 3rd punch
+40 - Combo end A
+42 - Combo end B
+44 - Grab knee
+46 - Grab combo end
+48 - Def special
+4A - Slide
+4C - Offspecial
+4E - Back attack
+50 - Neck breaker
+52 - Throw
+54 - Atomic drop
+56 - Use knife
+58 - Use pipe
+5A - Unused?
+5C - Use sword
+5E - Use kunai?
+60 - Unused?
+62 - Unused?
+64 - Combo endo (hold B)
