@@ -26,6 +26,8 @@ import lib.Rom;
  */
 public class CharacterObject {
     
+    public static final int SIZE = 0x18;
+    
     /**
         dc.b			; Character ID
         dc.b 0			; 1 = Level (scene)

@@ -26,44 +26,39 @@ import lib.Rom;
  */
 public class ItemObject {
     
-    /**
-        dc.b			; Character ID
-        dc.b 0			; 1 = Level (scene)
-        dc.b   1		; 2 = Spawn Type
-        dc.b 0			; 3 = Palette/Enemy AI
-        dc.b $1C		; 4 = Animation	Status bit 7 is	used for enemy that end	the stage ie bosses
-        dc.b 0			; 5 = Starting Obj Mode
-        dc.w $A0		; 6-7 =	Xpos Distance/Timer/Delay
-        dc.w $190		; 8-9 =	XPos
-        dc.w 0			; A-B =	YPos
-        dc.b 2			; C = Contained item
-        dc.b $E			; D = Hit Width
-        dc.b $48		; E = Hit Height
-        dc.b 6			; F = Vicinty
-        dc.w $10		; Score
+    public static final int SIZE = 0x12;
+    
+    /*
+        $0   = Obj ID
+        $1   = Scene to be used in
+        $2   = Status Bitfield
+        $3   = Hit Width
+        $4   = Hit Height
+        $5   = Hit Depth
+        $6   = Animation
+        $7   = Obj Mode
+        $8-9 = vertical velocity
+        $A-B = Xpos
+        $C-D = Ypos
+        $E-F = SpriteStatus
+        $10  = Contained item ID
     */
     
     public long address;
     
-    public int itemId;      // type of object
-    public int sceneId;          // in what scene this character shows up
-    public int triggerType;      // trigger by position, timer, etc
-    public int minimumDifficulty;       // Minimum minimumDifficulty for it to show up
-    public boolean useAlternativePalette; // if character use secondary palette
-    public int enemyAgressiveness;       // ????
-    public int initialState;     // Animation status
-    public int introductionType; // If character falls from sky, or out of a sewer etc
-    public int triggerArgument;  // Depending on the trigger, an argument can be used (e.g. timer, distance, etc)
-    // Position x,y
-    public int posX;
-    public int posY;
-    public int containedItemId;
-    // Collision box x, y, z
+    public int itemId;
+    public int sceneId;
+    public int status;
     public int collisionWidth;
     public int collisionHeight;
     public int collisionDept;
-    public int deathScore;      // Score added when enemie dies
-    
+    public int animation;
+    public int mode;
+    public int verticalSpeed;
+    public int posX;
+    public int posY;
+    public int spriteStatus;    
+    public int containedItemId;
     
     
     public ItemObject(RandomAccessFile rom, long address) throws IOException{
@@ -71,25 +66,17 @@ public class ItemObject {
         rom.seek(address);
         itemId = rom.read();
         sceneId = rom.read();
-        triggerType = rom.read();
-        minimumDifficulty = triggerType >> 4 & 0x7;
-        triggerType &= 0x7;      
-        int palleteByte = rom.read();
-        enemyAgressiveness = palleteByte & 0x7;
-        useAlternativePalette = (palleteByte >> 4 & 0x3) == 1;
-      
-        initialState = rom.read();
-        introductionType = rom.read();
-        triggerArgument = rom.readUnsignedShort();
-        
-        posX = rom.readUnsignedShort();
-        posY = rom.readUnsignedShort();
-        
-        containedItemId = rom.read();
+        status = rom.read();
         collisionWidth = rom.read();
         collisionHeight = rom.read();
         collisionDept = rom.read();
-        deathScore = rom.readUnsignedShort();      
+        animation = rom.read();
+        mode = rom.read();
+        verticalSpeed = rom.readUnsignedShort();
+        posX = rom.readUnsignedShort();
+        posY = rom.readUnsignedShort();
+        spriteStatus = rom.readUnsignedShort();
+        containedItemId = rom.read();    
     }
     
     
@@ -97,28 +84,17 @@ public class ItemObject {
         rom.seek(address);
         rom.writeByte(itemId);
         rom.writeByte(sceneId);
-        int triggerAndDifficulty = triggerType;
-        triggerAndDifficulty += (minimumDifficulty << 4) & 0xF8;
-        rom.writeByte(triggerAndDifficulty);
- 
-        int palleteByte = enemyAgressiveness;
-        if (useAlternativePalette){
-            palleteByte |= 0xC;
-        }
-        rom.writeByte(palleteByte);
-      
-        rom.writeByte(initialState);
-        rom.writeByte(introductionType);
-        rom.writeShort(triggerArgument);
-        
-        rom.writeShort(posX);
-        rom.writeShort(posY);
-        
-        rom.writeByte(containedItemId);
+        rom.writeByte(status);
         rom.writeByte(collisionWidth);
         rom.writeByte(collisionHeight);
         rom.writeByte(collisionDept);
-        rom.writeShort(deathScore);
+        rom.writeByte(animation);
+        rom.writeByte(mode);
+        rom.writeShort(verticalSpeed);
+        rom.writeShort(posX);
+        rom.writeShort(posY);
+        rom.writeShort(spriteStatus);
+        rom.writeByte(containedItemId);
     }
     
     public void write(RandomAccessFile rom) throws IOException{
@@ -131,7 +107,7 @@ public class ItemObject {
     public static void main(String[] args){
         try {
             Rom rom = new Rom(new File("sor2.bin"));
-            ItemObject obj = new ItemObject(rom.getRomFile(), 0x1F0DB4);
+            ItemObject obj = new ItemObject(rom.getRomFile(), 0x1F00CE);
             obj.write(rom.getRomFile());
             rom.close();
         } catch (Exception ex) {

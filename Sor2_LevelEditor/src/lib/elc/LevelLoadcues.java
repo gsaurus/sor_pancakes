@@ -28,9 +28,9 @@ import lib.Rom;
  */
 public final class LevelLoadcues {
     public long address;
-    public final List<CharacterObject> enemiesPart1 = new ArrayList<CharacterObject>(70);
-    public final List<CharacterObject> enemiesPart2 = new ArrayList<CharacterObject>(20);
-//    public final List<ItemObject> goodies = new ArrayList<ItemObject>(20);
+    public final List<CharacterObject> enemiesPart1 = new ArrayList<>(70);
+    public final List<CharacterObject> enemiesPart2 = new ArrayList<>(20);
+    public final List<ItemObject> goodies = new ArrayList<>(20);
     
     public LevelLoadcues(RandomAccessFile rom, long address) throws IOException{
         this.address = address;
@@ -40,14 +40,15 @@ public final class LevelLoadcues {
         long goodiesAddress = rom.readInt();
         readCharactersList(rom, enemiesPart1, enemiesAddress1);
         readCharactersList(rom, enemiesPart2, enemiesAddress2);
-//        readItemsList(rom, goodies, goodiesAddress);
+        readItemsList(rom, goodies, goodiesAddress);
     }
     
     void readCharactersList(RandomAccessFile rom, List<CharacterObject> list, long address) throws IOException{
         rom.seek(address);
         while (rom.readUnsignedShort() != 0xFFFF){
             list.add(new CharacterObject(rom, address));
-            address += 0x18;
+            address += CharacterObject.SIZE;
+            rom.seek(address);
         }
     }
     
@@ -55,7 +56,8 @@ public final class LevelLoadcues {
         rom.seek(address);
         while (rom.readUnsignedShort() != 0xFFFF){
             list.add(new ItemObject(rom, address));
-            address += 0x18;
+            address += ItemObject.SIZE;
+            rom.seek(address);
         }
     }
     
@@ -63,7 +65,8 @@ public final class LevelLoadcues {
         rom.seek(address);
         for (CharacterObject obj : list){
             obj.write(rom, address);
-            address += 0x18;
+            address += CharacterObject.SIZE;
+            rom.seek(address);
         }
     }
     
@@ -71,7 +74,8 @@ public final class LevelLoadcues {
         rom.seek(address);
         for (ItemObject obj : list){
             obj.write(rom, address);
-            address += 0x18;
+            address += ItemObject.SIZE;
+            rom.seek(address);
         }
     }
     
@@ -82,7 +86,7 @@ public final class LevelLoadcues {
         rom.writeInt((int)goodiesAddress);
         writeCharactersList(rom, enemiesPart1, enemiesAddress1);
         writeCharactersList(rom, enemiesPart2, enemiesAddress2);
-//        writeItemsList(rom, goodies, goodiesAddress);
+        writeItemsList(rom, goodies, goodiesAddress);
     }
     public void write(RandomAccessFile rom, long mainAddress) throws IOException{
         rom.seek(mainAddress + 2); // discard first word
@@ -91,7 +95,7 @@ public final class LevelLoadcues {
         long goodiesAddress = rom.readInt();
         writeCharactersList(rom, enemiesPart1, enemiesAddress1);
         writeCharactersList(rom, enemiesPart2, enemiesAddress2);
-//        writeItemsList(rom, goodies, goodiesAddress);
+        writeItemsList(rom, goodies, goodiesAddress);
     }
     
     public void write(RandomAccessFile rom) throws IOException{
@@ -104,7 +108,7 @@ public final class LevelLoadcues {
             LevelLoadcues obj = new LevelLoadcues(rom.getRomFile(), 0x1EF53C);
             obj.write(rom.getRomFile());
             rom.close();
-        } catch (Exception ex) {
+        } catch (IOException ex) {
             ex.printStackTrace();
         }
     }
