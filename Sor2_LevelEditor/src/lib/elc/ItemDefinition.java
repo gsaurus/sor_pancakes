@@ -18,7 +18,6 @@ package lib.elc;
 import java.awt.image.BufferedImage;
 import java.io.IOException;
 import java.io.RandomAccessFile;
-import java.util.*;
 import lib.anim.AnimFrame;
 import lib.map.Palette;
 import lib.map.Sprite;
@@ -29,12 +28,10 @@ import lib.map.Sprite;
 
 
 
-public class CharacterDefinition{    
+public class ItemDefinition{    
     
-    public final int characterId;
-    public final String name;
-    public final List<String> spawnModes; // formatted strings. E.g. "distance: %d pixels"
-    
+    public final int itemId;
+    public final String name;    
     private final Sprite sprite;
     
     
@@ -43,14 +40,13 @@ public class CharacterDefinition{
     }
     
     
-    public CharacterDefinition(RandomAccessFile rom, String name, int characterId, int animListAddress, List<String> spawnModes) throws IOException{
-        this.characterId = characterId;
+    public ItemDefinition(RandomAccessFile rom, String name, int itemId, int animListAddress) throws IOException{
+        this.itemId = itemId;
         this.name = name;
-        this.spawnModes = spawnModes;
         
         // read a sprite from animations address
-        // Used to obtain a visual representation of the character, depending on the palette used.
-        rom.seek(animListAddress + characterId*4);
+        // Used to obtain a visual representation of the item, depending on the palette used.
+        rom.seek(animListAddress + itemId*4);
         int localAddress = rom.readInt();        
         rom.seek(localAddress);
         localAddress += rom.readShort();
