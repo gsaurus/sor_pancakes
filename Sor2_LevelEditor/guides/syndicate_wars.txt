@@ -1,0 +1,281 @@
+1				// 1 = labeled addresses; 0 = global addresses
+PK_LOADCUES		// Address of characters list in rom
+PK_ELC_INDEX    // Address of levels object spawning list in rom
+
+// Each character is followed by a list of spawning modes
+// Ending with at least one empty line
+
+Max
+0
+
+Axel
+0
+
+Blaze
+0
+
+Skate
+0
+
+Adam
+0
+
+Zan
+0
+
+Roo
+0
+
+
+Galsia
+0
+Standing
+Sit
+Manhole
+w/ Knife
+w/ Pipe
+Lying Down
+Fall from distance
+Fall
+Check Distance
+
+
+Donovan
+0
+Standing
+Sit
+Manhole
+w/ Knife
+w/ Pipe
+Lying Down
+Fall from distance
+Fall
+Check Distance
+
+
+Jack
+0
+
+Barbon
+0
+
+
+Electra
+0
+
+
+Signal
+0
+
+
+Biker
+0
+
+
+Ninja
+0
+
+
+Bongo
+0
+
+
+Hakuyo
+0
+
+
+Kickboxer
+0
+
+
+Jet
+0
+
+
+Zamza
+0
+
+
+R Bear
+0
+
+
+Abadede
+0
+
+x
+
+x
+
+Particle
+0
+
+x
+
+Mr X
+0
+
+Shiva
+0
+
+Ninja (b)
+0
+
+Ninja (katana)
+0
+
+Grenade
+0
+
+Vehelits
+0
+
+Knife
+0
+
+Pipe
+0
+
+Galsia (2)
+0
+
+Sword
+0
+
+Kunai
+0
+
+Grenade (2)
+0
+
+Galsia (3)
+0
+
+Barbon Jacket
+0
+
+Bin
+0
+
+Manhole
+0
+
+Lamp
+0
+
+Menu
+0
+
+Table
+0
+
+Table (2)
+0
+
+Table (3)
+0
+
+Table (4)
+0
+
+Chair
+0
+
+Trash Can
+0
+
+Oil Barrel
+0
+
+Obj 1
+0
+
+Obj 1 (2)
+0
+
+Electrical Box 1
+0
+
+Electrical Box 2
+0
+
+Barrier
+0
+
+Light
+0
+
+Arcade
+0
+
+Ship Pole
+0
+
+Obj 2
+0
+
+Obj 3
+0
+
+Obj 4
+0
+
+Sandbag
+0
+
+Sandbag (2)
+0
+
+Sandbag (3)
+0
+
+Sandbag (4)
+0
+
+Crate
+0
+
+Obj 5
+0
+
+Vehelits (2)
+0
+
+Crate (2)
+0
+
+Crate (3)
+0
+
+Alien Egg
+0
+
+Cash Bag
+0
+
+Gold Bag
+0
+
+Lives
+0
+
+Apple
+0
+
+Chicken
+0
+
+Arrow
+0
+
+1P
+0
+
+2P
+0
+
+Go
+0
+
+Alphabet
+0

@@ -24,7 +24,7 @@ import lib.Rom;
  *
  * @author gil.costa
  */
-public class ItemObject {
+public class ItemObject extends BaseObject{
     
     public static final int SIZE = 0x12;
     
@@ -55,8 +55,6 @@ public class ItemObject {
     public int animation;
     public int mode;
     public int verticalSpeed;
-    public int posX;
-    public int posY;
     public int spriteStatus;    
     public int containedItemId;
     

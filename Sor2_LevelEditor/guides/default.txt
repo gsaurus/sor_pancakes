@@ -1,0 +1,278 @@
+0			// 1 = labeled addresses; 0 = global addresses
+20EAC		// Address of characters list in rom
+1F0DB4      // Address of levels object spawning list in rom
+
+// Each character is followed by 0 for uncompressed art, 1 for compressed art,
+// then a list of spawning modes
+// Finally ending with at least one empty line
+
+Max
+0
+
+Axel
+0
+
+Blaze
+0
+
+Skate
+0
+
+Galsia
+1
+Standing
+Sit
+Manhole
+w/ Knife
+w/ Pipe
+Lying Down
+Fall from distance
+Fall
+Check Distance
+
+
+Donovan
+1
+Standing
+Sit
+Manhole
+w/ Knife
+w/ Pipe
+Lying Down
+Fall from distance
+Fall
+Check Distance
+
+
+Jack
+1
+
+
+Barbon
+1
+
+
+Electra
+1
+
+
+Signal
+1
+
+
+Biker
+1
+
+
+Ninja
+1
+
+
+Bongo
+1
+
+
+Hakuyo
+1
+
+x
+
+Kickboxer
+1
+
+
+Jet
+1
+
+
+Zamza
+1
+
+
+R Bear
+1
+
+
+Abadede
+1
+
+x
+
+x
+
+Particle
+1
+
+
+x
+
+Mr X
+1
+
+
+Shiva
+1
+
+Ninja (b)
+1
+
+Ninja (katana)
+1
+
+Grenade
+1
+
+Vehelits
+1
+
+Knife
+1
+
+Pipe
+1
+
+Galsia (2)
+1
+
+Sword
+1
+
+Kunai
+1
+
+Grenade (2)
+1
+
+Galsia (3)
+1
+
+Barbon Jacket
+1
+
+Bin
+1
+
+Manhole
+1
+
+Lamp
+1
+
+Menu
+1
+
+Table
+1
+
+Table (2)
+1
+
+Table (3)
+1
+
+Table (4)
+1
+
+Chair
+1
+
+Trash Can
+1
+
+
+Oil Barrel
+1
+
+
+Obj 1
+1
+
+Obj 1 (2)
+1
+
+Electrical Box 1
+1
+
+Electrical Box 2
+1
+
+Barrier
+1
+
+Light
+1
+
+Arcade
+1
+
+Ship Pole
+1
+
+Obj 2
+1
+
+Obj 3
+1
+
+Obj 4
+1
+
+Sandbag
+1
+
+Sandbag (2)
+1
+
+Sandbag (3)
+1
+
+Sandbag (4)
+1
+
+Crate
+1
+
+Obj 5
+1
+
+Vehelits (2)
+1
+
+Crate (2)
+1
+
+Crate (3)
+1
+
+Alien Egg
+1
+
+Cash Bag
+1
+
+Gold Bag
+1
+
+Lives
+1
+
+Apple
+1
+
+Chicken
+1
+
+Arrow
+1
+
+1P
+1
+
+2P
+1
+
+Go
+1
+
+Alphabet
+1

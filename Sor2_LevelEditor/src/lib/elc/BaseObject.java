@@ -21,7 +21,16 @@ import java.awt.Point;
  *
  * @author gil.costa
  */
-public interface InteractibleObject {
-    Point getPosition();
-    void setPosition(Point position);
+public class BaseObject {
+    // Position x,y
+    protected int posX;
+    protected int posY;
+    
+    Point getPosition(){
+        return new Point(posX, posY);
+    }
+    void setPosition(Point position){
+        posX = position.x;
+        posY = position.y;
+    }
 }

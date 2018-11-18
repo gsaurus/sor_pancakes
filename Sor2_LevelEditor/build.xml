@@ -10,13 +10,12 @@
 <project name="PK2" default="default" basedir=".">
     <description>Builds, tests, and runs the project Sor Pancake.</description>
     <import file="nbproject/build-impl.xml"/>
-    <!--
+
 	<target name="-post-compile">
-		<copy todir="${dist.dir}/images">
-			<fileset dir="images"/>
+		<copy todir="${dist.dir}/guides">
+			<fileset dir="guides"/>
 		</copy>
 	</target>
-    -->
 
 	<!--
 

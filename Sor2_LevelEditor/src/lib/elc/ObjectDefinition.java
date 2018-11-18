@@ -29,7 +29,7 @@ import lib.map.Sprite;
 
 
 
-public class CharacterDefinition{    
+public class ObjectDefinition{    
     
     public final int characterId;
     public final String name;
@@ -43,7 +43,7 @@ public class CharacterDefinition{
     }
     
     
-    public CharacterDefinition(RandomAccessFile rom, String name, int characterId, int animListAddress, List<String> spawnModes) throws IOException{
+    public ObjectDefinition(RandomAccessFile rom, String name, int characterId, long animListAddress, List<String> spawnModes, int artType) throws IOException{
         this.characterId = characterId;
         this.name = name;
         this.spawnModes = spawnModes;
@@ -56,7 +56,7 @@ public class CharacterDefinition{
         localAddress += rom.readShort();
         
         rom.seek(localAddress + 2); // discard size (short)
-        AnimFrame frame = AnimFrame.read(rom, localAddress + 2, 0);
+        AnimFrame frame = AnimFrame.read(rom, localAddress + 2, artType);
         sprite = Sprite.read(rom, frame.mapAddress, frame.artAddress);
     }
 

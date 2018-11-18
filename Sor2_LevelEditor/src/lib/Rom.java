@@ -16,6 +16,7 @@
 package lib;
 
 import java.io.*;
+import java.util.HashMap;
 
 /**
  *
@@ -24,6 +25,7 @@ import java.io.*;
 public class Rom {
     public static final int ROM_START_ADDRESS = 512;
     private RandomAccessFile rom;
+    private HashMap<String, Long> knownLabels = new HashMap<>();
      
     private void fixChecksum() throws IOException{
         short checksum = 0;
@@ -44,6 +46,34 @@ public class Rom {
         rom.seek(420);
         rom.writeInt((int)rom.length()-1);
     }
+    
+    
+    public byte[] getAllData() throws IOException {
+        byte[] data = new byte[(int)rom.length()];
+        rom.read(data);
+        return data;
+    }
+    
+    
+    public long findLabel(byte[] data, String label) throws IOException {
+        Long value = knownLabels.get(label);
+        if (value != null) return value;
+        String matching = label;
+        int cardIndex = label.indexOf('#');
+        if (cardIndex > 0)
+            matching = label.substring(0, cardIndex);
+        byte[] pattern = matching.getBytes();
+        long index = KMPMatch.indexOf(data, pattern);
+        if (index != -1L) {
+            index += label.length();
+            if (index % 2L != 0L) {
+                index += 1L;
+            }
+        }
+        knownLabels.put(label, index);
+        return index;
+    }
+    
     
     public RandomAccessFile getRomFile(){
         return rom;

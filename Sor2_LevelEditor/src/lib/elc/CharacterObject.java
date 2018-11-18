@@ -24,7 +24,7 @@ import lib.Rom;
  *
  * @author gil.costa
  */
-public class CharacterObject {
+public class CharacterObject extends BaseObject {
     
     public static final int SIZE = 0x18;
     
@@ -57,10 +57,7 @@ public class CharacterObject {
     public int enemyAgressiveness;       // ????
     public int initialState;     // Animation status
     public int introductionType; // If character falls from sky, or out of a sewer etc
-    public int triggerArgument;  // Depending on the trigger, an argument can be used (e.g. timer, distance, etc)
-    // Position x,y
-    public int posX;
-    public int posY;
+    public int triggerArgument;  // Depending on the trigger, an argument can be used (e.g. timer, distance, etc)    
     public int health;
     // Collision box x, y, z
     public int collisionWidth;
