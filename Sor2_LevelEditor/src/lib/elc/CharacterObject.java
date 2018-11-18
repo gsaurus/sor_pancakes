@@ -45,13 +45,15 @@ public class CharacterObject {
         dc.w $252		; VRAM address
     */
     
+    public long address;
+    
     public int characterId;      // type of object
     public int sceneId;          // in what scene this character shows up
     public int triggerType;      // trigger by position, timer, etc
     public int minimumDifficulty;       // Minimum minimumDifficulty for it to show up
     public boolean useAlternativePalette; // if character use secondary palette
     public int enemyAgressiveness;       // ????
-    public int initialState;     // Smiling, sitting, etc
+    public int initialState;     // Animation status
     public int introductionType; // If character falls from sky, or out of a sewer etc
     public int triggerArgument;  // Depending on the trigger, an argument can be used (e.g. timer, distance, etc)
     // Position x,y
@@ -63,12 +65,13 @@ public class CharacterObject {
     public int collisionHeight;
     public int collisionDept;
     public int deathScore;      // Score added when enemie dies
-    public int nameAddress;     // Address of enemy name
+    public long nameAddress;     // Address of enemy name
     public int vram;            // We don't use this one
     
     
     
     public CharacterObject(RandomAccessFile rom, long address) throws IOException{
+        this.address = address;
         rom.seek(address);
         characterId = rom.read();
         sceneId = rom.read();
@@ -124,8 +127,12 @@ public class CharacterObject {
         rom.writeByte(collisionDept);
         rom.writeShort(deathScore);
       
-        rom.writeInt(nameAddress);
+        rom.writeInt((int)nameAddress);
         rom.writeShort(vram);
+    }
+    
+    public void write(RandomAccessFile rom) throws IOException{
+        this.write(rom, address);
     }
     
     
@@ -135,7 +142,8 @@ public class CharacterObject {
         try {
             Rom rom = new Rom(new File("sor2.bin"));
             CharacterObject obj = new CharacterObject(rom.getRomFile(), 0x1F0DB4);
-            obj.write(rom.getRomFile(), 0x1F0DB4);
+            obj.write(rom.getRomFile());
+            rom.close();
         } catch (Exception ex) {
             ex.printStackTrace();
         }

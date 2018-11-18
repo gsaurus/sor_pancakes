@@ -49,7 +49,7 @@ public class CharacterDefinition{
     }
     
     
-    public CharacterDefinition(RandomAccessFile rom, String name, int characterId, long animListAddress, List<String> spawnModes, Type type) throws IOException{
+    public CharacterDefinition(RandomAccessFile rom, String name, int characterId, int animListAddress, List<String> spawnModes, Type type) throws IOException{
         this.characterId = characterId;
         this.name = name;
         this.spawnModes = spawnModes;
@@ -58,7 +58,7 @@ public class CharacterDefinition{
         // read a sprite from animations address
         // Used to obtain a visual representation of the character, depending on the palette used.
         rom.seek(animListAddress + characterId*4);
-        long localAddress = rom.readInt();        
+        int localAddress = rom.readInt();        
         rom.seek(localAddress);
         localAddress += rom.readShort();
         
