@@ -1,6 +1,7 @@
 1				// 1 = labeled addresses; 0 = global addresses
 PK_LOADCUES		// Address of characters list in rom
 PK_ELC_INDEX    // Address of levels object spawning list in rom
+PK_DEFAULT##    // Address of default palette
 
 // Each character is followed by a list of spawning modes
 // Ending with at least one empty line
@@ -83,6 +84,7 @@ Bongo
 Hakuyo
 0
 
+x
 
 Kickboxer
 0
@@ -202,11 +204,15 @@ Electrical Box 2
 Barrier
 0
 
+x
+
 Light
 0
 
 Arcade
 0
+
+x
 
 Ship Pole
 0

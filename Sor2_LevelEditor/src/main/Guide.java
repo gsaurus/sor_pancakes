@@ -33,8 +33,9 @@ public class Guide {
     private static String INVALID_CHARACTER = "x";
     
     private long animsListAddress;
-    private long levelsLoadcuesAddress;
     
+    public long levelsLoadcuesAddress;
+    public long defaultPaletteAddress;
     public List<ObjectDefinition> objectsDefinition = new ArrayList<>(50);
     
     
@@ -78,9 +79,11 @@ public class Guide {
             byte[] allData = rom.getAllData();
             animsListAddress = rom.findLabel(allData, readLine(scanner));
             levelsLoadcuesAddress = rom.findLabel(allData, readLine(scanner));
+            defaultPaletteAddress = rom.findLabel(allData, readLine(scanner));
         }else {
             animsListAddress = readHexValue(scanner);
             levelsLoadcuesAddress = readHexValue(scanner);
+            defaultPaletteAddress = readHexValue(scanner);
         }
         
         // Read character spawning mode guides
@@ -120,8 +123,10 @@ public class Guide {
     
     public static void main(String[] args){
         try {
-            Rom rom = new Rom(new File("sor2.bin"));
-            new Guide(GUIDES_DIR + "default.txt", rom);
+//            Rom rom = new Rom(new File("sor2.bin"));
+//            new Guide(GUIDES_DIR + "default.txt", rom);
+            Rom rom = new Rom(new File("sor2built 2.bin"));
+            new Guide(GUIDES_DIR + "syndicate_wars.txt", rom);
             rom.close();
         } catch (Exception ex) {
             ex.printStackTrace();

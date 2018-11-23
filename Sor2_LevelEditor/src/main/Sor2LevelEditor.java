@@ -15,17 +15,113 @@
  */
 package main;
 
+import java.io.File;
+import java.io.FileNotFoundException;
+import java.io.IOException;
+import javax.swing.JFileChooser;
+import javax.swing.JOptionPane;
+import javax.swing.filechooser.FileFilter;
+import lib.ExceptionUtils;
+import lib.Rom;
+import lib.elc.AllLevelsLoadcues;
+
 /**
  *
  * @author gil.costa
  */
 public class Sor2LevelEditor extends javax.swing.JFrame {
-
+    
+    private static final String ORIGINAL_GUIDE_NAME = "default.txt";
+    private static final String SW_GUIDE_NAME = "syndicate_wars.txt";
+    
+    private JFileChooser romChooser;
+    
+    private Guide guide;
+    private Rom rom;
+    private AllLevelsLoadcues levels;
+    
     /**
      * Creates new form Sor2LevelEditor
      */
     public Sor2LevelEditor() {
         initComponents();
+        setupFileChoosers();
+    }
+    
+    
+    
+    private void setupFileChoosers(){
+        romChooser.addChoosableFileFilter(new FileFilter(){
+            @Override
+            public boolean accept(File file) {
+                if (file.isDirectory()) return true;
+                String filename = file.getName();
+                return filename.endsWith(".bin");
+            }
+            @Override
+            public String getDescription() {
+                return "*.bin";
+            }            
+        });    
+    }
+    
+    
+    private void showError(String text){
+        String title = "Wops!";
+        JOptionPane.showMessageDialog(this,
+            text, title,
+            JOptionPane.ERROR_MESSAGE
+        );
+    }
+    
+    
+    private boolean saveRom(){
+        // save
+         try {
+            levels.write(rom.getRomFile());
+            return true;
+        } catch (IOException ex) {
+            showError("Unable to save rom\n" + ExceptionUtils.toString(ex));
+            return false;
+        }
+    }
+    
+    
+    private boolean askSaveRom(){
+        if (levels == null) return true;
+        int option = JOptionPane.showConfirmDialog(
+                this,
+                "Save changes?",
+                "Character modified",
+                JOptionPane.YES_NO_CANCEL_OPTION
+        );
+        if (option == JOptionPane.YES_OPTION){
+            return saveRom();
+        }else if (option != JOptionPane.NO_OPTION){
+            // cancel or close, return false
+            return false;
+        }
+        return true;
+    }
+    
+    
+    Rom openRom(){
+        // close rom first
+        if (!askSaveRom()) return null;
+        
+        // open rom
+        int returnVal = romChooser.showOpenDialog(this);        
+        if (returnVal == JFileChooser.APPROVE_OPTION) {
+            File file = romChooser.getSelectedFile();
+            String romName = file.getAbsolutePath();
+            try {
+                Rom rom = new Rom(new File(romName));
+            } catch (FileNotFoundException ex) {
+                showError("Unable to load rom\n" + ExceptionUtils.toString(ex));
+            }
+            
+        }
+        return null;
     }
 
     /**
@@ -42,6 +138,14 @@ public class Sor2LevelEditor extends javax.swing.JFrame {
         jComboBox2 = new javax.swing.JComboBox<>();
         jSeparator1 = new javax.swing.JSeparator();
         jPanel4 = new javax.swing.JPanel();
+        jMenuBar1 = new javax.swing.JMenuBar();
+        jMenu1 = new javax.swing.JMenu();
+        openOriginalMenuItem = new javax.swing.JMenuItem();
+        openSWMenuItem = new javax.swing.JMenuItem();
+        jSeparator3 = new javax.swing.JPopupMenu.Separator();
+        saveMenuItem = new javax.swing.JMenuItem();
+        jSeparator2 = new javax.swing.JPopupMenu.Separator();
+        exitMenuItem = new javax.swing.JMenuItem();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
 
@@ -98,7 +202,7 @@ public class Sor2LevelEditor extends javax.swing.JFrame {
                     .addComponent(jComboBox2, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addComponent(jSeparator1, javax.swing.GroupLayout.PREFERRED_SIZE, 10, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addContainerGap(400, Short.MAX_VALUE))
+                .addContainerGap(378, Short.MAX_VALUE))
         );
 
         jPanel4.setBorder(javax.swing.BorderFactory.createLineBorder(new java.awt.Color(0, 0, 0)));
@@ -113,6 +217,38 @@ public class Sor2LevelEditor extends javax.swing.JFrame {
             jPanel4Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGap(0, 0, Short.MAX_VALUE)
         );
+
+        jMenu1.setText("File");
+
+        openOriginalMenuItem.setText("Open Original");
+        openOriginalMenuItem.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                openOriginalMenuItemActionPerformed(evt);
+            }
+        });
+        jMenu1.add(openOriginalMenuItem);
+
+        openSWMenuItem.setText("Open SW");
+        jMenu1.add(openSWMenuItem);
+        jMenu1.add(jSeparator3);
+
+        saveMenuItem.setAccelerator(javax.swing.KeyStroke.getKeyStroke(java.awt.event.KeyEvent.VK_S, java.awt.event.InputEvent.META_MASK));
+        saveMenuItem.setText("Save");
+        jMenu1.add(saveMenuItem);
+        jMenu1.add(jSeparator2);
+
+        exitMenuItem.setAccelerator(javax.swing.KeyStroke.getKeyStroke(java.awt.event.KeyEvent.VK_Q, java.awt.event.InputEvent.META_MASK));
+        exitMenuItem.setText("Exit");
+        exitMenuItem.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                exitMenuItemActionPerformed(evt);
+            }
+        });
+        jMenu1.add(exitMenuItem);
+
+        jMenuBar1.add(jMenu1);
+
+        setJMenuBar(jMenuBar1);
 
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(getContentPane());
         getContentPane().setLayout(layout);
@@ -139,6 +275,14 @@ public class Sor2LevelEditor extends javax.swing.JFrame {
     private void jComboBox2ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jComboBox2ActionPerformed
         // TODO add your handling code here:
     }//GEN-LAST:event_jComboBox2ActionPerformed
+
+    private void exitMenuItemActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_exitMenuItemActionPerformed
+        // TODO add your handling code here:
+    }//GEN-LAST:event_exitMenuItemActionPerformed
+
+    private void openOriginalMenuItemActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_openOriginalMenuItemActionPerformed
+        // TODO add your handling code here:
+    }//GEN-LAST:event_openOriginalMenuItemActionPerformed
 
     /**
      * @param args the command line arguments
@@ -176,12 +320,20 @@ public class Sor2LevelEditor extends javax.swing.JFrame {
     }
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
+    private javax.swing.JMenuItem exitMenuItem;
     private javax.swing.JComboBox<String> jComboBox1;
     private javax.swing.JComboBox<String> jComboBox2;
     private javax.swing.JLabel jLabel1;
     private javax.swing.JLabel jLabel2;
+    private javax.swing.JMenu jMenu1;
+    private javax.swing.JMenuBar jMenuBar1;
     private javax.swing.JPanel jPanel3;
     private javax.swing.JPanel jPanel4;
     private javax.swing.JSeparator jSeparator1;
+    private javax.swing.JPopupMenu.Separator jSeparator2;
+    private javax.swing.JPopupMenu.Separator jSeparator3;
+    private javax.swing.JMenuItem openOriginalMenuItem;
+    private javax.swing.JMenuItem openSWMenuItem;
+    private javax.swing.JMenuItem saveMenuItem;
     // End of variables declaration//GEN-END:variables
 }

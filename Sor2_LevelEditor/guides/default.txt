@@ -1,6 +1,7 @@
 0			// 1 = labeled addresses; 0 = global addresses
 20EAC		// Address of characters list in rom
 1F0DB4      // Address of levels object spawning list in rom
+A5E0        // Address of default palette
 
 // Each character is followed by 0 for uncompressed art, 1 for compressed art,
 // then a list of spawning modes

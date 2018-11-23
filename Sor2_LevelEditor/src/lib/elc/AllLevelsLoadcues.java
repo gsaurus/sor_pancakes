@@ -63,8 +63,10 @@ public class AllLevelsLoadcues {
     
     public static void main(String[] args){
         try {
-            Rom rom = new Rom(new File("sor2.bin"));
-            AllLevelsLoadcues obj = new AllLevelsLoadcues(rom.getRomFile(), 0x1EF49C);
+//            Rom rom = new Rom(new File("sor2.bin"));
+//            AllLevelsLoadcues obj = new AllLevelsLoadcues(rom.getRomFile(), 0x1EF49C);
+            Rom rom = new Rom(new File("sor2built 2.bin"));
+            AllLevelsLoadcues obj = new AllLevelsLoadcues(rom.getRomFile(), 0x15411e);
             obj.write(rom.getRomFile());
             rom.close();
         } catch (Exception ex) {
