@@ -15,6 +15,7 @@
  */
 package main;
 
+import java.awt.Dimension;
 import java.awt.Graphics;
 import java.awt.image.BufferedImage;
 import java.io.File;
@@ -34,6 +35,9 @@ import lib.elc.ObjectDefinition;
  * @author gil.costa
  */
 public final class MapPanel extends javax.swing.JPanel {
+    
+    final int MAP_PADDING = 128;
+    final Dimension MAP_SIZE = new Dimension(Short.MAX_VALUE, 736);
 
     class DisplayedObject{
         public BaseObject object;
@@ -42,9 +46,26 @@ public final class MapPanel extends javax.swing.JPanel {
         public DisplayedObject(BaseObject obj){
             this.object = obj;
         }
+        
+        public int getDisplayX(){
+            return MAP_PADDING + (short)object.posX;
+        }
+        
+        public int getDisplayY(){
+            return MAP_PADDING + (short)object.posY;
+        }
+        
+        public void setDisplayX(int x){
+            object.posX = (short)(x - MAP_PADDING);
+        }
+        
+        public void setDisplayY(int y){
+            object.posY = (short)(y - MAP_PADDING);
+        }
     }
     
     final List<DisplayedObject> displayedObjects = new ArrayList<>();
+    private BufferedImage background;
     
     
     /**
@@ -53,6 +74,8 @@ public final class MapPanel extends javax.swing.JPanel {
     public MapPanel() {
         initComponents();
         this.setLayout(null);
+        setPreferredSize(MAP_SIZE);
+        setMinimumSize(MAP_SIZE);
     }
     
     
@@ -76,24 +99,46 @@ public final class MapPanel extends javax.swing.JPanel {
         displayedObjects.add(object);
     }
     
-    public void reload(LevelLoadcues loadcues, int sceneNumber, int minimumDifficulty, Guide guide){
+    
+    void loadMapBackground(int levelNumber, int sceneNumber){
+        background = null;
+        levelNumber += 1;
+        sceneNumber += 1;        
+        // Try current scene, or any of the previous scenes (may be reusing same background)
+        while (sceneNumber > 0){
+            String imageName = "images/scenes/level_" + levelNumber + "_" + sceneNumber + ".png";
+            File backgroundFile = new File(imageName);
+            if (backgroundFile.exists()){
+                try{
+                    background = ImageIO.read(backgroundFile);
+                    break;
+                }catch(IOException ex){
+                    ExceptionUtils.showError(this, "Unable to load background image" + imageName, ex);
+                }
+            }
+            --sceneNumber;
+        }
+    }
+    
+    public void reload(LevelLoadcues loadcues, int levelNumber, int sceneNumber, int minimumDifficulty, Guide guide){
         clear(false);
-        sceneNumber *= 2;
+        int gameSceneNumber = sceneNumber * 2;
         for (CharacterObject obj: loadcues.enemiesPart1){
-            if ((sceneNumber < 0 || obj.sceneId == sceneNumber) && (obj.minimumDifficulty <= minimumDifficulty)){
+            if ((gameSceneNumber < 0 || obj.sceneId == gameSceneNumber) && (obj.minimumDifficulty <= minimumDifficulty)){
                 createDisplayedObject(obj, guide, obj.useAlternativePalette);
             }
         }
         for (CharacterObject obj: loadcues.enemiesPart2){
-            if ((sceneNumber < 0 || obj.sceneId == sceneNumber) && (obj.minimumDifficulty <= minimumDifficulty)){
+            if ((gameSceneNumber < 0 || obj.sceneId == gameSceneNumber) && (obj.minimumDifficulty <= minimumDifficulty)){
                 createDisplayedObject(obj, guide, obj.useAlternativePalette);
             }
         }
         for (ItemObject obj: loadcues.goodies){
-            if (sceneNumber < 0 || obj.sceneId == sceneNumber){
+            if (gameSceneNumber < 0 || obj.sceneId == gameSceneNumber){
                 createDisplayedObject(obj, guide, false);
             }
         }
+        loadMapBackground(levelNumber, sceneNumber);
         this.revalidate();
         this.repaint();
     }
@@ -120,8 +165,17 @@ public final class MapPanel extends javax.swing.JPanel {
      protected void paintComponent(Graphics g) {
         super.paintComponent(g);
         
+        if (background != null){
+            g.drawImage(background, MAP_PADDING, MAP_PADDING, this);
+        }
+        
         for (DisplayedObject obj: displayedObjects){
-            g.drawImage(obj.image , (short)obj.object.posX, (short)obj.object.posY, null);
+            g.drawImage(
+                    obj.image,
+                    obj.getDisplayX() + (int)(obj.image.getWidth() * 0.5f),
+                    obj.getDisplayY() - obj.image.getHeight(),
+                    null
+            );
         }
     }
     

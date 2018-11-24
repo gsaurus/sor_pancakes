@@ -246,7 +246,7 @@ public class Sor2LevelEditor extends javax.swing.JFrame {
             int currentLevel = levelComboBox.getSelectedIndex();
             int currentScene = sceneComboBox.getSelectedIndex();        
             int minimumDifficulty = difficultyComboBox.getSelectedIndex();
-            mapPanel.reload(levels.levels.get(currentLevel), currentScene, minimumDifficulty, guide);
+            mapPanel.reload(levels.levels.get(currentLevel), currentLevel, currentScene, minimumDifficulty, guide);
         }else{
             mapPanel.clear();
         }
@@ -269,6 +269,7 @@ public class Sor2LevelEditor extends javax.swing.JFrame {
         numberFormatComboBox = new javax.swing.JComboBox<>();
         jLabel4 = new javax.swing.JLabel();
         difficultyComboBox = new javax.swing.JComboBox<>();
+        jScrollPane1 = new javax.swing.JScrollPane();
         mapPanel = new main.MapPanel();
         jMenuBar1 = new javax.swing.JMenuBar();
         jMenu1 = new javax.swing.JMenu();
@@ -373,16 +374,21 @@ public class Sor2LevelEditor extends javax.swing.JFrame {
                 .addContainerGap(316, Short.MAX_VALUE))
         );
 
+        mapPanel.setBackground(new java.awt.Color(0, 153, 153));
+        mapPanel.setBorder(null);
+
         javax.swing.GroupLayout mapPanelLayout = new javax.swing.GroupLayout(mapPanel);
         mapPanel.setLayout(mapPanelLayout);
         mapPanelLayout.setHorizontalGroup(
             mapPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGap(0, 648, Short.MAX_VALUE)
+            .addGap(0, 830, Short.MAX_VALUE)
         );
         mapPanelLayout.setVerticalGroup(
             mapPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGap(0, 456, Short.MAX_VALUE)
+            .addGap(0, 457, Short.MAX_VALUE)
         );
+
+        jScrollPane1.setViewportView(mapPanel);
 
         jMenu1.setText("File");
 
@@ -434,16 +440,15 @@ public class Sor2LevelEditor extends javax.swing.JFrame {
                 .addComponent(jPanel3, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addContainerGap(645, Short.MAX_VALUE))
             .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                .addGroup(layout.createSequentialGroup()
-                    .addGap(201, 201, 201)
-                    .addComponent(mapPanel, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                    .addGap(0, 0, 0)))
+                .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
+                    .addGap(212, 212, 212)
+                    .addComponent(jScrollPane1, javax.swing.GroupLayout.DEFAULT_SIZE, 639, Short.MAX_VALUE)))
         );
         layout.setVerticalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addComponent(jPanel3, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
             .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                .addComponent(mapPanel, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+                .addComponent(jScrollPane1, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.DEFAULT_SIZE, 459, Short.MAX_VALUE))
         );
 
         pack();
@@ -550,6 +555,7 @@ public class Sor2LevelEditor extends javax.swing.JFrame {
     private javax.swing.JMenu jMenu1;
     private javax.swing.JMenuBar jMenuBar1;
     private javax.swing.JPanel jPanel3;
+    private javax.swing.JScrollPane jScrollPane1;
     private javax.swing.JSeparator jSeparator1;
     private javax.swing.JPopupMenu.Separator jSeparator2;
     private javax.swing.JPopupMenu.Separator jSeparator3;

@@ -46,7 +46,7 @@ public class ObjectDefinition{
         
         // read icon
         try{
-            spriteOne = ImageIO.read(new File("images/" + name + ".png"));
+            spriteOne = ImageIO.read(new File("images/objects/" + name + ".png"));
         }catch(IOException ex){
             // No image found for this object, use default
             spriteOne = ImageIO.read(new File("images/error.png"));
