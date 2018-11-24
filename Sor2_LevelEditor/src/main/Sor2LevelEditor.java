@@ -31,8 +31,8 @@ import lib.elc.AllLevelsLoadcues;
  */
 public class Sor2LevelEditor extends javax.swing.JFrame {
     
-    private static final String ORIGINAL_GUIDE_NAME = "default.txt";
-    private static final String SW_GUIDE_NAME = "syndicate_wars.txt";
+    private static final String ORIGINAL_GUIDE_NAME = "guides/default.txt";
+    private static final String SW_GUIDE_NAME = "guides/syndicate_wars.txt";
     
     private JFileChooser romChooser;
     
@@ -51,6 +51,7 @@ public class Sor2LevelEditor extends javax.swing.JFrame {
     
     
     private void setupFileChoosers(){
+        romChooser = new JFileChooser(new File("."));
         romChooser.addChoosableFileFilter(new FileFilter(){
             @Override
             public boolean accept(File file) {
@@ -74,54 +75,98 @@ public class Sor2LevelEditor extends javax.swing.JFrame {
         );
     }
     
+    private void close(){
+        if (rom != null){
+            try {
+                rom.close();
+            } catch (IOException ex) {
+                showError("Closing rom failed\n\n" + ExceptionUtils.toString(ex));
+            }
+            rom = null;
+        }
+        guide = null;
+        levels = null;
+    }
     
-    private boolean saveRom(){
+    
+    private boolean save(){
         // save
          try {
             levels.write(rom.getRomFile());
             return true;
         } catch (IOException ex) {
-            showError("Unable to save rom\n" + ExceptionUtils.toString(ex));
+            showError("Unable to save rom\n\n" + ExceptionUtils.toString(ex));
             return false;
         }
     }
     
     
-    private boolean askSaveRom(){
+    private boolean askToSave(){
         if (levels == null) return true;
         int option = JOptionPane.showConfirmDialog(
                 this,
+                "Save before closing the current project?",
                 "Save changes?",
-                "Character modified",
                 JOptionPane.YES_NO_CANCEL_OPTION
         );
         if (option == JOptionPane.YES_OPTION){
-            return saveRom();
-        }else if (option != JOptionPane.NO_OPTION){
-            // cancel or close, return false
-            return false;
+            if (save()){
+                close();
+                return true;
+            }
+        }else if (option == JOptionPane.NO_OPTION){
+            close();
+            return true;
         }
-        return true;
+        return false;
     }
     
     
-    Rom openRom(){
-        // close rom first
-        if (!askSaveRom()) return null;
-        
+    boolean openRom(){
         // open rom
         int returnVal = romChooser.showOpenDialog(this);        
         if (returnVal == JFileChooser.APPROVE_OPTION) {
             File file = romChooser.getSelectedFile();
             String romName = file.getAbsolutePath();
             try {
-                Rom rom = new Rom(new File(romName));
+                rom = new Rom(new File(romName));
+                return true;
             } catch (FileNotFoundException ex) {
-                showError("Unable to load rom\n" + ExceptionUtils.toString(ex));
-            }
-            
+                showError("Unable to load rom\n\n" + ExceptionUtils.toString(ex));
+            }            
         }
-        return null;
+        return false;
+    }
+    
+    boolean openGuide(String guideName){
+        try {
+            guide = new Guide(guideName, rom);
+            return true;
+        } catch (Exception ex) {
+            showError("Unable to load guide " + guideName + "\n\n" + ExceptionUtils.toString(ex));
+        }
+        return false;
+    }
+    
+    
+    boolean loadLevels(){
+        try {
+            levels = new AllLevelsLoadcues(rom.getRomFile(), guide.levelsLoadcuesAddress);
+            return true;
+        } catch (IOException ex) {
+            showError("Unable to load levels\n\n" + ExceptionUtils.toString(ex));
+            return false;
+        }
+    }
+    
+    void openProject(String guideName){
+        // close rom first
+        if (askToSave()){        
+            if (!openRom() || !openGuide(guideName) || !loadLevels()){
+                // Failed, close everything
+                close();
+            }
+        }
     }
 
     /**
@@ -148,6 +193,11 @@ public class Sor2LevelEditor extends javax.swing.JFrame {
         exitMenuItem = new javax.swing.JMenuItem();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
+        addWindowListener(new java.awt.event.WindowAdapter() {
+            public void windowClosing(java.awt.event.WindowEvent evt) {
+                formWindowClosing(evt);
+            }
+        });
 
         jLabel1.setText("Level:");
 
@@ -229,11 +279,21 @@ public class Sor2LevelEditor extends javax.swing.JFrame {
         jMenu1.add(openOriginalMenuItem);
 
         openSWMenuItem.setText("Open SW");
+        openSWMenuItem.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                openSWMenuItemActionPerformed(evt);
+            }
+        });
         jMenu1.add(openSWMenuItem);
         jMenu1.add(jSeparator3);
 
         saveMenuItem.setAccelerator(javax.swing.KeyStroke.getKeyStroke(java.awt.event.KeyEvent.VK_S, java.awt.event.InputEvent.META_MASK));
         saveMenuItem.setText("Save");
+        saveMenuItem.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                saveMenuItemActionPerformed(evt);
+            }
+        });
         jMenu1.add(saveMenuItem);
         jMenu1.add(jSeparator2);
 
@@ -277,12 +337,30 @@ public class Sor2LevelEditor extends javax.swing.JFrame {
     }//GEN-LAST:event_jComboBox2ActionPerformed
 
     private void exitMenuItemActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_exitMenuItemActionPerformed
-        // TODO add your handling code here:
+        if (askToSave()){
+            close();
+            System.exit(0);
+        }
     }//GEN-LAST:event_exitMenuItemActionPerformed
 
     private void openOriginalMenuItemActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_openOriginalMenuItemActionPerformed
-        // TODO add your handling code here:
+        openProject(ORIGINAL_GUIDE_NAME);
     }//GEN-LAST:event_openOriginalMenuItemActionPerformed
+
+    private void openSWMenuItemActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_openSWMenuItemActionPerformed
+        openProject(SW_GUIDE_NAME);
+    }//GEN-LAST:event_openSWMenuItemActionPerformed
+
+    private void saveMenuItemActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_saveMenuItemActionPerformed
+        save();
+    }//GEN-LAST:event_saveMenuItemActionPerformed
+
+    private void formWindowClosing(java.awt.event.WindowEvent evt) {//GEN-FIRST:event_formWindowClosing
+        if (askToSave()){
+            close();
+            System.exit(0);
+        }
+    }//GEN-LAST:event_formWindowClosing
 
     /**
      * @param args the command line arguments

@@ -22,7 +22,7 @@ import java.io.StringWriter;
  *
  * @author gil.costa
  */
-public class ExceptionUtils {
+public final class ExceptionUtils {
     
     public static String toString(Exception ex){
         StringWriter writer = new StringWriter();
