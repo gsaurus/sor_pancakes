@@ -32,10 +32,7 @@ public class Guide {
     
     private static String INVALID_CHARACTER = "x";
     
-    private long animsListAddress;
-    
     public long levelsLoadcuesAddress;
-    public long defaultPaletteAddress;
     public List<ObjectDefinition> objectsDefinition = new ArrayList<>(50);
     
     
@@ -71,21 +68,15 @@ public class Guide {
     
     public Guide(String guideFileName, Rom rom) throws FileNotFoundException, Exception{
         File file = new File(guideFileName);
-        String fileDir = file.getParent();
         Scanner scanner = new Scanner(file);
-        
         boolean isLabeled = readInt(scanner) != 0;
         if (isLabeled) {
             byte[] allData = rom.getAllData();
-            animsListAddress = rom.findLabel(allData, readLine(scanner));
             levelsLoadcuesAddress = rom.findLabel(allData, readLine(scanner));
-            defaultPaletteAddress = rom.findLabel(allData, readLine(scanner));
         }else {
-            animsListAddress = readHexValue(scanner);
             levelsLoadcuesAddress = readHexValue(scanner);
-            defaultPaletteAddress = readHexValue(scanner);
         }
-        
+                
         // Read character spawning mode guides
         String characterName;
         while(scanner.hasNextLine()){
@@ -95,7 +86,6 @@ public class Guide {
                 continue;
             }
             if (characterName.isEmpty()) break;
-            int artType = readInt(scanner);
             // Read character spawning modes
             List<String> spawningModes = new ArrayList<>(5);
             String spawningMode;
@@ -105,14 +95,13 @@ public class Guide {
                 spawningModes.add(spawningMode);
             }
             System.out.println("Reading " + characterName + " definition");
+            
             objectsDefinition.add(
                     new ObjectDefinition(
                             rom.getRomFile(),
                             characterName,
-                            objectsDefinition.size(),
-                            animsListAddress,
-                            spawningModes,
-                            artType
+                            objectsDefinition.size() * 2,
+                            spawningModes
                     )
             );
         }

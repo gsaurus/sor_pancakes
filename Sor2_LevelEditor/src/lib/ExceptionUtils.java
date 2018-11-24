@@ -15,8 +15,10 @@
  */
 package lib;
 
+import java.awt.Component;
 import java.io.PrintWriter;
 import java.io.StringWriter;
+import javax.swing.JOptionPane;
 
 /**
  *
@@ -31,6 +33,18 @@ public final class ExceptionUtils {
         ex.printStackTrace(printWriter);
         printWriter.flush();
         return writer.toString();
+    }
+    
+    public static void showError(Component parent, String text){
+        String title = "Wops!";
+        JOptionPane.showMessageDialog(parent,
+            text, title,
+            JOptionPane.ERROR_MESSAGE
+        );
+    }
+    
+    public static void showError(Component parent, String text, Exception ex){
+        showError(parent, text + "\n\n" + toString(ex));
     }
     
 }

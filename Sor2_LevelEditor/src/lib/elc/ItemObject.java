@@ -46,7 +46,6 @@ public class ItemObject extends BaseObject{
     
     public long address;
     
-    public int itemId;
     public int sceneId;
     public int status;
     public int collisionWidth;
@@ -62,7 +61,7 @@ public class ItemObject extends BaseObject{
     public ItemObject(RandomAccessFile rom, long address) throws IOException{
         this.address = address;
         rom.seek(address);
-        itemId = rom.read();
+        objectId = rom.read();
         sceneId = rom.read();
         status = rom.read();
         collisionWidth = rom.read();
@@ -80,7 +79,7 @@ public class ItemObject extends BaseObject{
     
     public void write(RandomAccessFile rom, long address) throws IOException{
         rom.seek(address);
-        rom.writeByte(itemId);
+        rom.writeByte(objectId);
         rom.writeByte(sceneId);
         rom.writeByte(status);
         rom.writeByte(collisionWidth);

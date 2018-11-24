@@ -49,7 +49,6 @@ public class CharacterObject extends BaseObject {
     
     public long address;
     
-    public int characterId;      // type of object
     public int sceneId;          // in what scene this character shows up
     public int triggerType;      // trigger by position, timer, etc
     public int minimumDifficulty;       // Minimum minimumDifficulty for it to show up
@@ -72,7 +71,7 @@ public class CharacterObject extends BaseObject {
     public CharacterObject(RandomAccessFile rom, long address) throws IOException{
         this.address = address;
         rom.seek(address);
-        characterId = rom.read();
+        objectId = rom.read();
         sceneId = rom.read();
         triggerType = rom.read();
         minimumDifficulty = triggerType >> 4 & 0x7;
@@ -101,7 +100,7 @@ public class CharacterObject extends BaseObject {
     
     public void write(RandomAccessFile rom, long address) throws IOException{
         rom.seek(address);
-        rom.writeByte(characterId);
+        rom.writeByte(objectId);
         rom.writeByte(sceneId);
         int triggerAndDifficulty = triggerType;
         triggerAndDifficulty += (minimumDifficulty << 4) & 0xF8;

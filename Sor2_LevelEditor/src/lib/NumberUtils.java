@@ -20,6 +20,11 @@ package lib;
  * @author gil.costa
  */
 public final class NumberUtils {
+    
+    public static final Formatter decimalFormatter = new DecimalFormatter();
+    public static final Formatter hexadecimalFormatter = new HexadecimalFormatter();
+    public static final Formatter binaryFormatter = new BinaryFormatter();
+    
     static String hexString(long number){
         return Long.toHexString(number);
     }
@@ -58,7 +63,8 @@ public final class NumberUtils {
         String toString(int number);
     }
     
-    public class HexFormatter implements Formatter{
+    public static class HexadecimalFormatter implements Formatter{
+        public HexadecimalFormatter(){}
         @Override
         public long toNumber(String text){
             return hexNumber(text);
@@ -73,7 +79,8 @@ public final class NumberUtils {
         }
     }
     
-    public class BinaryFormatter implements Formatter{
+    public static class BinaryFormatter implements Formatter{
+        public BinaryFormatter(){}
         @Override
         public long toNumber(String text){
             return binaryNumber(text);
@@ -88,7 +95,8 @@ public final class NumberUtils {
         }
     }
     
-    public class DecimalFormatter implements Formatter{
+    public static class DecimalFormatter implements Formatter{
+        public DecimalFormatter(){}
         @Override
         public long toNumber(String text){
             return decimalNumber(text);

@@ -15,13 +15,20 @@
  */
 package main;
 
+import java.awt.Component;
+import java.awt.Container;
 import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.IOException;
+import java.util.ArrayList;
+import java.util.Arrays;
 import javax.swing.JFileChooser;
+import javax.swing.JMenu;
+import javax.swing.JMenuItem;
 import javax.swing.JOptionPane;
 import javax.swing.filechooser.FileFilter;
 import lib.ExceptionUtils;
+import lib.NumberUtils;
 import lib.Rom;
 import lib.elc.AllLevelsLoadcues;
 
@@ -36,16 +43,55 @@ public class Sor2LevelEditor extends javax.swing.JFrame {
     
     private JFileChooser romChooser;
     
+    private NumberUtils.Formatter formatter;
+    
     private Guide guide;
     private Rom rom;
     private AllLevelsLoadcues levels;
+    
+    
+/////////////////////////////////////////////////////////////
+/////////////////////////////////////////////////////////////
+//////                                                 //////
+//////              OPEN  -  SAVE  -  CLOSE            //////
+//////                                                 //////
+/////////////////////////////////////////////////////////////
+/////////////////////////////////////////////////////////////
     
     /**
      * Creates new form Sor2LevelEditor
      */
     public Sor2LevelEditor() {
         initComponents();
+        formatter = NumberUtils.decimalFormatter;
+        setEnabledRecursively(false);
         setupFileChoosers();
+    }
+    
+    
+    private Component[] getComponents(Component container) {
+        ArrayList<Component> list = null;
+        try {
+            list = new ArrayList<>(Arrays.asList(
+                  ((Container) container).getComponents()));
+            for (int index = 0; index < list.size(); index++) {
+                for (Component currentComponent : getComponents(list.get(index))) {
+                    list.add(currentComponent);
+                }
+            }
+        } catch (ClassCastException e) {
+            list = new ArrayList<>();
+        }
+
+        return list.toArray(new Component[list.size()]);
+    }
+
+    private void setEnabledRecursively(boolean enabled){
+        for(Component component : getComponents(this)) {
+            if (!(component instanceof JMenuItem || component instanceof JMenu)){
+                component.setEnabled(enabled);
+            }
+        }
     }
     
     
@@ -66,26 +112,18 @@ public class Sor2LevelEditor extends javax.swing.JFrame {
         });    
     }
     
-    
-    private void showError(String text){
-        String title = "Wops!";
-        JOptionPane.showMessageDialog(this,
-            text, title,
-            JOptionPane.ERROR_MESSAGE
-        );
-    }
-    
     private void close(){
         if (rom != null){
             try {
                 rom.close();
             } catch (IOException ex) {
-                showError("Closing rom failed\n\n" + ExceptionUtils.toString(ex));
+                ExceptionUtils.showError(this, "Closing rom failed", ex);
             }
             rom = null;
         }
         guide = null;
         levels = null;
+        setEnabledRecursively(false);
     }
     
     
@@ -95,7 +133,7 @@ public class Sor2LevelEditor extends javax.swing.JFrame {
             levels.write(rom.getRomFile());
             return true;
         } catch (IOException ex) {
-            showError("Unable to save rom\n\n" + ExceptionUtils.toString(ex));
+            ExceptionUtils.showError(this, "Unable to save rom", ex);
             return false;
         }
     }
@@ -132,7 +170,7 @@ public class Sor2LevelEditor extends javax.swing.JFrame {
                 rom = new Rom(new File(romName));
                 return true;
             } catch (FileNotFoundException ex) {
-                showError("Unable to load rom\n\n" + ExceptionUtils.toString(ex));
+                ExceptionUtils.showError(this, "Unable to load rom", ex);
             }            
         }
         return false;
@@ -143,7 +181,7 @@ public class Sor2LevelEditor extends javax.swing.JFrame {
             guide = new Guide(guideName, rom);
             return true;
         } catch (Exception ex) {
-            showError("Unable to load guide " + guideName + "\n\n" + ExceptionUtils.toString(ex));
+            ExceptionUtils.showError(this, "Unable to load guide " + guideName, ex);
         }
         return false;
     }
@@ -154,7 +192,7 @@ public class Sor2LevelEditor extends javax.swing.JFrame {
             levels = new AllLevelsLoadcues(rom.getRomFile(), guide.levelsLoadcuesAddress);
             return true;
         } catch (IOException ex) {
-            showError("Unable to load levels\n\n" + ExceptionUtils.toString(ex));
+            ExceptionUtils.showError(this, "Unable to load levels", ex);
             return false;
         }
     }
@@ -162,11 +200,35 @@ public class Sor2LevelEditor extends javax.swing.JFrame {
     void openProject(String guideName){
         // close rom first
         if (askToSave()){        
-            if (!openRom() || !openGuide(guideName) || !loadLevels()){
+            if (openRom() && openGuide(guideName) &&loadLevels()){
+                setEnabledRecursively(true);
+                reloadMap();
+            }else{
                 // Failed, close everything
                 close();
             }
         }
+    }
+    
+    
+    
+/////////////////////////////////////////////////////////////
+/////////////////////////////////////////////////////////////
+//////                                                 //////
+//////                   EDITOR UI                     //////
+//////                                                 //////
+/////////////////////////////////////////////////////////////
+/////////////////////////////////////////////////////////////
+    
+    
+    void reloadAllFields(){
+        
+    }
+    
+    void reloadMap(){
+        int currentLevel = 0;
+        int currentScene = 0;
+        mapPanel.reload(levels.levels.get(currentLevel), currentScene, guide);
     }
 
     /**
@@ -182,7 +244,9 @@ public class Sor2LevelEditor extends javax.swing.JFrame {
         jComboBox1 = new javax.swing.JComboBox<>();
         jComboBox2 = new javax.swing.JComboBox<>();
         jSeparator1 = new javax.swing.JSeparator();
-        jPanel4 = new javax.swing.JPanel();
+        jLabel3 = new javax.swing.JLabel();
+        numberFormatComboBox = new javax.swing.JComboBox<>();
+        mapPanel = new main.MapPanel();
         jMenuBar1 = new javax.swing.JMenuBar();
         jMenu1 = new javax.swing.JMenu();
         openOriginalMenuItem = new javax.swing.JMenuItem();
@@ -220,6 +284,15 @@ public class Sor2LevelEditor extends javax.swing.JFrame {
             }
         });
 
+        jLabel3.setText("View as:");
+
+        numberFormatComboBox.setModel(new javax.swing.DefaultComboBoxModel<>(new String[] { "decimal", "hexadecimal", "binary" }));
+        numberFormatComboBox.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                numberFormatComboBoxActionPerformed(evt);
+            }
+        });
+
         javax.swing.GroupLayout jPanel3Layout = new javax.swing.GroupLayout(jPanel3);
         jPanel3.setLayout(jPanel3Layout);
         jPanel3Layout.setHorizontalGroup(
@@ -229,14 +302,17 @@ public class Sor2LevelEditor extends javax.swing.JFrame {
                 .addGroup(jPanel3Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                     .addComponent(jSeparator1)
                     .addGroup(jPanel3Layout.createSequentialGroup()
+                        .addComponent(jLabel3)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                        .addComponent(numberFormatComboBox, 0, 131, Short.MAX_VALUE))
+                    .addGroup(jPanel3Layout.createSequentialGroup()
                         .addGroup(jPanel3Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                             .addComponent(jLabel2)
                             .addComponent(jLabel1))
                         .addGap(18, 18, 18)
                         .addGroup(jPanel3Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                            .addComponent(jComboBox2, javax.swing.GroupLayout.PREFERRED_SIZE, 119, javax.swing.GroupLayout.PREFERRED_SIZE)
-                            .addComponent(jComboBox1, javax.swing.GroupLayout.PREFERRED_SIZE, 121, javax.swing.GroupLayout.PREFERRED_SIZE))
-                        .addGap(0, 0, Short.MAX_VALUE)))
+                            .addComponent(jComboBox1, 0, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                            .addComponent(jComboBox2, 0, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))))
                 .addContainerGap())
         );
         jPanel3Layout.setVerticalGroup(
@@ -250,22 +326,24 @@ public class Sor2LevelEditor extends javax.swing.JFrame {
                 .addGroup(jPanel3Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(jLabel2)
                     .addComponent(jComboBox2, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addGap(1, 1, 1)
+                .addGroup(jPanel3Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                    .addComponent(jLabel3)
+                    .addComponent(numberFormatComboBox, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                .addGap(16, 16, 16)
                 .addComponent(jSeparator1, javax.swing.GroupLayout.PREFERRED_SIZE, 10, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addContainerGap(378, Short.MAX_VALUE))
+                .addContainerGap(341, Short.MAX_VALUE))
         );
 
-        jPanel4.setBorder(javax.swing.BorderFactory.createLineBorder(new java.awt.Color(0, 0, 0)));
-
-        javax.swing.GroupLayout jPanel4Layout = new javax.swing.GroupLayout(jPanel4);
-        jPanel4.setLayout(jPanel4Layout);
-        jPanel4Layout.setHorizontalGroup(
-            jPanel4Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGap(0, 651, Short.MAX_VALUE)
+        javax.swing.GroupLayout mapPanelLayout = new javax.swing.GroupLayout(mapPanel);
+        mapPanel.setLayout(mapPanelLayout);
+        mapPanelLayout.setHorizontalGroup(
+            mapPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGap(0, 648, Short.MAX_VALUE)
         );
-        jPanel4Layout.setVerticalGroup(
-            jPanel4Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGap(0, 0, Short.MAX_VALUE)
+        mapPanelLayout.setVerticalGroup(
+            mapPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGap(0, 456, Short.MAX_VALUE)
         );
 
         jMenu1.setText("File");
@@ -316,13 +394,18 @@ public class Sor2LevelEditor extends javax.swing.JFrame {
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(layout.createSequentialGroup()
                 .addComponent(jPanel3, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addComponent(jPanel4, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+                .addContainerGap(651, Short.MAX_VALUE))
+            .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                .addGroup(layout.createSequentialGroup()
+                    .addGap(201, 201, 201)
+                    .addComponent(mapPanel, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                    .addGap(0, 0, 0)))
         );
         layout.setVerticalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addComponent(jPanel3, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-            .addComponent(jPanel4, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+            .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                .addComponent(mapPanel, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
         );
 
         pack();
@@ -361,6 +444,23 @@ public class Sor2LevelEditor extends javax.swing.JFrame {
             System.exit(0);
         }
     }//GEN-LAST:event_formWindowClosing
+
+    private void numberFormatComboBoxActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_numberFormatComboBoxActionPerformed
+        NumberUtils.Formatter oldFormatter = formatter;
+        switch (numberFormatComboBox.getSelectedIndex()){
+            case 1:
+                formatter = NumberUtils.hexadecimalFormatter;
+                break;
+            case 2:
+                formatter = NumberUtils.binaryFormatter;
+                break;
+            default:
+                formatter = NumberUtils.decimalFormatter;
+        }
+        if (formatter != oldFormatter){
+            reloadAllFields();
+        }
+    }//GEN-LAST:event_numberFormatComboBoxActionPerformed
 
     /**
      * @param args the command line arguments
@@ -403,13 +503,15 @@ public class Sor2LevelEditor extends javax.swing.JFrame {
     private javax.swing.JComboBox<String> jComboBox2;
     private javax.swing.JLabel jLabel1;
     private javax.swing.JLabel jLabel2;
+    private javax.swing.JLabel jLabel3;
     private javax.swing.JMenu jMenu1;
     private javax.swing.JMenuBar jMenuBar1;
     private javax.swing.JPanel jPanel3;
-    private javax.swing.JPanel jPanel4;
     private javax.swing.JSeparator jSeparator1;
     private javax.swing.JPopupMenu.Separator jSeparator2;
     private javax.swing.JPopupMenu.Separator jSeparator3;
+    private main.MapPanel mapPanel;
+    private javax.swing.JComboBox<String> numberFormatComboBox;
     private javax.swing.JMenuItem openOriginalMenuItem;
     private javax.swing.JMenuItem openSWMenuItem;
     private javax.swing.JMenuItem saveMenuItem;

@@ -15,22 +15,22 @@
  */
 package lib.elc;
 
-import java.awt.Point;
-
 /**
  *
  * @author gil.costa
  */
 public class BaseObject {
-    // Position x,y
-    protected int posX;
-    protected int posY;
     
-    Point getPosition(){
-        return new Point(posX, posY);
+    // Position x,y
+    public int posX;
+    public int posY;
+    
+    public int objectId;
+
+    
+    public int getObjectIndex(){
+        return objectId / 2;
     }
-    void setPosition(Point position){
-        posX = position.x;
-        posY = position.y;
-    }
+    
+    
 }

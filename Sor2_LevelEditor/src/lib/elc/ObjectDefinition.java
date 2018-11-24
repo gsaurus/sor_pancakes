@@ -16,12 +16,12 @@
 package lib.elc;
 
 import java.awt.image.BufferedImage;
+import java.awt.image.RescaleOp;
+import java.io.File;
 import java.io.IOException;
 import java.io.RandomAccessFile;
 import java.util.*;
-import lib.anim.AnimFrame;
-import lib.map.Palette;
-import lib.map.Sprite;
+import javax.imageio.ImageIO;
 
 
 
@@ -35,29 +35,28 @@ public class ObjectDefinition{
     public final String name;
     public final List<String> spawnModes; // formatted strings. E.g. "distance: %d pixels"
     
-    private final Sprite sprite;
+    public BufferedImage spriteOne;
+    public BufferedImage spriteTwo;    
     
     
-    public BufferedImage loadImage(Palette palette) throws IOException{        
-        return sprite.asImage(palette);
-    }
-    
-    
-    public ObjectDefinition(RandomAccessFile rom, String name, int characterId, long animListAddress, List<String> spawnModes, int artType) throws IOException{
+    public ObjectDefinition(RandomAccessFile rom, String name, int characterId, List<String> spawnModes) throws IOException{
         this.characterId = characterId;
         this.name = name;
         this.spawnModes = spawnModes;
         
-        // read a sprite from animations address
-        // Used to obtain a visual representation of the character, depending on the palette used.
-        rom.seek(animListAddress + characterId*4);
-        int localAddress = rom.readInt();        
-        rom.seek(localAddress);
-        localAddress += rom.readShort();
-        
-        rom.seek(localAddress + 2); // discard size (short)
-        AnimFrame frame = AnimFrame.read(rom, localAddress + 2, artType);
-        sprite = Sprite.read(rom, frame.mapAddress, frame.artAddress);
+        // read icon
+        try{
+            spriteOne = ImageIO.read(new File("images/" + name + ".png"));
+        }catch(IOException ex){
+            // No image found for this object, use default
+            spriteOne = ImageIO.read(new File("images/error.png"));
+        }
+        RescaleOp filter = new RescaleOp(
+            new float[]{0.5f, 0.5f, 0.5f, 1f},
+            new float[]{0, 0, 0, 0},
+            null
+        );
+        spriteTwo = filter.filter(spriteOne, null);
     }
 
     
