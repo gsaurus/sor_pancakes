@@ -269,6 +269,7 @@ public class Sor2LevelEditor extends javax.swing.JFrame {
         numberFormatComboBox = new javax.swing.JComboBox<>();
         jLabel4 = new javax.swing.JLabel();
         difficultyComboBox = new javax.swing.JComboBox<>();
+        showBackgroundCheckBox = new javax.swing.JCheckBox();
         jScrollPane1 = new javax.swing.JScrollPane();
         mapPanel = new main.MapPanel();
         jMenuBar1 = new javax.swing.JMenuBar();
@@ -280,7 +281,7 @@ public class Sor2LevelEditor extends javax.swing.JFrame {
         jSeparator2 = new javax.swing.JPopupMenu.Separator();
         exitMenuItem = new javax.swing.JMenuItem();
 
-        setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
+        setDefaultCloseOperation(javax.swing.WindowConstants.DO_NOTHING_ON_CLOSE);
         addWindowListener(new java.awt.event.WindowAdapter() {
             public void windowClosing(java.awt.event.WindowEvent evt) {
                 formWindowClosing(evt);
@@ -308,7 +309,7 @@ public class Sor2LevelEditor extends javax.swing.JFrame {
 
         jLabel3.setText("View as:");
 
-        numberFormatComboBox.setModel(new javax.swing.DefaultComboBoxModel<>(new String[] { "decimal", "hexadecimal", "binary" }));
+        numberFormatComboBox.setModel(new javax.swing.DefaultComboBoxModel<>(new String[] { "Decimal", "Hexadecimal", "Binary" }));
         numberFormatComboBox.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 numberFormatComboBoxActionPerformed(evt);
@@ -324,6 +325,14 @@ public class Sor2LevelEditor extends javax.swing.JFrame {
             }
         });
 
+        showBackgroundCheckBox.setSelected(true);
+        showBackgroundCheckBox.setText("Show Background");
+        showBackgroundCheckBox.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                showBackgroundCheckBoxActionPerformed(evt);
+            }
+        });
+
         javax.swing.GroupLayout jPanel3Layout = new javax.swing.GroupLayout(jPanel3);
         jPanel3.setLayout(jPanel3Layout);
         jPanel3Layout.setHorizontalGroup(
@@ -331,6 +340,7 @@ public class Sor2LevelEditor extends javax.swing.JFrame {
             .addGroup(jPanel3Layout.createSequentialGroup()
                 .addContainerGap()
                 .addGroup(jPanel3Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addComponent(showBackgroundCheckBox, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                     .addComponent(jSeparator1)
                     .addGroup(jPanel3Layout.createSequentialGroup()
                         .addComponent(jLabel3)
@@ -370,8 +380,10 @@ public class Sor2LevelEditor extends javax.swing.JFrame {
                     .addComponent(jLabel3)
                     .addComponent(numberFormatComboBox, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addComponent(showBackgroundCheckBox)
+                .addGap(22, 22, 22)
                 .addComponent(jSeparator1, javax.swing.GroupLayout.PREFERRED_SIZE, 10, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addContainerGap(316, Short.MAX_VALUE))
+                .addContainerGap(271, Short.MAX_VALUE))
         );
 
         mapPanel.setBackground(new java.awt.Color(0, 153, 153));
@@ -510,6 +522,12 @@ public class Sor2LevelEditor extends javax.swing.JFrame {
         reloadMap();
     }//GEN-LAST:event_difficultyComboBoxActionPerformed
 
+    private void showBackgroundCheckBoxActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_showBackgroundCheckBoxActionPerformed
+        mapPanel.showBackground = showBackgroundCheckBox.isSelected();
+        mapPanel.invalidate();
+        mapPanel.repaint();
+    }//GEN-LAST:event_showBackgroundCheckBoxActionPerformed
+
     /**
      * @param args the command line arguments
      */
@@ -566,5 +584,6 @@ public class Sor2LevelEditor extends javax.swing.JFrame {
     private javax.swing.JMenuItem openSWMenuItem;
     private javax.swing.JMenuItem saveMenuItem;
     private javax.swing.JComboBox<String> sceneComboBox;
+    private javax.swing.JCheckBox showBackgroundCheckBox;
     // End of variables declaration//GEN-END:variables
 }

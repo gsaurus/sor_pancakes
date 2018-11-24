@@ -15,8 +15,14 @@
  */
 package main;
 
+import java.awt.Color;
 import java.awt.Dimension;
 import java.awt.Graphics;
+import java.awt.Point;
+import java.awt.Rectangle;
+import java.awt.event.MouseEvent;
+import java.awt.event.MouseListener;
+import java.awt.event.MouseMotionListener;
 import java.awt.image.BufferedImage;
 import java.io.File;
 import java.io.IOException;
@@ -39,6 +45,10 @@ public final class MapPanel extends javax.swing.JPanel {
     final int MAP_PADDING = 128;
     final Dimension MAP_SIZE = new Dimension(Short.MAX_VALUE, 736);
 
+    public interface ObjectSelectedListener{
+        void onObjectSelected(BaseObject object);
+    }
+    
     class DisplayedObject{
         public BaseObject object;
         public BufferedImage image;
@@ -47,25 +57,32 @@ public final class MapPanel extends javax.swing.JPanel {
             this.object = obj;
         }
         
-        public int getDisplayX(){
-            return MAP_PADDING + (short)object.posX;
+        public int getVisualPosX(){
+            return MAP_PADDING + object.posX;            
         }
         
-        public int getDisplayY(){
-            return MAP_PADDING + (short)object.posY;
+        public int getVisualPosY(){
+            return MAP_PADDING + object.posY;
         }
         
-        public void setDisplayX(int x){
-            object.posX = (short)(x - MAP_PADDING);
+        public void setVisualPosX(int x){
+            object.posX = x - MAP_PADDING;
         }
         
-        public void setDisplayY(int y){
-            object.posY = (short)(y - MAP_PADDING);
+        public void setVisualPosY(int y){
+            object.posY = y - MAP_PADDING;
         }
+        
     }
     
-    final List<DisplayedObject> displayedObjects = new ArrayList<>();
+    
+    public boolean showBackground = true;    
+    public ObjectSelectedListener selectionListener;
+    
+    private final List<DisplayedObject> displayedObjects = new ArrayList<>();
     private BufferedImage background;
+    private DisplayedObject selectedObject;
+    private Point dragStartingDistance;
     
     
     /**
@@ -73,9 +90,113 @@ public final class MapPanel extends javax.swing.JPanel {
      */
     public MapPanel() {
         initComponents();
+        setupPanel();
+        setupMouseListeners();
+    }
+    
+    void setupPanel(){
         this.setLayout(null);
         setPreferredSize(MAP_SIZE);
         setMinimumSize(MAP_SIZE);
+    }
+    
+    void notifySelectionListener(){
+        if (selectionListener != null){
+            if (selectedObject != null){
+                selectionListener.onObjectSelected(selectedObject.object);
+            }else{
+                selectionListener.onObjectSelected(null);
+            }
+        }
+    }
+    
+    void refreshGraphics(){
+        this.revalidate();
+        this.repaint();
+    }
+    
+    void selectNearestObject(Point point){
+        DisplayedObject closest = null;
+        double shortestDistance = Double.MAX_VALUE;
+        for (DisplayedObject obj: displayedObjects){
+            int x = obj.getVisualPosX();
+            int y = obj.getVisualPosY();
+            Rectangle rect = new Rectangle((int) (x - obj.image.getWidth() * 0.5f), y - obj.image.getHeight(), obj.image.getWidth(), obj.image.getHeight());
+            if (rect.contains(point)){
+                double distance = point.distance(x, y - obj.image.getHeight() * 0.5);
+                if (distance < shortestDistance){
+                    closest = obj;
+                    // Give priority to selected object
+                    if (selectedObject == obj){
+                        shortestDistance = 0;
+                    }else{
+                        shortestDistance = distance;
+                    }
+                }
+            }
+        }
+        if (closest != null){
+            selectedObject = closest;
+            dragStartingDistance = new Point(point.x - selectedObject.getVisualPosX(), point.y - selectedObject.getVisualPosY());
+        }else{
+            selectedObject = null;
+        }
+        refreshGraphics();
+        notifySelectionListener();        
+    }
+    
+    
+    void updateSelectionPosition(Point point){
+        if (selectedObject != null){
+            Point finalPoint = new Point(point.x - dragStartingDistance.x, point.y - dragStartingDistance.y);
+            selectedObject.setVisualPosX(finalPoint.x);
+            selectedObject.setVisualPosY(finalPoint.y);
+            refreshGraphics();
+        }
+    }
+    
+    void setupMouseListeners(){
+        addMouseListener(new MouseListener(){
+            @Override
+            public void mouseClicked(MouseEvent e) {
+                // Nothing
+            }
+
+            @Override
+            public void mousePressed(MouseEvent e) {
+                selectNearestObject(e.getPoint());
+            }
+
+            @Override
+            public void mouseReleased(MouseEvent e) {
+                // Nothing
+            }
+
+            @Override
+            public void mouseEntered(MouseEvent e) {
+                // Nothing
+            }
+
+            @Override
+            public void mouseExited(MouseEvent e) {
+                // Nothing
+            }
+            
+        });
+        
+        this.addMouseMotionListener(new MouseMotionListener(){
+            @Override
+            public void mouseDragged(MouseEvent e) {
+                // Drag selection
+                updateSelectionPosition(e.getPoint());
+            }
+
+            @Override
+            public void mouseMoved(MouseEvent e) {
+                // Nothing
+            }
+            
+        });
     }
     
     
@@ -144,8 +265,9 @@ public final class MapPanel extends javax.swing.JPanel {
     }
     
     private void clear(boolean repaint){
+        selectedObject = null;
         this.removeAll();
-        displayedObjects.clear();
+        displayedObjects.clear();        
         if (repaint){
             this.revalidate();
             this.repaint();
@@ -159,23 +281,43 @@ public final class MapPanel extends javax.swing.JPanel {
     
     
     
-    
+    void drawObject(Graphics g, DisplayedObject obj, boolean selection){        
+        int width = obj.image.getWidth();
+        int height = obj.image.getHeight();
+        int x = obj.getVisualPosX();
+        int y = obj.getVisualPosY();
+        int imageX = x - (int)(width * 0.5f);
+        int imageY = y - height;
+        g.drawImage(obj.image, imageX, imageY, null);
+        if (selection){
+            g.setColor(Color.white);
+        }else{
+            g.setColor(Color.black);
+        }
+        g.drawRect(imageX, imageY, width, height);
+        g.drawLine(x-5, y, x+5, y);
+        g.drawLine(x, y-5, x, y+5);
+    }
     
     @Override
      protected void paintComponent(Graphics g) {
         super.paintComponent(g);
         
-        if (background != null){
+        if (showBackground && background != null){
             g.drawImage(background, MAP_PADDING, MAP_PADDING, this);
         }
         
+        // Draw objects
         for (DisplayedObject obj: displayedObjects){
-            g.drawImage(
-                    obj.image,
-                    obj.getDisplayX() + (int)(obj.image.getWidth() * 0.5f),
-                    obj.getDisplayY() - obj.image.getHeight(),
-                    null
-            );
+            if (obj != selectedObject){
+                drawObject(g, obj, false);
+            }
+            
+        }
+        
+        // Draw selection
+        if (selectedObject != null){
+            drawObject(g, selectedObject, true);            
         }
     }
     
