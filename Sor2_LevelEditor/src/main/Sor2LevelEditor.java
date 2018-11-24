@@ -22,6 +22,8 @@ import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Arrays;
+import javax.swing.ComboBoxModel;
+import javax.swing.DefaultComboBoxModel;
 import javax.swing.JFileChooser;
 import javax.swing.JMenu;
 import javax.swing.JMenuItem;
@@ -65,6 +67,7 @@ public class Sor2LevelEditor extends javax.swing.JFrame {
         initComponents();
         formatter = NumberUtils.decimalFormatter;
         setEnabledRecursively(false);
+        difficultyComboBox.setSelectedItem("Mania");
         setupFileChoosers();
     }
     
@@ -200,8 +203,9 @@ public class Sor2LevelEditor extends javax.swing.JFrame {
     void openProject(String guideName){
         // close rom first
         if (askToSave()){        
-            if (openRom() && openGuide(guideName) &&loadLevels()){
+            if (openRom() && openGuide(guideName) && loadLevels()){
                 setEnabledRecursively(true);
+                updateNumberOfScenes();
                 reloadMap();
             }else{
                 // Failed, close everything
@@ -221,14 +225,31 @@ public class Sor2LevelEditor extends javax.swing.JFrame {
 /////////////////////////////////////////////////////////////
     
     
+    void updateNumberOfScenes(){
+        int currentLevel = levelComboBox.getSelectedIndex();
+        int numberOfScenes = levels.levels.get(currentLevel).getTotalNumberOfScenes();
+        String[] sceneOptions = new String[numberOfScenes];
+        for (int i = 0 ; i < numberOfScenes; ++i){
+            sceneOptions[i] = Integer.toString(i+1);
+        }
+        ComboBoxModel model = new DefaultComboBoxModel(sceneOptions);
+        sceneComboBox.setModel(model);
+        sceneComboBox.setSelectedIndex(0);
+    }
+    
     void reloadAllFields(){
         
     }
     
     void reloadMap(){
-        int currentLevel = 0;
-        int currentScene = 0;
-        mapPanel.reload(levels.levels.get(currentLevel), currentScene, guide);
+        if (levels != null){
+            int currentLevel = levelComboBox.getSelectedIndex();
+            int currentScene = sceneComboBox.getSelectedIndex();        
+            int minimumDifficulty = difficultyComboBox.getSelectedIndex();
+            mapPanel.reload(levels.levels.get(currentLevel), currentScene, minimumDifficulty, guide);
+        }else{
+            mapPanel.clear();
+        }
     }
 
     /**
@@ -241,11 +262,13 @@ public class Sor2LevelEditor extends javax.swing.JFrame {
         jPanel3 = new javax.swing.JPanel();
         jLabel1 = new javax.swing.JLabel();
         jLabel2 = new javax.swing.JLabel();
-        jComboBox1 = new javax.swing.JComboBox<>();
-        jComboBox2 = new javax.swing.JComboBox<>();
+        levelComboBox = new javax.swing.JComboBox<>();
+        sceneComboBox = new javax.swing.JComboBox<>();
         jSeparator1 = new javax.swing.JSeparator();
         jLabel3 = new javax.swing.JLabel();
         numberFormatComboBox = new javax.swing.JComboBox<>();
+        jLabel4 = new javax.swing.JLabel();
+        difficultyComboBox = new javax.swing.JComboBox<>();
         mapPanel = new main.MapPanel();
         jMenuBar1 = new javax.swing.JMenuBar();
         jMenu1 = new javax.swing.JMenu();
@@ -267,20 +290,18 @@ public class Sor2LevelEditor extends javax.swing.JFrame {
 
         jLabel2.setText("Scene:");
 
-        jComboBox1.setEditable(true);
-        jComboBox1.setMaximumRowCount(9);
-        jComboBox1.setModel(new javax.swing.DefaultComboBoxModel<>(new String[] { "1", "2", "3", "4", "5", "6", "7", "8", "versus" }));
-        jComboBox1.addActionListener(new java.awt.event.ActionListener() {
+        levelComboBox.setMaximumRowCount(9);
+        levelComboBox.setModel(new javax.swing.DefaultComboBoxModel<>(new String[] { "1", "2", "3", "4", "5", "6", "7", "8", "versus" }));
+        levelComboBox.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
-                jComboBox1ActionPerformed(evt);
+                levelComboBoxActionPerformed(evt);
             }
         });
 
-        jComboBox2.setEditable(true);
-        jComboBox2.setModel(new javax.swing.DefaultComboBoxModel<>(new String[] { "all" }));
-        jComboBox2.addActionListener(new java.awt.event.ActionListener() {
+        sceneComboBox.setModel(new javax.swing.DefaultComboBoxModel<>(new String[] { "1" }));
+        sceneComboBox.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
-                jComboBox2ActionPerformed(evt);
+                sceneComboBoxActionPerformed(evt);
             }
         });
 
@@ -290,6 +311,15 @@ public class Sor2LevelEditor extends javax.swing.JFrame {
         numberFormatComboBox.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 numberFormatComboBoxActionPerformed(evt);
+            }
+        });
+
+        jLabel4.setText("Difficulty:");
+
+        difficultyComboBox.setModel(new javax.swing.DefaultComboBoxModel<>(new String[] { "Very Easy", "Easy", "Normal", "Hard", "Very Hard", "Mania" }));
+        difficultyComboBox.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                difficultyComboBoxActionPerformed(evt);
             }
         });
 
@@ -303,7 +333,7 @@ public class Sor2LevelEditor extends javax.swing.JFrame {
                     .addComponent(jSeparator1)
                     .addGroup(jPanel3Layout.createSequentialGroup()
                         .addComponent(jLabel3)
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
                         .addComponent(numberFormatComboBox, 0, 131, Short.MAX_VALUE))
                     .addGroup(jPanel3Layout.createSequentialGroup()
                         .addGroup(jPanel3Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
@@ -311,8 +341,12 @@ public class Sor2LevelEditor extends javax.swing.JFrame {
                             .addComponent(jLabel1))
                         .addGap(18, 18, 18)
                         .addGroup(jPanel3Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                            .addComponent(jComboBox1, 0, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                            .addComponent(jComboBox2, 0, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))))
+                            .addComponent(levelComboBox, 0, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                            .addComponent(sceneComboBox, 0, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)))
+                    .addGroup(jPanel3Layout.createSequentialGroup()
+                        .addComponent(jLabel4)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                        .addComponent(difficultyComboBox, 0, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)))
                 .addContainerGap())
         );
         jPanel3Layout.setVerticalGroup(
@@ -321,18 +355,22 @@ public class Sor2LevelEditor extends javax.swing.JFrame {
                 .addContainerGap()
                 .addGroup(jPanel3Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(jLabel1)
-                    .addComponent(jComboBox1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                    .addComponent(levelComboBox, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addGroup(jPanel3Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(jLabel2)
-                    .addComponent(jComboBox2, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
-                .addGap(1, 1, 1)
+                    .addComponent(sceneComboBox, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                .addGap(3, 3, 3)
+                .addGroup(jPanel3Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                    .addComponent(jLabel4)
+                    .addComponent(difficultyComboBox, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addGroup(jPanel3Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(jLabel3)
                     .addComponent(numberFormatComboBox, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
-                .addGap(16, 16, 16)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addComponent(jSeparator1, javax.swing.GroupLayout.PREFERRED_SIZE, 10, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addContainerGap(341, Short.MAX_VALUE))
+                .addContainerGap(316, Short.MAX_VALUE))
         );
 
         javax.swing.GroupLayout mapPanelLayout = new javax.swing.GroupLayout(mapPanel);
@@ -394,7 +432,7 @@ public class Sor2LevelEditor extends javax.swing.JFrame {
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(layout.createSequentialGroup()
                 .addComponent(jPanel3, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addContainerGap(651, Short.MAX_VALUE))
+                .addContainerGap(645, Short.MAX_VALUE))
             .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                 .addGroup(layout.createSequentialGroup()
                     .addGap(201, 201, 201)
@@ -411,13 +449,14 @@ public class Sor2LevelEditor extends javax.swing.JFrame {
         pack();
     }// </editor-fold>//GEN-END:initComponents
 
-    private void jComboBox1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jComboBox1ActionPerformed
-        // TODO add your handling code here:
-    }//GEN-LAST:event_jComboBox1ActionPerformed
+    private void levelComboBoxActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_levelComboBoxActionPerformed
+        updateNumberOfScenes();
+        reloadMap();
+    }//GEN-LAST:event_levelComboBoxActionPerformed
 
-    private void jComboBox2ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jComboBox2ActionPerformed
-        // TODO add your handling code here:
-    }//GEN-LAST:event_jComboBox2ActionPerformed
+    private void sceneComboBoxActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_sceneComboBoxActionPerformed
+        reloadMap();
+    }//GEN-LAST:event_sceneComboBoxActionPerformed
 
     private void exitMenuItemActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_exitMenuItemActionPerformed
         if (askToSave()){
@@ -462,6 +501,10 @@ public class Sor2LevelEditor extends javax.swing.JFrame {
         }
     }//GEN-LAST:event_numberFormatComboBoxActionPerformed
 
+    private void difficultyComboBoxActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_difficultyComboBoxActionPerformed
+        reloadMap();
+    }//GEN-LAST:event_difficultyComboBoxActionPerformed
+
     /**
      * @param args the command line arguments
      */
@@ -498,22 +541,24 @@ public class Sor2LevelEditor extends javax.swing.JFrame {
     }
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
+    private javax.swing.JComboBox<String> difficultyComboBox;
     private javax.swing.JMenuItem exitMenuItem;
-    private javax.swing.JComboBox<String> jComboBox1;
-    private javax.swing.JComboBox<String> jComboBox2;
     private javax.swing.JLabel jLabel1;
     private javax.swing.JLabel jLabel2;
     private javax.swing.JLabel jLabel3;
+    private javax.swing.JLabel jLabel4;
     private javax.swing.JMenu jMenu1;
     private javax.swing.JMenuBar jMenuBar1;
     private javax.swing.JPanel jPanel3;
     private javax.swing.JSeparator jSeparator1;
     private javax.swing.JPopupMenu.Separator jSeparator2;
     private javax.swing.JPopupMenu.Separator jSeparator3;
+    private javax.swing.JComboBox<String> levelComboBox;
     private main.MapPanel mapPanel;
     private javax.swing.JComboBox<String> numberFormatComboBox;
     private javax.swing.JMenuItem openOriginalMenuItem;
     private javax.swing.JMenuItem openSWMenuItem;
     private javax.swing.JMenuItem saveMenuItem;
+    private javax.swing.JComboBox<String> sceneComboBox;
     // End of variables declaration//GEN-END:variables
 }

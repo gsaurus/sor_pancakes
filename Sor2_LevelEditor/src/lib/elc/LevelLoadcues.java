@@ -43,6 +43,17 @@ public final class LevelLoadcues {
         readItemsList(rom, goodies, goodiesAddress);
     }
     
+    
+    public int getTotalNumberOfScenes(){
+        int maxScene = 0;
+        for (CharacterObject obj: enemiesPart1){
+            if (obj.sceneId > maxScene){
+                maxScene = obj.sceneId;
+            }
+        }
+        return (maxScene / 2) + 1;
+    }
+    
     void readCharactersList(RandomAccessFile rom, List<CharacterObject> list, long address) throws IOException{
         rom.seek(address);
         while (rom.readUnsignedShort() != 0xFFFF){

@@ -17,6 +17,7 @@ package main;
 
 import java.awt.Graphics;
 import java.awt.image.BufferedImage;
+import java.io.File;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
@@ -67,7 +68,7 @@ public final class MapPanel extends javax.swing.JPanel {
         }
         else{
             try {
-                object.image = ImageIO.read(getClass().getResource("/resources/error.png"));
+                object.image = ImageIO.read(new File("images/error.png"));
             } catch (IOException ex) {
                 ExceptionUtils.showError(this, "Unable to load default error image", ex);
             }
@@ -75,16 +76,16 @@ public final class MapPanel extends javax.swing.JPanel {
         displayedObjects.add(object);
     }
     
-    public void reload(LevelLoadcues loadcues, int sceneNumber, Guide guide){
-        this.removeAll();
-        displayedObjects.clear();
+    public void reload(LevelLoadcues loadcues, int sceneNumber, int minimumDifficulty, Guide guide){
+        clear(false);
+        sceneNumber *= 2;
         for (CharacterObject obj: loadcues.enemiesPart1){
-            if (sceneNumber < 0 || obj.sceneId == sceneNumber){
+            if ((sceneNumber < 0 || obj.sceneId == sceneNumber) && (obj.minimumDifficulty <= minimumDifficulty)){
                 createDisplayedObject(obj, guide, obj.useAlternativePalette);
             }
         }
         for (CharacterObject obj: loadcues.enemiesPart2){
-            if (sceneNumber < 0 || obj.sceneId == sceneNumber){
+            if ((sceneNumber < 0 || obj.sceneId == sceneNumber) && (obj.minimumDifficulty <= minimumDifficulty)){
                 createDisplayedObject(obj, guide, obj.useAlternativePalette);
             }
         }
@@ -95,6 +96,19 @@ public final class MapPanel extends javax.swing.JPanel {
         }
         this.revalidate();
         this.repaint();
+    }
+    
+    private void clear(boolean repaint){
+        this.removeAll();
+        displayedObjects.clear();
+        if (repaint){
+            this.revalidate();
+            this.repaint();
+        }
+    }
+    
+    public void clear(){
+        clear(true);
     }
     
     
