@@ -99,6 +99,15 @@ public final class CharacterPanel extends javax.swing.JPanel {
     void setComboValue(JComboBox comboBox, int index, long value){
         setComboValue(comboBox, index, formatter.toString(value));
     }
+    void setComboValue(JComboBox comboBox, int index, int value){
+        setComboValue(comboBox, index, formatter.toString(value));
+    }
+    void setComboValue(JComboBox comboBox, int index, short value){
+        setComboValue(comboBox, index, formatter.toString(value));
+    }
+    void setComboValue(JComboBox comboBox, int index, byte value){
+        setComboValue(comboBox, index, formatter.toString(value));
+    }
     
     
     public void reloadPosition(){
@@ -112,12 +121,12 @@ public final class CharacterPanel extends javax.swing.JPanel {
     public void reload(){
         isReloading = true;
         
-        setComboValue(difficultyComboBox, object.minimumDifficulty, object.minimumDifficulty);
+        setComboValue(difficultyComboBox, object.minimumDifficulty, (byte)object.minimumDifficulty);
         int nameIndex = (int)(object.nameAddress - enemyNames.address) / AllEnemyNames.NAME_SIZE;
         setComboValue(nameComboBox, nameIndex, object.nameAddress);
-        setComboValue(objectIdComboBox, object.objectId / 2, object.objectId);
-        setComboValue(spawnModeComboBox, object.introductionType, object.introductionType);
-        setComboValue(triggerComboBox, object.triggerType, object.triggerType);
+        setComboValue(objectIdComboBox, object.objectId / 2, (byte)object.objectId);
+        setComboValue(spawnModeComboBox, object.introductionType, (byte)object.introductionType);
+        setComboValue(triggerComboBox, object.triggerType, (byte)object.triggerType);
         
         aggressivenessTextField.setText(formatter.toString((byte)object.enemyAgressiveness));
         alternativePaletteCheckBox.setSelected(object.useAlternativePalette);

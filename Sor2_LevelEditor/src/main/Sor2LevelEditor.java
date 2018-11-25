@@ -35,6 +35,7 @@ import lib.Rom;
 import lib.elc.AllLevelsLoadcues;
 import lib.elc.BaseObject;
 import lib.elc.CharacterObject;
+import lib.elc.ItemObject;
 import lib.names.AllEnemyNames;
 
 /**
@@ -129,6 +130,10 @@ public final class Sor2LevelEditor extends javax.swing.JFrame {
                     CharacterPanel charPanel = ((CharacterPanel)component);
                     charPanel.formatter = formatter;
                     charPanel.reload();
+                }else if (component instanceof GoodiePanel){
+                    GoodiePanel goodiePanel = ((GoodiePanel)component);
+                    goodiePanel.formatter = formatter;
+                    goodiePanel.reload();
                 }
             }
         }
@@ -152,6 +157,14 @@ public final class Sor2LevelEditor extends javax.swing.JFrame {
                 objectContainerPanel.add(panel);
                 objectContainerPanel.revalidate();
                 objectContainerPanel.repaint();
+            } else if (object instanceof ItemObject){
+                GoodiePanel panel = new GoodiePanel((ItemObject)object, formatter, guide);                
+                panel.listener = (ItemObject charObj) -> {
+                    reloadMap();
+                };                
+                objectContainerPanel.add(panel);
+                objectContainerPanel.revalidate();
+                objectContainerPanel.repaint();
             }
         };
         
@@ -161,6 +174,8 @@ public final class Sor2LevelEditor extends javax.swing.JFrame {
                 if (component != null){
                     if (component instanceof CharacterPanel){
                         ((CharacterPanel)component).reloadPosition();
+                    }else if (component instanceof GoodiePanel){
+                        ((GoodiePanel)component).reloadPosition();
                     }
                 }
             }

@@ -56,6 +56,7 @@ public class ItemObject extends BaseObject{
     public int verticalSpeed;
     public int spriteStatus;    
     public int containedItemId;
+    public boolean insideForTwoPlayersOnly;
     
     
     public ItemObject(RandomAccessFile rom, long address) throws IOException{
@@ -73,7 +74,9 @@ public class ItemObject extends BaseObject{
         posX = rom.readUnsignedShort();
         posY = rom.readUnsignedShort();
         spriteStatus = rom.readUnsignedShort();
-        containedItemId = rom.read();    
+        int containedByte = rom.read();
+        containedItemId = containedByte & 0x7F;
+        insideForTwoPlayersOnly = (containedByte >> 7 & 0x1) == 1;
     }
     
     
@@ -91,7 +94,11 @@ public class ItemObject extends BaseObject{
         rom.writeShort(posX);
         rom.writeShort(posY);
         rom.writeShort(spriteStatus);
-        rom.writeByte(containedItemId);
+        int containedByte = containedItemId;
+        if (insideForTwoPlayersOnly){
+            containedByte |= 0x80;
+        }
+        rom.writeByte(containedByte);
     }
     
     public void write(RandomAccessFile rom) throws IOException{
