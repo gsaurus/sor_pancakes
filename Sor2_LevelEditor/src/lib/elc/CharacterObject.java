@@ -56,6 +56,11 @@ public class CharacterObject extends BaseObject {
     public int enemyAgressiveness;       // ????
     public int initialState;     // Animation status
     public int introductionType; // If character falls from sky, or out of a sewer etc
+    // Flags used in spawn type
+    public boolean weaponFlag1;
+    public boolean weaponFlag2;
+    public boolean weaponFlag3;
+    public boolean weaponFlag4;
     public int triggerArgument;  // Depending on the trigger, an argument can be used (e.g. timer, distance, etc)    
     public int health;
     // Collision box x, y, z
@@ -77,11 +82,16 @@ public class CharacterObject extends BaseObject {
         minimumDifficulty = triggerType >> 4 & 0x7;
         triggerType &= 0x7;      
         int palleteByte = rom.read();
-        enemyAgressiveness = palleteByte & 0x7;
-        useAlternativePalette = (palleteByte >> 4 & 0x3) == 1;
+        enemyAgressiveness = palleteByte & 0xEF;
+        useAlternativePalette = ((palleteByte >> 4) & 0x1) == 1;
       
         initialState = rom.read();
         introductionType = rom.read();
+        weaponFlag1 = (introductionType >> 7 & 0x1) == 1;
+        weaponFlag2 = (introductionType >> 6 & 0x1) == 1;
+        weaponFlag3 = (introductionType >> 5 & 0x1) == 1;
+        weaponFlag4 = (introductionType >> 4 & 0x1) == 1;
+        introductionType &= 0x0F;
         triggerArgument = rom.readUnsignedShort();
         
         posX = rom.readUnsignedShort();
@@ -108,12 +118,17 @@ public class CharacterObject extends BaseObject {
  
         int palleteByte = enemyAgressiveness;
         if (useAlternativePalette){
-            palleteByte |= 0xC;
+            palleteByte |= 0x10;
         }
         rom.writeByte(palleteByte);
       
         rom.writeByte(initialState);
-        rom.writeByte(introductionType);
+        int introductionByte = introductionType & 0x0F;
+        if (weaponFlag1) introductionByte |= 0x80;
+        if (weaponFlag2) introductionByte |= 0x40;
+        if (weaponFlag3) introductionByte |= 0x20;
+        if (weaponFlag4) introductionByte |= 0x10;
+        rom.writeByte(introductionByte);
         rom.writeShort(triggerArgument);
         
         rom.writeShort(posX);

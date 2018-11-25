@@ -1,6 +1,6 @@
 1				// 1 = labeled addresses; 0 = global addresses
 PK_ELC_INDEX    // Address of levels object spawning list in rom
-PK_ENAME        // Address of enemy names
+A        // Address of enemy names
 143             // Number of enemy names
 
 // Each character is followed by a list of spawning modes
@@ -43,44 +43,110 @@ Fall
 Check Distance
 
 Jack
+Green
+Fade-in
+Dark
 
 Barbon
+Cocktail
+Boss
+Dark Standing
+Dark Waiting
+Orange Fall
 
 Electra
+Standing
+Singing
+Fall on Proximity
+Fall Immediately
 
 Signal
+Standing
+Waiting
+Jump in
+Play Arcade
 
 Biker
+Standing
+Bike Wait
+Bike Ride
+Bike Jump Off
+Bike Grenade
+Bike High Left
+Bike High Right
+Wait Behind (turn weapon ON)
+Sit
+Sit Above
+Cheer 1
+Cheer 2
+Cheer 3
+
 
 Ninja
+Standing
+Sit
+Hooked
+Fall
 
 Bongo
+Stand
+Wait
+Fall on Proximity
+Fall Immediately
 
 Hakuyo
+Standing
+Wait
+Fall on Proximity
+
 
 x
 
 Kickboxer
+Standing
+Lying Down
+Fall on Proximity
+Fall Immediately
 
 Jet
+Standing
+Boss
+Unused Sub-Boss
 
 Zamza
+Standing Boss
+Wait Boss
+Shadow Boss
+Fall Immediately
 
 R Bear
+Standing
+Wait Sub-Boss
+Fall Immediately
 
 Abadede
+Standing
+Wait Sub-Boss
+Fall Immediately
+
 
 x
 
 x
 
 Particle
+Standing
+Wait
+Fall on Proximity
+Fall Immediately
 
 x
 
 Mr X
+Boss
 
 Shiva
+Boss
 
 Ninja
 
