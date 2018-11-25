@@ -33,6 +33,8 @@ public class Guide {
     private static String INVALID_CHARACTER = "x";
     
     public long levelsLoadcuesAddress;
+    public long enemyNamesAddress;
+    public int totalNumberOfEnemyNames;
     public List<ObjectDefinition> objectsDefinition = new ArrayList<>(50);
     
     
@@ -73,9 +75,12 @@ public class Guide {
         if (isLabeled) {
             byte[] allData = rom.getAllData();
             levelsLoadcuesAddress = rom.findLabel(allData, readLine(scanner));
+            enemyNamesAddress = rom.findLabel(allData, readLine(scanner));            
         }else {
             levelsLoadcuesAddress = readHexValue(scanner);
+            enemyNamesAddress = readHexValue(scanner);
         }
+        totalNumberOfEnemyNames = readInt(scanner);
                 
         // Read character spawning mode guides
         String characterName;

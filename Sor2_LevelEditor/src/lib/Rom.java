@@ -27,7 +27,7 @@ public class Rom {
     private RandomAccessFile rom;
     private HashMap<String, Long> knownLabels = new HashMap<>();
      
-    private void fixChecksum() throws IOException{
+    public void fixChecksum() throws IOException{
         short checksum = 0;
         rom.seek(ROM_START_ADDRESS);
         byte[] bytes = new byte[4096];
@@ -88,7 +88,7 @@ public class Rom {
         rom = new RandomAccessFile(file,"rw");
     }    
     
-    String readName(int address, int size) throws IOException {
+    public String readName(int address, int size) throws IOException {
         rom.seek(address);
         char[] res = new char[size];
         for (int i = 0 ; i < size ; ++i){
@@ -116,7 +116,7 @@ public class Rom {
         return new String(res);
     }
 
-    void writeName(int speedAddress, String newName, int size) throws IOException {
+    public void writeName(int speedAddress, String newName, int size) throws IOException {
         rom.seek(speedAddress);
         for (int i = 0 ; i < size ; ++i){
             char c = ' ';

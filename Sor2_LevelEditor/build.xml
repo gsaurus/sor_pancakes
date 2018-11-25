@@ -15,6 +15,9 @@
 		<copy todir="${dist.dir}/guides">
 			<fileset dir="guides"/>
 		</copy>
+        <copy todir="${dist.dir}/images">
+			<fileset dir="images"/>
+		</copy>
 	</target>
 
 	<!--

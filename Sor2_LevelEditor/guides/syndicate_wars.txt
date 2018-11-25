@@ -1,5 +1,7 @@
 1				// 1 = labeled addresses; 0 = global addresses
 PK_ELC_INDEX    // Address of levels object spawning list in rom
+PK_ENAME        // Address of enemy names
+143             // Number of enemy names
 
 // Each character is followed by a list of spawning modes
 // Ending with at least one empty line

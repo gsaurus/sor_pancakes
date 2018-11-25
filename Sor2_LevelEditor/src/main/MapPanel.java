@@ -29,6 +29,7 @@ import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 import javax.imageio.ImageIO;
+import javax.swing.JViewport;
 import lib.ExceptionUtils;
 import lib.elc.BaseObject;
 import lib.elc.CharacterObject;
@@ -42,11 +43,15 @@ import lib.elc.ObjectDefinition;
  */
 public final class MapPanel extends javax.swing.JPanel {
     
-    final int MAP_PADDING = 128;
-    final Dimension MAP_SIZE = new Dimension(Short.MAX_VALUE, 736);
+    final int MAP_PADDING = 512;
+    final Dimension MAP_SIZE = new Dimension(Short.MAX_VALUE, 480 + 2 * MAP_PADDING);
 
     public interface ObjectSelectedListener{
         void onObjectSelected(BaseObject object);
+    }
+    
+    public interface ObjectMovedListener{
+        void onObjectMoved(BaseObject object);
     }
     
     class DisplayedObject{
@@ -58,26 +63,30 @@ public final class MapPanel extends javax.swing.JPanel {
         }
         
         public int getVisualPosX(){
-            return MAP_PADDING + object.posX;            
+            return MAP_PADDING + (short)object.posX;            
         }
         
         public int getVisualPosY(){
-            return MAP_PADDING + object.posY;
+            return MAP_PADDING + (short)object.posY;
         }
         
         public void setVisualPosX(int x){
-            object.posX = x - MAP_PADDING;
+            object.posX = (short)(x - MAP_PADDING);
         }
         
         public void setVisualPosY(int y){
-            object.posY = y - MAP_PADDING;
+            object.posY = (short)(y - MAP_PADDING);
         }
         
     }
     
     
     public boolean showBackground = true;    
+    public boolean showEnemies1 = true;
+    public boolean showEnemies2 = true;
+    public boolean showItems = true;
     public ObjectSelectedListener selectionListener;
+    public ObjectMovedListener movedListener;
     
     private final List<DisplayedObject> displayedObjects = new ArrayList<>();
     private BufferedImage background;
@@ -89,7 +98,7 @@ public final class MapPanel extends javax.swing.JPanel {
      * Creates new form MapPanel
      */
     public MapPanel() {
-        initComponents();
+        initComponents();        
         setupPanel();
         setupMouseListeners();
     }
@@ -110,7 +119,44 @@ public final class MapPanel extends javax.swing.JPanel {
         }
     }
     
-    void refreshGraphics(){
+    void notifyMovedListener(){
+        if (movedListener != null){
+            if (selectedObject != null){
+                movedListener.onObjectMoved(selectedObject.object);
+            }else{
+                movedListener.onObjectMoved(null);
+            }
+        }
+    }
+    
+    private void selectNext(int delta){
+        if (displayedObjects.isEmpty()) return;
+        if (selectedObject == null){
+            selectedObject = displayedObjects.get(delta > 0 ? 0: displayedObjects.size() - 1);
+        }else{
+            int index = displayedObjects.indexOf(selectedObject);
+            index += delta;
+            if (index >= displayedObjects.size()){
+                index = 0;
+            }else if (index < 0) index = displayedObjects.size() - 1;
+            selectedObject = displayedObjects.get(index);
+        }
+        if (selectedObject != null){
+            JViewport viewport = (JViewport)this.getParent();
+            viewport.setViewPosition(new Point(selectedObject.getVisualPosX() - viewport.getWidth()/2, selectedObject.getVisualPosY() - viewport.getHeight()/2));
+        }
+        notifySelectionListener();
+    }
+    
+    public void selectNext(){
+        selectNext(1);
+    }
+    
+    public void selectPrevious(){
+        selectNext(-1);
+    }
+    
+    public void refreshGraphics(){
         this.revalidate();
         this.repaint();
     }
@@ -152,6 +198,7 @@ public final class MapPanel extends javax.swing.JPanel {
             selectedObject.setVisualPosX(finalPoint.x);
             selectedObject.setVisualPosY(finalPoint.y);
             refreshGraphics();
+            notifyMovedListener();
         }
     }
     
@@ -171,12 +218,10 @@ public final class MapPanel extends javax.swing.JPanel {
             public void mouseReleased(MouseEvent e) {
                 // Nothing
             }
-
             @Override
             public void mouseEntered(MouseEvent e) {
                 // Nothing
             }
-
             @Override
             public void mouseExited(MouseEvent e) {
                 // Nothing
@@ -242,24 +287,35 @@ public final class MapPanel extends javax.swing.JPanel {
     }
     
     public void reload(LevelLoadcues loadcues, int levelNumber, int sceneNumber, int minimumDifficulty, Guide guide){
+        // Reset view
+        if (displayedObjects.isEmpty()){
+            JViewport viewport = (JViewport)this.getParent();
+            viewport.setViewPosition(new Point(MAP_PADDING + 160 - viewport.getWidth()/2, MAP_PADDING + 112 - viewport.getHeight()/2));
+        }
         clear(false);
         int gameSceneNumber = sceneNumber * 2;
-        for (CharacterObject obj: loadcues.enemiesPart1){
-            if ((gameSceneNumber < 0 || obj.sceneId == gameSceneNumber) && (obj.minimumDifficulty <= minimumDifficulty)){
-                createDisplayedObject(obj, guide, obj.useAlternativePalette);
+        if (showEnemies1){
+            for (CharacterObject obj: loadcues.enemiesPart1){
+                if ((gameSceneNumber < 0 || obj.sceneId == gameSceneNumber) && (obj.minimumDifficulty <= minimumDifficulty)){
+                    createDisplayedObject(obj, guide, obj.useAlternativePalette);
+                }
             }
         }
-        for (CharacterObject obj: loadcues.enemiesPart2){
-            if ((gameSceneNumber < 0 || obj.sceneId == gameSceneNumber) && (obj.minimumDifficulty <= minimumDifficulty)){
-                createDisplayedObject(obj, guide, obj.useAlternativePalette);
+        if (showEnemies2){
+            for (CharacterObject obj: loadcues.enemiesPart2){
+                if ((gameSceneNumber < 0 || obj.sceneId == gameSceneNumber) && (obj.minimumDifficulty <= minimumDifficulty)){
+                    createDisplayedObject(obj, guide, obj.useAlternativePalette);
+                }
             }
         }
-        for (ItemObject obj: loadcues.goodies){
-            if (gameSceneNumber < 0 || obj.sceneId == gameSceneNumber){
-                createDisplayedObject(obj, guide, false);
+        if (showItems){
+            for (ItemObject obj: loadcues.goodies){
+                if (gameSceneNumber < 0 || obj.sceneId == gameSceneNumber){
+                    createDisplayedObject(obj, guide, false);
+                }
             }
         }
-        loadMapBackground(levelNumber, sceneNumber);
+        loadMapBackground(levelNumber, sceneNumber);        
         this.revalidate();
         this.repaint();
     }
@@ -303,11 +359,15 @@ public final class MapPanel extends javax.swing.JPanel {
      protected void paintComponent(Graphics g) {
         super.paintComponent(g);
         
+        // Background
+        g.setColor(Color.black);
+        g.drawLine(MAP_PADDING, MAP_PADDING, MAP_PADDING, MAP_SIZE.height);
+        g.drawLine(MAP_PADDING, MAP_PADDING, MAP_SIZE.width, MAP_PADDING);
         if (showBackground && background != null){
             g.drawImage(background, MAP_PADDING, MAP_PADDING, this);
         }
         
-        // Draw objects
+        // Objects
         for (DisplayedObject obj: displayedObjects){
             if (obj != selectedObject){
                 drawObject(g, obj, false);
@@ -315,7 +375,7 @@ public final class MapPanel extends javax.swing.JPanel {
             
         }
         
-        // Draw selection
+        // Selection
         if (selectedObject != null){
             drawObject(g, selectedObject, true);            
         }
@@ -329,17 +389,17 @@ public final class MapPanel extends javax.swing.JPanel {
     // <editor-fold defaultstate="collapsed" desc="Generated Code">//GEN-BEGIN:initComponents
     private void initComponents() {
 
-        setBorder(javax.swing.BorderFactory.createLineBorder(new java.awt.Color(0, 0, 0)));
+        setBackground(new java.awt.Color(0, 153, 153));
 
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(this);
         this.setLayout(layout);
         layout.setHorizontalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGap(0, 398, Short.MAX_VALUE)
+            .addGap(0, 400, Short.MAX_VALUE)
         );
         layout.setVerticalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGap(0, 298, Short.MAX_VALUE)
+            .addGap(0, 300, Short.MAX_VALUE)
         );
     }// </editor-fold>//GEN-END:initComponents
 
