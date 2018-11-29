@@ -102,21 +102,18 @@ public final class CharacterPanel extends javax.swing.JPanel {
         try{
             comboBox.setSelectedIndex(index);
         }catch(IllegalArgumentException ex){
-            comboBox.setSelectedItem(value);
+            if (comboBox.getSelectedIndex() != index){
+                comboBox.setSelectedItem(value);
+            }
         }
+    }
+
+    void setComboValue(JComboBox comboBox, int index, int value){
+        setComboValue(comboBox, index, formatter.toUnsignedString(value));
     }
     
     void setComboValue(JComboBox comboBox, int index, long value){
-        setComboValue(comboBox, index, formatter.toString(value));
-    }
-    void setComboValue(JComboBox comboBox, int index, int value){
-        setComboValue(comboBox, index, formatter.toString(value));
-    }
-    void setComboValue(JComboBox comboBox, int index, short value){
-        setComboValue(comboBox, index, formatter.toString(value));
-    }
-    void setComboValue(JComboBox comboBox, int index, byte value){
-        setComboValue(comboBox, index, formatter.toString(value));
+        setComboValue(comboBox, index, formatter.toUnsignedString(value));
     }
     
     
@@ -131,14 +128,14 @@ public final class CharacterPanel extends javax.swing.JPanel {
     public void reload(){
         isReloading = true;
         
-        setComboValue(difficultyComboBox, object.minimumDifficulty, (byte)object.minimumDifficulty);
+        setComboValue(difficultyComboBox, object.minimumDifficulty, object.minimumDifficulty);
         int nameIndex = (int)(object.nameAddress - enemyNames.address) / AllEnemyNames.NAME_SIZE;
         setComboValue(nameComboBox, nameIndex, object.nameAddress);
-        setComboValue(objectIdComboBox, object.objectId / 2, (byte)object.objectId);
-        setComboValue(spawnModeComboBox, object.introductionType, (byte)object.introductionType);
-        setComboValue(triggerComboBox, object.triggerType, (byte)object.triggerType);
+        setComboValue(objectIdComboBox, object.objectId / 2, object.objectId);
+        setComboValue(spawnModeComboBox, object.introductionType, object.introductionType);
+        setComboValue(triggerComboBox, object.triggerType, object.triggerType);
         
-        aggressivenessTextField.setText(formatter.toString((byte)object.enemyAgressiveness));
+        aggressivenessTextField.setText(formatter.toUnsignedString(object.enemyAgressiveness));
         alternativePaletteCheckBox.setSelected(object.useAlternativePalette);
         bikerWeaponCheckBox.setSelected(object.weaponFlag1);
         ninjaWeaponCheckBox1.setSelected(object.weaponFlag2);
@@ -147,12 +144,12 @@ public final class CharacterPanel extends javax.swing.JPanel {
         bboxDeptTextField.setText(formatter.toString((byte)object.collisionDept));
         bboxHeightTextField.setText(formatter.toString((byte)object.collisionHeight));
         bboxWidhTextField.setText(formatter.toString((byte)object.collisionWidth));
-        healthTextField.setText(formatter.toString((byte)object.health));
-        initialStateTextField.setText(formatter.toString((byte)object.initialState));
-        sceneIdTextField.setText(formatter.toString((byte)object.sceneId));
-        scoreTextField.setText(formatter.toString((short)object.deathScore));        
-        triggerArgumentTextField.setText(formatter.toString((short)object.triggerArgument));
-        vramTextField.setText(formatter.toString((short)object.vram));
+        healthTextField.setText(formatter.toUnsignedString(object.health));
+        initialStateTextField.setText(formatter.toUnsignedString(object.initialState));
+        sceneIdTextField.setText(formatter.toUnsignedString(object.sceneId));
+        scoreTextField.setText(formatter.toUnsignedString(object.deathScore));        
+        setTriggerArgumentValueToTextField();
+        vramTextField.setText(formatter.toUnsignedString(object.vram));
         reloadPosition();
         
         isReloading = false;
@@ -184,6 +181,32 @@ public final class CharacterPanel extends javax.swing.JPanel {
         ninjaWeaponCheckBox2ActionPerformed(null);
         ninjaWeaponCheckBox3ActionPerformed(null);
         isReloading = false;
+    }    
+    
+    void setTriggerArgumentValueToTextField(){
+        if (object.triggerType == 2){
+            int arg1 = (object.triggerArgument >> 8) & 0xFF;
+            int arg2 = object.triggerArgument & 0xFF;
+            triggerArgumentTextField.setText(formatter.toUnsignedString(arg1) + " " + formatter.toUnsignedString(arg2));
+        }else{
+            triggerArgumentTextField.setText(formatter.toUnsignedString(object.triggerArgument));
+        }
+    }
+    
+    void getTriggerArgumentValueFromTextField(){
+        String[] values = triggerArgumentTextField.getText().split(" ");
+        if (values.length > 1){
+            int arg1 = (int) formatter.toNumber(values[0]);
+            int arg2 = (int) formatter.toNumber(values[1]);
+            object.triggerArgument = ((arg1 << 8) & 0xFF00) + (arg2 & 0xFF);
+        }else if (values.length == 1){
+            object.triggerArgument = (int)formatter.toNumber(values[0]);
+        }
+    }
+    
+    void refreshTriggerArgumentValue(){
+        getTriggerArgumentValueFromTextField();
+        setTriggerArgumentValueToTextField();
     }
     
 
@@ -320,6 +343,11 @@ public final class CharacterPanel extends javax.swing.JPanel {
 
         triggerComboBox.setEditable(true);
         triggerComboBox.setModel(new javax.swing.DefaultComboBoxModel<>(new String[] { "Item 1", "Item 2", "Item 3", "Item 4" }));
+        triggerComboBox.addItemListener(new java.awt.event.ItemListener() {
+            public void itemStateChanged(java.awt.event.ItemEvent evt) {
+                triggerComboBoxItemStateChanged(evt);
+            }
+        });
         triggerComboBox.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 triggerComboBoxActionPerformed(evt);
@@ -656,10 +684,12 @@ public final class CharacterPanel extends javax.swing.JPanel {
         }else{
             object.triggerType = (int)formatter.toNumber((String)triggerComboBox.getSelectedItem());
         }
+        // Update trigger argument display
+        refreshTriggerArgumentValue();
     }//GEN-LAST:event_triggerComboBoxActionPerformed
 
     private void triggerArgumentTextFieldActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_triggerArgumentTextFieldActionPerformed
-        object.triggerArgument = (int)formatter.toNumber(triggerArgumentTextField.getText());
+        getTriggerArgumentValueFromTextField();
     }//GEN-LAST:event_triggerArgumentTextFieldActionPerformed
 
     private void spawnModeComboBoxActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_spawnModeComboBoxActionPerformed
@@ -723,6 +753,10 @@ public final class CharacterPanel extends javax.swing.JPanel {
     private void ninjaWeaponCheckBox3ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_ninjaWeaponCheckBox3ActionPerformed
         object.weaponFlag4 = ninjaWeaponCheckBox2.isSelected();
     }//GEN-LAST:event_ninjaWeaponCheckBox3ActionPerformed
+
+    private void triggerComboBoxItemStateChanged(java.awt.event.ItemEvent evt) {//GEN-FIRST:event_triggerComboBoxItemStateChanged
+        refreshTriggerArgumentValue();
+    }//GEN-LAST:event_triggerComboBoxItemStateChanged
 
 
     // Variables declaration - do not modify//GEN-BEGIN:variables

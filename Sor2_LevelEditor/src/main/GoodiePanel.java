@@ -77,8 +77,11 @@ public final class GoodiePanel extends javax.swing.JPanel {
         }
     }
     
-    void setComboValue(JComboBox comboBox, int index, byte value){
-        setComboValue(comboBox, index, formatter.toString(value));
+    void setComboValue(JComboBox comboBox, int index, int value){
+        setComboValue(comboBox, index, formatter.toUnsignedString(value));
+    }
+    void setSignedComboValue(JComboBox comboBox, int index, int value){
+        setComboValue(comboBox, index, formatter.toString((byte)value));
     }
     
     
@@ -92,18 +95,18 @@ public final class GoodiePanel extends javax.swing.JPanel {
     
     public void reload(){
         isReloading = true;        
-        setComboValue(objectIdComboBox, object.objectId / 2, (byte)object.objectId);
-        setComboValue(insideComboBox, object.containedItemId, (byte)object.containedItemId);
+        setComboValue(objectIdComboBox, object.objectId / 2, object.objectId);
+        setSignedComboValue(insideComboBox, object.containedItemId, object.containedItemId);
         
         inside2PlayersCheckBox.setSelected(object.insideForTwoPlayersOnly);
         bboxDeptTextField.setText(formatter.toString((byte)object.collisionDept));
         bboxHeightTextField.setText(formatter.toString((byte)object.collisionHeight));
         bboxWidhTextField.setText(formatter.toString((byte)object.collisionWidth));
-        animationTextField.setText(formatter.toString((byte)object.animation));
-        initialStateTextField.setText(formatter.toString((byte)object.status));
-        sceneIdTextField.setText(formatter.toString((byte)object.sceneId));
+        animationTextField.setText(formatter.toUnsignedString(object.animation));
+        initialStateTextField.setText(formatter.toUnsignedString(object.status));
+        sceneIdTextField.setText(formatter.toUnsignedString(object.sceneId));
         heightTextField.setText(formatter.toString((short)object.verticalSpeed));
-        spriteStatusTextField.setText(formatter.toString((short)object.spriteStatus));
+        spriteStatusTextField.setText(formatter.toUnsignedString(object.spriteStatus));
         reloadPosition();
         
         isReloading = false;
