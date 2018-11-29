@@ -122,6 +122,7 @@ public final class CharacterPanel extends javax.swing.JPanel {
         isReloading = true;
         posXTextField.setText(formatter.toString((short)object.posX));
         posYTextField.setText(formatter.toString((short)object.posY));
+        setTriggerArgumentValueToTextField();
         isReloading = wasReloading;
     }
     
@@ -147,8 +148,7 @@ public final class CharacterPanel extends javax.swing.JPanel {
         healthTextField.setText(formatter.toUnsignedString(object.health));
         initialStateTextField.setText(formatter.toUnsignedString(object.initialState));
         sceneIdTextField.setText(formatter.toUnsignedString(object.sceneId));
-        scoreTextField.setText(formatter.toUnsignedString(object.deathScore));        
-        setTriggerArgumentValueToTextField();
+        scoreTextField.setText(formatter.toUnsignedString(object.deathScore));                
         vramTextField.setText(formatter.toUnsignedString(object.vram));
         reloadPosition();
         

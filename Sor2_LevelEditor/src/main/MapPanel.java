@@ -45,6 +45,8 @@ public final class MapPanel extends javax.swing.JPanel {
     
     final int MAP_PADDING = 512;
     final Dimension MAP_SIZE = new Dimension(Short.MAX_VALUE, 480 + 2 * MAP_PADDING);
+    
+    final int DISTANCE_DRAG_MARGIN = 16;
 
     public interface ObjectSelectedListener{
         void onObjectSelected(BaseObject object);
@@ -67,7 +69,11 @@ public final class MapPanel extends javax.swing.JPanel {
         }
         
         public int getVisualPosY(){
-            return MAP_PADDING + (short)object.posY;
+            int posY = MAP_PADDING + (short)object.posY;
+            if (object instanceof ItemObject){
+                return posY + (short)((ItemObject)object).verticalSpeed;
+            }
+            return posY;
         }
         
         public void setVisualPosX(int x){
@@ -76,6 +82,9 @@ public final class MapPanel extends javax.swing.JPanel {
         
         public void setVisualPosY(int y){
             object.posY = (short)(y - MAP_PADDING);
+            if (object instanceof ItemObject){
+                object.posY -= (short)((ItemObject)object).verticalSpeed;
+            }            
         }
         
     }
@@ -92,6 +101,7 @@ public final class MapPanel extends javax.swing.JPanel {
     private BufferedImage background;
     private DisplayedObject selectedObject;
     private Point dragStartingDistance;
+    private boolean draggingDistanceLine;
     
     
     /**
@@ -191,7 +201,6 @@ public final class MapPanel extends javax.swing.JPanel {
         notifySelectionListener();        
     }
     
-    
     void updateSelectionPosition(Point point){
         if (selectedObject != null){
             Point finalPoint = new Point(point.x - dragStartingDistance.x, point.y - dragStartingDistance.y);
@@ -200,6 +209,29 @@ public final class MapPanel extends javax.swing.JPanel {
             refreshGraphics();
             notifyMovedListener();
         }
+    }
+    
+    
+    boolean selectDistanceLine(Point point){
+        if (selectedObject == null || !(selectedObject.object instanceof CharacterObject)) return false;
+        CharacterObject character = (CharacterObject) selectedObject.object;
+        if (character.triggerType != 1) return false;
+        int distanceLine = (MAP_PADDING + character.triggerArgument);
+        draggingDistanceLine = Math.abs(point.x - distanceLine) < DISTANCE_DRAG_MARGIN;
+        if (draggingDistanceLine){
+            dragStartingDistance = new Point(point.x - distanceLine, 0);
+        }
+        return draggingDistanceLine;
+    }
+    
+    boolean tryUpdateSelectionDistance(Point point){
+        if (! draggingDistanceLine || selectedObject == null || !(selectedObject.object instanceof CharacterObject)) return false;
+        CharacterObject character = (CharacterObject) selectedObject.object;
+        if (character.triggerType != 1) return false;
+        character.triggerArgument = (point.x - dragStartingDistance.x) - MAP_PADDING;
+        refreshGraphics();
+        notifyMovedListener();
+        return true;
     }
     
     void setupMouseListeners(){
@@ -211,7 +243,10 @@ public final class MapPanel extends javax.swing.JPanel {
 
             @Override
             public void mousePressed(MouseEvent e) {
-                selectNearestObject(e.getPoint());
+                if (!selectDistanceLine(e.getPoint())){
+                    draggingDistanceLine = false;
+                    selectNearestObject(e.getPoint());
+                }
             }
 
             @Override
@@ -233,7 +268,9 @@ public final class MapPanel extends javax.swing.JPanel {
             @Override
             public void mouseDragged(MouseEvent e) {
                 // Drag selection
-                updateSelectionPosition(e.getPoint());
+                if (!tryUpdateSelectionDistance(e.getPoint())){
+                    updateSelectionPosition(e.getPoint());
+                }
             }
 
             @Override
@@ -287,6 +324,7 @@ public final class MapPanel extends javax.swing.JPanel {
     }
     
     public void reload(LevelLoadcues loadcues, int levelNumber, int sceneNumber, int minimumDifficulty, Guide guide){
+        DisplayedObject previouslySelectedObject = selectedObject;
         // Reset view
         if (displayedObjects.isEmpty()){
             JViewport viewport = (JViewport)this.getParent();
@@ -315,6 +353,16 @@ public final class MapPanel extends javax.swing.JPanel {
                 }
             }
         }
+        
+        if (previouslySelectedObject != null){
+            for (DisplayedObject obj: displayedObjects){
+                if (obj.object == previouslySelectedObject.object){
+                    selectedObject = previouslySelectedObject;
+                    break;
+                }
+            }            
+        }
+        
         loadMapBackground(levelNumber, sceneNumber);        
         this.revalidate();
         this.repaint();
@@ -343,7 +391,7 @@ public final class MapPanel extends javax.swing.JPanel {
         int x = obj.getVisualPosX();
         int y = obj.getVisualPosY();
         int imageX = x - (int)(width * 0.5f);
-        int imageY = y - height;
+        int imageY = y - height;        
         g.drawImage(obj.image, imageX, imageY, null);
         if (selection){
             g.setColor(Color.white);
@@ -351,6 +399,17 @@ public final class MapPanel extends javax.swing.JPanel {
             g.setColor(Color.black);
         }
         g.drawRect(imageX, imageY, width, height);
+        
+        if (obj.object instanceof ItemObject){            
+            int verticalHeight = (short)((ItemObject)obj.object).verticalSpeed;
+            int realY = y - verticalHeight;
+            Color previousColor = g.getColor();
+            g.setColor(Color.orange);
+            g.drawLine(x, y, x, realY);
+            g.setColor(previousColor);
+            y = realY;
+        }
+        
         g.drawLine(x-5, y, x+5, y);
         g.drawLine(x, y-5, x, y+5);
     }
@@ -377,7 +436,15 @@ public final class MapPanel extends javax.swing.JPanel {
         
         // Selection
         if (selectedObject != null){
-            drawObject(g, selectedObject, true);            
+            drawObject(g, selectedObject, true);
+            
+            if (selectedObject.object instanceof CharacterObject){
+                CharacterObject characterObject = (CharacterObject)selectedObject.object;
+                if (characterObject.triggerType == 1){
+                    g.setColor(Color.yellow);
+                    g.drawLine(MAP_PADDING + characterObject.triggerArgument, 0, MAP_PADDING + characterObject.triggerArgument, MAP_SIZE.height);
+                }
+            }
         }
     }
     

@@ -427,6 +427,7 @@ public final class GoodiePanel extends javax.swing.JPanel {
 
     private void heightTextFieldActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_heightTextFieldActionPerformed
         object.verticalSpeed = (int)formatter.toNumber(heightTextField.getText());
+        notifyListener();
     }//GEN-LAST:event_heightTextFieldActionPerformed
 
     private void bboxWidhTextFieldActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_bboxWidhTextFieldActionPerformed
