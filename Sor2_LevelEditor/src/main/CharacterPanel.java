@@ -147,6 +147,7 @@ public final class CharacterPanel extends javax.swing.JPanel {
         bboxWidhTextField.setText(formatter.toString((byte)object.collisionWidth));
         healthTextField.setText(formatter.toUnsignedString(object.health));
         initialStateTextField.setText(formatter.toUnsignedString(object.initialState));
+        useBossSlotCheckBox.setSelected(object.useBossSlot);
         sceneIdTextField.setText(formatter.toUnsignedString(object.sceneId));
         scoreTextField.setText(formatter.toUnsignedString(object.deathScore));                
         vramTextField.setText(formatter.toUnsignedString(object.vram));
@@ -257,6 +258,8 @@ public final class CharacterPanel extends javax.swing.JPanel {
         ninjaWeaponCheckBox2 = new javax.swing.JCheckBox();
         ninjaWeaponCheckBox3 = new javax.swing.JCheckBox();
         jLabel19 = new javax.swing.JLabel();
+        useBossSlotCheckBox = new javax.swing.JCheckBox();
+        jLabel20 = new javax.swing.JLabel();
 
         jLabel1.setText("Character ID:");
 
@@ -281,7 +284,7 @@ public final class CharacterPanel extends javax.swing.JPanel {
 
         jLabel8.setText("Spawn Mode:");
 
-        jLabel9.setText("Initial State:");
+        jLabel9.setText("State:");
 
         jLabel10.setText("Health:");
 
@@ -451,6 +454,14 @@ public final class CharacterPanel extends javax.swing.JPanel {
 
         jLabel19.setText("Weapon:");
 
+        useBossSlotCheckBox.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                useBossSlotCheckBoxActionPerformed(evt);
+            }
+        });
+
+        jLabel20.setText("Boss:");
+
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(this);
         this.setLayout(layout);
         layout.setHorizontalGroup(
@@ -504,16 +515,18 @@ public final class CharacterPanel extends javax.swing.JPanel {
                             .addGroup(layout.createSequentialGroup()
                                 .addComponent(jLabel9)
                                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                                    .addGroup(layout.createSequentialGroup()
+                                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
+                                    .addGroup(javax.swing.GroupLayout.Alignment.LEADING, layout.createSequentialGroup()
                                         .addGap(7, 7, 7)
                                         .addComponent(ninjaWeaponCheckBox1)
-                                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                                        .addGap(18, 18, 18)
                                         .addComponent(ninjaWeaponCheckBox2)
-                                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                                        .addComponent(ninjaWeaponCheckBox3)
-                                        .addGap(0, 0, Short.MAX_VALUE))
-                                    .addComponent(initialStateTextField))))
+                                        .addGap(22, 22, 22))
+                                    .addComponent(initialStateTextField))
+                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                                .addComponent(jLabel20)
+                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                                .addComponent(useBossSlotCheckBox)))
                         .addContainerGap())
                     .addGroup(layout.createSequentialGroup()
                         .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
@@ -543,8 +556,10 @@ public final class CharacterPanel extends javax.swing.JPanel {
                             .addGroup(layout.createSequentialGroup()
                                 .addGap(1, 1, 1)
                                 .addComponent(jLabel19)
-                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                                .addComponent(bikerWeaponCheckBox)))
+                                .addGap(18, 18, 18)
+                                .addComponent(bikerWeaponCheckBox)
+                                .addGap(18, 18, 18)
+                                .addComponent(ninjaWeaponCheckBox3)))
                         .addGap(0, 0, Short.MAX_VALUE))))
         );
         layout.setVerticalGroup(
@@ -593,14 +608,17 @@ public final class CharacterPanel extends javax.swing.JPanel {
                         .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                             .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
                                 .addComponent(ninjaWeaponCheckBox1)
-                                .addComponent(ninjaWeaponCheckBox2)
                                 .addComponent(ninjaWeaponCheckBox3, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
-                            .addComponent(bikerWeaponCheckBox))
+                            .addComponent(bikerWeaponCheckBox)
+                            .addComponent(ninjaWeaponCheckBox2))
                         .addGap(0, 0, Short.MAX_VALUE)))
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                    .addComponent(jLabel9)
-                    .addComponent(initialStateTextField, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                        .addComponent(jLabel9)
+                        .addComponent(initialStateTextField, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addComponent(jLabel20, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+                    .addComponent(useBossSlotCheckBox, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(jLabel10)
@@ -758,6 +776,10 @@ public final class CharacterPanel extends javax.swing.JPanel {
         refreshTriggerArgumentValue();
     }//GEN-LAST:event_triggerComboBoxItemStateChanged
 
+    private void useBossSlotCheckBoxActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_useBossSlotCheckBoxActionPerformed
+        object.useBossSlot = useBossSlotCheckBox.isSelected();
+    }//GEN-LAST:event_useBossSlotCheckBoxActionPerformed
+
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JTextField aggressivenessTextField;
@@ -780,6 +802,7 @@ public final class CharacterPanel extends javax.swing.JPanel {
     private javax.swing.JLabel jLabel17;
     private javax.swing.JLabel jLabel19;
     private javax.swing.JLabel jLabel2;
+    private javax.swing.JLabel jLabel20;
     private javax.swing.JLabel jLabel3;
     private javax.swing.JLabel jLabel4;
     private javax.swing.JLabel jLabel5;
@@ -799,6 +822,7 @@ public final class CharacterPanel extends javax.swing.JPanel {
     private javax.swing.JComboBox<String> spawnModeComboBox;
     private javax.swing.JTextField triggerArgumentTextField;
     private javax.swing.JComboBox<String> triggerComboBox;
+    private javax.swing.JCheckBox useBossSlotCheckBox;
     private javax.swing.JTextField vramTextField;
     // End of variables declaration//GEN-END:variables
 }

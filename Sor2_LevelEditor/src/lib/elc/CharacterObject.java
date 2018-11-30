@@ -55,6 +55,7 @@ public class CharacterObject extends BaseObject {
     public boolean useAlternativePalette; // if character use secondary palette
     public int enemyAgressiveness;       // ????
     public int initialState;     // Animation status
+    public boolean useBossSlot;
     public int introductionType; // If character falls from sky, or out of a sewer etc
     // Flags used in spawn type
     public boolean weaponFlag1;
@@ -86,6 +87,8 @@ public class CharacterObject extends BaseObject {
         useAlternativePalette = ((palleteByte >> 4) & 0x1) == 1;
       
         initialState = rom.read();
+        useBossSlot = ((initialState >> 7) & 0x1) == 1;
+        initialState &= 0x7F;
         introductionType = rom.read();
         weaponFlag1 = (introductionType >> 7 & 0x1) == 1;
         weaponFlag2 = (introductionType >> 6 & 0x1) == 1;
@@ -122,7 +125,11 @@ public class CharacterObject extends BaseObject {
         }
         rom.writeByte(palleteByte);
       
-        rom.writeByte(initialState);
+        int initialStateByte = initialState;
+        if (useBossSlot){
+            initialStateByte |= 0x80;
+        } 
+        rom.writeByte(initialStateByte);
         int introductionByte = introductionType & 0x0F;
         if (weaponFlag1) introductionByte |= 0x80;
         if (weaponFlag2) introductionByte |= 0x40;
