@@ -72,23 +72,21 @@
                               <EmptySpace max="-2" attributes="0"/>
                               <Component id="vramTextField" max="32767" attributes="0"/>
                           </Group>
-                          <Group type="102" alignment="0" attributes="0">
+                          <Group type="102" alignment="1" attributes="0">
                               <Component id="jLabel9" min="-2" max="-2" attributes="0"/>
                               <EmptySpace min="-2" max="-2" attributes="0"/>
-                              <Group type="103" groupAlignment="1" attributes="0">
-                                  <Group type="102" alignment="0" attributes="0">
-                                      <EmptySpace min="7" pref="7" max="-2" attributes="0"/>
-                                      <Component id="ninjaWeaponCheckBox1" min="-2" max="-2" attributes="0"/>
-                                      <EmptySpace type="separate" min="-2" max="-2" attributes="0"/>
-                                      <Component id="ninjaWeaponCheckBox2" min="-2" max="-2" attributes="0"/>
-                                      <EmptySpace min="-2" pref="22" max="-2" attributes="0"/>
-                                  </Group>
-                                  <Component id="initialStateTextField" max="32767" attributes="0"/>
-                              </Group>
-                              <EmptySpace min="-2" max="-2" attributes="0"/>
+                              <Component id="initialStateTextField" max="32767" attributes="0"/>
+                              <EmptySpace max="-2" attributes="0"/>
                               <Component id="jLabel20" min="-2" max="-2" attributes="0"/>
                               <EmptySpace min="-2" max="-2" attributes="0"/>
                               <Component id="useBossSlotCheckBox" min="-2" max="-2" attributes="0"/>
+                          </Group>
+                          <Group type="102" alignment="0" attributes="0">
+                              <EmptySpace min="-2" pref="147" max="-2" attributes="0"/>
+                              <Component id="ninjaWeaponCheckBox1" min="-2" max="-2" attributes="0"/>
+                              <EmptySpace max="-2" attributes="0"/>
+                              <Component id="ninjaWeaponCheckBox2" min="-2" max="-2" attributes="0"/>
+                              <EmptySpace min="0" pref="0" max="32767" attributes="0"/>
                           </Group>
                       </Group>
                       <EmptySpace min="-2" max="-2" attributes="0"/>
@@ -124,13 +122,15 @@
                           <Group type="102" alignment="0" attributes="0">
                               <EmptySpace min="-2" pref="1" max="-2" attributes="0"/>
                               <Component id="jLabel19" min="-2" max="-2" attributes="0"/>
-                              <EmptySpace type="separate" max="-2" attributes="0"/>
+                              <EmptySpace max="-2" attributes="0"/>
                               <Component id="bikerWeaponCheckBox" min="-2" max="-2" attributes="0"/>
-                              <EmptySpace type="separate" max="-2" attributes="0"/>
+                              <EmptySpace max="-2" attributes="0"/>
+                              <Component id="jLabel21" min="-2" max="-2" attributes="0"/>
+                              <EmptySpace min="-2" pref="58" max="-2" attributes="0"/>
                               <Component id="ninjaWeaponCheckBox3" min="-2" max="-2" attributes="0"/>
                           </Group>
                       </Group>
-                      <EmptySpace min="0" pref="0" max="32767" attributes="0"/>
+                      <EmptySpace min="0" pref="7" max="32767" attributes="0"/>
                   </Group>
               </Group>
           </Group>
@@ -139,17 +139,17 @@
     <DimensionLayout dim="1">
       <Group type="103" groupAlignment="0" attributes="0">
           <Group type="102" alignment="0" attributes="0">
-              <EmptySpace max="-2" attributes="0"/>
+              <EmptySpace min="-2" max="-2" attributes="0"/>
               <Group type="103" groupAlignment="3" attributes="0">
                   <Component id="jLabel1" alignment="3" min="-2" max="-2" attributes="0"/>
                   <Component id="objectIdComboBox" alignment="3" min="-2" max="-2" attributes="0"/>
               </Group>
-              <EmptySpace max="-2" attributes="0"/>
+              <EmptySpace min="-2" max="-2" attributes="0"/>
               <Group type="103" groupAlignment="3" attributes="0">
                   <Component id="jLabel2" alignment="3" min="-2" max="-2" attributes="0"/>
                   <Component id="sceneIdTextField" alignment="3" min="-2" max="-2" attributes="0"/>
               </Group>
-              <EmptySpace max="-2" attributes="0"/>
+              <EmptySpace min="-2" max="-2" attributes="0"/>
               <Group type="103" groupAlignment="3" attributes="0">
                   <Component id="jLabel3" alignment="3" min="-2" max="-2" attributes="0"/>
                   <Component id="jLabel17" alignment="3" min="-2" max="-2" attributes="0"/>
@@ -158,7 +158,7 @@
               </Group>
               <EmptySpace min="-2" pref="3" max="-2" attributes="0"/>
               <Component id="alternativePaletteCheckBox" min="-2" max="-2" attributes="0"/>
-              <EmptySpace max="-2" attributes="0"/>
+              <EmptySpace min="-2" max="-2" attributes="0"/>
               <Group type="103" groupAlignment="3" attributes="0">
                   <Component id="jLabel4" alignment="3" min="-2" max="-2" attributes="0"/>
                   <Component id="difficultyComboBox" alignment="3" min="-2" max="-2" attributes="0"/>
@@ -168,76 +168,77 @@
                   <Component id="jLabel7" alignment="3" min="-2" max="-2" attributes="0"/>
                   <Component id="aggressivenessTextField" alignment="3" min="-2" max="-2" attributes="0"/>
               </Group>
-              <EmptySpace max="-2" attributes="0"/>
+              <EmptySpace min="-2" max="-2" attributes="0"/>
               <Group type="103" groupAlignment="3" attributes="0">
                   <Component id="jLabel5" alignment="3" min="-2" max="-2" attributes="0"/>
                   <Component id="triggerComboBox" alignment="3" min="-2" max="-2" attributes="0"/>
               </Group>
-              <EmptySpace max="-2" attributes="0"/>
+              <EmptySpace min="-2" max="-2" attributes="0"/>
               <Group type="103" groupAlignment="3" attributes="0">
                   <Component id="jLabel6" alignment="3" min="-2" max="-2" attributes="0"/>
                   <Component id="triggerArgumentTextField" alignment="3" min="-2" max="-2" attributes="0"/>
               </Group>
-              <EmptySpace max="-2" attributes="0"/>
+              <EmptySpace min="-2" max="-2" attributes="0"/>
               <Group type="103" groupAlignment="3" attributes="0">
                   <Component id="jLabel8" alignment="3" min="-2" max="-2" attributes="0"/>
                   <Component id="spawnModeComboBox" alignment="3" min="-2" max="-2" attributes="0"/>
               </Group>
-              <EmptySpace max="-2" attributes="0"/>
+              <EmptySpace min="-2" max="-2" attributes="0"/>
               <Group type="103" groupAlignment="0" attributes="0">
-                  <Component id="jLabel19" max="32767" attributes="0"/>
                   <Group type="102" attributes="0">
                       <Group type="103" groupAlignment="0" attributes="0">
-                          <Group type="103" groupAlignment="0" max="-2" attributes="0">
-                              <Component id="ninjaWeaponCheckBox1" alignment="0" min="-2" max="-2" attributes="0"/>
-                              <Component id="ninjaWeaponCheckBox3" max="32767" attributes="0"/>
-                          </Group>
+                          <Component id="jLabel19" min="-2" pref="23" max="-2" attributes="0"/>
+                          <Component id="ninjaWeaponCheckBox1" alignment="0" min="-2" max="-2" attributes="0"/>
+                          <Component id="ninjaWeaponCheckBox3" min="-2" max="-2" attributes="0"/>
                           <Component id="bikerWeaponCheckBox" min="-2" max="-2" attributes="0"/>
                           <Component id="ninjaWeaponCheckBox2" min="-2" max="-2" attributes="0"/>
                       </Group>
+                      <EmptySpace min="-2" max="-2" attributes="0"/>
+                      <Group type="103" groupAlignment="0" attributes="0">
+                          <Group type="103" groupAlignment="3" attributes="0">
+                              <Component id="jLabel9" alignment="3" min="-2" max="-2" attributes="0"/>
+                              <Component id="initialStateTextField" alignment="3" min="-2" max="-2" attributes="0"/>
+                              <Component id="jLabel20" alignment="3" max="32767" attributes="0"/>
+                          </Group>
+                          <Component id="useBossSlotCheckBox" min="-2" pref="26" max="-2" attributes="0"/>
+                      </Group>
+                      <EmptySpace min="-2" max="-2" attributes="0"/>
+                      <Group type="103" groupAlignment="3" attributes="0">
+                          <Component id="jLabel10" alignment="3" min="-2" max="-2" attributes="0"/>
+                          <Component id="healthTextField" alignment="3" min="-2" max="-2" attributes="0"/>
+                      </Group>
+                      <EmptySpace min="-2" max="-2" attributes="0"/>
+                      <Group type="103" groupAlignment="3" attributes="0">
+                          <Component id="jLabel14" alignment="3" min="-2" max="-2" attributes="0"/>
+                          <Component id="scoreTextField" alignment="3" min="-2" max="-2" attributes="0"/>
+                      </Group>
+                      <EmptySpace min="-2" max="-2" attributes="0"/>
+                      <Component id="jLabel11" min="-2" max="-2" attributes="0"/>
+                      <EmptySpace min="-2" max="-2" attributes="0"/>
+                      <Group type="103" groupAlignment="3" attributes="0">
+                          <Component id="jLabel12" alignment="3" min="-2" max="-2" attributes="0"/>
+                          <Component id="jLabel13" alignment="3" min="-2" max="-2" attributes="0"/>
+                          <Component id="bboxWidhTextField" alignment="3" min="-2" max="-2" attributes="0"/>
+                          <Component id="bboxHeightTextField" alignment="3" min="-2" max="-2" attributes="0"/>
+                          <Component id="bboxDeptTextField" alignment="3" min="-2" max="-2" attributes="0"/>
+                      </Group>
+                      <EmptySpace min="-2" max="-2" attributes="0"/>
+                      <Group type="103" groupAlignment="3" attributes="0">
+                          <Component id="jLabel15" alignment="3" min="-2" max="-2" attributes="0"/>
+                          <Component id="nameComboBox" alignment="3" min="-2" max="-2" attributes="0"/>
+                      </Group>
+                      <EmptySpace min="-2" max="-2" attributes="0"/>
+                      <Group type="103" groupAlignment="3" attributes="0">
+                          <Component id="jLabel16" alignment="3" min="-2" max="-2" attributes="0"/>
+                          <Component id="vramTextField" alignment="3" min="-2" max="-2" attributes="0"/>
+                      </Group>
+                  </Group>
+                  <Group type="102" attributes="0">
+                      <Component id="jLabel21" min="-2" pref="23" max="-2" attributes="0"/>
                       <EmptySpace min="0" pref="0" max="32767" attributes="0"/>
                   </Group>
               </Group>
               <EmptySpace max="-2" attributes="0"/>
-              <Group type="103" groupAlignment="0" attributes="0">
-                  <Group type="103" groupAlignment="3" attributes="0">
-                      <Component id="jLabel9" alignment="3" min="-2" max="-2" attributes="0"/>
-                      <Component id="initialStateTextField" alignment="3" min="-2" max="-2" attributes="0"/>
-                      <Component id="jLabel20" alignment="3" max="32767" attributes="0"/>
-                  </Group>
-                  <Component id="useBossSlotCheckBox" max="32767" attributes="0"/>
-              </Group>
-              <EmptySpace max="-2" attributes="0"/>
-              <Group type="103" groupAlignment="3" attributes="0">
-                  <Component id="jLabel10" alignment="3" min="-2" max="-2" attributes="0"/>
-                  <Component id="healthTextField" alignment="3" min="-2" max="-2" attributes="0"/>
-              </Group>
-              <EmptySpace max="-2" attributes="0"/>
-              <Group type="103" groupAlignment="3" attributes="0">
-                  <Component id="jLabel14" alignment="3" min="-2" max="-2" attributes="0"/>
-                  <Component id="scoreTextField" alignment="3" min="-2" max="-2" attributes="0"/>
-              </Group>
-              <EmptySpace max="-2" attributes="0"/>
-              <Component id="jLabel11" min="-2" max="-2" attributes="0"/>
-              <EmptySpace max="-2" attributes="0"/>
-              <Group type="103" groupAlignment="3" attributes="0">
-                  <Component id="jLabel12" alignment="3" min="-2" max="-2" attributes="0"/>
-                  <Component id="jLabel13" alignment="3" min="-2" max="-2" attributes="0"/>
-                  <Component id="bboxWidhTextField" alignment="3" min="-2" max="-2" attributes="0"/>
-                  <Component id="bboxHeightTextField" alignment="3" min="-2" max="-2" attributes="0"/>
-                  <Component id="bboxDeptTextField" alignment="3" min="-2" max="-2" attributes="0"/>
-              </Group>
-              <EmptySpace max="-2" attributes="0"/>
-              <Group type="103" groupAlignment="3" attributes="0">
-                  <Component id="jLabel15" alignment="3" min="-2" max="-2" attributes="0"/>
-                  <Component id="nameComboBox" alignment="3" min="-2" max="-2" attributes="0"/>
-              </Group>
-              <EmptySpace max="-2" attributes="0"/>
-              <Group type="103" groupAlignment="3" attributes="0">
-                  <Component id="jLabel16" alignment="3" min="-2" max="-2" attributes="0"/>
-                  <Component id="vramTextField" alignment="3" min="-2" max="-2" attributes="0"/>
-              </Group>
-              <EmptySpace max="32767" attributes="0"/>
           </Group>
       </Group>
     </DimensionLayout>
@@ -266,6 +267,7 @@
     <Component class="javax.swing.JCheckBox" name="alternativePaletteCheckBox">
       <Properties>
         <Property name="text" type="java.lang.String" value="Alternative Palette"/>
+        <Property name="toolTipText" type="java.lang.String" value="&lt;html&gt;Use the alternative colors&lt;br&gt;Use &lt;b&gt;&lt;i&gt;Palettes of Rage&lt;/b&gt;&lt;/i&gt; to edit the alt. palette of each scene&lt;br&gt;Alt. Palette can also be set by using a sub-boss&lt;br&gt;or boss with it&apos;s own palette&lt;/html&gt;"/>
       </Properties>
       <Events>
         <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="alternativePaletteCheckBoxActionPerformed"/>
@@ -293,7 +295,7 @@
     </Component>
     <Component class="javax.swing.JLabel" name="jLabel9">
       <Properties>
-        <Property name="text" type="java.lang.String" value="State:"/>
+        <Property name="text" type="java.lang.String" value="Settings:"/>
       </Properties>
     </Component>
     <Component class="javax.swing.JLabel" name="jLabel10">
@@ -341,6 +343,7 @@
             <StringItem index="3" value="Item 4"/>
           </StringArray>
         </Property>
+        <Property name="toolTipText" type="java.lang.String" value="Type of enemy to spawn"/>
       </Properties>
       <Events>
         <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="objectIdComboBoxActionPerformed"/>
@@ -352,6 +355,7 @@
     <Component class="javax.swing.JTextField" name="sceneIdTextField">
       <Properties>
         <Property name="text" type="java.lang.String" value="jTextField1"/>
+        <Property name="toolTipText" type="java.lang.String" value="&lt;html&gt;Which scene this enemy spawns at&lt;br&gt;Note: only move enemies between adjacent scenes&lt;br&gt;I.e. you can move last enemies of the scene to the next scene,&lt;br&gt;or first enemies to previous scene&lt;/html&gt;"/>
       </Properties>
       <Events>
         <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="sceneIdTextFieldActionPerformed"/>
@@ -365,6 +369,7 @@
     <Component class="javax.swing.JTextField" name="posXTextField">
       <Properties>
         <Property name="text" type="java.lang.String" value="jTextField1"/>
+        <Property name="toolTipText" type="java.lang.String" value="&lt;html&gt;Position X&lt;br&gt;If triggered by distance or clock, position is relative to screen bounds&lt;/html&gt;"/>
       </Properties>
       <Events>
         <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="posXTextFieldActionPerformed"/>
@@ -373,6 +378,7 @@
     <Component class="javax.swing.JTextField" name="posYTextField">
       <Properties>
         <Property name="text" type="java.lang.String" value="jTextField1"/>
+        <Property name="toolTipText" type="java.lang.String" value="&lt;html&gt;Position Y&lt;/html&gt;"/>
       </Properties>
       <Events>
         <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="posYTextFieldActionPerformed"/>
@@ -390,6 +396,7 @@
             <StringItem index="5" value="Mania"/>
           </StringArray>
         </Property>
+        <Property name="toolTipText" type="java.lang.String" value="Minimum difficulty in which this enemy can spawn"/>
       </Properties>
       <Events>
         <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="difficultyComboBoxActionPerformed"/>
@@ -401,6 +408,7 @@
     <Component class="javax.swing.JTextField" name="aggressivenessTextField">
       <Properties>
         <Property name="text" type="java.lang.String" value="jTextField1"/>
+        <Property name="toolTipText" type="java.lang.String" value="&lt;html&gt;Level of AI agressiveness&lt;br&gt;On Mania, all enemies are at their maximum&lt;/html&gt;"/>
       </Properties>
       <Events>
         <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="aggressivenessTextFieldActionPerformed"/>
@@ -417,6 +425,7 @@
             <StringItem index="3" value="Item 4"/>
           </StringArray>
         </Property>
+        <Property name="toolTipText" type="java.lang.String" value="&lt;html&gt;What triggers the spawning of this enemy&lt;br&gt;&lt;b&gt;Instantaneous:&lt;/b&gt; spawn imediately&lt;br&gt;&lt;b&gt;Distance:&lt;/b&gt; Spawn if player crosses a certain line on map,&lt;br&gt;Drag the yellow line on the map, or edit Trigg Arg value&lt;br&gt;&lt;b&gt;Clock:&lt;/b&gt; Spawn if HUD clock drops below the first hex value of the argument,&lt;br&gt; or if number of enemies on screen drop bellow the second value of the argument&lt;br&gt;&lt;b&gt;Delayed:&lt;/b&gt; The enemy is not used, but the next enemy&lt;br&gt;will be delayed by the value in Trigg Arg&lt;/html&gt;"/>
       </Properties>
       <Events>
         <EventHandler event="itemStateChanged" listener="java.awt.event.ItemListener" parameters="java.awt.event.ItemEvent" handler="triggerComboBoxItemStateChanged"/>
@@ -429,6 +438,7 @@
     <Component class="javax.swing.JTextField" name="triggerArgumentTextField">
       <Properties>
         <Property name="text" type="java.lang.String" value="jTextField1"/>
+        <Property name="toolTipText" type="java.lang.String" value="&lt;html&gt;Argument used in the spawn trigger&lt;br&gt;Depends on the type of trigger&lt;br&gt;&lt;b&gt;Instantaneous:&lt;/b&gt; argument is not used&lt;br&gt;&lt;b&gt;Distance:&lt;/b&gt; position on map that player needs to cross to spawn the enemy&lt;br&gt;&lt;b&gt;Clock:&lt;/b&gt; Divides the argument in two numbers, separated by spaces&lt;br&gt; - First value represents clock value;&lt;br&gt; - Second value represents number of enemies on screen&lt;br&gt;Enemy spawns if clock is under the first value,&lt;br&gt;or num enemies on screen is below the second value&lt;br&gt;&lt;b&gt;Delayed:&lt;/b&gt; Time to delay the spawning of the next enemy&lt;/html&gt;"/>
       </Properties>
       <Events>
         <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="triggerArgumentTextFieldActionPerformed"/>
@@ -445,6 +455,7 @@
             <StringItem index="3" value="Item 4"/>
           </StringArray>
         </Property>
+        <Property name="toolTipText" type="java.lang.String" value="&lt;html&gt;How the enemy shows up&lt;br&gt;Different per type of enemy&lt;/html&gt;"/>
       </Properties>
       <Events>
         <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="spawnModeComboBoxActionPerformed"/>
@@ -456,6 +467,7 @@
     <Component class="javax.swing.JTextField" name="initialStateTextField">
       <Properties>
         <Property name="text" type="java.lang.String" value="jTextField1"/>
+        <Property name="toolTipText" type="java.lang.String" value="Tecnical settings of the enemy"/>
       </Properties>
       <Events>
         <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="initialStateTextFieldActionPerformed"/>
@@ -464,6 +476,7 @@
     <Component class="javax.swing.JTextField" name="healthTextField">
       <Properties>
         <Property name="text" type="java.lang.String" value="jTextField1"/>
+        <Property name="toolTipText" type="java.lang.String" value="&lt;html&gt;Enemy health/energy bar&lt;br&gt;It is multiplied by difficulty level&lt;html&gt;"/>
       </Properties>
       <Events>
         <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="healthTextFieldActionPerformed"/>
@@ -472,6 +485,7 @@
     <Component class="javax.swing.JTextField" name="scoreTextField">
       <Properties>
         <Property name="text" type="java.lang.String" value="jTextField1"/>
+        <Property name="toolTipText" type="java.lang.String" value="&lt;html&gt;Score won by beating this enemy&lt;br&gt;Sometimes used as &quot;bonus&quot; enemies&lt;/html&gt;"/>
       </Properties>
       <Events>
         <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="scoreTextFieldActionPerformed"/>
@@ -480,6 +494,7 @@
     <Component class="javax.swing.JTextField" name="bboxWidhTextField">
       <Properties>
         <Property name="text" type="java.lang.String" value="jTextField1"/>
+        <Property name="toolTipText" type="java.lang.String" value="Width"/>
       </Properties>
       <Events>
         <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="bboxWidhTextFieldActionPerformed"/>
@@ -488,6 +503,7 @@
     <Component class="javax.swing.JTextField" name="bboxHeightTextField">
       <Properties>
         <Property name="text" type="java.lang.String" value="jTextField1"/>
+        <Property name="toolTipText" type="java.lang.String" value="Height"/>
       </Properties>
       <Events>
         <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="bboxHeightTextFieldActionPerformed"/>
@@ -496,6 +512,7 @@
     <Component class="javax.swing.JTextField" name="bboxDeptTextField">
       <Properties>
         <Property name="text" type="java.lang.String" value="jTextField1"/>
+        <Property name="toolTipText" type="java.lang.String" value="Depth"/>
       </Properties>
       <Events>
         <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="bboxDeptTextFieldActionPerformed"/>
@@ -511,6 +528,7 @@
             <StringItem index="3" value="Item 4"/>
           </StringArray>
         </Property>
+        <Property name="toolTipText" type="java.lang.String" value="Enemy name on HUD"/>
       </Properties>
       <Events>
         <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="nameComboBoxActionPerformed"/>
@@ -522,37 +540,53 @@
     <Component class="javax.swing.JTextField" name="vramTextField">
       <Properties>
         <Property name="text" type="java.lang.String" value="jTextField1"/>
+        <Property name="toolTipText" type="java.lang.String" value="&lt;html&gt;Address in VRAM where this type of enemy is loaded&lt;br&gt;Unused in Syndicate Wars&lt;/html&gt;"/>
       </Properties>
       <Events>
         <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="vramTextFieldActionPerformed"/>
       </Events>
     </Component>
     <Component class="javax.swing.JCheckBox" name="bikerWeaponCheckBox">
+      <Properties>
+        <Property name="toolTipText" type="java.lang.String" value="Used by ninjas"/>
+      </Properties>
       <Events>
         <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="bikerWeaponCheckBoxActionPerformed"/>
       </Events>
     </Component>
     <Component class="javax.swing.JCheckBox" name="ninjaWeaponCheckBox1">
+      <Properties>
+        <Property name="toolTipText" type="java.lang.String" value="&lt;html&gt;Used by Bikers&lt;br&gt;If set, Biker carries a pipe&lt;html&gt;"/>
+      </Properties>
       <Events>
         <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="ninjaWeaponCheckBox1ActionPerformed"/>
       </Events>
     </Component>
     <Component class="javax.swing.JCheckBox" name="ninjaWeaponCheckBox2">
+      <Properties>
+        <Property name="toolTipText" type="java.lang.String" value="Used by ninjas"/>
+      </Properties>
       <Events>
         <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="ninjaWeaponCheckBox2ActionPerformed"/>
       </Events>
     </Component>
     <Component class="javax.swing.JCheckBox" name="ninjaWeaponCheckBox3">
+      <Properties>
+        <Property name="toolTipText" type="java.lang.String" value="Used by ninjas"/>
+      </Properties>
       <Events>
         <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="ninjaWeaponCheckBox3ActionPerformed"/>
       </Events>
     </Component>
     <Component class="javax.swing.JLabel" name="jLabel19">
       <Properties>
-        <Property name="text" type="java.lang.String" value="Weapon:"/>
+        <Property name="text" type="java.lang.String" value="Biker Weap:"/>
       </Properties>
     </Component>
     <Component class="javax.swing.JCheckBox" name="useBossSlotCheckBox">
+      <Properties>
+        <Property name="toolTipText" type="java.lang.String" value="&lt;html&gt;Must be triggered for bosses&lt;br&gt;They use a special spawning slot&lt;/html&gt;"/>
+      </Properties>
       <Events>
         <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="useBossSlotCheckBoxActionPerformed"/>
       </Events>
@@ -560,6 +594,11 @@
     <Component class="javax.swing.JLabel" name="jLabel20">
       <Properties>
         <Property name="text" type="java.lang.String" value="Boss:"/>
+      </Properties>
+    </Component>
+    <Component class="javax.swing.JLabel" name="jLabel21">
+      <Properties>
+        <Property name="text" type="java.lang.String" value="Ninja:"/>
       </Properties>
     </Component>
   </SubComponents>

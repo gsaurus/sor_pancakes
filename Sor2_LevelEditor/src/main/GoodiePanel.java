@@ -169,7 +169,7 @@ public final class GoodiePanel extends javax.swing.JPanel {
 
         jLabel3.setText("Position:");
 
-        jLabel9.setText("Initial State:");
+        jLabel9.setText("Settings:");
 
         jLabel10.setText("Animation:");
 
@@ -182,6 +182,7 @@ public final class GoodiePanel extends javax.swing.JPanel {
         jLabel14.setText("Height:");
 
         objectIdComboBox.setModel(new javax.swing.DefaultComboBoxModel<>(new String[] { "Item 1", "Item 2", "Item 3", "Item 4" }));
+        objectIdComboBox.setToolTipText("Type of item to spawn");
         objectIdComboBox.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 objectIdComboBoxActionPerformed(evt);
@@ -189,6 +190,7 @@ public final class GoodiePanel extends javax.swing.JPanel {
         });
 
         sceneIdTextField.setText("jTextField1");
+        sceneIdTextField.setToolTipText("<html>Which scene this object spawns at<br>Note: only move objects between adjacent scenes<br>I.e. you can move last objects of the scene to the next scene,<br>or first objects to previous scene</html>");
         sceneIdTextField.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 sceneIdTextFieldActionPerformed(evt);
@@ -198,6 +200,7 @@ public final class GoodiePanel extends javax.swing.JPanel {
         jLabel17.setText("x");
 
         posXTextField.setText("jTextField1");
+        posXTextField.setToolTipText("Position X");
         posXTextField.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 posXTextFieldActionPerformed(evt);
@@ -205,6 +208,7 @@ public final class GoodiePanel extends javax.swing.JPanel {
         });
 
         posYTextField.setText("jTextField1");
+        posYTextField.setToolTipText("Position Y");
         posYTextField.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 posYTextFieldActionPerformed(evt);
@@ -212,6 +216,7 @@ public final class GoodiePanel extends javax.swing.JPanel {
         });
 
         initialStateTextField.setText("jTextField1");
+        initialStateTextField.setToolTipText("<html>Technical settings of the object\\nE.g. Use 3 for solid containers!</html>");
         initialStateTextField.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 initialStateTextFieldActionPerformed(evt);
@@ -219,6 +224,7 @@ public final class GoodiePanel extends javax.swing.JPanel {
         });
 
         animationTextField.setText("jTextField1");
+        animationTextField.setToolTipText("<html>Starting animation ID</html>");
         animationTextField.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 animationTextFieldActionPerformed(evt);
@@ -226,6 +232,7 @@ public final class GoodiePanel extends javax.swing.JPanel {
         });
 
         heightTextField.setText("jTextField1");
+        heightTextField.setToolTipText("<html>Distance to the ground<br>Use negative values to move UP<br>E.g. Barbon's bar light on the wall</html>");
         heightTextField.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 heightTextFieldActionPerformed(evt);
@@ -233,6 +240,7 @@ public final class GoodiePanel extends javax.swing.JPanel {
         });
 
         bboxWidhTextField.setText("jTextField1");
+        bboxWidhTextField.setToolTipText("Width");
         bboxWidhTextField.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 bboxWidhTextFieldActionPerformed(evt);
@@ -240,6 +248,7 @@ public final class GoodiePanel extends javax.swing.JPanel {
         });
 
         bboxHeightTextField.setText("jTextField1");
+        bboxHeightTextField.setToolTipText("Height");
         bboxHeightTextField.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 bboxHeightTextFieldActionPerformed(evt);
@@ -247,6 +256,7 @@ public final class GoodiePanel extends javax.swing.JPanel {
         });
 
         bboxDeptTextField.setText("jTextField1");
+        bboxDeptTextField.setToolTipText("Depth");
         bboxDeptTextField.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 bboxDeptTextFieldActionPerformed(evt);
@@ -256,6 +266,7 @@ public final class GoodiePanel extends javax.swing.JPanel {
         jLabel18.setText("Sprite Status:");
 
         spriteStatusTextField.setText("jTextField1");
+        spriteStatusTextField.setToolTipText("<html>Technical sprite status<html>");
         spriteStatusTextField.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 spriteStatusTextFieldActionPerformed(evt);
@@ -265,6 +276,7 @@ public final class GoodiePanel extends javax.swing.JPanel {
         jLabel15.setText("Inside:");
 
         inside2PlayersCheckBox.setText("Inside for 2 Players only");
+        inside2PlayersCheckBox.setToolTipText("<html>If checked, contained item only spawns in two players mode</html>");
         inside2PlayersCheckBox.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 inside2PlayersCheckBoxActionPerformed(evt);
@@ -272,6 +284,7 @@ public final class GoodiePanel extends javax.swing.JPanel {
         });
 
         insideComboBox.setEditable(true);
+        insideComboBox.setToolTipText("<html>If this is a container, what object is inside<br>The object spawns once the container is destroyed</html>");
         insideComboBox.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 insideComboBoxActionPerformed(evt);
@@ -283,63 +296,62 @@ public final class GoodiePanel extends javax.swing.JPanel {
         layout.setHorizontalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(layout.createSequentialGroup()
+                .addGap(12, 12, 12)
+                .addComponent(inside2PlayersCheckBox, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                .addContainerGap())
+            .addGroup(layout.createSequentialGroup()
+                .addContainerGap()
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                     .addGroup(layout.createSequentialGroup()
-                        .addContainerGap()
+                        .addComponent(jLabel14)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                        .addComponent(heightTextField))
+                    .addGroup(layout.createSequentialGroup()
+                        .addComponent(jLabel10)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                        .addComponent(animationTextField))
+                    .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
+                        .addComponent(jLabel18)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                        .addComponent(spriteStatusTextField))
+                    .addGroup(layout.createSequentialGroup()
+                        .addComponent(jLabel15)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                        .addComponent(insideComboBox, 0, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+                    .addGroup(layout.createSequentialGroup()
+                        .addComponent(jLabel9)
+                        .addGap(20, 20, 20)
+                        .addComponent(initialStateTextField))
+                    .addGroup(layout.createSequentialGroup()
                         .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                             .addGroup(layout.createSequentialGroup()
-                                .addComponent(jLabel14)
+                                .addComponent(jLabel3)
                                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                                .addComponent(heightTextField))
+                                .addComponent(posXTextField, javax.swing.GroupLayout.PREFERRED_SIZE, 71, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                                .addComponent(jLabel17)
+                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                                .addComponent(posYTextField, javax.swing.GroupLayout.PREFERRED_SIZE, 68, javax.swing.GroupLayout.PREFERRED_SIZE))
                             .addGroup(layout.createSequentialGroup()
-                                .addComponent(jLabel9)
+                                .addComponent(jLabel1)
                                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                                .addComponent(initialStateTextField))
+                                .addComponent(objectIdComboBox, 0, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
                             .addGroup(layout.createSequentialGroup()
-                                .addComponent(jLabel10)
+                                .addComponent(jLabel2)
                                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                                .addComponent(animationTextField))
-                            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
-                                .addComponent(jLabel18)
+                                .addComponent(sceneIdTextField, javax.swing.GroupLayout.PREFERRED_SIZE, 52, javax.swing.GroupLayout.PREFERRED_SIZE))
+                            .addGroup(layout.createSequentialGroup()
+                                .addComponent(bboxWidhTextField, javax.swing.GroupLayout.PREFERRED_SIZE, 59, javax.swing.GroupLayout.PREFERRED_SIZE)
                                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                                .addComponent(spriteStatusTextField))
-                            .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                                .addGroup(layout.createSequentialGroup()
-                                    .addComponent(jLabel15)
-                                    .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                                    .addComponent(insideComboBox, 0, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
-                                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
-                                    .addGroup(layout.createSequentialGroup()
-                                        .addComponent(jLabel3)
-                                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                                        .addComponent(posXTextField, javax.swing.GroupLayout.PREFERRED_SIZE, 71, javax.swing.GroupLayout.PREFERRED_SIZE)
-                                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                                        .addComponent(jLabel17)
-                                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                                        .addComponent(posYTextField, javax.swing.GroupLayout.PREFERRED_SIZE, 68, javax.swing.GroupLayout.PREFERRED_SIZE))
-                                    .addGroup(layout.createSequentialGroup()
-                                        .addComponent(jLabel1)
-                                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                                        .addComponent(objectIdComboBox, 0, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
-                                    .addGroup(layout.createSequentialGroup()
-                                        .addComponent(jLabel2)
-                                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                                        .addComponent(sceneIdTextField, javax.swing.GroupLayout.PREFERRED_SIZE, 52, javax.swing.GroupLayout.PREFERRED_SIZE)))
-                                .addGroup(layout.createSequentialGroup()
-                                    .addComponent(bboxWidhTextField, javax.swing.GroupLayout.PREFERRED_SIZE, 59, javax.swing.GroupLayout.PREFERRED_SIZE)
-                                    .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                                    .addComponent(jLabel12)
-                                    .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                                    .addComponent(bboxHeightTextField, javax.swing.GroupLayout.PREFERRED_SIZE, 62, javax.swing.GroupLayout.PREFERRED_SIZE)
-                                    .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                                    .addComponent(jLabel13)
-                                    .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                                    .addComponent(bboxDeptTextField, javax.swing.GroupLayout.PREFERRED_SIZE, 59, javax.swing.GroupLayout.PREFERRED_SIZE))
-                                .addComponent(jLabel11))))
-                    .addGroup(layout.createSequentialGroup()
-                        .addGap(12, 12, 12)
-                        .addComponent(inside2PlayersCheckBox, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)))
-                .addContainerGap())
+                                .addComponent(jLabel12)
+                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                                .addComponent(bboxHeightTextField, javax.swing.GroupLayout.PREFERRED_SIZE, 62, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                                .addComponent(jLabel13)
+                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                                .addComponent(bboxDeptTextField, javax.swing.GroupLayout.PREFERRED_SIZE, 59, javax.swing.GroupLayout.PREFERRED_SIZE))
+                            .addComponent(jLabel11))
+                        .addContainerGap())))
         );
         layout.setVerticalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)

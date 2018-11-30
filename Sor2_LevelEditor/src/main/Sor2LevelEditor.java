@@ -56,6 +56,8 @@ public final class Sor2LevelEditor extends javax.swing.JFrame {
     private AllLevelsLoadcues levels;
     private AllEnemyNames enemyNames;
     
+    public static Sor2LevelEditor instance;
+    
     
 /////////////////////////////////////////////////////////////
 /////////////////////////////////////////////////////////////
@@ -148,10 +150,12 @@ public final class Sor2LevelEditor extends javax.swing.JFrame {
     
     private void setupMapListeners(){
         
-        mapPanel.selectionListener = (BaseObject object) -> {
+        mapPanel.selectionListener = (BaseObject object, int index) -> {
             clearObjectPanel();
+            objectIndexLabel.setText("");
             if (object instanceof CharacterObject){
-                CharacterPanel panel = new CharacterPanel((CharacterObject)object, formatter, enemyNames, guide);                
+                CharacterPanel panel = new CharacterPanel((CharacterObject)object, formatter, enemyNames, guide);
+                objectIndexLabel.setText(Integer.toString(index + 1));
                 panel.listener = (CharacterObject charObj) -> {
                     reloadMap(false);
                 };                
@@ -159,7 +163,8 @@ public final class Sor2LevelEditor extends javax.swing.JFrame {
                 objectContainerPanel.revalidate();
                 objectContainerPanel.repaint();
             } else if (object instanceof ItemObject){
-                GoodiePanel panel = new GoodiePanel((ItemObject)object, formatter, guide);                
+                GoodiePanel panel = new GoodiePanel((ItemObject)object, formatter, guide);
+                objectIndexLabel.setText(Integer.toString(index));
                 panel.listener = (ItemObject charObj) -> {
                     reloadMap(false);
                 };                
@@ -303,7 +308,7 @@ public final class Sor2LevelEditor extends javax.swing.JFrame {
             if (openRom() && openGuide(guideName) && loadLevels() && loadEnemyNames()){
                 setEnabledRecursively(true);
                 updateNumberOfScenes();
-                reloadMap(true);
+                reloadMap(false);
             }else{
                 // Failed, close everything
                 close();
@@ -368,6 +373,8 @@ public final class Sor2LevelEditor extends javax.swing.JFrame {
         showEnemiesPack2CheckBox = new javax.swing.JCheckBox();
         jButton1 = new javax.swing.JButton();
         jButton2 = new javax.swing.JButton();
+        editNamesButton = new javax.swing.JButton();
+        objectIndexLabel = new javax.swing.JLabel();
         jScrollPane1 = new javax.swing.JScrollPane();
         mapPanel = new main.MapPanel();
         objectContainerPanel = new javax.swing.JPanel();
@@ -381,6 +388,9 @@ public final class Sor2LevelEditor extends javax.swing.JFrame {
         exitMenuItem = new javax.swing.JMenuItem();
         jMenu2 = new javax.swing.JMenu();
         jMenuItem1 = new javax.swing.JMenuItem();
+        jSeparator1 = new javax.swing.JPopupMenu.Separator();
+        jMenuItem2 = new javax.swing.JMenuItem();
+        jMenuItem3 = new javax.swing.JMenuItem();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.DO_NOTHING_ON_CLOSE);
         setLocationByPlatform(true);
@@ -396,6 +406,7 @@ public final class Sor2LevelEditor extends javax.swing.JFrame {
 
         levelComboBox.setMaximumRowCount(9);
         levelComboBox.setModel(new javax.swing.DefaultComboBoxModel<>(new String[] { "1", "2", "3", "4", "5", "6", "7", "8", "versus" }));
+        levelComboBox.setToolTipText("Display objects for a specific level");
         levelComboBox.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 levelComboBoxActionPerformed(evt);
@@ -403,6 +414,7 @@ public final class Sor2LevelEditor extends javax.swing.JFrame {
         });
 
         sceneComboBox.setModel(new javax.swing.DefaultComboBoxModel<>(new String[] { "1" }));
+        sceneComboBox.setToolTipText("<html>Display objects of a scene<br>in currently selected level</html>");
         sceneComboBox.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 sceneComboBoxActionPerformed(evt);
@@ -412,6 +424,7 @@ public final class Sor2LevelEditor extends javax.swing.JFrame {
         jLabel3.setText("View as:");
 
         numberFormatComboBox.setModel(new javax.swing.DefaultComboBoxModel<>(new String[] { "Decimal", "Hexadecimal", "Binary" }));
+        numberFormatComboBox.setToolTipText("<html>Display settings in different numerical bases<br>This allow you to better interpret certain values</html>");
         numberFormatComboBox.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 numberFormatComboBoxActionPerformed(evt);
@@ -421,6 +434,7 @@ public final class Sor2LevelEditor extends javax.swing.JFrame {
         jLabel4.setText("Difficulty:");
 
         difficultyComboBox.setModel(new javax.swing.DefaultComboBoxModel<>(new String[] { "Very Easy", "Easy", "Normal", "Hard", "Very Hard", "Mania" }));
+        difficultyComboBox.setToolTipText("<html>Display all enemies that spawn at a specific difficulty</html>");
         difficultyComboBox.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 difficultyComboBoxActionPerformed(evt);
@@ -429,6 +443,7 @@ public final class Sor2LevelEditor extends javax.swing.JFrame {
 
         showBackgroundCheckBox.setSelected(true);
         showBackgroundCheckBox.setText("Background");
+        showBackgroundCheckBox.setToolTipText("<html>Display scene background<br>As a guideline for objets positioning</html>");
         showBackgroundCheckBox.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 showBackgroundCheckBoxActionPerformed(evt);
@@ -437,6 +452,7 @@ public final class Sor2LevelEditor extends javax.swing.JFrame {
 
         showEnemiesPack1CheckBox.setSelected(true);
         showEnemiesPack1CheckBox.setText("Enemies pack 1");
+        showEnemiesPack1CheckBox.setToolTipText("<html>Display enemies in pack 1 for the current scene<br>Enemies in sor2 are stored in two packs per scene</html>");
         showEnemiesPack1CheckBox.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 showEnemiesPack1CheckBoxActionPerformed(evt);
@@ -444,7 +460,8 @@ public final class Sor2LevelEditor extends javax.swing.JFrame {
         });
 
         showGoodiesCheckBox.setSelected(true);
-        showGoodiesCheckBox.setText("Goodies");
+        showGoodiesCheckBox.setText("Items");
+        showGoodiesCheckBox.setToolTipText("<html>Display item objects<br>Such as goodies and crates</html>");
         showGoodiesCheckBox.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 showGoodiesCheckBoxActionPerformed(evt);
@@ -453,25 +470,45 @@ public final class Sor2LevelEditor extends javax.swing.JFrame {
 
         showEnemiesPack2CheckBox.setSelected(true);
         showEnemiesPack2CheckBox.setText("Enemies pack 2");
+        showEnemiesPack2CheckBox.setToolTipText("<html>Display enemies in pack 2 for the current scene<br>Enemies in sor2 are stored in two packs per scene</html>");
         showEnemiesPack2CheckBox.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 showEnemiesPack2CheckBoxActionPerformed(evt);
             }
         });
 
-        jButton1.setText("NEXT");
+        jButton1.setText("|>");
+        jButton1.setToolTipText("<html>Select next enemy or object<br>And focus the view on it</html>");
         jButton1.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 jButton1ActionPerformed(evt);
             }
         });
 
-        jButton2.setText("Previous");
+        jButton2.setText("<|");
+        jButton2.setToolTipText("<html>Select previous enemy or object<br>And focus the view on it</html>");
         jButton2.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 jButton2ActionPerformed(evt);
             }
         });
+
+        editNamesButton.setText("Edit Names");
+        editNamesButton.setToolTipText("<html>Edit the list of all enemy names<br>The names that display on game HUD</html>");
+        editNamesButton.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                editNamesButtonActionPerformed(evt);
+            }
+        });
+
+        objectIndexLabel.setFont(new java.awt.Font("Lucida Grande", 1, 14)); // NOI18N
+        objectIndexLabel.setHorizontalAlignment(javax.swing.SwingConstants.CENTER);
+        objectIndexLabel.setText("      ");
+        objectIndexLabel.setToolTipText("<html>Spawning order of the selected enemy or object</html>");
+        objectIndexLabel.setFocusable(false);
+        objectIndexLabel.setHorizontalTextPosition(javax.swing.SwingConstants.CENTER);
+        objectIndexLabel.setPreferredSize(new java.awt.Dimension(30, 17));
+        objectIndexLabel.setSize(new java.awt.Dimension(30, 16));
 
         javax.swing.GroupLayout jPanel3Layout = new javax.swing.GroupLayout(jPanel3);
         jPanel3.setLayout(jPanel3Layout);
@@ -503,14 +540,18 @@ public final class Sor2LevelEditor extends javax.swing.JFrame {
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addGroup(jPanel3Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
                     .addGroup(jPanel3Layout.createSequentialGroup()
-                        .addComponent(showEnemiesPack2CheckBox)
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                        .addComponent(jButton2))
-                    .addGroup(jPanel3Layout.createSequentialGroup()
                         .addComponent(showEnemiesPack1CheckBox)
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                        .addComponent(jButton1, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)))
-                .addContainerGap(227, Short.MAX_VALUE))
+                        .addComponent(jButton2, javax.swing.GroupLayout.PREFERRED_SIZE, 52, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                        .addComponent(objectIndexLabel, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                        .addComponent(jButton1, javax.swing.GroupLayout.PREFERRED_SIZE, 1, Short.MAX_VALUE))
+                    .addGroup(jPanel3Layout.createSequentialGroup()
+                        .addComponent(showEnemiesPack2CheckBox)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                        .addComponent(editNamesButton, javax.swing.GroupLayout.DEFAULT_SIZE, 142, Short.MAX_VALUE)))
+                .addContainerGap(396, Short.MAX_VALUE))
         );
         jPanel3Layout.setVerticalGroup(
             jPanel3Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
@@ -522,6 +563,8 @@ public final class Sor2LevelEditor extends javax.swing.JFrame {
                     .addComponent(difficultyComboBox, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                     .addComponent(showBackgroundCheckBox)
                     .addComponent(showEnemiesPack1CheckBox)
+                    .addComponent(jButton2)
+                    .addComponent(objectIndexLabel, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                     .addComponent(jButton1))
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addGroup(jPanel3Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
@@ -533,7 +576,8 @@ public final class Sor2LevelEditor extends javax.swing.JFrame {
                     .addComponent(showGoodiesCheckBox)
                     .addGroup(jPanel3Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                         .addComponent(showEnemiesPack2CheckBox)
-                        .addComponent(jButton2))))
+                        .addComponent(editNamesButton)))
+                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
         );
 
         javax.swing.GroupLayout mapPanelLayout = new javax.swing.GroupLayout(mapPanel);
@@ -601,6 +645,25 @@ public final class Sor2LevelEditor extends javax.swing.JFrame {
             }
         });
         jMenu2.add(jMenuItem1);
+        jMenu2.add(jSeparator1);
+
+        jMenuItem2.setAccelerator(javax.swing.KeyStroke.getKeyStroke(java.awt.event.KeyEvent.VK_LEFT, 0));
+        jMenuItem2.setText("Previous Object");
+        jMenuItem2.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                jMenuItem2ActionPerformed(evt);
+            }
+        });
+        jMenu2.add(jMenuItem2);
+
+        jMenuItem3.setAccelerator(javax.swing.KeyStroke.getKeyStroke(java.awt.event.KeyEvent.VK_RIGHT, 0));
+        jMenuItem3.setText("Next Object");
+        jMenuItem3.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                jMenuItem3ActionPerformed(evt);
+            }
+        });
+        jMenu2.add(jMenuItem3);
 
         jMenuBar1.add(jMenu2);
 
@@ -613,23 +676,25 @@ public final class Sor2LevelEditor extends javax.swing.JFrame {
             .addComponent(jPanel3, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
             .addGroup(layout.createSequentialGroup()
                 .addContainerGap()
-                .addComponent(objectContainerPanel, javax.swing.GroupLayout.PREFERRED_SIZE, 223, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addComponent(objectContainerPanel, javax.swing.GroupLayout.PREFERRED_SIZE, 237, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
             .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
-                    .addGap(233, 233, 233)
-                    .addComponent(jScrollPane1, javax.swing.GroupLayout.DEFAULT_SIZE, 679, Short.MAX_VALUE)))
+                .addGroup(layout.createSequentialGroup()
+                    .addGap(242, 242, 242)
+                    .addComponent(jScrollPane1, javax.swing.GroupLayout.DEFAULT_SIZE, 884, Short.MAX_VALUE)
+                    .addGap(0, 0, 0)))
         );
         layout.setVerticalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(layout.createSequentialGroup()
                 .addComponent(jPanel3, javax.swing.GroupLayout.PREFERRED_SIZE, 58, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addComponent(objectContainerPanel, javax.swing.GroupLayout.DEFAULT_SIZE, 574, Short.MAX_VALUE))
+                .addComponent(objectContainerPanel, javax.swing.GroupLayout.DEFAULT_SIZE, 591, Short.MAX_VALUE))
             .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
+                .addGroup(layout.createSequentialGroup()
                     .addGap(60, 60, 60)
-                    .addComponent(jScrollPane1, javax.swing.GroupLayout.DEFAULT_SIZE, 578, Short.MAX_VALUE)))
+                    .addComponent(jScrollPane1, javax.swing.GroupLayout.DEFAULT_SIZE, 595, Short.MAX_VALUE)
+                    .addGap(0, 0, 0)))
         );
 
         pack();
@@ -720,10 +785,22 @@ public final class Sor2LevelEditor extends javax.swing.JFrame {
     }//GEN-LAST:event_jButton2ActionPerformed
 
     private void jMenuItem1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jMenuItem1ActionPerformed
+        editNamesButtonActionPerformed(null);
+    }//GEN-LAST:event_jMenuItem1ActionPerformed
+
+    private void editNamesButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_editNamesButtonActionPerformed
         NamesEditorForm namesEditor = new NamesEditorForm(enemyNames);
         namesEditor.setLocationRelativeTo(null);
         namesEditor.setVisible(true);
-    }//GEN-LAST:event_jMenuItem1ActionPerformed
+    }//GEN-LAST:event_editNamesButtonActionPerformed
+
+    private void jMenuItem2ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jMenuItem2ActionPerformed
+        jButton2ActionPerformed(null);
+    }//GEN-LAST:event_jMenuItem2ActionPerformed
+
+    private void jMenuItem3ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jMenuItem3ActionPerformed
+        jButton1ActionPerformed(null);
+    }//GEN-LAST:event_jMenuItem3ActionPerformed
 
     /**
      * @param args the command line arguments
@@ -755,13 +832,15 @@ public final class Sor2LevelEditor extends javax.swing.JFrame {
         /* Create and display the form */
         java.awt.EventQueue.invokeLater(new Runnable() {
             public void run() {
-                new Sor2LevelEditor().setVisible(true);
+                instance = new Sor2LevelEditor();
+                instance.setVisible(true);
             }
         });
     }
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JComboBox<String> difficultyComboBox;
+    private javax.swing.JButton editNamesButton;
     private javax.swing.JMenuItem exitMenuItem;
     private javax.swing.JButton jButton1;
     private javax.swing.JButton jButton2;
@@ -773,14 +852,18 @@ public final class Sor2LevelEditor extends javax.swing.JFrame {
     private javax.swing.JMenu jMenu2;
     private javax.swing.JMenuBar jMenuBar1;
     private javax.swing.JMenuItem jMenuItem1;
+    private javax.swing.JMenuItem jMenuItem2;
+    private javax.swing.JMenuItem jMenuItem3;
     private javax.swing.JPanel jPanel3;
     private javax.swing.JScrollPane jScrollPane1;
+    private javax.swing.JPopupMenu.Separator jSeparator1;
     private javax.swing.JPopupMenu.Separator jSeparator2;
     private javax.swing.JPopupMenu.Separator jSeparator3;
     private javax.swing.JComboBox<String> levelComboBox;
     private main.MapPanel mapPanel;
     private javax.swing.JComboBox<String> numberFormatComboBox;
     private javax.swing.JPanel objectContainerPanel;
+    private javax.swing.JLabel objectIndexLabel;
     private javax.swing.JMenuItem openOriginalMenuItem;
     private javax.swing.JMenuItem openSWMenuItem;
     private javax.swing.JMenuItem saveMenuItem;

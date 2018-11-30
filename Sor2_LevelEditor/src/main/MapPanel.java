@@ -49,7 +49,7 @@ public final class MapPanel extends javax.swing.JPanel {
     final int DISTANCE_DRAG_MARGIN = 16;
 
     public interface ObjectSelectedListener{
-        void onObjectSelected(BaseObject object);
+        void onObjectSelected(BaseObject object, int index);
     }
     
     public interface ObjectMovedListener{
@@ -122,9 +122,9 @@ public final class MapPanel extends javax.swing.JPanel {
     void notifySelectionListener(){
         if (selectionListener != null){
             if (selectedObject != null){
-                selectionListener.onObjectSelected(selectedObject.object);
+                selectionListener.onObjectSelected(selectedObject.object, displayedObjects.indexOf(selectedObject));
             }else{
-                selectionListener.onObjectSelected(null);
+                selectionListener.onObjectSelected(null, -1);
             }
         }
     }
@@ -198,16 +198,23 @@ public final class MapPanel extends javax.swing.JPanel {
             selectedObject = null;
         }
         refreshGraphics();
-        notifySelectionListener();        
+        notifySelectionListener();
+    }
+    
+    
+    void updateFinalSelectionPosition(Point finalPoint){
+        if (selectedObject != null){
+            selectedObject.setVisualPosX(finalPoint.x);
+            selectedObject.setVisualPosY(finalPoint.y);
+            refreshGraphics();
+            notifyMovedListener();
+        }
     }
     
     void updateSelectionPosition(Point point){
         if (selectedObject != null){
             Point finalPoint = new Point(point.x - dragStartingDistance.x, point.y - dragStartingDistance.y);
-            selectedObject.setVisualPosX(finalPoint.x);
-            selectedObject.setVisualPosY(finalPoint.y);
-            refreshGraphics();
-            notifyMovedListener();
+            updateFinalSelectionPosition(finalPoint);            
         }
     }
     
@@ -280,6 +287,7 @@ public final class MapPanel extends javax.swing.JPanel {
             
         });
     }
+    
     
     
     void createDisplayedObject(BaseObject obj, Guide guide, boolean useAlternativePalette){
@@ -357,12 +365,14 @@ public final class MapPanel extends javax.swing.JPanel {
         if (previouslySelectedObject != null){
             for (DisplayedObject obj: displayedObjects){
                 if (obj.object == previouslySelectedObject.object){
-                    selectedObject = previouslySelectedObject;
+                    selectedObject = obj;
                     break;
                 }
             }            
         }
-        
+        if (selectedObject == null){
+            selectNext();
+        }        
         loadMapBackground(levelNumber, sceneNumber);        
         this.revalidate();
         this.repaint();
