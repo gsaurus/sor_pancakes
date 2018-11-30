@@ -44,20 +44,20 @@ public class AllLevelsLoadcues {
         }
     }
     
-    public void write(RandomAccessFile rom, long address) throws IOException{
+    public void write(RandomAccessFile rom, long address, int deltaObjectId) throws IOException{
         for (LevelLoadcues level: levels){
             rom.seek(address);
             long levelElcAddress = address + rom.readUnsignedShort();            
             // store in first scene ELC only
             rom.seek(levelElcAddress);
             long firstSceneElcAddress = levelElcAddress + rom.readUnsignedShort();
-            level.write(rom, firstSceneElcAddress);
+            level.write(rom, firstSceneElcAddress, deltaObjectId);
             address += 2L;
         }
     }
     
     public void write(RandomAccessFile rom) throws IOException{
-        write(rom, address);
+        write(rom, address, 0);
     }
     
     

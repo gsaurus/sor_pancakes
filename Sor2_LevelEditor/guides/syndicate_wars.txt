@@ -2,6 +2,7 @@
 PK_ELC_INDEX    // Address of levels object spawning list in rom
 PK_ENAME        // Address of enemy names
 143             // Number of enemy names
+7               // Number of main characters
 
 // Each character is followed by a list of spawning modes
 // Ending with at least one empty line
@@ -204,13 +205,9 @@ Electrical Box 2
 
 Barrier
 
-x
-
 Light
 
 Arcade
-
-x
 
 Ship Pole
 
@@ -244,7 +241,7 @@ Cash
 
 Gold
 
-1Up
+1UP
 
 Apple
 

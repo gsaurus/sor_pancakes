@@ -72,45 +72,45 @@ public final class LevelLoadcues {
         }
     }
     
-    void writeCharactersList(RandomAccessFile rom, List<CharacterObject> list, long address) throws IOException{
+    void writeCharactersList(RandomAccessFile rom, List<CharacterObject> list, long address, int deltaObjectId) throws IOException{
         rom.seek(address);
         for (CharacterObject obj : list){
-            obj.write(rom, address);
+            obj.write(rom, address, deltaObjectId);
             address += CharacterObject.SIZE;
             rom.seek(address);
         }
     }
     
-    void writeItemsList(RandomAccessFile rom, List<ItemObject> list, long address) throws IOException{
+    void writeItemsList(RandomAccessFile rom, List<ItemObject> list, long address, int deltaObjectId) throws IOException{
         rom.seek(address);
         for (ItemObject obj : list){
-            obj.write(rom, address);
+            obj.write(rom, address, deltaObjectId);
             address += ItemObject.SIZE;
             rom.seek(address);
         }
     }
     
-    public void write(RandomAccessFile rom, long mainAddress, long enemiesAddress1, long enemiesAddress2, long goodiesAddress) throws IOException{
+    public void write(RandomAccessFile rom, long mainAddress, long enemiesAddress1, long enemiesAddress2, long goodiesAddress, int deltaObjectId) throws IOException{
         rom.seek(mainAddress + 2); // discard first word
         rom.writeInt((int)enemiesAddress1);
         rom.writeInt((int)enemiesAddress2);
         rom.writeInt((int)goodiesAddress);
-        writeCharactersList(rom, enemiesPart1, enemiesAddress1);
-        writeCharactersList(rom, enemiesPart2, enemiesAddress2);
-        writeItemsList(rom, goodies, goodiesAddress);
+        writeCharactersList(rom, enemiesPart1, enemiesAddress1, deltaObjectId);
+        writeCharactersList(rom, enemiesPart2, enemiesAddress2, deltaObjectId);
+        writeItemsList(rom, goodies, goodiesAddress, deltaObjectId);
     }
-    public void write(RandomAccessFile rom, long mainAddress) throws IOException{
+    public void write(RandomAccessFile rom, long mainAddress, int deltaObjectId) throws IOException{
         rom.seek(mainAddress + 2); // discard first word
         long enemiesAddress1 = rom.readInt();
         long enemiesAddress2 = rom.readInt();
         long goodiesAddress = rom.readInt();
-        writeCharactersList(rom, enemiesPart1, enemiesAddress1);
-        writeCharactersList(rom, enemiesPart2, enemiesAddress2);
-        writeItemsList(rom, goodies, goodiesAddress);
+        writeCharactersList(rom, enemiesPart1, enemiesAddress1, deltaObjectId);
+        writeCharactersList(rom, enemiesPart2, enemiesAddress2, deltaObjectId);
+        writeItemsList(rom, goodies, goodiesAddress, deltaObjectId);
     }
     
     public void write(RandomAccessFile rom) throws IOException{
-        write(rom, address);
+        write(rom, address, 0);
     }
 
     public static void main(String[] args){

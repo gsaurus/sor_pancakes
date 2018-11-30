@@ -35,6 +35,7 @@ public class Guide {
     public long levelsLoadcuesAddress;
     public long enemyNamesAddress;
     public int totalNumberOfEnemyNames;
+    public int numberOfMainCharacters;
     public List<ObjectDefinition> objectsDefinition = new ArrayList<>(50);
     
     
@@ -81,6 +82,7 @@ public class Guide {
             enemyNamesAddress = readHexValue(scanner);
         }
         totalNumberOfEnemyNames = readInt(scanner);
+        numberOfMainCharacters = readInt(scanner);
                 
         // Read character spawning mode guides
         String characterName;

@@ -37,10 +37,15 @@ public class AllEnemyNames {
         }
     }
     
-    public void write(Rom rom) throws IOException{
+    public void write(Rom rom, long address) throws IOException{
         for (int i = 0 ; i < allNames.size() ; ++i){
             rom.writeName((int) (address + i * NAME_SIZE), allNames.get(i), NAME_SIZE);
         }
+    }
+    
+    
+    public void write(Rom rom) throws IOException{
+        write(rom, address);
     }
     
 }

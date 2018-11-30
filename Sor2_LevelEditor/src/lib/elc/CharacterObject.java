@@ -111,9 +111,9 @@ public class CharacterObject extends BaseObject {
     }
     
     
-    public void write(RandomAccessFile rom, long address) throws IOException{
+    public void write(RandomAccessFile rom, long address, int deltaObjectId) throws IOException{
         rom.seek(address);
-        rom.writeByte(objectId);
+        rom.writeByte(objectId + deltaObjectId);
         rom.writeByte(sceneId);
         int triggerAndDifficulty = triggerType;
         triggerAndDifficulty += (minimumDifficulty << 4) & 0xF8;
@@ -152,7 +152,7 @@ public class CharacterObject extends BaseObject {
     }
     
     public void write(RandomAccessFile rom) throws IOException{
-        this.write(rom, address);
+        this.write(rom, address, 0);
     }
     
     

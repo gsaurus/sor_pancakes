@@ -155,6 +155,8 @@ public final class MapPanel extends javax.swing.JPanel {
             JViewport viewport = (JViewport)this.getParent();
             viewport.setViewPosition(new Point(selectedObject.getVisualPosX() - viewport.getWidth()/2, selectedObject.getVisualPosY() - viewport.getHeight()/2));
         }
+        this.revalidate();
+        this.repaint();
         notifySelectionListener();
     }
     
@@ -212,7 +214,7 @@ public final class MapPanel extends javax.swing.JPanel {
     }
     
     void updateSelectionPosition(Point point){
-        if (selectedObject != null){
+        if (selectedObject != null && dragStartingDistance != null){
             Point finalPoint = new Point(point.x - dragStartingDistance.x, point.y - dragStartingDistance.y);
             updateFinalSelectionPosition(finalPoint);            
         }

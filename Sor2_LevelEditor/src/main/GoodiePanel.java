@@ -53,7 +53,7 @@ public final class GoodiePanel extends javax.swing.JPanel {
             if (definition != null){
                 objectNames[i] = definition.name;
             }else{
-                objectNames[i] = "";
+                objectNames[i] = Integer.toHexString(i * 2);
             }
         }
         objectIdComboBox.setModel(new DefaultComboBoxModel(objectNames));

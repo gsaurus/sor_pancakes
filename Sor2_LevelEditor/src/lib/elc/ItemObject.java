@@ -80,9 +80,9 @@ public class ItemObject extends BaseObject{
     }
     
     
-    public void write(RandomAccessFile rom, long address) throws IOException{
+    public void write(RandomAccessFile rom, long address, int deltaObjectId) throws IOException{
         rom.seek(address);
-        rom.writeByte(objectId);
+        rom.writeByte(objectId + deltaObjectId);
         rom.writeByte(sceneId);
         rom.writeByte(status);
         rom.writeByte(collisionWidth);
@@ -102,7 +102,7 @@ public class ItemObject extends BaseObject{
     }
     
     public void write(RandomAccessFile rom) throws IOException{
-        this.write(rom, address);
+        this.write(rom, address, 0);
     }
     
     

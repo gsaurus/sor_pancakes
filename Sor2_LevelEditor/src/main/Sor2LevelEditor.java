@@ -44,6 +44,9 @@ import lib.names.AllEnemyNames;
  */
 public final class Sor2LevelEditor extends javax.swing.JFrame {
     
+    private static final String VERSION = " v1.0";    
+    private static final String TITLE = "Spawns Of Rage 2" + VERSION;
+    
     private static final String ORIGINAL_GUIDE_NAME = "guides/default.txt";
     private static final String SW_GUIDE_NAME = "guides/syndicate_wars.txt";
     
@@ -164,7 +167,7 @@ public final class Sor2LevelEditor extends javax.swing.JFrame {
                 objectContainerPanel.repaint();
             } else if (object instanceof ItemObject){
                 GoodiePanel panel = new GoodiePanel((ItemObject)object, formatter, guide);
-                objectIndexLabel.setText(Integer.toString(index));
+                objectIndexLabel.setText(Integer.toString(index + 1));
                 panel.listener = (ItemObject charObj) -> {
                     reloadMap(false);
                 };                
@@ -218,19 +221,28 @@ public final class Sor2LevelEditor extends javax.swing.JFrame {
         }
     }
     
-    private boolean save(){
+    private boolean saveToRom(Rom rom, Guide guide){
         requestFocusInWindow();
         storeUnsavedDataInJPanels();
+        // when saving between different guides, number of characters may vary
+        int deltaObjectId = guide.numberOfMainCharacters - this.guide.numberOfMainCharacters;
+        // Object ID is always even
+        deltaObjectId *= 2;
         // save
          try {
-            levels.write(rom.getRomFile());
-            enemyNames.write(rom);
+            levels.write(rom.getRomFile(), guide.levelsLoadcuesAddress, deltaObjectId);
+            enemyNames.write(rom, guide.enemyNamesAddress);
             rom.fixChecksum();
             return true;
         } catch (IOException ex) {
             ExceptionUtils.showError(this, "Unable to save rom", ex);
-            return false;
         }
+         return false;
+    }
+    
+    
+    private boolean save(){
+        return saveToRom(rom, guide);
     }
     
     
@@ -255,34 +267,33 @@ public final class Sor2LevelEditor extends javax.swing.JFrame {
     }
     
     
-    boolean openRom(){
+    Rom openRom(){
         // open rom
+        Rom localRom = null;
         int returnVal = romChooser.showOpenDialog(this);        
         if (returnVal == JFileChooser.APPROVE_OPTION) {
             File file = romChooser.getSelectedFile();
             String romName = file.getAbsolutePath();
             try {
-                rom = new Rom(new File(romName));
-                return true;
+                localRom = new Rom(new File(romName));
             } catch (FileNotFoundException ex) {
                 ExceptionUtils.showError(this, "Unable to load rom", ex);
             }            
         }
-        return false;
+        return localRom;
     }
     
-    boolean openGuide(String guideName){
+    Guide openGuide(String guideName, Rom rom){
         try {
-            guide = new Guide(guideName, rom);
-            return true;
+            return new Guide(guideName, rom);
         } catch (Exception ex) {
             ExceptionUtils.showError(this, "Unable to load guide " + guideName, ex);
         }
-        return false;
+        return null;
     }
     
     
-    boolean loadLevels(){
+    boolean loadLevels(Rom rom){
         try {
             levels = new AllLevelsLoadcues(rom.getRomFile(), guide.levelsLoadcuesAddress);
             return true;
@@ -292,7 +303,7 @@ public final class Sor2LevelEditor extends javax.swing.JFrame {
         }
     }
     
-    boolean loadEnemyNames(){
+    boolean loadEnemyNames(Rom rom){
         try {
             enemyNames = new AllEnemyNames(rom, guide.enemyNamesAddress, guide.totalNumberOfEnemyNames);
             return true;
@@ -304,16 +315,42 @@ public final class Sor2LevelEditor extends javax.swing.JFrame {
     
     void openProject(String guideName){
         // close rom first
-        if (askToSave()){        
-            if (openRom() && openGuide(guideName) && loadLevels() && loadEnemyNames()){
-                setEnabledRecursively(true);
-                updateNumberOfScenes();
-                reloadMap(false);
+        if (askToSave()){ 
+            rom = openRom();
+            if (rom != null){
+                guide = openGuide(guideName, rom);
+                if (guide != null && loadLevels(rom) && loadEnemyNames(rom)){
+                    setEnabledRecursively(true);
+                    updateNumberOfScenes();
+                    reloadMap(false);
+                }else{
+                    // Failed, close everything
+                    close();
+                }
             }else{
-                // Failed, close everything
                 close();
             }
         }
+    }
+    
+    
+    void exportProject(String guideName){
+        Rom romToExport = openRom();
+        if (romToExport != null){
+            Guide guideToExport = openGuide(guideName, romToExport);
+            if (guide != null){
+                saveToRom(romToExport, guideToExport);
+                JOptionPane.showMessageDialog(this,
+                    "Export successful!", "Export successful",
+                    JOptionPane.INFORMATION_MESSAGE
+                );
+            }
+            try {
+                romToExport.close();
+            } catch (IOException ex) {
+                ExceptionUtils.showError(this, "Closing rom failed", ex);
+            }
+        }        
     }
     
     
@@ -384,6 +421,9 @@ public final class Sor2LevelEditor extends javax.swing.JFrame {
         openSWMenuItem = new javax.swing.JMenuItem();
         jSeparator3 = new javax.swing.JPopupMenu.Separator();
         saveMenuItem = new javax.swing.JMenuItem();
+        jMenu4 = new javax.swing.JMenu();
+        jMenuItem6 = new javax.swing.JMenuItem();
+        jMenuItem7 = new javax.swing.JMenuItem();
         jSeparator2 = new javax.swing.JPopupMenu.Separator();
         exitMenuItem = new javax.swing.JMenuItem();
         jMenu2 = new javax.swing.JMenu();
@@ -391,8 +431,11 @@ public final class Sor2LevelEditor extends javax.swing.JFrame {
         jSeparator1 = new javax.swing.JPopupMenu.Separator();
         jMenuItem2 = new javax.swing.JMenuItem();
         jMenuItem3 = new javax.swing.JMenuItem();
+        jMenu3 = new javax.swing.JMenu();
+        jMenuItem4 = new javax.swing.JMenuItem();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.DO_NOTHING_ON_CLOSE);
+        setTitle(TITLE);
         setLocationByPlatform(true);
         addWindowListener(new java.awt.event.WindowAdapter() {
             public void windowClosing(java.awt.event.WindowEvent evt) {
@@ -507,7 +550,6 @@ public final class Sor2LevelEditor extends javax.swing.JFrame {
         objectIndexLabel.setToolTipText("<html>Spawning order of the selected enemy or object</html>");
         objectIndexLabel.setFocusable(false);
         objectIndexLabel.setHorizontalTextPosition(javax.swing.SwingConstants.CENTER);
-        objectIndexLabel.setPreferredSize(new java.awt.Dimension(30, 17));
         objectIndexLabel.setSize(new java.awt.Dimension(30, 16));
 
         javax.swing.GroupLayout jPanel3Layout = new javax.swing.GroupLayout(jPanel3);
@@ -544,7 +586,7 @@ public final class Sor2LevelEditor extends javax.swing.JFrame {
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                         .addComponent(jButton2, javax.swing.GroupLayout.PREFERRED_SIZE, 52, javax.swing.GroupLayout.PREFERRED_SIZE)
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                        .addComponent(objectIndexLabel, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addComponent(objectIndexLabel)
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                         .addComponent(jButton1, javax.swing.GroupLayout.PREFERRED_SIZE, 1, Short.MAX_VALUE))
                     .addGroup(jPanel3Layout.createSequentialGroup()
@@ -564,7 +606,7 @@ public final class Sor2LevelEditor extends javax.swing.JFrame {
                     .addComponent(showBackgroundCheckBox)
                     .addComponent(showEnemiesPack1CheckBox)
                     .addComponent(jButton2)
-                    .addComponent(objectIndexLabel, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(objectIndexLabel)
                     .addComponent(jButton1))
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addGroup(jPanel3Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
@@ -606,7 +648,7 @@ public final class Sor2LevelEditor extends javax.swing.JFrame {
         });
         jMenu1.add(openOriginalMenuItem);
 
-        openSWMenuItem.setText("Open SW");
+        openSWMenuItem.setText("Open Syndicate Wars");
         openSWMenuItem.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 openSWMenuItemActionPerformed(evt);
@@ -623,6 +665,26 @@ public final class Sor2LevelEditor extends javax.swing.JFrame {
             }
         });
         jMenu1.add(saveMenuItem);
+
+        jMenu4.setText("Export...");
+
+        jMenuItem6.setText("To Original");
+        jMenuItem6.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                jMenuItem6ActionPerformed(evt);
+            }
+        });
+        jMenu4.add(jMenuItem6);
+
+        jMenuItem7.setText("To Syndicate Wars");
+        jMenuItem7.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                jMenuItem7ActionPerformed(evt);
+            }
+        });
+        jMenu4.add(jMenuItem7);
+
+        jMenu1.add(jMenu4);
         jMenu1.add(jSeparator2);
 
         exitMenuItem.setAccelerator(javax.swing.KeyStroke.getKeyStroke(java.awt.event.KeyEvent.VK_Q, java.awt.event.InputEvent.META_MASK));
@@ -667,6 +729,18 @@ public final class Sor2LevelEditor extends javax.swing.JFrame {
 
         jMenuBar1.add(jMenu2);
 
+        jMenu3.setText("Help");
+
+        jMenuItem4.setText("About");
+        jMenuItem4.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                jMenuItem4ActionPerformed(evt);
+            }
+        });
+        jMenu3.add(jMenuItem4);
+
+        jMenuBar1.add(jMenu3);
+
         setJMenuBar(jMenuBar1);
 
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(getContentPane());
@@ -676,13 +750,12 @@ public final class Sor2LevelEditor extends javax.swing.JFrame {
             .addComponent(jPanel3, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
             .addGroup(layout.createSequentialGroup()
                 .addContainerGap()
-                .addComponent(objectContainerPanel, javax.swing.GroupLayout.PREFERRED_SIZE, 237, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addComponent(objectContainerPanel, javax.swing.GroupLayout.PREFERRED_SIZE, 223, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
             .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                .addGroup(layout.createSequentialGroup()
-                    .addGap(242, 242, 242)
-                    .addComponent(jScrollPane1, javax.swing.GroupLayout.DEFAULT_SIZE, 884, Short.MAX_VALUE)
-                    .addGap(0, 0, 0)))
+                .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
+                    .addGap(233, 233, 233)
+                    .addComponent(jScrollPane1, javax.swing.GroupLayout.DEFAULT_SIZE, 893, Short.MAX_VALUE)))
         );
         layout.setVerticalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
@@ -691,10 +764,9 @@ public final class Sor2LevelEditor extends javax.swing.JFrame {
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addComponent(objectContainerPanel, javax.swing.GroupLayout.DEFAULT_SIZE, 591, Short.MAX_VALUE))
             .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                .addGroup(layout.createSequentialGroup()
+                .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
                     .addGap(60, 60, 60)
-                    .addComponent(jScrollPane1, javax.swing.GroupLayout.DEFAULT_SIZE, 595, Short.MAX_VALUE)
-                    .addGap(0, 0, 0)))
+                    .addComponent(jScrollPane1, javax.swing.GroupLayout.DEFAULT_SIZE, 595, Short.MAX_VALUE)))
         );
 
         pack();
@@ -802,6 +874,27 @@ public final class Sor2LevelEditor extends javax.swing.JFrame {
         jButton1ActionPerformed(null);
     }//GEN-LAST:event_jMenuItem3ActionPerformed
 
+    private void jMenuItem4ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jMenuItem4ActionPerformed
+        JOptionPane.showMessageDialog(this,
+            "<html><h2>" + TITLE + " 2018</h2><br><br>" +
+            "Tool: <b>gsaurus</b><br>" +
+            "Knowledge expert: <b>Red Crimson</b><br>" +
+            "Backgrounds by: <b>darrenagar</b><br><br>" +
+            "Acknowledgment on derived work<br>"+
+            "would be appreciated but is not required<br><br>"+
+            "Spawnage of Rage 2 is free software.<br>The authors can not be held responsible<br>for any illicit use of this program.<br></html>",
+            "About",
+            JOptionPane.INFORMATION_MESSAGE);
+    }//GEN-LAST:event_jMenuItem4ActionPerformed
+
+    private void jMenuItem6ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jMenuItem6ActionPerformed
+        exportProject(ORIGINAL_GUIDE_NAME);
+    }//GEN-LAST:event_jMenuItem6ActionPerformed
+
+    private void jMenuItem7ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jMenuItem7ActionPerformed
+        exportProject(SW_GUIDE_NAME);
+    }//GEN-LAST:event_jMenuItem7ActionPerformed
+
     /**
      * @param args the command line arguments
      */
@@ -850,10 +943,15 @@ public final class Sor2LevelEditor extends javax.swing.JFrame {
     private javax.swing.JLabel jLabel4;
     private javax.swing.JMenu jMenu1;
     private javax.swing.JMenu jMenu2;
+    private javax.swing.JMenu jMenu3;
+    private javax.swing.JMenu jMenu4;
     private javax.swing.JMenuBar jMenuBar1;
     private javax.swing.JMenuItem jMenuItem1;
     private javax.swing.JMenuItem jMenuItem2;
     private javax.swing.JMenuItem jMenuItem3;
+    private javax.swing.JMenuItem jMenuItem4;
+    private javax.swing.JMenuItem jMenuItem6;
+    private javax.swing.JMenuItem jMenuItem7;
     private javax.swing.JPanel jPanel3;
     private javax.swing.JScrollPane jScrollPane1;
     private javax.swing.JPopupMenu.Separator jSeparator1;
