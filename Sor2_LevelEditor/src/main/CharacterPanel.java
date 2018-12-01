@@ -755,7 +755,7 @@ public final class CharacterPanel extends javax.swing.JPanel {
     }//GEN-LAST:event_nameComboBoxActionPerformed
 
     private void vramTextFieldActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_vramTextFieldActionPerformed
-        object.deathScore = (int)formatter.toNumber(vramTextField.getText());
+        object.vram = (int)formatter.toNumber(vramTextField.getText());
     }//GEN-LAST:event_vramTextFieldActionPerformed
 
     private void bikerWeaponCheckBoxActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_bikerWeaponCheckBoxActionPerformed
