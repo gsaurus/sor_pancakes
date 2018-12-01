@@ -21,7 +21,7 @@ Zan
 
 Roo
 
-Galsia
+Galsia 1
 Standing
 Sit
 Manhole
@@ -83,7 +83,7 @@ Cheer 2
 Cheer 3
 
 
-Ninja
+Ninja 1
 Standing
 Sit
 Hooked
@@ -149,27 +149,35 @@ Boss
 Shiva
 Boss
 
-Ninja
+Ninja 2
+Standing
+Sit
+Hooked
+Fall
 
-Ninja
+Ninja 3
+Standing
+Sit
+Hooked
+Fall
 
-Grenade
+Grenade 1
 
-Vehelits
+Vehelits 1
 
 Knife
 
 Pipe
 
-Galsia
+Galsia 2
 
 Sword
 
 Kunai
 
-Grenade
+Grenade 2
 
-Galsia
+Galsia 3
 
 Barbon Jacket
 
@@ -181,13 +189,13 @@ Lamp
 
 Menu
 
-Table
+Table 1
 
-Table
+Table 2
 
-Table
+Table 3
 
-Table
+Table 4
 
 Chair
 
@@ -195,13 +203,13 @@ Trash Can
 
 Oil Barrel
 
-Obj 1
+Obj A 1
 
-Obj 1
+Obj A 2
 
-Electrical Box 1
+Electrical Box A
 
-Electrical Box 2
+Electrical Box B
 
 Barrier
 
@@ -211,29 +219,29 @@ Arcade
 
 Ship Pole
 
-Obj 2
+Obj B
 
-Obj 3
+Obj C
 
-Obj 4
+Obj D
 
-Sandbag
+Sandbag 1
 
-Sandbag
+Sandbag 2
 
-Sandbag
+Sandbag 3
 
-Sandbag
+Sandbag 4
 
-Crate
+Crate 1
 
-Obj 5
+Obj E
 
-Vehelits
+Vehelits 2
 
-Crate
+Crate 2
 
-Crate
+Crate 3
 
 Alien Egg
 

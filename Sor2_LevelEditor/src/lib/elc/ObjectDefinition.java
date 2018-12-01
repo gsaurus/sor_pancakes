@@ -44,6 +44,18 @@ public class ObjectDefinition{
         this.name = name;
         this.spawnModes = spawnModes;
         
+        String[] tokens = name.split(" ");
+        if (tokens.length > 1){
+            try{
+                Integer.parseInt(tokens[tokens.length - 1]);
+                // If reaches here, means string ends with a number
+                tokens = Arrays.copyOf(tokens, tokens.length - 1);
+                name = String.join(" ", tokens);
+            }catch(NumberFormatException e){
+                // Nothing to do
+            }
+        }
+        
         // read icon
         try{
             spriteOne = ImageIO.read(new File("images/objects/" + name + ".png"));

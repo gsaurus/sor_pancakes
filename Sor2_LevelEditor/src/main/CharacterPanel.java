@@ -138,10 +138,8 @@ public final class CharacterPanel extends javax.swing.JPanel {
         
         aggressivenessTextField.setText(formatter.toUnsignedString(object.enemyAgressiveness));
         alternativePaletteCheckBox.setSelected(object.useAlternativePalette);
-        bikerWeaponCheckBox.setSelected(object.weaponFlag1);
-        ninjaWeaponCheckBox1.setSelected(object.weaponFlag2);
-        ninjaWeaponCheckBox2.setSelected(object.weaponFlag3);
-        ninjaWeaponCheckBox3.setSelected(object.weaponFlag4);
+        bikerWeaponCheckBox.setSelected(object.bikerWeaponFlag);
+        ninjaHeightTextField.setText(formatter.toUnsignedString(object.ninjaHookHeight));        
         bboxDeptTextField.setText(formatter.toString((byte)object.collisionDept));
         bboxHeightTextField.setText(formatter.toString((byte)object.collisionHeight));
         bboxWidhTextField.setText(formatter.toString((byte)object.collisionWidth));
@@ -178,9 +176,7 @@ public final class CharacterPanel extends javax.swing.JPanel {
         nameComboBoxActionPerformed(null);
         vramTextFieldActionPerformed(null);
         bikerWeaponCheckBoxActionPerformed(null);
-        ninjaWeaponCheckBox1ActionPerformed(null);
-        ninjaWeaponCheckBox2ActionPerformed(null);
-        ninjaWeaponCheckBox3ActionPerformed(null);
+        ninjaHeightTextFieldActionPerformed(null);
         isReloading = false;
     }    
     
@@ -254,13 +250,11 @@ public final class CharacterPanel extends javax.swing.JPanel {
         nameComboBox = new javax.swing.JComboBox<>();
         vramTextField = new javax.swing.JTextField();
         bikerWeaponCheckBox = new javax.swing.JCheckBox();
-        ninjaWeaponCheckBox1 = new javax.swing.JCheckBox();
-        ninjaWeaponCheckBox2 = new javax.swing.JCheckBox();
-        ninjaWeaponCheckBox3 = new javax.swing.JCheckBox();
         jLabel19 = new javax.swing.JLabel();
         useBossSlotCheckBox = new javax.swing.JCheckBox();
         jLabel20 = new javax.swing.JLabel();
         jLabel21 = new javax.swing.JLabel();
+        ninjaHeightTextField = new javax.swing.JTextField();
 
         jLabel1.setText("Character ID:");
 
@@ -345,7 +339,7 @@ public final class CharacterPanel extends javax.swing.JPanel {
         });
 
         aggressivenessTextField.setText("jTextField1");
-        aggressivenessTextField.setToolTipText("<html>Level of AI agressiveness<br>On Mania, all enemies are at their maximum</html>");
+        aggressivenessTextField.setToolTipText("<html>Level of AI agressiveness<br>Maximum is 0xF, 15 in decimal<br>On Mania, all enemies are at their maximum</html>");
         aggressivenessTextField.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 aggressivenessTextFieldActionPerformed(evt);
@@ -447,35 +441,14 @@ public final class CharacterPanel extends javax.swing.JPanel {
             }
         });
 
-        bikerWeaponCheckBox.setToolTipText("Used by ninjas");
+        bikerWeaponCheckBox.setToolTipText("When set, biker carries a pipe weapon");
         bikerWeaponCheckBox.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 bikerWeaponCheckBoxActionPerformed(evt);
             }
         });
 
-        ninjaWeaponCheckBox1.setToolTipText("<html>Used by Bikers<br>If set, Biker carries a pipe<html>");
-        ninjaWeaponCheckBox1.addActionListener(new java.awt.event.ActionListener() {
-            public void actionPerformed(java.awt.event.ActionEvent evt) {
-                ninjaWeaponCheckBox1ActionPerformed(evt);
-            }
-        });
-
-        ninjaWeaponCheckBox2.setToolTipText("Used by ninjas");
-        ninjaWeaponCheckBox2.addActionListener(new java.awt.event.ActionListener() {
-            public void actionPerformed(java.awt.event.ActionEvent evt) {
-                ninjaWeaponCheckBox2ActionPerformed(evt);
-            }
-        });
-
-        ninjaWeaponCheckBox3.setToolTipText("Used by ninjas");
-        ninjaWeaponCheckBox3.addActionListener(new java.awt.event.ActionListener() {
-            public void actionPerformed(java.awt.event.ActionEvent evt) {
-                ninjaWeaponCheckBox3ActionPerformed(evt);
-            }
-        });
-
-        jLabel19.setText("Biker Weap:");
+        jLabel19.setText("Biker Pipe:");
 
         useBossSlotCheckBox.setToolTipText("<html>Must be triggered for bosses<br>They use a special spawning slot</html>");
         useBossSlotCheckBox.addActionListener(new java.awt.event.ActionListener() {
@@ -486,7 +459,15 @@ public final class CharacterPanel extends javax.swing.JPanel {
 
         jLabel20.setText("Boss:");
 
-        jLabel21.setText("Ninja:");
+        jLabel21.setText("Ninja H:");
+
+        ninjaHeightTextField.setText("jTextField1");
+        ninjaHeightTextField.setToolTipText("When a ninja is hooked, this determines how high he is");
+        ninjaHeightTextField.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                ninjaHeightTextFieldActionPerformed(evt);
+            }
+        });
 
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(this);
         this.setLayout(layout);
@@ -547,47 +528,41 @@ public final class CharacterPanel extends javax.swing.JPanel {
                                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                                 .addComponent(useBossSlotCheckBox))
                             .addGroup(layout.createSequentialGroup()
-                                .addGap(147, 147, 147)
-                                .addComponent(ninjaWeaponCheckBox1)
-                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                                .addComponent(ninjaWeaponCheckBox2)
-                                .addGap(0, 0, Short.MAX_VALUE)))
-                        .addContainerGap())
-                    .addGroup(layout.createSequentialGroup()
-                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                                    .addGroup(layout.createSequentialGroup()
+                                        .addComponent(jLabel3)
+                                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                                        .addComponent(posXTextField, javax.swing.GroupLayout.PREFERRED_SIZE, 71, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                                        .addComponent(jLabel17)
+                                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                                        .addComponent(posYTextField, javax.swing.GroupLayout.PREFERRED_SIZE, 68, javax.swing.GroupLayout.PREFERRED_SIZE))
+                                    .addGroup(layout.createSequentialGroup()
+                                        .addComponent(jLabel2)
+                                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                                        .addComponent(sceneIdTextField, javax.swing.GroupLayout.PREFERRED_SIZE, 52, javax.swing.GroupLayout.PREFERRED_SIZE))
+                                    .addGroup(layout.createSequentialGroup()
+                                        .addComponent(bboxWidhTextField, javax.swing.GroupLayout.PREFERRED_SIZE, 59, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                                        .addComponent(jLabel12)
+                                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                                        .addComponent(bboxHeightTextField, javax.swing.GroupLayout.PREFERRED_SIZE, 62, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                                        .addComponent(jLabel13)
+                                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                                        .addComponent(bboxDeptTextField, javax.swing.GroupLayout.PREFERRED_SIZE, 59, javax.swing.GroupLayout.PREFERRED_SIZE))
+                                    .addComponent(jLabel11))
+                                .addGap(0, 11, Short.MAX_VALUE))
                             .addGroup(layout.createSequentialGroup()
-                                .addComponent(jLabel3)
-                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                                .addComponent(posXTextField, javax.swing.GroupLayout.PREFERRED_SIZE, 71, javax.swing.GroupLayout.PREFERRED_SIZE)
-                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                                .addComponent(jLabel17)
-                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                                .addComponent(posYTextField, javax.swing.GroupLayout.PREFERRED_SIZE, 68, javax.swing.GroupLayout.PREFERRED_SIZE))
-                            .addGroup(layout.createSequentialGroup()
-                                .addComponent(jLabel2)
-                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                                .addComponent(sceneIdTextField, javax.swing.GroupLayout.PREFERRED_SIZE, 52, javax.swing.GroupLayout.PREFERRED_SIZE))
-                            .addGroup(layout.createSequentialGroup()
-                                .addComponent(bboxWidhTextField, javax.swing.GroupLayout.PREFERRED_SIZE, 59, javax.swing.GroupLayout.PREFERRED_SIZE)
-                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                                .addComponent(jLabel12)
-                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                                .addComponent(bboxHeightTextField, javax.swing.GroupLayout.PREFERRED_SIZE, 62, javax.swing.GroupLayout.PREFERRED_SIZE)
-                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                                .addComponent(jLabel13)
-                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                                .addComponent(bboxDeptTextField, javax.swing.GroupLayout.PREFERRED_SIZE, 59, javax.swing.GroupLayout.PREFERRED_SIZE))
-                            .addComponent(jLabel11)
-                            .addGroup(layout.createSequentialGroup()
-                                .addGap(1, 1, 1)
                                 .addComponent(jLabel19)
                                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                                 .addComponent(bikerWeaponCheckBox)
                                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                                 .addComponent(jLabel21)
-                                .addGap(58, 58, 58)
-                                .addComponent(ninjaWeaponCheckBox3)))
-                        .addGap(0, 7, Short.MAX_VALUE))))
+                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                                .addComponent(ninjaHeightTextField, javax.swing.GroupLayout.PREFERRED_SIZE, 1, Short.MAX_VALUE)
+                                .addGap(1, 1, 1)))
+                        .addContainerGap())))
         );
         layout.setVerticalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
@@ -633,10 +608,7 @@ public final class CharacterPanel extends javax.swing.JPanel {
                     .addGroup(layout.createSequentialGroup()
                         .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                             .addComponent(jLabel19, javax.swing.GroupLayout.PREFERRED_SIZE, 23, javax.swing.GroupLayout.PREFERRED_SIZE)
-                            .addComponent(ninjaWeaponCheckBox1)
-                            .addComponent(ninjaWeaponCheckBox3)
-                            .addComponent(bikerWeaponCheckBox)
-                            .addComponent(ninjaWeaponCheckBox2))
+                            .addComponent(bikerWeaponCheckBox))
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                         .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                             .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
@@ -670,7 +642,9 @@ public final class CharacterPanel extends javax.swing.JPanel {
                             .addComponent(jLabel16)
                             .addComponent(vramTextField, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)))
                     .addGroup(layout.createSequentialGroup()
-                        .addComponent(jLabel21, javax.swing.GroupLayout.PREFERRED_SIZE, 23, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                            .addComponent(jLabel21, javax.swing.GroupLayout.PREFERRED_SIZE, 23, javax.swing.GroupLayout.PREFERRED_SIZE)
+                            .addComponent(ninjaHeightTextField, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
                         .addGap(0, 0, Short.MAX_VALUE)))
                 .addContainerGap())
         );
@@ -785,20 +759,8 @@ public final class CharacterPanel extends javax.swing.JPanel {
     }//GEN-LAST:event_vramTextFieldActionPerformed
 
     private void bikerWeaponCheckBoxActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_bikerWeaponCheckBoxActionPerformed
-        object.weaponFlag1 = bikerWeaponCheckBox.isSelected();
+        object.bikerWeaponFlag = bikerWeaponCheckBox.isSelected();
     }//GEN-LAST:event_bikerWeaponCheckBoxActionPerformed
-
-    private void ninjaWeaponCheckBox1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_ninjaWeaponCheckBox1ActionPerformed
-        object.weaponFlag2 = ninjaWeaponCheckBox1.isSelected();
-    }//GEN-LAST:event_ninjaWeaponCheckBox1ActionPerformed
-
-    private void ninjaWeaponCheckBox2ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_ninjaWeaponCheckBox2ActionPerformed
-        object.weaponFlag3 = ninjaWeaponCheckBox2.isSelected();
-    }//GEN-LAST:event_ninjaWeaponCheckBox2ActionPerformed
-
-    private void ninjaWeaponCheckBox3ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_ninjaWeaponCheckBox3ActionPerformed
-        object.weaponFlag4 = ninjaWeaponCheckBox2.isSelected();
-    }//GEN-LAST:event_ninjaWeaponCheckBox3ActionPerformed
 
     private void triggerComboBoxItemStateChanged(java.awt.event.ItemEvent evt) {//GEN-FIRST:event_triggerComboBoxItemStateChanged
         refreshTriggerArgumentValue();
@@ -807,6 +769,10 @@ public final class CharacterPanel extends javax.swing.JPanel {
     private void useBossSlotCheckBoxActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_useBossSlotCheckBoxActionPerformed
         object.useBossSlot = useBossSlotCheckBox.isSelected();
     }//GEN-LAST:event_useBossSlotCheckBoxActionPerformed
+
+    private void ninjaHeightTextFieldActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_ninjaHeightTextFieldActionPerformed
+        object.ninjaHookHeight = (int)formatter.toUnsignedNumber(ninjaHeightTextField.getText());
+    }//GEN-LAST:event_ninjaHeightTextFieldActionPerformed
 
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
@@ -840,9 +806,7 @@ public final class CharacterPanel extends javax.swing.JPanel {
     private javax.swing.JLabel jLabel8;
     private javax.swing.JLabel jLabel9;
     private javax.swing.JComboBox<String> nameComboBox;
-    private javax.swing.JCheckBox ninjaWeaponCheckBox1;
-    private javax.swing.JCheckBox ninjaWeaponCheckBox2;
-    private javax.swing.JCheckBox ninjaWeaponCheckBox3;
+    private javax.swing.JTextField ninjaHeightTextField;
     private javax.swing.JComboBox<String> objectIdComboBox;
     private javax.swing.JTextField posXTextField;
     private javax.swing.JTextField posYTextField;
