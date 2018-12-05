@@ -17,6 +17,7 @@ package main;
 
 import java.io.File;
 import java.io.FileNotFoundException;
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Scanner;
@@ -67,20 +68,24 @@ public class Guide {
         return Long.parseLong(text, 16);
     }
     
+    private long readAddress(Rom rom, Scanner scanner, byte[] allData) throws IOException{
+        String text = readLine(scanner);
+        if (text.startsWith("0x")){
+            return Long.parseLong(text.substring(2), 16);
+        }else{
+            return rom.findLabel(allData, text);
+        }
+    }
     
     
     public Guide(String guideFileName, Rom rom) throws FileNotFoundException, Exception{
         File file = new File(guideFileName);
         Scanner scanner = new Scanner(file);
-        boolean isLabeled = readInt(scanner) != 0;
-        if (isLabeled) {
-            byte[] allData = rom.getAllData();
-            levelsLoadcuesAddress = rom.findLabel(allData, readLine(scanner));
-            enemyNamesAddress = rom.findLabel(allData, readLine(scanner));            
-        }else {
-            levelsLoadcuesAddress = readHexValue(scanner);
-            enemyNamesAddress = readHexValue(scanner);
-        }
+        byte[] allData = rom.getAllData();
+        
+        levelsLoadcuesAddress = readAddress(rom, scanner, allData);
+        enemyNamesAddress = readAddress(rom, scanner, allData);
+        
         totalNumberOfEnemyNames = readInt(scanner);
         numberOfMainCharacters = readInt(scanner);
                 

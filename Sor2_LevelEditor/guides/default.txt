@@ -1,8 +1,7 @@
-0			// 1 = labeled addresses; 0 = global addresses
-1EF49C      // Address of levels object spawning list in rom
-1EFC56      // Address of enemy names
-143         // Number of enemy names
-4           // Number of main characters
+0x1EF49C      // Address of levels object spawning list in rom
+0x1EFC56      // Address of enemy names
+143           // Number of enemy names
+4             // Number of main characters
 
 // Each character is followed by a list of spawning modes
 // Ending with at least one empty line
