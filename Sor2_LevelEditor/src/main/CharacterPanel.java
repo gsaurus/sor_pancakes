@@ -72,7 +72,11 @@ public final class CharacterPanel extends javax.swing.JPanel {
         this.formatter = formatter;
         this.enemyNames = enemyNames;
         
-        nameComboBox.setModel(new DefaultComboBoxModel(enemyNames.allNames.toArray()));
+        if (enemyNames != null){
+            nameComboBox.setModel(new DefaultComboBoxModel(enemyNames.allNames.toArray()));
+        }else{
+            nameComboBox.setModel(new DefaultComboBoxModel());
+        }
         
         String[] objectNames = new String[guide.objectsDefinition.size()];
         for (int i = 0 ; i < guide.objectsDefinition.size(); ++i){
@@ -130,8 +134,12 @@ public final class CharacterPanel extends javax.swing.JPanel {
         isReloading = true;
         
         setComboValue(difficultyComboBox, object.minimumDifficulty, object.minimumDifficulty);
-        int nameIndex = (int)(object.nameAddress - enemyNames.address) / AllEnemyNames.NAME_SIZE;
-        setComboValue(nameComboBox, nameIndex, object.nameAddress);
+        if (enemyNames != null){
+            int nameIndex = (int)(object.nameAddress - enemyNames.address) / AllEnemyNames.NAME_SIZE;            
+            setComboValue(nameComboBox, nameIndex, formatter.toString(object.nameAddress));
+        }else{
+            nameComboBox.setSelectedItem(formatter.toString(object.nameAddress));
+        }        
         setComboValue(objectIdComboBox, object.objectId / 2, object.objectId);
         setComboValue(spawnModeComboBox, object.introductionType, object.introductionType);
         setComboValue(triggerComboBox, object.triggerType, object.triggerType);
@@ -425,6 +433,7 @@ public final class CharacterPanel extends javax.swing.JPanel {
             }
         });
 
+        nameComboBox.setEditable(true);
         nameComboBox.setModel(new javax.swing.DefaultComboBoxModel<>(new String[] { "Item 1", "Item 2", "Item 3", "Item 4" }));
         nameComboBox.setToolTipText("Enemy name on HUD");
         nameComboBox.addActionListener(new java.awt.event.ActionListener() {

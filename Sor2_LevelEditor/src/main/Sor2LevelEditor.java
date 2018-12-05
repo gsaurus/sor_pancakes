@@ -231,7 +231,9 @@ public final class Sor2LevelEditor extends javax.swing.JFrame {
         // save
          try {
             levels.write(rom.getRomFile(), guide.levelsLoadcuesAddress, deltaObjectId);
-            enemyNames.write(rom, guide.enemyNamesAddress);
+            if (enemyNames != null){
+                enemyNames.write(rom, guide.enemyNamesAddress);
+            }
             rom.fixChecksum();
             return true;
         } catch (IOException ex) {
@@ -305,7 +307,11 @@ public final class Sor2LevelEditor extends javax.swing.JFrame {
     
     boolean loadEnemyNames(Rom rom){
         try {
-            enemyNames = new AllEnemyNames(rom, guide.enemyNamesAddress, guide.totalNumberOfEnemyNames);
+            if (guide.enemyNamesAddress > 0){
+                enemyNames = new AllEnemyNames(rom, guide.enemyNamesAddress, guide.totalNumberOfEnemyNames);
+            }else{
+                enemyNames = null;
+            }
             return true;
         } catch (IOException ex) {
             ExceptionUtils.showError(this, "Unable to load enemy names", ex);
@@ -864,9 +870,13 @@ public final class Sor2LevelEditor extends javax.swing.JFrame {
     }//GEN-LAST:event_jMenuItem1ActionPerformed
 
     private void editNamesButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_editNamesButtonActionPerformed
-        NamesEditorForm namesEditor = new NamesEditorForm(enemyNames);
-        namesEditor.setLocationRelativeTo(null);
-        namesEditor.setVisible(true);
+        if (enemyNames != null){
+            NamesEditorForm namesEditor = new NamesEditorForm(enemyNames);
+            namesEditor.setLocationRelativeTo(null);
+            namesEditor.setVisible(true);
+        }else{
+            ExceptionUtils.showError(this, "Enemy names couldn't be loaded using the guide with this rom");
+        }
     }//GEN-LAST:event_editNamesButtonActionPerformed
 
     private void jMenuItem2ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jMenuItem2ActionPerformed
