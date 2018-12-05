@@ -1,5 +1,5 @@
 0x1EF49C      // Address of levels object spawning list in rom
-lixo      // Address of enemy names
+0x1EFC56      // Address of enemy names
 143           // Number of enemy names
 4             // Number of main characters
 
