@@ -45,12 +45,13 @@ import lib.names.AllEnemyNames;
 public final class Sor2LevelEditor extends javax.swing.JFrame {
     
     private static final String VERSION = " v1.0";    
-    private static final String TITLE = "Spawns Of Rage 2" + VERSION;
+    private static final String TITLE = "SoR2 Level Editor" + VERSION;
     
     private static final String ORIGINAL_GUIDE_NAME = "guides/default.txt";
-    private static final String SW_GUIDE_NAME = "guides/syndicate_wars.txt";
+    private static final String SW_GUIDE_NAME = "guides/syndicate_wars_v2.txt";
     
     private JFileChooser romChooser;
+    private JFileChooser guideChooser;
     
     private NumberUtils.Formatter formatter;
     
@@ -113,7 +114,7 @@ public final class Sor2LevelEditor extends javax.swing.JFrame {
     
     private void setupFileChoosers(){
         romChooser = new JFileChooser(new File("."));
-        romChooser.addChoosableFileFilter(new FileFilter(){
+        FileFilter filter = new FileFilter(){
             @Override
             public boolean accept(File file) {
                 if (file.isDirectory()) return true;
@@ -124,7 +125,27 @@ public final class Sor2LevelEditor extends javax.swing.JFrame {
             public String getDescription() {
                 return "*.bin";
             }            
-        });    
+        };
+        romChooser.addChoosableFileFilter(filter);
+        romChooser.setFileFilter(filter);
+        romChooser.setDialogTitle("Open ROM");
+        
+        guideChooser = new JFileChooser(new File(Guide.GUIDES_DIR));
+        filter = new FileFilter(){
+            @Override
+            public boolean accept(File file) {
+                if (file.isDirectory()) return true;
+                String filename = file.getName();
+                return filename.endsWith(".txt");
+            }
+            @Override
+            public String getDescription() {
+                return "*.txt";
+            }
+        };
+        guideChooser.addChoosableFileFilter(filter);
+        guideChooser.setFileFilter(filter);
+        guideChooser.setDialogTitle("Select Guide");
     }
     
     private void reloadObjectPanel(){
@@ -285,6 +306,15 @@ public final class Sor2LevelEditor extends javax.swing.JFrame {
         return localRom;
     }
     
+    String askForGuideFile(){
+        int returnVal = guideChooser.showOpenDialog(this);        
+        if (returnVal == JFileChooser.APPROVE_OPTION) {
+            File file = guideChooser.getSelectedFile();
+            return file.getAbsolutePath();
+        }
+        return null;
+    }
+    
     Guide openGuide(String guideName, Rom rom){
         try {
             return new Guide(guideName, rom);
@@ -423,8 +453,11 @@ public final class Sor2LevelEditor extends javax.swing.JFrame {
         objectContainerPanel = new javax.swing.JPanel();
         jMenuBar1 = new javax.swing.JMenuBar();
         jMenu1 = new javax.swing.JMenu();
+        jMenu5 = new javax.swing.JMenu();
         openOriginalMenuItem = new javax.swing.JMenuItem();
         openSWMenuItem = new javax.swing.JMenuItem();
+        jSeparator5 = new javax.swing.JPopupMenu.Separator();
+        jMenuItem5 = new javax.swing.JMenuItem();
         jSeparator3 = new javax.swing.JPopupMenu.Separator();
         saveMenuItem = new javax.swing.JMenuItem();
         jMenu4 = new javax.swing.JMenu();
@@ -647,21 +680,34 @@ public final class Sor2LevelEditor extends javax.swing.JFrame {
 
         jMenu1.setText("File");
 
-        openOriginalMenuItem.setText("Open Original");
+        jMenu5.setText("Open...");
+
+        openOriginalMenuItem.setText("Original");
         openOriginalMenuItem.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 openOriginalMenuItemActionPerformed(evt);
             }
         });
-        jMenu1.add(openOriginalMenuItem);
+        jMenu5.add(openOriginalMenuItem);
 
-        openSWMenuItem.setText("Open Syndicate Wars");
+        openSWMenuItem.setText("Syndicate Wars 2.x");
         openSWMenuItem.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 openSWMenuItemActionPerformed(evt);
             }
         });
-        jMenu1.add(openSWMenuItem);
+        jMenu5.add(openSWMenuItem);
+        jMenu5.add(jSeparator5);
+
+        jMenuItem5.setText("Specific Guide");
+        jMenuItem5.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                jMenuItem5ActionPerformed(evt);
+            }
+        });
+        jMenu5.add(jMenuItem5);
+
+        jMenu1.add(jMenu5);
         jMenu1.add(jSeparator3);
 
         saveMenuItem.setAccelerator(javax.swing.KeyStroke.getKeyStroke(java.awt.event.KeyEvent.VK_S, java.awt.event.InputEvent.META_MASK));
@@ -908,6 +954,13 @@ public final class Sor2LevelEditor extends javax.swing.JFrame {
         exportProject(SW_GUIDE_NAME);
     }//GEN-LAST:event_jMenuItem7ActionPerformed
 
+    private void jMenuItem5ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jMenuItem5ActionPerformed
+        String guideFileName = askForGuideFile();
+        if (guideFileName != null){
+            openProject(guideFileName);
+        }
+    }//GEN-LAST:event_jMenuItem5ActionPerformed
+
     /**
      * @param args the command line arguments
      */
@@ -958,11 +1011,13 @@ public final class Sor2LevelEditor extends javax.swing.JFrame {
     private javax.swing.JMenu jMenu2;
     private javax.swing.JMenu jMenu3;
     private javax.swing.JMenu jMenu4;
+    private javax.swing.JMenu jMenu5;
     private javax.swing.JMenuBar jMenuBar1;
     private javax.swing.JMenuItem jMenuItem1;
     private javax.swing.JMenuItem jMenuItem2;
     private javax.swing.JMenuItem jMenuItem3;
     private javax.swing.JMenuItem jMenuItem4;
+    private javax.swing.JMenuItem jMenuItem5;
     private javax.swing.JMenuItem jMenuItem6;
     private javax.swing.JMenuItem jMenuItem7;
     private javax.swing.JPanel jPanel3;
@@ -970,6 +1025,7 @@ public final class Sor2LevelEditor extends javax.swing.JFrame {
     private javax.swing.JPopupMenu.Separator jSeparator1;
     private javax.swing.JPopupMenu.Separator jSeparator2;
     private javax.swing.JPopupMenu.Separator jSeparator3;
+    private javax.swing.JPopupMenu.Separator jSeparator5;
     private javax.swing.JComboBox<String> levelComboBox;
     private main.MapPanel mapPanel;
     private javax.swing.JComboBox<String> numberFormatComboBox;

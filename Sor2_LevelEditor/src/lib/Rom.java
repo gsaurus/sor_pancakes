@@ -74,6 +74,10 @@ public class Rom {
         return index;
     }
     
+    public long findBytes(byte[] allData, byte[] searchBytes) throws IOException {                        
+        return KMPMatch.indexOf(allData, searchBytes);
+    }
+    
     
     public RandomAccessFile getRomFile(){
         return rom;
