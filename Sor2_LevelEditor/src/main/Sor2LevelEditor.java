@@ -265,6 +265,9 @@ public final class Sor2LevelEditor extends javax.swing.JFrame {
     
     
     private boolean save(){
+        if (rom == null || guide == null){
+            return false;
+        }
         return saveToRom(rom, guide);
     }
     
@@ -371,16 +374,15 @@ public final class Sor2LevelEditor extends javax.swing.JFrame {
     
     
     void exportProject(String guideName){
+        if (rom == null || guide == null) return;
         Rom romToExport = openRom();
         if (romToExport != null){
             Guide guideToExport = openGuide(guideName, romToExport);
-            if (guide != null){
-                saveToRom(romToExport, guideToExport);
-                JOptionPane.showMessageDialog(this,
-                    "Export successful!", "Export successful",
-                    JOptionPane.INFORMATION_MESSAGE
-                );
-            }
+            saveToRom(romToExport, guideToExport);
+            JOptionPane.showMessageDialog(this,
+                "Export successful!", "Export successful",
+                JOptionPane.INFORMATION_MESSAGE
+            );
             try {
                 romToExport.close();
             } catch (IOException ex) {
