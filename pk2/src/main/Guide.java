@@ -1,175 +1,347 @@
-/* 
- * Copyright 2017 Gil Costa.
- *
- * Licensed under the Apache License, Version 2.0 (the "License");
- * you may not use this file except in compliance with the License.
- * You may obtain a copy of the License at
- *
- *      http://www.apache.org/licenses/LICENSE-2.0
- *
- * Unless required by applicable law or agreed to in writing, software
- * distributed under the License is distributed on an "AS IS" BASIS,
- * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
- * See the License for the specific language governing permissions and
- * limitations under the License.
+/*
+ * Decompiled with CFR 0_132.
  */
 package main;
 
 import java.io.File;
 import java.io.FileNotFoundException;
 import java.util.ArrayList;
+import java.util.Iterator;
 import java.util.Scanner;
 import java.util.TreeMap;
 
-/**
- *
- * @author Gil
- */
 public class Guide {
     public static String GUIDES_DIR = "guides/";
-    
     private long animsListAddress;
     private long hitsListAddress;
     private long weaponsListAddress;
-    private long portraitsListAddress;
+    private long iconsListAddress;
+    private long namesListAddress;
+    private long statsListAddress;
+    private long speedListAddress;
+    private String animsListLabel;
+    private String hitsListLabel;
+    private String weaponsListLabel;
+    private String iconsListLabel;
+    private String namesListLabel;
+    private String statsListLabel;
+    private String speedListLabel;
+    private int playableChars;
+    private int numNameLetters;
+    private boolean globalCollisions;
+    private boolean globalWeapons;
     private ArrayList<Integer> skips;
     private ArrayList<String> charNames;
     private ArrayList<Long> paletteAddresses;
+    private ArrayList<String> paletteLabels;
     private ArrayList<Integer> animTypes;
     private ArrayList<Integer> animsCount;
     private ArrayList<ArrayList<String>> animNames;
     private TreeMap<Integer, Long> compressedArtAddresses;
-    
-    private long hexToLong(String str){
+    private TreeMap<Integer, String> compressedArtLabels;
+    private TreeMap<Integer, Long> subArtAddresses;
+    private TreeMap<Integer, String> subArtLabels;
+
+    private long hexToLong(String str) {
         return Long.parseLong(str, 16);
     }
-    
-    private int stringToInt(String str){
+
+    private int stringToInt(String str) {
         return Integer.parseInt(str);
     }
-    
-    public void setAnimType(int charId, int newType){
-        animTypes.set(charId, newType);
+
+    public void setAnimType(int charId, int newType) {
+        this.animTypes.set(charId, newType);
     }
-    
-    public int getRealCharId(int id){
-        int res = id;
-        for(int nextSkip : skips){
-            if (res >= nextSkip){                
-                res++;
-            }else break;
-        }        
-        return res;
-    }
-    
-    public int getFakeCharId(int id){
-        int res = id;
-        for(int nextSkip : skips){
-            if (id >= nextSkip)
-                res--;
-            else break;
+
+    public int getRealCharId(int id) {
+        int nextSkip;
+        int res;
+        Iterator<Integer> i$ = this.skips.iterator();
+        for (res = id; i$.hasNext() && res >= (nextSkip = i$.next().intValue()); ++res) {
         }
         return res;
     }
-    
-    private void initLists(int numChars) {
-        skips = new ArrayList<Integer>();
-        charNames = new ArrayList<String>(numChars);
-        animNames = new ArrayList<ArrayList<String>>(numChars);
-        animTypes = new ArrayList<Integer>(numChars);
-        animsCount = new ArrayList<Integer>(numChars);
-        paletteAddresses = new ArrayList<Long>(numChars);
-        compressedArtAddresses = new TreeMap<Integer,Long>();
+
+    public int getFakeCharId(int id) {
+        int nextSkip;
+        int res = id;
+        Iterator<Integer> i$ = this.skips.iterator();
+        while (i$.hasNext() && id >= (nextSkip = i$.next().intValue())) {
+            --res;
+        }
+        return res;
     }
-    
-    public Guide(String guideFileName) throws FileNotFoundException, Exception{
+
+    private void initLists(int numChars) {
+        this.skips = new ArrayList();
+        this.charNames = new ArrayList(numChars);
+        this.animNames = new ArrayList(numChars);
+        this.animTypes = new ArrayList(numChars);
+        this.animsCount = new ArrayList(numChars);
+        this.paletteAddresses = new ArrayList(numChars);
+        this.paletteLabels = new ArrayList(numChars);
+        this.compressedArtAddresses = new TreeMap();
+        this.compressedArtLabels = new TreeMap();
+        this.subArtAddresses = new TreeMap();
+        this.subArtLabels = new TreeMap();
+    }
+
+    public Guide(String guideFileName) throws FileNotFoundException, Exception {
         File file = new File(guideFileName);
         String fileDir = file.getParent();
         Scanner sc = new Scanner(file);
-        animsListAddress = hexToLong(sc.nextLine());    // address of animations list (hex value)
-        hitsListAddress  = hexToLong(sc.nextLine());    // address of hits list (hex value)
-        weaponsListAddress  = hexToLong(sc.nextLine()); // address of weapons list (hex value)
-        portraitsListAddress = hexToLong(sc.nextLine());// address of miniportraits list (hex value)
-        int numChars = stringToInt(sc.nextLine());      // number of characters
-        initLists(numChars);
-        for (int i = 0 ; i < numChars ; ++i){
+        boolean labeled = sc.nextInt() != 0;
+        sc.nextLine();
+        if (!labeled) {
+            this.animsListAddress = this.hexToLong(sc.next());
+            sc.nextLine();
+            this.globalCollisions = sc.nextInt() != 0;
+            sc.nextLine();
+            this.hitsListAddress = this.hexToLong(sc.next());
+            sc.nextLine();
+            this.globalWeapons = sc.nextInt() != 0;
+            sc.nextLine();
+            this.weaponsListAddress = this.hexToLong(sc.next());
+            sc.nextLine();
+            this.iconsListAddress = this.hexToLong(sc.next());
+            sc.nextLine();
+            this.numNameLetters = sc.nextInt();
+            sc.nextLine();
+            this.namesListAddress = this.hexToLong(sc.next());
+            sc.nextLine();
+            this.statsListAddress = this.hexToLong(sc.next());
+            sc.nextLine();
+            this.speedListAddress = this.hexToLong(sc.next());
+            sc.nextLine();
+        } else {
+            this.animsListLabel = sc.next();
+            sc.nextLine();
+            this.globalCollisions = sc.nextInt() != 0;
+            sc.nextLine();
+            this.hitsListLabel = sc.next();
+            sc.nextLine();
+            this.globalWeapons = sc.nextInt() != 0;
+            sc.nextLine();
+            this.weaponsListLabel = sc.next();
+            sc.nextLine();
+            this.iconsListLabel = sc.next();
+            sc.nextLine();
+            this.numNameLetters = sc.nextInt();
+            sc.nextLine();
+            this.namesListLabel = sc.next();
+            sc.nextLine();
+            this.statsListLabel = sc.next();
+            sc.nextLine();
+            this.speedListLabel = sc.next();
+            sc.nextLine();
+        }
+        this.playableChars = sc.nextInt();
+        sc.nextLine();
+        int numChars = sc.nextInt();
+        sc.nextLine();
+        this.initLists(++numChars);
+        for (int i = 0; i < numChars; ++i) {
             String name = "";
-            while (name.isEmpty()) name = sc.nextLine();
-            if (name.length() == 1){
-                skips.add(i);
+            while (name.isEmpty()) {
+                name = sc.nextLine();
+            }
+            if (name.length() == 1) {
+                this.skips.add(i);
                 continue;
             }
-            charNames.add(name);                            // character name
-            paletteAddresses.add(hexToLong(sc.nextLine())); // palette address
-            final int type = stringToInt(sc.nextLine());
-            animTypes.add(type);      // type of animation scripts
-            if (type == 1){
-                final String line = sc.nextLine();
-                compressedArtAddresses.put(i, hexToLong(line));
+            this.charNames.add(name);
+            if (labeled) {
+                this.paletteLabels.add(sc.next());
+            } else {
+                this.paletteAddresses.add(this.hexToLong(sc.next()));
             }
-            int count = stringToInt(sc.nextLine());         // number of animations
-            animsCount.add(count);
-            ArrayList<String> names = new ArrayList<String>(count);
-            animNames.add(names);
-            String fileName = sc.nextLine();                // file containing animations names
-            try{
-                Scanner animsScanner = new Scanner(new File(fileDir + "/" + fileName));
-                for (int j = 0; j < count && animsScanner.hasNextLine() ; ++j){
-                    names.add( j+1 + " - " + animsScanner.nextLine() );
+            sc.nextLine();
+            int type = sc.nextInt();
+            sc.nextLine();
+            this.animTypes.add(type);
+            switch (type) {
+                case 1: {
+                    if (labeled) {
+                        this.compressedArtLabels.put(i, sc.next());
+                    } else {
+                        this.compressedArtAddresses.put(i, this.hexToLong(sc.next()));
+                    }
+                    sc.nextLine();
+                    break;
                 }
-            } catch(Exception e){
-                // Ignore
+                case 3: {
+                    if (labeled) {
+                        this.subArtLabels.put(i, sc.next());
+                    } else {
+                        this.subArtAddresses.put(i, this.hexToLong(sc.next()));
+                    }
+                    sc.nextLine();
+                }
+            }
+            int count = sc.nextInt();
+            sc.nextLine();
+            this.animsCount.add(count);
+            ArrayList<String> names = new ArrayList<String>(count);
+            this.animNames.add(names);
+            String fileName = sc.nextLine();
+            try {
+                Scanner animsScanner = new Scanner(new File(fileDir + "/" + fileName));
+                for (int j = 0; j < count && animsScanner.hasNextLine(); ++j) {
+                    names.add(animsScanner.nextLine());
+                }
+                continue;
+            }
+            catch (Exception e) {
+                // empty catch block
             }
         }
     }
 
     public String getAnimName(int charId, int animId) {
-        final ArrayList<String> charAnimNames = animNames.get(charId);
-        if ( charAnimNames.size() <= animId ) return "Animation " + Integer.toString(animId+1);        
+        ArrayList<String> charAnimNames = this.animNames.get(charId);
+        if (charAnimNames.size() <= animId) {
+            return "Unknown";
+        }
         return charAnimNames.get(animId);
     }
-    
-    public long getPaletteAddress(int charId){
-        return paletteAddresses.get(charId);
+
+    public long getPaletteAddress(int charId) {
+        if (this.paletteAddresses == null || charId >= this.paletteAddresses.size()) {
+            return 0L;
+        }
+        return this.paletteAddresses.get(charId);
+    }
+
+    public String getPaletteLabel(int charId) {
+        if (this.paletteLabels == null || charId >= this.paletteLabels.size()) {
+            return "";
+        }
+        return this.paletteLabels.get(charId);
     }
 
     public String getCharName(int charId) {
-        return charNames.get(charId);
+        return this.charNames.get(charId);
     }
 
     public int getType(int charId) {
-        return animTypes.get(charId);
+        return this.animTypes.get(charId);
     }
 
     public int getAnimsCount(int charId) {
-        return animsCount.get(charId);
+        return this.animsCount.get(charId);
     }
 
     public long getAnimsListAddress() {
-        return animsListAddress;
+        return this.animsListAddress;
     }
 
     public long getHitsListAddress() {
-        return hitsListAddress;
+        return this.hitsListAddress;
     }
-    
-    public long getWeaponsListAddress(){
-        return weaponsListAddress;
+
+    public long getWeaponsListAddress() {
+        return this.weaponsListAddress;
     }
-    
-    public long getPortraitsListAddress(){
-        return portraitsListAddress;
+
+    public long getPortraitsListAddress() {
+        return this.iconsListAddress;
     }
-    
-    public int getNumChars(){
-        return charNames.size();
+
+    public int getNumChars() {
+        return this.charNames.size();
     }
-    
-    public long getCompressedArtAddress(int charId){
-        Long res = compressedArtAddresses.get(charId);
-        if (res == null) return 0;
+
+    public long getCompressedArtAddress(int charId) {
+        Long res = this.compressedArtAddresses.get(charId);
+        if (res == null) {
+            return 0L;
+        }
         return res;
     }
-    
-    
+
+    public String getCompressedArtLabel(int charId) {
+        String res = this.compressedArtLabels.get(charId);
+        if (res == null) {
+            return "";
+        }
+        return res;
+    }
+
+    public long getSubArtAddress(int charId) {
+        Long res = this.subArtAddresses.get(charId);
+        if (res == null) {
+            return 0L;
+        }
+        return res;
+    }
+
+    public String getSubArtLabel(int charId) {
+        String res = this.subArtLabels.get(charId);
+        if (res == null) {
+            return "";
+        }
+        return res;
+    }
+
+    public long getNamesListAddress() {
+        return this.namesListAddress;
+    }
+
+    public long getStatsListAddress() {
+        return this.statsListAddress;
+    }
+
+    public long getSpeedListAddress() {
+        return this.speedListAddress;
+    }
+
+    public String getAnimsListLabel() {
+        return this.animsListLabel;
+    }
+
+    public String getHitsListLabel() {
+        return this.hitsListLabel;
+    }
+
+    public String getWeaponsListLabel() {
+        return this.weaponsListLabel;
+    }
+
+    public String getPortraitsListLabel() {
+        return this.iconsListLabel;
+    }
+
+    public String getNamesListLabel() {
+        return this.namesListLabel;
+    }
+
+    public String getStatsListLabel() {
+        return this.statsListLabel;
+    }
+
+    public String getSpeedListLabel() {
+        return this.speedListLabel;
+    }
+
+    public boolean isGlobalCollisions() {
+        return this.globalCollisions;
+    }
+
+    public boolean isGlobalWeapons() {
+        return this.globalWeapons;
+    }
+
+    public int getNumNameLetters() {
+        return this.numNameLetters;
+    }
+
+    public int getPlayableChars() {
+        return this.playableChars;
+    }
+
+    public int getPlayableCharsWithSkips() {
+        return this.playableChars + this.skips.size();
+    }
 }
+

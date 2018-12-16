@@ -1,0 +1,31 @@
+00 - Standing
+02 - run
+04 - run (backwards?)
+06 - unused
+08 - grab front
+0A - grab back
+0C - Being front grabbed
+0E - Being back grabbed
+10 - Being grab hit
+12 - Being hit
+14 - Knocked down
+16 - Lying down
+18 - Stand up
+1A - ready to roll
+1C - block
+1E - start jump
+20 - roll jump
+22 - land
+24 - Front slammed Max
+26 - Back slammed Axel
+28 - Back slammed Max
+2A - Front slammed Blaze
+2C - Thrown by Max
+2E - ????
+30 - back slam
+32 - double punch
+34 - roll attack
+36 - uppercut
+38 - slide
+3A - jumpkick
+3C - ????

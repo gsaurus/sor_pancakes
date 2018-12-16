@@ -1,80 +1,78 @@
-/* 
- * Copyright 2017 Gil Costa.
- *
- * Licensed under the Apache License, Version 2.0 (the "License");
- * you may not use this file except in compliance with the License.
- * You may obtain a copy of the License at
- *
- *      http://www.apache.org/licenses/LICENSE-2.0
- *
- * Unless required by applicable law or agreed to in writing, software
- * distributed under the License is distributed on an "AS IS" BASIS,
- * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
- * See the License for the specific language governing permissions and
- * limitations under the License.
+/*
+ * Decompiled with CFR 0_132.
  */
 package lib;
 
 import java.util.ArrayList;
 
-/**
- *
- * @author Gil
- */
-public class RandomDataStream{
-    
-    public enum Pos{
-        begin, cur, end
-    }
+public class RandomDataStream {
     private ArrayList<Byte> data;
     private int writePos;
     private int readPos;
-    
-    public ArrayList<Byte> asList(){
-        return data;
+
+    public ArrayList<Byte> asList() {
+        return this.data;
     }
-    
-    public RandomDataStream(){
-        data = new ArrayList<Byte>();
+
+    public byte[] getData() {
+        byte[] res = new byte[this.data.size()];
+        for (int i = 0; i < this.data.size(); ++i) {
+            res[i] = this.data.get(i);
+        }
+        return res;
     }
-    public RandomDataStream(int capacity){
-        data = new ArrayList<Byte>(capacity);
+
+    public RandomDataStream() {
+        this.data = new ArrayList();
     }
-    
-    public void write(byte b){
-        if (writePos == data.size())
-            data.add(b);
-        else data.set(writePos, b);
-        writePos++;
+
+    public RandomDataStream(int capacity) {
+        this.data = new ArrayList(capacity);
     }
-    
-    public byte read(){        
-        return data.get(readPos++);
+
+    public void write(byte b) {
+        if (this.writePos == this.data.size()) {
+            this.data.add(b);
+        } else {
+            this.data.set(this.writePos, b);
+        }
+        ++this.writePos;
     }
-    
-    public int getReadPos(){
-        return readPos;
+
+    public byte read() {
+        return this.data.get(this.readPos++);
     }
-    public int getWritePos(){
-        return writePos;
+
+    public int getReadPos() {
+        return this.readPos;
     }
-    public void seekRead(int pos, Pos rel){
-        if (rel == Pos.begin)
-            readPos = pos;
-        else if (rel == Pos.cur)
-            readPos+=pos;
-        else readPos = data.size()-pos;
+
+    public int getWritePos() {
+        return this.writePos;
     }
-    public void seekWrite(int pos, Pos rel){
-        if (rel == Pos.begin)
-            writePos = pos;
-        else if (rel == Pos.cur)
-            writePos+=pos;
-        else writePos = data.size()-pos;
+
+    public void seekRead(int pos, Pos rel) {
+        this.readPos = rel == Pos.begin ? pos : (rel == Pos.cur ? (this.readPos += pos) : this.data.size() - pos);
     }
-    
-    public void seek(int pos){
-        seekRead(pos,Pos.begin);
-        seekWrite(pos,Pos.begin);
+
+    public void seekWrite(int pos, Pos rel) {
+        this.writePos = rel == Pos.begin ? pos : (rel == Pos.cur ? (this.writePos += pos) : this.data.size() - pos);
     }
+
+    public void seek(int pos) {
+        this.seekRead(pos, Pos.begin);
+        this.seekWrite(pos, Pos.begin);
+    }
+
+    public static enum Pos {
+        begin,
+        cur,
+        end;
+        
+
+        private Pos() {
+        }
+    }
+
 }
+

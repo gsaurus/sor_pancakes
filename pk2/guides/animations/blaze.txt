@@ -19,8 +19,8 @@ Fall?
 Front slammed Max
 Back slammed Axel
 Back slammed Max
-Front slammed Blaze
-Thrown by max
+Front Slam (Blaze)
+Air Slam (Max)
 ????
 Throw front to back
 Back slam
@@ -48,3 +48,4 @@ Use kunai?
 Unused?
 Unused?
 Combo end (hold B)
+Back thrown by Zan

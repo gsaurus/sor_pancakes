@@ -1,8 +1,18 @@
-20EAC
-4940
-11024
-6D22
-80
+0		// 1 = labeled addresses 0 = global addresses
+20EAC	// Characters index address
+0		// 1 = global collision pointers 0 = word offsets
+4940	// Collisions index address
+0		// 1 = global weapon pointers 0 = word offsets
+11024	// Weapons index address
+6D22	// Icons index address
+
+5		// number of letters per name
+-1		// Names index, -1 to use default, < -1 to use default with offset (ex: -14 -> offset = 14)
+7598	// Statistics index
+C0EA	// Speed index
+
+4		// Playable characters
+79		// Total objects
 
 Max
 A5E0
@@ -266,28 +276,28 @@ Menu
 A680
 1
 100FF8
-10
+1
 -
 
-Table 
+Table
 A6C0
 1
 107068
-10
+1
 -
 
 Table (2)
 A6C0
 1
 107068
-10
+1
 -
 
 Table (3)
 A6C0
 1
 107068
-10
+1
 -
 
 Table (4)
@@ -301,105 +311,105 @@ Chair
 A6C0
 1
 103908
-10
+1
 -
 
 Trash Can
 a700
 1
 107478
-2
+1
 -
 
 Oil Barrel
 A5E0
 1
 10E878
-10
+1
 -
 
 Obj 1
 A5E0
 1
 166E3E
-10
+1
 -
 
 Obj 1 (2)
 A5E0
 1
 166E3E
-10
+1
 -
 
 Electrical Box 1
 A780
 1
 10BC90
-10
+1
 -
 
 Electrical Box 2
 A780
 1
 10BC90
-10
+1
 -
 
 Barrier
 A5E0
 1
 10ED68
-10
+1
 -
 
 Light
 A5E0
 1
 166E3E
-10
+1
 -
 
 Arcade
 a860
 1
 117F98
-10
+1
 -
 
 Ship Pole
 a880
 1
 114778
-10
+1
 -
 
 Obj 2
 A5E0
 1
 166E3E
-10
+1
 -
 
 Obj 3
 A5E0
 1
 166E3E
-10
+1
 -
 
 Obj 4
 A5E0
 1
 166E3E
-10
+1
 -
 
 Sandbag
 aac0
 1
 128990
-10
+1
 -
 
 Sandbag (2)
@@ -427,110 +437,110 @@ Crate
 A5E0
 1
 166E3E
-10
+1
 -
 
 Obj 5
 A5E0
 1
 166E3E
-10
+1
 -
 
 Vehelits (2)
 a8e0
 1
 1ea3b6
-10
+1
 -
 
 Crate (2)
 A5E0
 1
 166E3E
-10
+1
 -
 
 Crate (3)
 A5E0
 1
 166E3E
-10
+1
 -
 
 Alien Egg
 A5E0
 1
 166E3E
-10
+1
 -
 
 Cash Bag
 A5E0
 1
 166E3E
-10
+1
 -
 
 Gold Bag
 A5E0
 1
 166E3E
-10
+1
 -
 
 Lives
 A5E0
 1
 166E3E
-10
+1
 -
 
 Apple
 A5E0
 1
 166E3E
-10
+1
 -
 
 Chicken
 A5E0
 1
 166E3E
-10
+1
 -
 
 Arrow
 A5E0
 1
 166E3E
-10
+1
 -
 
 1P
 A5E0
 1
 166E3E
-10
+1
 -
 
 2P
 A5E0
 1
 166E3E
-10
+1
 -
 
 Go
 A5E0
 1
 166E3E
-10
+1
 -
 
 Alphabet
 A5E0
 1
 341E0
-58
+1
 -
