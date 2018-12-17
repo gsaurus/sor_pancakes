@@ -5,8 +5,6 @@ package main;
 
 import java.awt.Color;
 import java.awt.Component;
-import java.awt.Cursor;
-import java.awt.Dimension;
 import java.awt.EventQueue;
 import java.awt.Font;
 import java.awt.Graphics2D;
@@ -15,13 +13,9 @@ import java.awt.Rectangle;
 import java.awt.Toolkit;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
-import java.awt.event.KeyAdapter;
 import java.awt.event.KeyEvent;
-import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
 import java.awt.event.MouseWheelEvent;
-import java.awt.event.MouseWheelListener;
-import java.awt.event.WindowAdapter;
 import java.awt.event.WindowEvent;
 import java.awt.image.BufferedImage;
 import java.awt.image.RenderedImage;
@@ -37,29 +31,16 @@ import java.util.TreeMap;
 import java.util.TreeSet;
 import javax.imageio.ImageIO;
 import javax.swing.BorderFactory;
-import javax.swing.DefaultComboBoxModel;
-import javax.swing.GroupLayout;
-import javax.swing.JButton;
 import javax.swing.JCheckBox;
 import javax.swing.JComboBox;
 import javax.swing.JComponent;
 import javax.swing.JFileChooser;
 import javax.swing.JFrame;
 import javax.swing.JLabel;
-import javax.swing.JMenu;
-import javax.swing.JMenuBar;
-import javax.swing.JMenuItem;
 import javax.swing.JOptionPane;
 import javax.swing.JPanel;
-import javax.swing.JPopupMenu;
-import javax.swing.JRadioButton;
-import javax.swing.JRadioButtonMenuItem;
 import javax.swing.JScrollBar;
-import javax.swing.JScrollPane;
 import javax.swing.JTextField;
-import javax.swing.JToggleButton;
-import javax.swing.KeyStroke;
-import javax.swing.LayoutStyle;
 import javax.swing.ProgressMonitor;
 import javax.swing.Timer;
 import javax.swing.UIManager;
@@ -125,137 +106,137 @@ TheListener {
     private boolean wasFrameReplaced;
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
-    private JTextField angleField;
-    private JComboBox animationCombo;
-    private JPanel animationPanel;
-    private JTextField artField;
-    private JButton backBut;
-    private JCheckBox behindCheck;
-    private JRadioButtonMenuItem brushMenu;
-    private JRadioButton brushRadio;
-    private JRadioButtonMenuItem bucketMenu;
-    private JRadioButton bucketRadio;
-    private JComboBox characterCombo;
-    private JPanel characterPanel;
-    private JPanel characterPanel1;
-    private JMenuItem closeMenu;
-    private JPanel colorPanel1;
-    private JPanel colorPanel10;
-    private JPanel colorPanel11;
-    private JPanel colorPanel12;
-    private JPanel colorPanel13;
-    private JPanel colorPanel14;
-    private JPanel colorPanel15;
-    private JPanel colorPanel16;
-    private JPanel colorPanel2;
-    private JPanel colorPanel3;
-    private JPanel colorPanel4;
-    private JPanel colorPanel5;
-    private JPanel colorPanel6;
-    private JPanel colorPanel7;
-    private JPanel colorPanel8;
-    private JPanel colorPanel9;
-    private JPanel colorsPanel1;
-    private JLabel compressedLabel;
-    private JMenuItem copyMenu;
-    private JTextField damageField;
-    private JTextField delayField;
-    private JRadioButtonMenuItem dragImageMenu;
-    private JRadioButton dragImageRadio;
-    private JRadioButtonMenuItem dragSpriteMenu;
-    private JRadioButton dragSpriteRadio;
-    private JMenu exportMenu;
-    private JPanel framePanel;
-    private JButton frontBut;
-    private JTextField genAddressField;
-    private JTextField genPaletteField;
-    private JPanel generatePanel;
-    private JButton hardReplaceButton;
-    private JRadioButtonMenuItem hexIdsMenu;
-    private JCheckBox hitCheck;
-    private JPanel hitPanel;
-    private JMenu inportMenu;
-    private JButton jButton2;
-    private JButton jButton3;
-    private JLabel jLabel1;
-    private JLabel jLabel10;
-    private JLabel jLabel11;
-    private JLabel jLabel12;
-    private JLabel jLabel13;
-    private JLabel jLabel14;
-    private JLabel jLabel15;
-    private JLabel jLabel16;
-    private JLabel jLabel17;
-    private JLabel jLabel2;
-    private JLabel jLabel3;
-    private JLabel jLabel5;
-    private JLabel jLabel6;
-    private JLabel jLabel7;
-    private JLabel jLabel8;
-    private JLabel jLabel9;
-    private JMenu jMenu1;
-    private JMenu jMenu2;
-    private JMenu jMenu3;
-    private JMenu jMenu4;
-    private JMenu jMenu5;
-    private JMenu jMenu6;
-    private JMenuBar jMenuBar1;
-    private JMenuItem jMenuItem1;
-    private JMenuItem jMenuItem10;
-    private JMenuItem jMenuItem11;
-    private JMenuItem jMenuItem2;
-    private JMenuItem jMenuItem3;
-    private JMenuItem jMenuItem4;
-    private JMenuItem jMenuItem5;
-    private JMenuItem jMenuItem6;
-    private JMenuItem jMenuItem7;
-    private JMenuItem jMenuItem9;
-    private JPopupMenu.Separator jSeparator1;
-    private JPopupMenu.Separator jSeparator2;
-    private JPopupMenu.Separator jSeparator3;
-    private JPopupMenu.Separator jSeparator4;
-    private JPopupMenu.Separator jSeparator5;
-    private JPopupMenu.Separator jSeparator6;
-    private JCheckBox koCheck;
-    private JPanel mainPanel;
-    private JTextField mapField;
-    private JMenuItem nameMenu;
-    private JButton nextBut;
-    private JRadioButtonMenuItem noneMenu;
-    private JRadioButton noneRadio;
-    private JMenuItem openRomMenu;
-    private JPanel overridePanel;
-    private JMenuItem pasteMenu;
-    private JMenuItem pasteMenu1;
-    private JRadioButtonMenuItem pencilMenu;
-    private JRadioButton pencilRadio;
-    private JToggleButton playToggle;
-    private JPanel playerPanel;
-    private JPanel previewPanel;
-    private JButton previousBut;
-    private JMenuItem resizeAnimsMenu;
-    private JScrollPane scrollPanel;
-    private JCheckBox showCenterCheck;
-    private JCheckBox showFacedRightCheck;
-    private JCheckBox showHitsCheck;
-    private JCheckBox showTileCheck;
-    private JCheckBox showWeaponCheck;
-    private JTextField sizeField;
-    private JRadioButtonMenuItem sizeRadioMenu1;
-    private JRadioButtonMenuItem sizeRadioMenu2;
-    private JRadioButtonMenuItem sizeRadioMenu3;
-    private JButton softReplaceButton;
-    private JTextField soundField;
-    private JMenuItem spriteSheetMenu;
-    private JMenuItem spriteSheetMenu1;
-    private JPanel toolsPanel;
-    private JTextField wXField;
-    private JTextField wYField;
-    private JCheckBox weaponCheck;
-    private JComboBox weaponCombo;
-    private JPanel weaponPanel;
-    private JTextField xField;
-    private JTextField yField;
+    private javax.swing.JTextField angleField;
+    private javax.swing.JComboBox animationCombo;
+    private javax.swing.JPanel animationPanel;
+    private javax.swing.JTextField artField;
+    private javax.swing.JButton backBut;
+    private javax.swing.JCheckBox behindCheck;
+    private javax.swing.JRadioButtonMenuItem brushMenu;
+    private javax.swing.JRadioButton brushRadio;
+    private javax.swing.JRadioButtonMenuItem bucketMenu;
+    private javax.swing.JRadioButton bucketRadio;
+    private javax.swing.JComboBox characterCombo;
+    private javax.swing.JPanel characterPanel;
+    private javax.swing.JPanel characterPanel1;
+    private javax.swing.JMenuItem closeMenu;
+    private javax.swing.JPanel colorPanel1;
+    private javax.swing.JPanel colorPanel10;
+    private javax.swing.JPanel colorPanel11;
+    private javax.swing.JPanel colorPanel12;
+    private javax.swing.JPanel colorPanel13;
+    private javax.swing.JPanel colorPanel14;
+    private javax.swing.JPanel colorPanel15;
+    private javax.swing.JPanel colorPanel16;
+    private javax.swing.JPanel colorPanel2;
+    private javax.swing.JPanel colorPanel3;
+    private javax.swing.JPanel colorPanel4;
+    private javax.swing.JPanel colorPanel5;
+    private javax.swing.JPanel colorPanel6;
+    private javax.swing.JPanel colorPanel7;
+    private javax.swing.JPanel colorPanel8;
+    private javax.swing.JPanel colorPanel9;
+    private javax.swing.JPanel colorsPanel1;
+    private javax.swing.JLabel compressedLabel;
+    private javax.swing.JMenuItem copyMenu;
+    private javax.swing.JTextField damageField;
+    private javax.swing.JTextField delayField;
+    private javax.swing.JRadioButtonMenuItem dragImageMenu;
+    private javax.swing.JRadioButton dragImageRadio;
+    private javax.swing.JRadioButtonMenuItem dragSpriteMenu;
+    private javax.swing.JRadioButton dragSpriteRadio;
+    private javax.swing.JMenu exportMenu;
+    private javax.swing.JPanel framePanel;
+    private javax.swing.JButton frontBut;
+    private javax.swing.JTextField genAddressField;
+    private javax.swing.JTextField genPaletteField;
+    private javax.swing.JPanel generatePanel;
+    private javax.swing.JButton hardReplaceButton;
+    private javax.swing.JCheckBoxMenuItem hexIdsMenu;
+    private javax.swing.JCheckBox hitCheck;
+    private javax.swing.JPanel hitPanel;
+    private javax.swing.JMenu inportMenu;
+    private javax.swing.JButton jButton2;
+    private javax.swing.JButton jButton3;
+    private javax.swing.JLabel jLabel1;
+    private javax.swing.JLabel jLabel10;
+    private javax.swing.JLabel jLabel11;
+    private javax.swing.JLabel jLabel12;
+    private javax.swing.JLabel jLabel13;
+    private javax.swing.JLabel jLabel14;
+    private javax.swing.JLabel jLabel15;
+    private javax.swing.JLabel jLabel16;
+    private javax.swing.JLabel jLabel17;
+    private javax.swing.JLabel jLabel2;
+    private javax.swing.JLabel jLabel3;
+    private javax.swing.JLabel jLabel5;
+    private javax.swing.JLabel jLabel6;
+    private javax.swing.JLabel jLabel7;
+    private javax.swing.JLabel jLabel8;
+    private javax.swing.JLabel jLabel9;
+    private javax.swing.JMenu jMenu1;
+    private javax.swing.JMenu jMenu2;
+    private javax.swing.JMenu jMenu3;
+    private javax.swing.JMenu jMenu4;
+    private javax.swing.JMenu jMenu5;
+    private javax.swing.JMenu jMenu6;
+    private javax.swing.JMenuBar jMenuBar1;
+    private javax.swing.JMenuItem jMenuItem1;
+    private javax.swing.JMenuItem jMenuItem10;
+    private javax.swing.JMenuItem jMenuItem11;
+    private javax.swing.JMenuItem jMenuItem2;
+    private javax.swing.JMenuItem jMenuItem3;
+    private javax.swing.JMenuItem jMenuItem4;
+    private javax.swing.JMenuItem jMenuItem5;
+    private javax.swing.JMenuItem jMenuItem6;
+    private javax.swing.JMenuItem jMenuItem7;
+    private javax.swing.JMenuItem jMenuItem9;
+    private javax.swing.JPopupMenu.Separator jSeparator1;
+    private javax.swing.JPopupMenu.Separator jSeparator2;
+    private javax.swing.JPopupMenu.Separator jSeparator3;
+    private javax.swing.JPopupMenu.Separator jSeparator4;
+    private javax.swing.JPopupMenu.Separator jSeparator5;
+    private javax.swing.JPopupMenu.Separator jSeparator6;
+    private javax.swing.JCheckBox koCheck;
+    private javax.swing.JPanel mainPanel;
+    private javax.swing.JTextField mapField;
+    private javax.swing.JMenuItem nameMenu;
+    private javax.swing.JButton nextBut;
+    private javax.swing.JRadioButtonMenuItem noneMenu;
+    private javax.swing.JRadioButton noneRadio;
+    private javax.swing.JMenuItem openRomMenu;
+    private javax.swing.JPanel overridePanel;
+    private javax.swing.JMenuItem pasteMenu;
+    private javax.swing.JMenuItem pasteMenu1;
+    private javax.swing.JRadioButtonMenuItem pencilMenu;
+    private javax.swing.JRadioButton pencilRadio;
+    private javax.swing.JToggleButton playToggle;
+    private javax.swing.JPanel playerPanel;
+    private javax.swing.JPanel previewPanel;
+    private javax.swing.JButton previousBut;
+    private javax.swing.JMenuItem resizeAnimsMenu;
+    private javax.swing.JScrollPane scrollPanel;
+    private javax.swing.JCheckBox showCenterCheck;
+    private javax.swing.JCheckBox showFacedRightCheck;
+    private javax.swing.JCheckBox showHitsCheck;
+    private javax.swing.JCheckBox showTileCheck;
+    private javax.swing.JCheckBox showWeaponCheck;
+    private javax.swing.JTextField sizeField;
+    private javax.swing.JRadioButtonMenuItem sizeRadioMenu1;
+    private javax.swing.JRadioButtonMenuItem sizeRadioMenu2;
+    private javax.swing.JRadioButtonMenuItem sizeRadioMenu3;
+    private javax.swing.JButton softReplaceButton;
+    private javax.swing.JTextField soundField;
+    private javax.swing.JMenuItem spriteSheetMenu;
+    private javax.swing.JMenuItem spriteSheetMenu1;
+    private javax.swing.JPanel toolsPanel;
+    private javax.swing.JTextField wXField;
+    private javax.swing.JTextField wYField;
+    private javax.swing.JCheckBox weaponCheck;
+    private javax.swing.JComboBox weaponCombo;
+    private javax.swing.JPanel weaponPanel;
+    private javax.swing.JTextField xField;
+    private javax.swing.JTextField yField;
     // End of variables declaration//GEN-END:variables
 
     private void setupAnimationCombo() {
@@ -545,6 +526,7 @@ TheListener {
             this.nameMenu.setEnabled(false);
             this.pasteMenu1.setEnabled(false);
             this.resizeAnimsMenu.setEnabled(false);
+            this.hexIdsMenu.setEnabled(false);
             this.imagePanel.setImage(null, null);
             this.imagePanel.setReplaceImage(null);
             this.imagePanel.removeHit();
@@ -641,6 +623,7 @@ TheListener {
         this.copyMenu.setEnabled(this.manager != null);
         this.pasteMenu.setEnabled(this.manager != null && this.copiedMap != 0L);
         this.pasteMenu1.setEnabled(this.manager != null);
+        this.hexIdsMenu.setEnabled(this.manager != null);
         if (this.manager != null) {
             this.updateHitFrameEnabling();
             this.updateWeaponFrameEnabling();
@@ -1396,6 +1379,7 @@ TheListener {
             this.colorPanels[i].setBackground(new Color(palette.getColor(i)));
         }
     }
+    
 
     /**
      * This method is called from within the constructor to initialize the form.
@@ -1405,1146 +1389,1642 @@ TheListener {
     @SuppressWarnings("unchecked")
     // <editor-fold defaultstate="collapsed" desc="Generated Code">//GEN-BEGIN:initComponents
     private void initComponents() {
-        this.mainPanel = new JPanel();
-        this.characterPanel = new JPanel();
-        this.jLabel1 = new JLabel();
-        this.characterCombo = new JComboBox();
-        this.animationPanel = new JPanel();
-        this.jLabel5 = new JLabel();
-        this.animationCombo = new JComboBox();
-        this.jLabel6 = new JLabel();
-        this.sizeField = new JTextField();
-        this.framePanel = new JPanel();
-        this.jLabel7 = new JLabel();
-        this.delayField = new JTextField();
-        this.hitPanel = new JPanel();
-        this.jLabel8 = new JLabel();
-        this.xField = new JTextField();
-        this.jLabel9 = new JLabel();
-        this.yField = new JTextField();
-        this.jLabel10 = new JLabel();
-        this.soundField = new JTextField();
-        this.jLabel11 = new JLabel();
-        this.damageField = new JTextField();
-        this.koCheck = new JCheckBox();
-        this.hitCheck = new JCheckBox();
-        this.jLabel12 = new JLabel();
-        this.mapField = new JTextField();
-        this.jLabel3 = new JLabel();
-        this.artField = new JTextField();
-        this.jButton2 = new JButton();
-        this.jButton3 = new JButton();
-        this.weaponPanel = new JPanel();
-        this.jLabel15 = new JLabel();
-        this.wXField = new JTextField();
-        this.jLabel16 = new JLabel();
-        this.wYField = new JTextField();
-        this.jLabel17 = new JLabel();
-        this.angleField = new JTextField();
-        this.behindCheck = new JCheckBox();
-        this.weaponCheck = new JCheckBox();
-        this.compressedLabel = new JLabel();
-        this.previewPanel = new JPanel();
-        this.scrollPanel = new JScrollPane(this.imagePanel);
-        this.playerPanel = new JPanel();
-        this.backBut = new JButton();
-        this.previousBut = new JButton();
-        this.nextBut = new JButton();
-        this.frontBut = new JButton();
-        this.playToggle = new JToggleButton();
-        this.colorsPanel1 = new JPanel();
-        this.colorPanel2 = new JPanel();
-        this.colorPanel3 = new JPanel();
-        this.colorPanel4 = new JPanel();
-        this.colorPanel5 = new JPanel();
-        this.colorPanel6 = new JPanel();
-        this.colorPanel7 = new JPanel();
-        this.colorPanel8 = new JPanel();
-        this.colorPanel9 = new JPanel();
-        this.colorPanel10 = new JPanel();
-        this.colorPanel11 = new JPanel();
-        this.colorPanel12 = new JPanel();
-        this.colorPanel13 = new JPanel();
-        this.colorPanel14 = new JPanel();
-        this.colorPanel15 = new JPanel();
-        this.colorPanel16 = new JPanel();
-        this.colorPanel1 = new JPanel();
-        this.characterPanel1 = new JPanel();
-        this.showHitsCheck = new JCheckBox();
-        this.showWeaponCheck = new JCheckBox();
-        this.weaponCombo = new JComboBox();
-        this.showFacedRightCheck = new JCheckBox();
-        this.showTileCheck = new JCheckBox();
-        this.showCenterCheck = new JCheckBox();
-        this.toolsPanel = new JPanel();
-        this.pencilRadio = new JRadioButton();
-        this.brushRadio = new JRadioButton();
-        this.bucketRadio = new JRadioButton();
-        this.dragSpriteRadio = new JRadioButton();
-        this.dragImageRadio = new JRadioButton();
-        this.noneRadio = new JRadioButton();
-        this.overridePanel = new JPanel();
-        this.softReplaceButton = new JButton();
-        this.jLabel2 = new JLabel();
-        this.generatePanel = new JPanel();
-        this.hardReplaceButton = new JButton();
-        this.jLabel13 = new JLabel();
-        this.genAddressField = new JTextField();
-        this.jLabel14 = new JLabel();
-        this.genPaletteField = new JTextField();
-        this.jMenuBar1 = new JMenuBar();
-        this.jMenu1 = new JMenu();
-        this.openRomMenu = new JMenuItem();
-        this.jMenuItem4 = new JMenuItem();
-        this.closeMenu = new JMenuItem();
-        this.jSeparator2 = new JPopupMenu.Separator();
-        this.inportMenu = new JMenu();
-        this.jMenuItem1 = new JMenuItem();
-        this.jMenuItem2 = new JMenuItem();
-        this.jSeparator6 = new JPopupMenu.Separator();
-        this.jMenuItem3 = new JMenuItem();
-        this.exportMenu = new JMenu();
-        this.spriteSheetMenu1 = new JMenuItem();
-        this.spriteSheetMenu = new JMenuItem();
-        this.jSeparator1 = new JPopupMenu.Separator();
-        this.jMenuItem5 = new JMenuItem();
-        this.jMenu2 = new JMenu();
-        this.jMenu6 = new JMenu();
-        this.pencilMenu = new JRadioButtonMenuItem();
-        this.brushMenu = new JRadioButtonMenuItem();
-        this.bucketMenu = new JRadioButtonMenuItem();
-        this.dragSpriteMenu = new JRadioButtonMenuItem();
-        this.dragImageMenu = new JRadioButtonMenuItem();
-        this.noneMenu = new JRadioButtonMenuItem();
-        this.jMenu5 = new JMenu();
-        this.sizeRadioMenu1 = new JRadioButtonMenuItem();
-        this.sizeRadioMenu2 = new JRadioButtonMenuItem();
-        this.sizeRadioMenu3 = new JRadioButtonMenuItem();
-        this.jMenu4 = new JMenu();
-        this.jMenuItem11 = new JMenuItem();
-        this.jMenuItem7 = new JMenuItem();
-        this.jMenuItem9 = new JMenuItem();
-        this.jMenuItem10 = new JMenuItem();
-        this.hexIdsMenu = new JRadioButtonMenuItem();
-        this.jSeparator3 = new JPopupMenu.Separator();
-        this.resizeAnimsMenu = new JMenuItem();
-        this.nameMenu = new JMenuItem();
-        this.jSeparator4 = new JPopupMenu.Separator();
-        this.copyMenu = new JMenuItem();
-        this.pasteMenu = new JMenuItem();
-        this.jSeparator5 = new JPopupMenu.Separator();
-        this.pasteMenu1 = new JMenuItem();
-        this.jMenu3 = new JMenu();
-        this.jMenuItem6 = new JMenuItem();
-        this.setDefaultCloseOperation(0);
-        this.setTitle(TITLE);
-        this.setLocationByPlatform(true);
-        this.addMouseWheelListener(new MouseWheelListener(){
-
-            @Override
-            public void mouseWheelMoved(MouseWheelEvent evt) {
-                Gui.this.formMouseWheelMoved(evt);
-            }
-        });
-        this.addWindowListener(new WindowAdapter(){
-
-            @Override
-            public void windowClosing(WindowEvent evt) {
-                Gui.this.formWindowClosing(evt);
-            }
-        });
-        this.characterPanel.setBackground(new Color(229, 235, 235));
-        this.characterPanel.setBorder(BorderFactory.createTitledBorder(""));
-        this.jLabel1.setFont(new Font("Tahoma", 1, 14));
-        this.jLabel1.setHorizontalAlignment(4);
-        this.jLabel1.setText("Character:");
-        this.characterCombo.setFont(new Font("Tahoma", 0, 14));
-        this.characterCombo.setMaximumRowCount(16);
-        this.characterCombo.addActionListener(new ActionListener(){
-
-            @Override
-            public void actionPerformed(ActionEvent evt) {
-                Gui.this.characterComboActionPerformed(evt);
-            }
-        });
-        this.characterCombo.addKeyListener(new KeyAdapter(){
-
-            @Override
-            public void keyPressed(KeyEvent evt) {
-                Gui.this.characterComboKeyPressed(evt);
-            }
-        });
-        this.animationPanel.setBackground(new Color(241, 241, 171));
-        this.animationPanel.setBorder(BorderFactory.createTitledBorder(""));
-        this.jLabel5.setFont(new Font("Tahoma", 1, 12));
-        this.jLabel5.setHorizontalAlignment(4);
-        this.jLabel5.setText("Animation:");
-        this.animationCombo.setFont(new Font("Tahoma", 0, 14));
-        this.animationCombo.setMaximumRowCount(16);
-        this.animationCombo.addActionListener(new ActionListener(){
-
-            @Override
-            public void actionPerformed(ActionEvent evt) {
-                Gui.this.animationComboActionPerformed(evt);
-            }
-        });
-        this.animationCombo.addKeyListener(new KeyAdapter(){
-
-            @Override
-            public void keyPressed(KeyEvent evt) {
-                Gui.this.animationComboKeyPressed(evt);
-            }
-        });
-        this.jLabel6.setFont(new Font("Tahoma", 0, 14));
-        this.jLabel6.setHorizontalAlignment(4);
-        this.jLabel6.setText("Size:");
-        this.sizeField.setEditable(false);
-        this.sizeField.setFont(new Font("Courier New", 0, 14));
-        this.sizeField.setHorizontalAlignment(4);
-        this.sizeField.setText("0");
-        this.framePanel.setBackground(new Color(240, 226, 157));
-        this.framePanel.setBorder(BorderFactory.createTitledBorder(null, "Frame #", 0, 0, new Font("Tahoma", 0, 14), new Color(0, 0, 0)));
-        this.jLabel7.setFont(new Font("Tahoma", 0, 14));
-        this.jLabel7.setHorizontalAlignment(4);
-        this.jLabel7.setText("Delay:");
-        this.delayField.setFont(new Font("Courier New", 0, 14));
-        this.delayField.setHorizontalAlignment(4);
-        this.delayField.setText("0");
-        this.hitPanel.setBackground(new Color(236, 209, 127));
-        this.hitPanel.setBorder(BorderFactory.createTitledBorder(null, "Hit", 0, 0, new Font("Tahoma", 0, 11), new Color(0, 0, 0)));
-        this.jLabel8.setFont(new Font("Tahoma", 0, 14));
-        this.jLabel8.setHorizontalAlignment(4);
-        this.jLabel8.setText("x:");
-        this.xField.setFont(new Font("Courier New", 0, 14));
-        this.xField.setHorizontalAlignment(4);
-        this.xField.setText("0");
-        this.jLabel9.setFont(new Font("Tahoma", 0, 14));
-        this.jLabel9.setHorizontalAlignment(4);
-        this.jLabel9.setText("y:");
-        this.yField.setFont(new Font("Courier New", 0, 14));
-        this.yField.setHorizontalAlignment(4);
-        this.yField.setText("0");
-        this.jLabel10.setFont(new Font("Tahoma", 0, 14));
-        this.jLabel10.setHorizontalAlignment(4);
-        this.jLabel10.setText("sound:");
-        this.soundField.setFont(new Font("Courier New", 0, 14));
-        this.soundField.setHorizontalAlignment(4);
-        this.soundField.setText("0");
-        this.jLabel11.setFont(new Font("Tahoma", 0, 14));
-        this.jLabel11.setHorizontalAlignment(4);
-        this.jLabel11.setText("damage:");
-        this.damageField.setFont(new Font("Courier New", 0, 14));
-        this.damageField.setHorizontalAlignment(4);
-        this.damageField.setText("0");
-        this.koCheck.setBackground(new Color(236, 209, 127));
-        this.koCheck.setFont(new Font("Tahoma", 0, 14));
-        this.koCheck.setText("Knock Down");
-        this.koCheck.setContentAreaFilled(false);
-        this.koCheck.setFocusable(false);
-        this.koCheck.addActionListener(new ActionListener(){
-
-            @Override
-            public void actionPerformed(ActionEvent evt) {
-                Gui.this.koCheckActionPerformed(evt);
-            }
-        });
-        GroupLayout hitPanelLayout = new GroupLayout(this.hitPanel);
-        this.hitPanel.setLayout(hitPanelLayout);
-        hitPanelLayout.setHorizontalGroup(hitPanelLayout.createParallelGroup(GroupLayout.Alignment.LEADING).addGroup(hitPanelLayout.createSequentialGroup().addGroup(hitPanelLayout.createParallelGroup(GroupLayout.Alignment.LEADING).addGroup(hitPanelLayout.createSequentialGroup().addGap(16, 16, 16).addComponent(this.jLabel8, -2, 22, -2).addPreferredGap(LayoutStyle.ComponentPlacement.RELATED).addComponent(this.xField, -2, 33, -2).addPreferredGap(LayoutStyle.ComponentPlacement.RELATED).addComponent(this.jLabel9, -2, 22, -2).addPreferredGap(LayoutStyle.ComponentPlacement.RELATED).addComponent(this.yField, -2, 33, -2)).addGroup(GroupLayout.Alignment.TRAILING, hitPanelLayout.createSequentialGroup().addContainerGap().addComponent(this.jLabel11, -2, 63, -2).addPreferredGap(LayoutStyle.ComponentPlacement.RELATED).addComponent(this.damageField, -2, 33, -2))).addPreferredGap(LayoutStyle.ComponentPlacement.UNRELATED).addGroup(hitPanelLayout.createParallelGroup(GroupLayout.Alignment.TRAILING).addComponent(this.koCheck).addGroup(hitPanelLayout.createSequentialGroup().addComponent(this.jLabel10, -2, 57, -2).addPreferredGap(LayoutStyle.ComponentPlacement.RELATED).addComponent(this.soundField, -2, 33, -2))).addContainerGap(-1, 32767)));
-        hitPanelLayout.setVerticalGroup(hitPanelLayout.createParallelGroup(GroupLayout.Alignment.LEADING).addGroup(hitPanelLayout.createSequentialGroup().addGroup(hitPanelLayout.createParallelGroup(GroupLayout.Alignment.BASELINE).addComponent(this.jLabel8).addComponent(this.xField, -2, -1, -2).addComponent(this.jLabel9).addComponent(this.yField, -2, -1, -2).addComponent(this.jLabel10).addComponent(this.soundField, -2, -1, -2)).addPreferredGap(LayoutStyle.ComponentPlacement.UNRELATED).addGroup(hitPanelLayout.createParallelGroup(GroupLayout.Alignment.BASELINE).addComponent(this.jLabel11).addComponent(this.damageField, -2, -1, -2).addComponent(this.koCheck)).addGap(0, 9, 32767)));
-        this.hitCheck.setBackground(new Color(240, 226, 157));
-        this.hitCheck.setFont(new Font("Tahoma", 0, 14));
-        this.hitCheck.setText("Hit frame");
-        this.hitCheck.setContentAreaFilled(false);
-        this.hitCheck.setFocusable(false);
-        this.hitCheck.addActionListener(new ActionListener(){
-
-            @Override
-            public void actionPerformed(ActionEvent evt) {
-                Gui.this.hitCheckActionPerformed(evt);
-            }
-        });
-        this.jLabel12.setFont(new Font("Tahoma", 0, 14));
-        this.jLabel12.setHorizontalAlignment(4);
-        this.jLabel12.setText("SpriteMap:");
-        this.mapField.setFont(new Font("Courier New", 0, 14));
-        this.mapField.setHorizontalAlignment(4);
-        this.mapField.setText("200");
-        this.jLabel3.setFont(new Font("Tahoma", 0, 14));
-        this.jLabel3.setHorizontalAlignment(4);
-        this.jLabel3.setText("Art Address:");
-        this.artField.setFont(new Font("Courier New", 0, 14));
-        this.artField.setHorizontalAlignment(4);
-        this.artField.setText("200");
-        this.jButton2.setText("<");
-        this.jButton2.setFocusable(false);
-        this.jButton2.addActionListener(new ActionListener(){
-
-            @Override
-            public void actionPerformed(ActionEvent evt) {
-                Gui.this.jButton2ActionPerformed(evt);
-            }
-        });
-        this.jButton3.setText(">");
-        this.jButton3.setFocusable(false);
-        this.jButton3.addActionListener(new ActionListener(){
-
-            @Override
-            public void actionPerformed(ActionEvent evt) {
-                Gui.this.jButton3ActionPerformed(evt);
-            }
-        });
-        this.weaponPanel.setBackground(new Color(217, 227, 154));
-        this.weaponPanel.setBorder(BorderFactory.createTitledBorder(null, "Weapon Point", 0, 0, new Font("Tahoma", 0, 11), new Color(0, 0, 0)));
-        this.jLabel15.setFont(new Font("Tahoma", 0, 14));
-        this.jLabel15.setHorizontalAlignment(4);
-        this.jLabel15.setText("x:");
-        this.wXField.setFont(new Font("Courier New", 0, 14));
-        this.wXField.setHorizontalAlignment(4);
-        this.wXField.setText("0");
-        this.jLabel16.setFont(new Font("Tahoma", 0, 14));
-        this.jLabel16.setHorizontalAlignment(4);
-        this.jLabel16.setText("y:");
-        this.wYField.setFont(new Font("Courier New", 0, 14));
-        this.wYField.setHorizontalAlignment(4);
-        this.wYField.setText("0");
-        this.jLabel17.setFont(new Font("Tahoma", 0, 14));
-        this.jLabel17.setHorizontalAlignment(4);
-        this.jLabel17.setText("rotation");
-        this.angleField.setFont(new Font("Courier New", 0, 14));
-        this.angleField.setHorizontalAlignment(4);
-        this.angleField.setText("0");
-        this.behindCheck.setFont(new Font("Tahoma", 0, 14));
-        this.behindCheck.setText("Show behind");
-        this.behindCheck.setContentAreaFilled(false);
-        this.behindCheck.addActionListener(new ActionListener(){
-
-            @Override
-            public void actionPerformed(ActionEvent evt) {
-                Gui.this.behindCheckActionPerformed(evt);
-            }
-        });
-        GroupLayout weaponPanelLayout = new GroupLayout(this.weaponPanel);
-        this.weaponPanel.setLayout(weaponPanelLayout);
-        weaponPanelLayout.setHorizontalGroup(weaponPanelLayout.createParallelGroup(GroupLayout.Alignment.LEADING).addGroup(weaponPanelLayout.createSequentialGroup().addComponent(this.jLabel15, -2, 22, -2).addPreferredGap(LayoutStyle.ComponentPlacement.RELATED).addComponent(this.wXField, -2, 33, -2).addPreferredGap(LayoutStyle.ComponentPlacement.RELATED).addComponent(this.jLabel16, -2, 22, -2).addPreferredGap(LayoutStyle.ComponentPlacement.RELATED).addComponent(this.wYField, -2, 33, -2).addPreferredGap(LayoutStyle.ComponentPlacement.RELATED).addComponent(this.jLabel17, -2, 51, -2).addPreferredGap(LayoutStyle.ComponentPlacement.RELATED).addComponent(this.angleField, -2, 19, -2).addPreferredGap(LayoutStyle.ComponentPlacement.RELATED, -1, 32767).addComponent(this.behindCheck)));
-        weaponPanelLayout.setVerticalGroup(weaponPanelLayout.createParallelGroup(GroupLayout.Alignment.LEADING).addGroup(weaponPanelLayout.createParallelGroup(GroupLayout.Alignment.BASELINE).addComponent(this.jLabel15).addComponent(this.wXField, -2, -1, -2).addComponent(this.jLabel16).addComponent(this.wYField, -2, -1, -2).addComponent(this.jLabel17).addComponent(this.angleField, -2, -1, -2).addComponent(this.behindCheck)));
-        this.weaponCheck.setBackground(new Color(240, 226, 157));
-        this.weaponCheck.setFont(new Font("Tahoma", 0, 14));
-        this.weaponCheck.setText("Weapon Point");
-        this.weaponCheck.setContentAreaFilled(false);
-        this.weaponCheck.setFocusable(false);
-        this.weaponCheck.addActionListener(new ActionListener(){
-
-            @Override
-            public void actionPerformed(ActionEvent evt) {
-                Gui.this.weaponCheckActionPerformed(evt);
-            }
-        });
-        GroupLayout framePanelLayout = new GroupLayout(this.framePanel);
-        this.framePanel.setLayout(framePanelLayout);
-        framePanelLayout.setHorizontalGroup(framePanelLayout.createParallelGroup(GroupLayout.Alignment.LEADING).addGroup(framePanelLayout.createSequentialGroup().addComponent(this.jLabel12, -2, 79, -2).addPreferredGap(LayoutStyle.ComponentPlacement.RELATED).addComponent(this.mapField, -2, 62, -2).addPreferredGap(LayoutStyle.ComponentPlacement.UNRELATED).addComponent(this.jLabel3, -2, 79, -2).addPreferredGap(LayoutStyle.ComponentPlacement.RELATED).addComponent(this.artField, -2, 62, -2).addContainerGap()).addGroup(framePanelLayout.createSequentialGroup().addGroup(framePanelLayout.createParallelGroup(GroupLayout.Alignment.TRAILING).addGroup(framePanelLayout.createSequentialGroup().addComponent(this.jLabel7).addPreferredGap(LayoutStyle.ComponentPlacement.RELATED).addComponent(this.delayField, -2, 33, -2)).addComponent(this.hitCheck)).addPreferredGap(LayoutStyle.ComponentPlacement.RELATED, -1, 32767).addComponent(this.jButton2).addPreferredGap(LayoutStyle.ComponentPlacement.RELATED).addComponent(this.jButton3)).addGroup(framePanelLayout.createSequentialGroup().addComponent(this.weaponCheck).addGap(0, 0, 32767)).addComponent(this.hitPanel, -1, -1, 32767).addComponent(this.weaponPanel, -1, -1, 32767));
-        framePanelLayout.setVerticalGroup(framePanelLayout.createParallelGroup(GroupLayout.Alignment.LEADING).addGroup(framePanelLayout.createSequentialGroup().addGroup(framePanelLayout.createParallelGroup(GroupLayout.Alignment.LEADING).addGroup(framePanelLayout.createParallelGroup(GroupLayout.Alignment.BASELINE).addComponent(this.jButton2).addComponent(this.jButton3)).addGroup(framePanelLayout.createParallelGroup(GroupLayout.Alignment.BASELINE).addComponent(this.jLabel7).addComponent(this.delayField, -2, -1, -2))).addPreferredGap(LayoutStyle.ComponentPlacement.RELATED).addComponent(this.hitCheck).addPreferredGap(LayoutStyle.ComponentPlacement.RELATED).addComponent(this.hitPanel, -2, -1, -2).addPreferredGap(LayoutStyle.ComponentPlacement.RELATED, 8, 32767).addComponent(this.weaponCheck).addPreferredGap(LayoutStyle.ComponentPlacement.UNRELATED).addComponent(this.weaponPanel, -2, -1, -2).addPreferredGap(LayoutStyle.ComponentPlacement.RELATED).addGroup(framePanelLayout.createParallelGroup(GroupLayout.Alignment.BASELINE).addComponent(this.jLabel12).addComponent(this.mapField, -2, -1, -2).addComponent(this.jLabel3).addComponent(this.artField, -2, -1, -2))));
-        GroupLayout animationPanelLayout = new GroupLayout(this.animationPanel);
-        this.animationPanel.setLayout(animationPanelLayout);
-        animationPanelLayout.setHorizontalGroup(animationPanelLayout.createParallelGroup(GroupLayout.Alignment.LEADING).addGroup(animationPanelLayout.createSequentialGroup().addComponent(this.jLabel5).addPreferredGap(LayoutStyle.ComponentPlacement.RELATED).addComponent(this.animationCombo, -2, 202, -2).addPreferredGap(LayoutStyle.ComponentPlacement.RELATED).addComponent(this.jLabel6).addPreferredGap(LayoutStyle.ComponentPlacement.RELATED, -1, 32767).addComponent(this.sizeField, -2, 33, -2).addGap(6, 6, 6)).addComponent(this.framePanel, -1, -1, 32767));
-        animationPanelLayout.setVerticalGroup(animationPanelLayout.createParallelGroup(GroupLayout.Alignment.LEADING).addGroup(animationPanelLayout.createSequentialGroup().addGroup(animationPanelLayout.createParallelGroup(GroupLayout.Alignment.BASELINE).addComponent(this.jLabel5).addComponent(this.animationCombo, -2, -1, -2).addComponent(this.sizeField, -2, -1, -2).addComponent(this.jLabel6)).addPreferredGap(LayoutStyle.ComponentPlacement.UNRELATED).addComponent(this.framePanel, -1, -1, 32767)));
-        this.compressedLabel.setFont(new Font("Tahoma", 1, 12));
-        this.compressedLabel.setForeground(new Color(199, 18, 18));
-        this.compressedLabel.setText("Compressed!");
-        GroupLayout characterPanelLayout = new GroupLayout(this.characterPanel);
-        this.characterPanel.setLayout(characterPanelLayout);
-        characterPanelLayout.setHorizontalGroup(characterPanelLayout.createParallelGroup(GroupLayout.Alignment.LEADING).addGroup(characterPanelLayout.createSequentialGroup().addGroup(characterPanelLayout.createParallelGroup(GroupLayout.Alignment.LEADING).addGroup(characterPanelLayout.createSequentialGroup().addComponent(this.jLabel1, -2, 73, -2).addPreferredGap(LayoutStyle.ComponentPlacement.RELATED).addComponent(this.characterCombo, -2, 205, -2).addPreferredGap(LayoutStyle.ComponentPlacement.RELATED).addComponent(this.compressedLabel)).addComponent(this.animationPanel, -2, -1, -2)).addContainerGap(-1, 32767)));
-        characterPanelLayout.setVerticalGroup(characterPanelLayout.createParallelGroup(GroupLayout.Alignment.LEADING).addGroup(characterPanelLayout.createSequentialGroup().addGroup(characterPanelLayout.createParallelGroup(GroupLayout.Alignment.BASELINE).addComponent(this.jLabel1).addComponent(this.characterCombo, -2, -1, -2).addComponent(this.compressedLabel)).addPreferredGap(LayoutStyle.ComponentPlacement.RELATED).addComponent(this.animationPanel, -1, -1, 32767)));
-        this.scrollPanel.setBackground(new Color(0, 0, 0));
-        this.scrollPanel.setFocusable(false);
-        this.backBut.setBackground(new Color(241, 241, 171));
-        this.backBut.setText("|<<");
-        this.backBut.setFocusable(false);
-        this.backBut.addActionListener(new ActionListener(){
-
-            @Override
-            public void actionPerformed(ActionEvent evt) {
-                Gui.this.backButActionPerformed(evt);
-            }
-        });
-        this.previousBut.setBackground(new Color(240, 226, 157));
-        this.previousBut.setText("<<");
-        this.previousBut.setFocusable(false);
-        this.previousBut.addActionListener(new ActionListener(){
-
-            @Override
-            public void actionPerformed(ActionEvent evt) {
-                Gui.this.previousButActionPerformed(evt);
-            }
-        });
-        this.nextBut.setBackground(new Color(240, 226, 157));
-        this.nextBut.setText(">>");
-        this.nextBut.setFocusable(false);
-        this.nextBut.addActionListener(new ActionListener(){
-
-            @Override
-            public void actionPerformed(ActionEvent evt) {
-                Gui.this.nextButActionPerformed(evt);
-            }
-        });
-        this.frontBut.setBackground(new Color(241, 241, 171));
-        this.frontBut.setText(">>|");
-        this.frontBut.setFocusable(false);
-        this.frontBut.addActionListener(new ActionListener(){
-
-            @Override
-            public void actionPerformed(ActionEvent evt) {
-                Gui.this.frontButActionPerformed(evt);
-            }
-        });
-        this.playToggle.setBackground(new Color(236, 209, 127));
-        this.playToggle.setText(">");
-        this.playToggle.setFocusable(false);
-        this.playToggle.addActionListener(new ActionListener(){
-
-            @Override
-            public void actionPerformed(ActionEvent evt) {
-                Gui.this.playToggleActionPerformed(evt);
-            }
-        });
-        GroupLayout playerPanelLayout = new GroupLayout(this.playerPanel);
-        this.playerPanel.setLayout(playerPanelLayout);
-        playerPanelLayout.setHorizontalGroup(playerPanelLayout.createParallelGroup(GroupLayout.Alignment.LEADING).addGroup(GroupLayout.Alignment.TRAILING, playerPanelLayout.createSequentialGroup().addComponent(this.backBut, -1, -1, 32767).addPreferredGap(LayoutStyle.ComponentPlacement.RELATED).addComponent(this.previousBut, -1, -1, 32767).addPreferredGap(LayoutStyle.ComponentPlacement.RELATED).addComponent(this.playToggle, -2, 105, -2).addPreferredGap(LayoutStyle.ComponentPlacement.RELATED).addComponent(this.nextBut, -1, -1, 32767).addPreferredGap(LayoutStyle.ComponentPlacement.RELATED).addComponent(this.frontBut, -1, -1, 32767)));
-        playerPanelLayout.setVerticalGroup(playerPanelLayout.createParallelGroup(GroupLayout.Alignment.LEADING).addGroup(playerPanelLayout.createParallelGroup(GroupLayout.Alignment.BASELINE).addComponent(this.backBut).addComponent(this.previousBut).addComponent(this.nextBut).addComponent(this.frontBut).addComponent(this.playToggle)));
-        this.colorsPanel1.setBorder(BorderFactory.createTitledBorder(null, "Palette", 0, 0, new Font("Tahoma", 0, 11), new Color(0, 0, 0)));
-        this.colorsPanel1.setPreferredSize(new Dimension(256, 64));
-        this.colorPanel2.setBackground(new Color(255, 255, 255));
-        this.colorPanel2.setCursor(new Cursor(0));
-        this.colorPanel2.setPreferredSize(new Dimension(32, 32));
-        this.colorPanel2.addMouseListener(new MouseAdapter(){
-
-            @Override
-            public void mousePressed(MouseEvent evt) {
-                Gui.this.colorPanel2MousePressed(evt);
-            }
-        });
-        GroupLayout colorPanel2Layout = new GroupLayout(this.colorPanel2);
-        this.colorPanel2.setLayout(colorPanel2Layout);
-        colorPanel2Layout.setHorizontalGroup(colorPanel2Layout.createParallelGroup(GroupLayout.Alignment.LEADING).addGap(0, 0, 32767));
-        colorPanel2Layout.setVerticalGroup(colorPanel2Layout.createParallelGroup(GroupLayout.Alignment.LEADING).addGap(0, 32, 32767));
-        this.colorPanel3.setBackground(new Color(255, 255, 255));
-        this.colorPanel3.setCursor(new Cursor(0));
-        this.colorPanel3.setPreferredSize(new Dimension(32, 32));
-        this.colorPanel3.addMouseListener(new MouseAdapter(){
-
-            @Override
-            public void mousePressed(MouseEvent evt) {
-                Gui.this.colorPanel3MousePressed(evt);
-            }
-        });
-        GroupLayout colorPanel3Layout = new GroupLayout(this.colorPanel3);
-        this.colorPanel3.setLayout(colorPanel3Layout);
-        colorPanel3Layout.setHorizontalGroup(colorPanel3Layout.createParallelGroup(GroupLayout.Alignment.LEADING).addGap(0, 0, 32767));
-        colorPanel3Layout.setVerticalGroup(colorPanel3Layout.createParallelGroup(GroupLayout.Alignment.LEADING).addGap(0, 32, 32767));
-        this.colorPanel4.setBackground(new Color(255, 255, 255));
-        this.colorPanel4.setCursor(new Cursor(0));
-        this.colorPanel4.setPreferredSize(new Dimension(32, 32));
-        this.colorPanel4.addMouseListener(new MouseAdapter(){
-
-            @Override
-            public void mousePressed(MouseEvent evt) {
-                Gui.this.colorPanel4MousePressed(evt);
-            }
-        });
-        GroupLayout colorPanel4Layout = new GroupLayout(this.colorPanel4);
-        this.colorPanel4.setLayout(colorPanel4Layout);
-        colorPanel4Layout.setHorizontalGroup(colorPanel4Layout.createParallelGroup(GroupLayout.Alignment.LEADING).addGap(0, 0, 32767));
-        colorPanel4Layout.setVerticalGroup(colorPanel4Layout.createParallelGroup(GroupLayout.Alignment.LEADING).addGap(0, 32, 32767));
-        this.colorPanel5.setBackground(new Color(255, 255, 255));
-        this.colorPanel5.setCursor(new Cursor(0));
-        this.colorPanel5.setPreferredSize(new Dimension(32, 32));
-        this.colorPanel5.addMouseListener(new MouseAdapter(){
-
-            @Override
-            public void mousePressed(MouseEvent evt) {
-                Gui.this.colorPanel5MousePressed(evt);
-            }
-        });
-        GroupLayout colorPanel5Layout = new GroupLayout(this.colorPanel5);
-        this.colorPanel5.setLayout(colorPanel5Layout);
-        colorPanel5Layout.setHorizontalGroup(colorPanel5Layout.createParallelGroup(GroupLayout.Alignment.LEADING).addGap(0, 0, 32767));
-        colorPanel5Layout.setVerticalGroup(colorPanel5Layout.createParallelGroup(GroupLayout.Alignment.LEADING).addGap(0, 32, 32767));
-        this.colorPanel6.setBackground(new Color(255, 255, 255));
-        this.colorPanel6.setCursor(new Cursor(0));
-        this.colorPanel6.setPreferredSize(new Dimension(32, 32));
-        this.colorPanel6.addMouseListener(new MouseAdapter(){
-
-            @Override
-            public void mousePressed(MouseEvent evt) {
-                Gui.this.colorPanel6MousePressed(evt);
-            }
-        });
-        GroupLayout colorPanel6Layout = new GroupLayout(this.colorPanel6);
-        this.colorPanel6.setLayout(colorPanel6Layout);
-        colorPanel6Layout.setHorizontalGroup(colorPanel6Layout.createParallelGroup(GroupLayout.Alignment.LEADING).addGap(0, 0, 32767));
-        colorPanel6Layout.setVerticalGroup(colorPanel6Layout.createParallelGroup(GroupLayout.Alignment.LEADING).addGap(0, 32, 32767));
-        this.colorPanel7.setBackground(new Color(255, 255, 255));
-        this.colorPanel7.setCursor(new Cursor(0));
-        this.colorPanel7.setPreferredSize(new Dimension(32, 32));
-        this.colorPanel7.addMouseListener(new MouseAdapter(){
-
-            @Override
-            public void mousePressed(MouseEvent evt) {
-                Gui.this.colorPanel7MousePressed(evt);
-            }
-        });
-        GroupLayout colorPanel7Layout = new GroupLayout(this.colorPanel7);
-        this.colorPanel7.setLayout(colorPanel7Layout);
-        colorPanel7Layout.setHorizontalGroup(colorPanel7Layout.createParallelGroup(GroupLayout.Alignment.LEADING).addGap(0, 0, 32767));
-        colorPanel7Layout.setVerticalGroup(colorPanel7Layout.createParallelGroup(GroupLayout.Alignment.LEADING).addGap(0, 32, 32767));
-        this.colorPanel8.setBackground(new Color(255, 255, 255));
-        this.colorPanel8.setCursor(new Cursor(0));
-        this.colorPanel8.setPreferredSize(new Dimension(32, 32));
-        this.colorPanel8.addMouseListener(new MouseAdapter(){
-
-            @Override
-            public void mousePressed(MouseEvent evt) {
-                Gui.this.colorPanel8MousePressed(evt);
-            }
-        });
-        GroupLayout colorPanel8Layout = new GroupLayout(this.colorPanel8);
-        this.colorPanel8.setLayout(colorPanel8Layout);
-        colorPanel8Layout.setHorizontalGroup(colorPanel8Layout.createParallelGroup(GroupLayout.Alignment.LEADING).addGap(0, 0, 32767));
-        colorPanel8Layout.setVerticalGroup(colorPanel8Layout.createParallelGroup(GroupLayout.Alignment.LEADING).addGap(0, 32, 32767));
-        this.colorPanel9.setBackground(new Color(255, 255, 255));
-        this.colorPanel9.setCursor(new Cursor(0));
-        this.colorPanel9.setPreferredSize(new Dimension(32, 32));
-        this.colorPanel9.addMouseListener(new MouseAdapter(){
-
-            @Override
-            public void mousePressed(MouseEvent evt) {
-                Gui.this.colorPanel9MousePressed(evt);
-            }
-        });
-        GroupLayout colorPanel9Layout = new GroupLayout(this.colorPanel9);
-        this.colorPanel9.setLayout(colorPanel9Layout);
-        colorPanel9Layout.setHorizontalGroup(colorPanel9Layout.createParallelGroup(GroupLayout.Alignment.LEADING).addGap(0, 0, 32767));
-        colorPanel9Layout.setVerticalGroup(colorPanel9Layout.createParallelGroup(GroupLayout.Alignment.LEADING).addGap(0, 32, 32767));
-        this.colorPanel10.setBackground(new Color(255, 255, 255));
-        this.colorPanel10.setCursor(new Cursor(0));
-        this.colorPanel10.setPreferredSize(new Dimension(32, 32));
-        this.colorPanel10.addMouseListener(new MouseAdapter(){
-
-            @Override
-            public void mousePressed(MouseEvent evt) {
-                Gui.this.colorPanel10MousePressed(evt);
-            }
-        });
-        GroupLayout colorPanel10Layout = new GroupLayout(this.colorPanel10);
-        this.colorPanel10.setLayout(colorPanel10Layout);
-        colorPanel10Layout.setHorizontalGroup(colorPanel10Layout.createParallelGroup(GroupLayout.Alignment.LEADING).addGap(0, 0, 32767));
-        colorPanel10Layout.setVerticalGroup(colorPanel10Layout.createParallelGroup(GroupLayout.Alignment.LEADING).addGap(0, 32, 32767));
-        this.colorPanel11.setBackground(new Color(255, 255, 255));
-        this.colorPanel11.setCursor(new Cursor(0));
-        this.colorPanel11.setPreferredSize(new Dimension(32, 32));
-        this.colorPanel11.addMouseListener(new MouseAdapter(){
-
-            @Override
-            public void mousePressed(MouseEvent evt) {
-                Gui.this.colorPanel11MousePressed(evt);
-            }
-        });
-        GroupLayout colorPanel11Layout = new GroupLayout(this.colorPanel11);
-        this.colorPanel11.setLayout(colorPanel11Layout);
-        colorPanel11Layout.setHorizontalGroup(colorPanel11Layout.createParallelGroup(GroupLayout.Alignment.LEADING).addGap(0, 0, 32767));
-        colorPanel11Layout.setVerticalGroup(colorPanel11Layout.createParallelGroup(GroupLayout.Alignment.LEADING).addGap(0, 32, 32767));
-        this.colorPanel12.setBackground(new Color(255, 255, 255));
-        this.colorPanel12.setCursor(new Cursor(0));
-        this.colorPanel12.setPreferredSize(new Dimension(32, 32));
-        this.colorPanel12.addMouseListener(new MouseAdapter(){
-
-            @Override
-            public void mousePressed(MouseEvent evt) {
-                Gui.this.colorPanel12MousePressed(evt);
-            }
-        });
-        GroupLayout colorPanel12Layout = new GroupLayout(this.colorPanel12);
-        this.colorPanel12.setLayout(colorPanel12Layout);
-        colorPanel12Layout.setHorizontalGroup(colorPanel12Layout.createParallelGroup(GroupLayout.Alignment.LEADING).addGap(0, 0, 32767));
-        colorPanel12Layout.setVerticalGroup(colorPanel12Layout.createParallelGroup(GroupLayout.Alignment.LEADING).addGap(0, 32, 32767));
-        this.colorPanel13.setBackground(new Color(255, 255, 255));
-        this.colorPanel13.setCursor(new Cursor(0));
-        this.colorPanel13.setPreferredSize(new Dimension(32, 32));
-        this.colorPanel13.addMouseListener(new MouseAdapter(){
-
-            @Override
-            public void mousePressed(MouseEvent evt) {
-                Gui.this.colorPanel13MousePressed(evt);
-            }
-        });
-        GroupLayout colorPanel13Layout = new GroupLayout(this.colorPanel13);
-        this.colorPanel13.setLayout(colorPanel13Layout);
-        colorPanel13Layout.setHorizontalGroup(colorPanel13Layout.createParallelGroup(GroupLayout.Alignment.LEADING).addGap(0, 0, 32767));
-        colorPanel13Layout.setVerticalGroup(colorPanel13Layout.createParallelGroup(GroupLayout.Alignment.LEADING).addGap(0, 32, 32767));
-        this.colorPanel14.setBackground(new Color(255, 255, 255));
-        this.colorPanel14.setCursor(new Cursor(0));
-        this.colorPanel14.setPreferredSize(new Dimension(32, 32));
-        this.colorPanel14.addMouseListener(new MouseAdapter(){
-
-            @Override
-            public void mousePressed(MouseEvent evt) {
-                Gui.this.colorPanel14MousePressed(evt);
-            }
-        });
-        GroupLayout colorPanel14Layout = new GroupLayout(this.colorPanel14);
-        this.colorPanel14.setLayout(colorPanel14Layout);
-        colorPanel14Layout.setHorizontalGroup(colorPanel14Layout.createParallelGroup(GroupLayout.Alignment.LEADING).addGap(0, 0, 32767));
-        colorPanel14Layout.setVerticalGroup(colorPanel14Layout.createParallelGroup(GroupLayout.Alignment.LEADING).addGap(0, 32, 32767));
-        this.colorPanel15.setBackground(new Color(255, 255, 255));
-        this.colorPanel15.setCursor(new Cursor(0));
-        this.colorPanel15.setPreferredSize(new Dimension(32, 32));
-        this.colorPanel15.addMouseListener(new MouseAdapter(){
-
-            @Override
-            public void mousePressed(MouseEvent evt) {
-                Gui.this.colorPanel15MousePressed(evt);
-            }
-        });
-        GroupLayout colorPanel15Layout = new GroupLayout(this.colorPanel15);
-        this.colorPanel15.setLayout(colorPanel15Layout);
-        colorPanel15Layout.setHorizontalGroup(colorPanel15Layout.createParallelGroup(GroupLayout.Alignment.LEADING).addGap(0, 0, 32767));
-        colorPanel15Layout.setVerticalGroup(colorPanel15Layout.createParallelGroup(GroupLayout.Alignment.LEADING).addGap(0, 32, 32767));
-        this.colorPanel16.setBackground(new Color(255, 255, 255));
-        this.colorPanel16.setCursor(new Cursor(0));
-        this.colorPanel16.setPreferredSize(new Dimension(32, 32));
-        this.colorPanel16.addMouseListener(new MouseAdapter(){
-
-            @Override
-            public void mousePressed(MouseEvent evt) {
-                Gui.this.colorPanel16MousePressed(evt);
-            }
-        });
-        GroupLayout colorPanel16Layout = new GroupLayout(this.colorPanel16);
-        this.colorPanel16.setLayout(colorPanel16Layout);
-        colorPanel16Layout.setHorizontalGroup(colorPanel16Layout.createParallelGroup(GroupLayout.Alignment.LEADING).addGap(0, 0, 32767));
-        colorPanel16Layout.setVerticalGroup(colorPanel16Layout.createParallelGroup(GroupLayout.Alignment.LEADING).addGap(0, 32, 32767));
-        this.colorPanel1.setBackground(new Color(255, 255, 255));
-        this.colorPanel1.setCursor(new Cursor(0));
-        this.colorPanel1.setPreferredSize(new Dimension(32, 32));
-        this.colorPanel1.addMouseListener(new MouseAdapter(){
-
-            @Override
-            public void mousePressed(MouseEvent evt) {
-                Gui.this.colorPanel1MousePressed(evt);
-            }
-        });
-        GroupLayout colorPanel1Layout = new GroupLayout(this.colorPanel1);
-        this.colorPanel1.setLayout(colorPanel1Layout);
-        colorPanel1Layout.setHorizontalGroup(colorPanel1Layout.createParallelGroup(GroupLayout.Alignment.LEADING).addGap(0, 0, 32767));
-        colorPanel1Layout.setVerticalGroup(colorPanel1Layout.createParallelGroup(GroupLayout.Alignment.LEADING).addGap(0, 32, 32767));
-        GroupLayout colorsPanel1Layout = new GroupLayout(this.colorsPanel1);
-        this.colorsPanel1.setLayout(colorsPanel1Layout);
-        colorsPanel1Layout.setHorizontalGroup(colorsPanel1Layout.createParallelGroup(GroupLayout.Alignment.TRAILING).addGroup(colorsPanel1Layout.createSequentialGroup().addGap(0, 0, 0).addGroup(colorsPanel1Layout.createParallelGroup(GroupLayout.Alignment.LEADING).addComponent(this.colorPanel1, -1, 33, 32767).addComponent(this.colorPanel9, -1, 33, 32767)).addPreferredGap(LayoutStyle.ComponentPlacement.RELATED).addGroup(colorsPanel1Layout.createParallelGroup(GroupLayout.Alignment.LEADING).addComponent(this.colorPanel2, -1, 33, 32767).addComponent(this.colorPanel10, -1, 33, 32767)).addPreferredGap(LayoutStyle.ComponentPlacement.RELATED).addGroup(colorsPanel1Layout.createParallelGroup(GroupLayout.Alignment.LEADING).addComponent(this.colorPanel3, -1, 33, 32767).addComponent(this.colorPanel11, -1, 33, 32767)).addPreferredGap(LayoutStyle.ComponentPlacement.RELATED).addGroup(colorsPanel1Layout.createParallelGroup(GroupLayout.Alignment.LEADING).addComponent(this.colorPanel4, -1, 35, 32767).addComponent(this.colorPanel12, -1, 35, 32767)).addPreferredGap(LayoutStyle.ComponentPlacement.RELATED).addGroup(colorsPanel1Layout.createParallelGroup(GroupLayout.Alignment.LEADING).addComponent(this.colorPanel5, -1, 37, 32767).addComponent(this.colorPanel13, -1, 37, 32767)).addPreferredGap(LayoutStyle.ComponentPlacement.RELATED).addGroup(colorsPanel1Layout.createParallelGroup(GroupLayout.Alignment.LEADING).addComponent(this.colorPanel6, -1, 35, 32767).addComponent(this.colorPanel14, -1, 35, 32767)).addPreferredGap(LayoutStyle.ComponentPlacement.RELATED).addGroup(colorsPanel1Layout.createParallelGroup(GroupLayout.Alignment.LEADING).addComponent(this.colorPanel7, -1, 35, 32767).addComponent(this.colorPanel15, -1, 35, 32767)).addPreferredGap(LayoutStyle.ComponentPlacement.RELATED).addGroup(colorsPanel1Layout.createParallelGroup(GroupLayout.Alignment.LEADING).addComponent(this.colorPanel8, -1, 34, 32767).addComponent(this.colorPanel16, -1, 34, 32767))));
-        colorsPanel1Layout.setVerticalGroup(colorsPanel1Layout.createParallelGroup(GroupLayout.Alignment.LEADING).addGroup(colorsPanel1Layout.createSequentialGroup().addGroup(colorsPanel1Layout.createParallelGroup(GroupLayout.Alignment.LEADING).addComponent(this.colorPanel2, -2, -1, -2).addComponent(this.colorPanel3, -2, -1, -2).addComponent(this.colorPanel4, -2, -1, -2).addComponent(this.colorPanel5, -2, -1, -2).addComponent(this.colorPanel6, -2, -1, -2).addComponent(this.colorPanel7, -2, -1, -2).addComponent(this.colorPanel8, -2, -1, -2).addComponent(this.colorPanel1, -2, -1, -2)).addPreferredGap(LayoutStyle.ComponentPlacement.RELATED, -1, 32767).addGroup(colorsPanel1Layout.createParallelGroup(GroupLayout.Alignment.LEADING).addComponent(this.colorPanel10, GroupLayout.Alignment.TRAILING, -2, -1, -2).addComponent(this.colorPanel11, GroupLayout.Alignment.TRAILING, -2, -1, -2).addComponent(this.colorPanel12, GroupLayout.Alignment.TRAILING, -2, -1, -2).addComponent(this.colorPanel13, GroupLayout.Alignment.TRAILING, -2, -1, -2).addComponent(this.colorPanel14, GroupLayout.Alignment.TRAILING, -2, -1, -2).addComponent(this.colorPanel15, GroupLayout.Alignment.TRAILING, -2, -1, -2).addComponent(this.colorPanel16, GroupLayout.Alignment.TRAILING, -2, -1, -2).addComponent(this.colorPanel9, GroupLayout.Alignment.TRAILING, -2, -1, -2))));
-        GroupLayout previewPanelLayout = new GroupLayout(this.previewPanel);
-        this.previewPanel.setLayout(previewPanelLayout);
-        previewPanelLayout.setHorizontalGroup(previewPanelLayout.createParallelGroup(GroupLayout.Alignment.LEADING).addComponent(this.playerPanel, GroupLayout.Alignment.TRAILING, -1, -1, 32767).addComponent(this.scrollPanel, GroupLayout.Alignment.TRAILING).addComponent(this.colorsPanel1, -1, 333, 32767));
-        previewPanelLayout.setVerticalGroup(previewPanelLayout.createParallelGroup(GroupLayout.Alignment.LEADING).addGroup(previewPanelLayout.createSequentialGroup().addComponent(this.scrollPanel).addPreferredGap(LayoutStyle.ComponentPlacement.RELATED).addComponent(this.playerPanel, -2, -1, -2).addPreferredGap(LayoutStyle.ComponentPlacement.RELATED).addComponent(this.colorsPanel1, -2, 100, -2)));
-        this.characterPanel1.setBackground(new Color(228, 236, 191));
-        this.characterPanel1.setBorder(BorderFactory.createTitledBorder(null, "View", 0, 0, new Font("Tahoma", 0, 14), new Color(0, 0, 0)));
-        this.showHitsCheck.setBackground(new Color(228, 236, 191));
-        this.showHitsCheck.setSelected(true);
-        this.showHitsCheck.setText("Hit Point");
-        this.showHitsCheck.setContentAreaFilled(false);
-        this.showHitsCheck.setFocusable(false);
-        this.showHitsCheck.addActionListener(new ActionListener(){
-
-            @Override
-            public void actionPerformed(ActionEvent evt) {
-                Gui.this.showHitsCheckActionPerformed(evt);
-            }
-        });
-        this.showWeaponCheck.setBackground(new Color(228, 236, 191));
-        this.showWeaponCheck.setSelected(true);
-        this.showWeaponCheck.setText("Weapon:");
-        this.showWeaponCheck.setContentAreaFilled(false);
-        this.showWeaponCheck.setFocusable(false);
-        this.showWeaponCheck.addActionListener(new ActionListener(){
-
-            @Override
-            public void actionPerformed(ActionEvent evt) {
-                Gui.this.showWeaponCheckActionPerformed(evt);
-            }
-        });
-        this.weaponCombo.setModel(new DefaultComboBoxModel<String>(new String[]{"Knife", "Pipe"}));
-        this.weaponCombo.addActionListener(new ActionListener(){
-
-            @Override
-            public void actionPerformed(ActionEvent evt) {
-                Gui.this.weaponComboActionPerformed(evt);
-            }
-        });
-        this.showFacedRightCheck.setBackground(new Color(228, 236, 191));
-        this.showFacedRightCheck.setSelected(true);
-        this.showFacedRightCheck.setText("Faced Right");
-        this.showFacedRightCheck.setContentAreaFilled(false);
-        this.showFacedRightCheck.setFocusable(false);
-        this.showFacedRightCheck.addActionListener(new ActionListener(){
-
-            @Override
-            public void actionPerformed(ActionEvent evt) {
-                Gui.this.showFacedRightCheckActionPerformed(evt);
-            }
-        });
-        this.showTileCheck.setBackground(new Color(228, 236, 191));
-        this.showTileCheck.setSelected(true);
-        this.showTileCheck.setText("Tile Space");
-        this.showTileCheck.setContentAreaFilled(false);
-        this.showTileCheck.setFocusable(false);
-        this.showTileCheck.addActionListener(new ActionListener(){
-
-            @Override
-            public void actionPerformed(ActionEvent evt) {
-                Gui.this.showTileCheckActionPerformed(evt);
-            }
-        });
-        this.showCenterCheck.setBackground(new Color(228, 236, 191));
-        this.showCenterCheck.setText("Ghost");
-        this.showCenterCheck.setContentAreaFilled(false);
-        this.showCenterCheck.setFocusable(false);
-        this.showCenterCheck.addActionListener(new ActionListener(){
-
-            @Override
-            public void actionPerformed(ActionEvent evt) {
-                Gui.this.showCenterCheckActionPerformed(evt);
-            }
-        });
-        GroupLayout characterPanel1Layout = new GroupLayout(this.characterPanel1);
-        this.characterPanel1.setLayout(characterPanel1Layout);
-        characterPanel1Layout.setHorizontalGroup(characterPanel1Layout.createParallelGroup(GroupLayout.Alignment.LEADING).addGroup(characterPanel1Layout.createSequentialGroup().addGroup(characterPanel1Layout.createParallelGroup(GroupLayout.Alignment.LEADING).addComponent(this.showWeaponCheck).addComponent(this.showCenterCheck).addComponent(this.showHitsCheck)).addPreferredGap(LayoutStyle.ComponentPlacement.UNRELATED).addGroup(characterPanel1Layout.createParallelGroup(GroupLayout.Alignment.LEADING).addComponent(this.weaponCombo, -2, 83, -2).addComponent(this.showFacedRightCheck).addComponent(this.showTileCheck)).addContainerGap(-1, 32767)));
-        characterPanel1Layout.setVerticalGroup(characterPanel1Layout.createParallelGroup(GroupLayout.Alignment.TRAILING).addGroup(characterPanel1Layout.createSequentialGroup().addGap(1, 1, 1).addGroup(characterPanel1Layout.createParallelGroup(GroupLayout.Alignment.BASELINE).addComponent(this.showFacedRightCheck).addComponent(this.showCenterCheck)).addPreferredGap(LayoutStyle.ComponentPlacement.RELATED).addGroup(characterPanel1Layout.createParallelGroup(GroupLayout.Alignment.BASELINE).addComponent(this.showTileCheck).addComponent(this.showHitsCheck)).addPreferredGap(LayoutStyle.ComponentPlacement.RELATED, 3, 32767).addGroup(characterPanel1Layout.createParallelGroup(GroupLayout.Alignment.BASELINE).addComponent(this.weaponCombo, -2, -1, -2).addComponent(this.showWeaponCheck))));
-        this.toolsPanel.setBackground(new Color(230, 230, 235));
-        this.toolsPanel.setBorder(BorderFactory.createTitledBorder(null, "Tools", 0, 0, new Font("Tahoma", 0, 14), new Color(0, 0, 0)));
-        this.pencilRadio.setBackground(new Color(230, 226, 235));
-        this.pencilRadio.setText("Pencil");
-        this.pencilRadio.setContentAreaFilled(false);
-        this.pencilRadio.addActionListener(new ActionListener(){
-
-            @Override
-            public void actionPerformed(ActionEvent evt) {
-                Gui.this.pencilRadioActionPerformed(evt);
-            }
-        });
-        this.brushRadio.setBackground(new Color(230, 226, 235));
-        this.brushRadio.setText("Brush");
-        this.brushRadio.setContentAreaFilled(false);
-        this.brushRadio.addActionListener(new ActionListener(){
-
-            @Override
-            public void actionPerformed(ActionEvent evt) {
-                Gui.this.brushRadioActionPerformed(evt);
-            }
-        });
-        this.bucketRadio.setBackground(new Color(230, 226, 235));
-        this.bucketRadio.setText("Paint Bucket");
-        this.bucketRadio.setContentAreaFilled(false);
-        this.bucketRadio.addActionListener(new ActionListener(){
-
-            @Override
-            public void actionPerformed(ActionEvent evt) {
-                Gui.this.bucketRadioActionPerformed(evt);
-            }
-        });
-        this.dragSpriteRadio.setBackground(new Color(230, 226, 235));
-        this.dragSpriteRadio.setText("Drag Sprite");
-        this.dragSpriteRadio.setContentAreaFilled(false);
-        this.dragSpriteRadio.addActionListener(new ActionListener(){
-
-            @Override
-            public void actionPerformed(ActionEvent evt) {
-                Gui.this.dragSpriteRadioActionPerformed(evt);
-            }
-        });
-        this.dragImageRadio.setBackground(new Color(230, 226, 235));
-        this.dragImageRadio.setText("Drag Image");
-        this.dragImageRadio.setContentAreaFilled(false);
-        this.dragImageRadio.addActionListener(new ActionListener(){
-
-            @Override
-            public void actionPerformed(ActionEvent evt) {
-                Gui.this.dragImageRadioActionPerformed(evt);
-            }
-        });
-        this.noneRadio.setBackground(new Color(230, 226, 235));
-        this.noneRadio.setSelected(true);
-        this.noneRadio.setText("None");
-        this.noneRadio.setContentAreaFilled(false);
-        this.noneRadio.addActionListener(new ActionListener(){
-
-            @Override
-            public void actionPerformed(ActionEvent evt) {
-                Gui.this.noneRadioActionPerformed(evt);
-            }
-        });
-        GroupLayout toolsPanelLayout = new GroupLayout(this.toolsPanel);
-        this.toolsPanel.setLayout(toolsPanelLayout);
-        toolsPanelLayout.setHorizontalGroup(toolsPanelLayout.createParallelGroup(GroupLayout.Alignment.LEADING).addGroup(toolsPanelLayout.createSequentialGroup().addContainerGap().addGroup(toolsPanelLayout.createParallelGroup(GroupLayout.Alignment.LEADING).addComponent(this.pencilRadio).addComponent(this.brushRadio).addComponent(this.bucketRadio)).addPreferredGap(LayoutStyle.ComponentPlacement.RELATED, -1, 32767).addGroup(toolsPanelLayout.createParallelGroup(GroupLayout.Alignment.LEADING).addGroup(toolsPanelLayout.createSequentialGroup().addGap(2, 2, 2).addComponent(this.dragSpriteRadio)).addGroup(GroupLayout.Alignment.TRAILING, toolsPanelLayout.createParallelGroup(GroupLayout.Alignment.LEADING, false).addComponent(this.dragImageRadio, -1, -1, 32767).addComponent(this.noneRadio, -2, 81, -2)))));
-        toolsPanelLayout.setVerticalGroup(toolsPanelLayout.createParallelGroup(GroupLayout.Alignment.LEADING).addGroup(toolsPanelLayout.createSequentialGroup().addGroup(toolsPanelLayout.createParallelGroup(GroupLayout.Alignment.BASELINE).addComponent(this.pencilRadio).addComponent(this.dragSpriteRadio)).addPreferredGap(LayoutStyle.ComponentPlacement.RELATED).addGroup(toolsPanelLayout.createParallelGroup(GroupLayout.Alignment.BASELINE).addComponent(this.brushRadio).addComponent(this.dragImageRadio)).addPreferredGap(LayoutStyle.ComponentPlacement.RELATED, -1, 32767).addGroup(toolsPanelLayout.createParallelGroup(GroupLayout.Alignment.BASELINE).addComponent(this.bucketRadio).addComponent(this.noneRadio))));
-        this.overridePanel.setBackground(new Color(240, 233, 221));
-        this.overridePanel.setBorder(BorderFactory.createTitledBorder(null, "Override Art", 0, 0, new Font("Tahoma", 0, 14), new Color(0, 0, 0)));
-        this.softReplaceButton.setText("Replace from Image");
-        this.softReplaceButton.setFocusable(false);
-        this.softReplaceButton.addActionListener(new ActionListener(){
-
-            @Override
-            public void actionPerformed(ActionEvent evt) {
-                Gui.this.softReplaceButtonActionPerformed(evt);
-            }
-        });
-        this.jLabel2.setText("Replace art using same tiles");
-        GroupLayout overridePanelLayout = new GroupLayout(this.overridePanel);
-        this.overridePanel.setLayout(overridePanelLayout);
-        overridePanelLayout.setHorizontalGroup(overridePanelLayout.createParallelGroup(GroupLayout.Alignment.LEADING).addGroup(overridePanelLayout.createSequentialGroup().addContainerGap(-1, 32767).addGroup(overridePanelLayout.createParallelGroup(GroupLayout.Alignment.LEADING).addGroup(GroupLayout.Alignment.TRAILING, overridePanelLayout.createSequentialGroup().addComponent(this.softReplaceButton).addGap(18, 18, 18)).addGroup(GroupLayout.Alignment.TRAILING, overridePanelLayout.createSequentialGroup().addComponent(this.jLabel2).addContainerGap()))));
-        overridePanelLayout.setVerticalGroup(overridePanelLayout.createParallelGroup(GroupLayout.Alignment.LEADING).addGroup(GroupLayout.Alignment.TRAILING, overridePanelLayout.createSequentialGroup().addGap(19, 19, 19).addComponent(this.jLabel2).addPreferredGap(LayoutStyle.ComponentPlacement.RELATED, 27, 32767).addComponent(this.softReplaceButton)));
-        this.generatePanel.setBackground(new Color(240, 221, 221));
-        this.generatePanel.setBorder(BorderFactory.createTitledBorder(null, "Generate Sprite", 0, 0, new Font("Tahoma", 0, 14), new Color(0, 0, 0)));
-        this.hardReplaceButton.setText("Generate From Image");
-        this.hardReplaceButton.setFocusable(false);
-        this.hardReplaceButton.addActionListener(new ActionListener(){
-
-            @Override
-            public void actionPerformed(ActionEvent evt) {
-                Gui.this.hardReplaceButtonActionPerformed(evt);
-            }
-        });
-        this.jLabel13.setFont(new Font("Tahoma", 0, 14));
-        this.jLabel13.setHorizontalAlignment(4);
-        this.jLabel13.setText("Address:");
-        this.genAddressField.setFont(new Font("Courier New", 0, 14));
-        this.genAddressField.setHorizontalAlignment(4);
-        this.genAddressField.setText("200");
-        this.jLabel14.setFont(new Font("Tahoma", 0, 14));
-        this.jLabel14.setHorizontalAlignment(4);
-        this.jLabel14.setText("Palette Line:");
-        this.genPaletteField.setFont(new Font("Courier New", 0, 14));
-        this.genPaletteField.setHorizontalAlignment(4);
-        this.genPaletteField.setText("0");
-        GroupLayout generatePanelLayout = new GroupLayout(this.generatePanel);
-        this.generatePanel.setLayout(generatePanelLayout);
-        generatePanelLayout.setHorizontalGroup(generatePanelLayout.createParallelGroup(GroupLayout.Alignment.LEADING).addGroup(generatePanelLayout.createSequentialGroup().addGroup(generatePanelLayout.createParallelGroup(GroupLayout.Alignment.LEADING).addGroup(generatePanelLayout.createSequentialGroup().addGap(18, 18, 18).addGroup(generatePanelLayout.createParallelGroup(GroupLayout.Alignment.LEADING, false).addGroup(generatePanelLayout.createSequentialGroup().addComponent(this.jLabel13, -2, 61, -2).addPreferredGap(LayoutStyle.ComponentPlacement.RELATED).addComponent(this.genAddressField)).addGroup(generatePanelLayout.createSequentialGroup().addComponent(this.jLabel14, -2, 79, -2).addGap(18, 18, 18).addComponent(this.genPaletteField, -2, 24, -2)))).addGroup(generatePanelLayout.createSequentialGroup().addContainerGap().addComponent(this.hardReplaceButton))).addGap(0, 25, 32767)));
-        generatePanelLayout.setVerticalGroup(generatePanelLayout.createParallelGroup(GroupLayout.Alignment.LEADING).addGroup(GroupLayout.Alignment.TRAILING, generatePanelLayout.createSequentialGroup().addGroup(generatePanelLayout.createParallelGroup(GroupLayout.Alignment.BASELINE).addComponent(this.jLabel13).addComponent(this.genAddressField, -2, -1, -2)).addPreferredGap(LayoutStyle.ComponentPlacement.RELATED, -1, 32767).addGroup(generatePanelLayout.createParallelGroup(GroupLayout.Alignment.LEADING).addComponent(this.jLabel14, GroupLayout.Alignment.TRAILING).addComponent(this.genPaletteField, GroupLayout.Alignment.TRAILING, -2, -1, -2)).addPreferredGap(LayoutStyle.ComponentPlacement.RELATED).addComponent(this.hardReplaceButton)));
-        GroupLayout mainPanelLayout = new GroupLayout(this.mainPanel);
-        this.mainPanel.setLayout(mainPanelLayout);
-        mainPanelLayout.setHorizontalGroup(mainPanelLayout.createParallelGroup(GroupLayout.Alignment.LEADING).addGroup(mainPanelLayout.createSequentialGroup().addGroup(mainPanelLayout.createParallelGroup(GroupLayout.Alignment.LEADING, false).addGroup(mainPanelLayout.createSequentialGroup().addGroup(mainPanelLayout.createParallelGroup(GroupLayout.Alignment.LEADING).addComponent(this.characterPanel1, -1, 0, 32767).addComponent(this.overridePanel, -1, -1, 32767)).addPreferredGap(LayoutStyle.ComponentPlacement.RELATED).addGroup(mainPanelLayout.createParallelGroup(GroupLayout.Alignment.LEADING).addComponent(this.toolsPanel, GroupLayout.Alignment.TRAILING, -2, -1, -2).addComponent(this.generatePanel, GroupLayout.Alignment.TRAILING, -2, -1, -2))).addComponent(this.characterPanel, -2, 376, -2)).addPreferredGap(LayoutStyle.ComponentPlacement.RELATED).addComponent(this.previewPanel, -1, -1, 32767)));
-        mainPanelLayout.setVerticalGroup(mainPanelLayout.createParallelGroup(GroupLayout.Alignment.LEADING).addGroup(mainPanelLayout.createSequentialGroup().addComponent(this.characterPanel, -2, -1, -2).addPreferredGap(LayoutStyle.ComponentPlacement.RELATED).addGroup(mainPanelLayout.createParallelGroup(GroupLayout.Alignment.LEADING).addComponent(this.characterPanel1, -2, -1, -2).addComponent(this.toolsPanel, -2, -1, -2)).addPreferredGap(LayoutStyle.ComponentPlacement.RELATED).addGroup(mainPanelLayout.createParallelGroup(GroupLayout.Alignment.LEADING).addComponent(this.overridePanel, -2, -1, -2).addComponent(this.generatePanel, -2, -1, -2))).addComponent(this.previewPanel, -1, -1, 32767));
-        this.jMenu1.setText("File");
-        this.openRomMenu.setAccelerator(KeyStroke.getKeyStroke(82, 2));
-        this.openRomMenu.setText("Open Rom");
-        this.openRomMenu.addActionListener(new ActionListener(){
-
-            @Override
-            public void actionPerformed(ActionEvent evt) {
-                Gui.this.openRomMenuActionPerformed(evt);
-            }
-        });
-        this.jMenu1.add(this.openRomMenu);
-        this.jMenuItem4.setText("Open with Specific Guide");
-        this.jMenuItem4.addActionListener(new ActionListener(){
-
-            @Override
-            public void actionPerformed(ActionEvent evt) {
-                Gui.this.jMenuItem4ActionPerformed(evt);
-            }
-        });
-        this.jMenu1.add(this.jMenuItem4);
-        this.closeMenu.setText("Close");
-        this.closeMenu.addActionListener(new ActionListener(){
-
-            @Override
-            public void actionPerformed(ActionEvent evt) {
-                Gui.this.closeMenuActionPerformed(evt);
-            }
-        });
-        this.jMenu1.add(this.closeMenu);
-        this.jMenu1.add(this.jSeparator2);
-        this.inportMenu.setText("Inport Character...");
-        this.jMenuItem1.setText("Replace from Spritesheet");
-        this.jMenuItem1.addActionListener(new ActionListener(){
-
-            @Override
-            public void actionPerformed(ActionEvent evt) {
-                Gui.this.jMenuItem1ActionPerformed(evt);
-            }
-        });
-        this.inportMenu.add(this.jMenuItem1);
-        this.jMenuItem2.setText("Generate from Spritesheet");
-        this.jMenuItem2.addActionListener(new ActionListener(){
-
-            @Override
-            public void actionPerformed(ActionEvent evt) {
-                Gui.this.jMenuItem2ActionPerformed(evt);
-            }
-        });
-        this.inportMenu.add(this.jMenuItem2);
-        this.inportMenu.add(this.jSeparator6);
-        this.jMenuItem3.setText("Import from other ROM");
-        this.jMenuItem3.addActionListener(new ActionListener(){
-
-            @Override
-            public void actionPerformed(ActionEvent evt) {
-                Gui.this.jMenuItem3ActionPerformed(evt);
-            }
-        });
-        this.inportMenu.add(this.jMenuItem3);
-        this.jMenu1.add(this.inportMenu);
-        this.exportMenu.setText("Export Character...");
-        this.spriteSheetMenu1.setText("Individual Frames");
-        this.spriteSheetMenu1.addActionListener(new ActionListener(){
-
-            @Override
-            public void actionPerformed(ActionEvent evt) {
-                Gui.this.spriteSheetMenu1ActionPerformed(evt);
-            }
-        });
-        this.exportMenu.add(this.spriteSheetMenu1);
-        this.spriteSheetMenu.setText("Spritesheet");
-        this.spriteSheetMenu.addActionListener(new ActionListener(){
-
-            @Override
-            public void actionPerformed(ActionEvent evt) {
-                Gui.this.spriteSheetMenuActionPerformed(evt);
-            }
-        });
-        this.exportMenu.add(this.spriteSheetMenu);
-        this.jMenu1.add(this.exportMenu);
-        this.jMenu1.add(this.jSeparator1);
-        this.jMenuItem5.setAccelerator(KeyStroke.getKeyStroke(115, 8));
-        this.jMenuItem5.setText("Exit");
-        this.jMenuItem5.addActionListener(new ActionListener(){
-
-            @Override
-            public void actionPerformed(ActionEvent evt) {
-                Gui.this.jMenuItem5ActionPerformed(evt);
-            }
-        });
-        this.jMenu1.add(this.jMenuItem5);
-        this.jMenuBar1.add(this.jMenu1);
-        this.jMenu2.setText("Edit");
-        this.jMenu6.setText("Tool");
-        this.pencilMenu.setAccelerator(KeyStroke.getKeyStroke(49, 8));
-        this.pencilMenu.setText("Pencil");
-        this.pencilMenu.addActionListener(new ActionListener(){
-
-            @Override
-            public void actionPerformed(ActionEvent evt) {
-                Gui.this.pencilMenuActionPerformed(evt);
-            }
-        });
-        this.jMenu6.add(this.pencilMenu);
-        this.brushMenu.setAccelerator(KeyStroke.getKeyStroke(50, 8));
-        this.brushMenu.setText("Brush");
-        this.brushMenu.addActionListener(new ActionListener(){
-
-            @Override
-            public void actionPerformed(ActionEvent evt) {
-                Gui.this.brushMenuActionPerformed(evt);
-            }
-        });
-        this.jMenu6.add(this.brushMenu);
-        this.bucketMenu.setAccelerator(KeyStroke.getKeyStroke(51, 8));
-        this.bucketMenu.setText("Paint Bucket");
-        this.bucketMenu.addActionListener(new ActionListener(){
-
-            @Override
-            public void actionPerformed(ActionEvent evt) {
-                Gui.this.bucketMenuActionPerformed(evt);
-            }
-        });
-        this.jMenu6.add(this.bucketMenu);
-        this.dragSpriteMenu.setAccelerator(KeyStroke.getKeyStroke(52, 8));
-        this.dragSpriteMenu.setText("Drag Sprite");
-        this.dragSpriteMenu.addActionListener(new ActionListener(){
-
-            @Override
-            public void actionPerformed(ActionEvent evt) {
-                Gui.this.dragSpriteMenuActionPerformed(evt);
-            }
-        });
-        this.jMenu6.add(this.dragSpriteMenu);
-        this.dragImageMenu.setAccelerator(KeyStroke.getKeyStroke(53, 8));
-        this.dragImageMenu.setText("Drag Image");
-        this.dragImageMenu.addActionListener(new ActionListener(){
-
-            @Override
-            public void actionPerformed(ActionEvent evt) {
-                Gui.this.dragImageMenuActionPerformed(evt);
-            }
-        });
-        this.jMenu6.add(this.dragImageMenu);
-        this.noneMenu.setAccelerator(KeyStroke.getKeyStroke(54, 8));
-        this.noneMenu.setSelected(true);
-        this.noneMenu.setText("None");
-        this.noneMenu.addActionListener(new ActionListener(){
-
-            @Override
-            public void actionPerformed(ActionEvent evt) {
-                Gui.this.noneMenuActionPerformed(evt);
-            }
-        });
-        this.jMenu6.add(this.noneMenu);
-        this.jMenu2.add(this.jMenu6);
-        this.jMenu5.setText("Brush Size");
-        this.sizeRadioMenu1.setAccelerator(KeyStroke.getKeyStroke(49, 1));
-        this.sizeRadioMenu1.setSelected(true);
-        this.sizeRadioMenu1.setText("3 pixels");
-        this.sizeRadioMenu1.addActionListener(new ActionListener(){
-
-            @Override
-            public void actionPerformed(ActionEvent evt) {
-                Gui.this.sizeRadioMenu1ActionPerformed(evt);
-            }
-        });
-        this.jMenu5.add(this.sizeRadioMenu1);
-        this.sizeRadioMenu2.setAccelerator(KeyStroke.getKeyStroke(50, 1));
-        this.sizeRadioMenu2.setText("5 pixels");
-        this.sizeRadioMenu2.addActionListener(new ActionListener(){
-
-            @Override
-            public void actionPerformed(ActionEvent evt) {
-                Gui.this.sizeRadioMenu2ActionPerformed(evt);
-            }
-        });
-        this.jMenu5.add(this.sizeRadioMenu2);
-        this.sizeRadioMenu3.setAccelerator(KeyStroke.getKeyStroke(51, 1));
-        this.sizeRadioMenu3.setText("10 pixels");
-        this.sizeRadioMenu3.addActionListener(new ActionListener(){
-
-            @Override
-            public void actionPerformed(ActionEvent evt) {
-                Gui.this.sizeRadioMenu3ActionPerformed(evt);
-            }
-        });
-        this.jMenu5.add(this.sizeRadioMenu3);
-        this.jMenu2.add(this.jMenu5);
-        this.jMenu4.setText("Scale");
-        this.jMenuItem11.setAccelerator(KeyStroke.getKeyStroke(49, 2));
-        this.jMenuItem11.setText("Reset Scale");
-        this.jMenuItem11.addActionListener(new ActionListener(){
-
-            @Override
-            public void actionPerformed(ActionEvent evt) {
-                Gui.this.jMenuItem11ActionPerformed(evt);
-            }
-        });
-        this.jMenu4.add(this.jMenuItem11);
-        this.jMenuItem7.setAccelerator(KeyStroke.getKeyStroke(50, 2));
-        this.jMenuItem7.setText("2x Scale");
-        this.jMenuItem7.addActionListener(new ActionListener(){
-
-            @Override
-            public void actionPerformed(ActionEvent evt) {
-                Gui.this.jMenuItem7ActionPerformed(evt);
-            }
-        });
-        this.jMenu4.add(this.jMenuItem7);
-        this.jMenuItem9.setAccelerator(KeyStroke.getKeyStroke(51, 2));
-        this.jMenuItem9.setText("6x Scale");
-        this.jMenuItem9.addActionListener(new ActionListener(){
-
-            @Override
-            public void actionPerformed(ActionEvent evt) {
-                Gui.this.jMenuItem9ActionPerformed(evt);
-            }
-        });
-        this.jMenu4.add(this.jMenuItem9);
-        this.jMenuItem10.setAccelerator(KeyStroke.getKeyStroke(52, 2));
-        this.jMenuItem10.setText("12x Scale");
-        this.jMenuItem10.addActionListener(new ActionListener(){
-
-            @Override
-            public void actionPerformed(ActionEvent evt) {
-                Gui.this.jMenuItem10ActionPerformed(evt);
-            }
-        });
-        this.jMenu4.add(this.jMenuItem10);
-        this.jMenu2.add(this.jMenu4);
-        this.hexIdsMenu.setText("See IDs as hex");
-        this.hexIdsMenu.addActionListener(new ActionListener(){
-
-            @Override
-            public void actionPerformed(ActionEvent evt) {
-                Gui.this.hexIdsMenuActionPerformed(evt);
-            }
-        });
-        this.jMenu2.add(this.hexIdsMenu);
-        this.jMenu2.add(this.jSeparator3);
-        this.resizeAnimsMenu.setText("Resize Animations");
-        this.resizeAnimsMenu.setEnabled(false);
-        this.resizeAnimsMenu.addActionListener(new ActionListener(){
-
-            @Override
-            public void actionPerformed(ActionEvent evt) {
-                Gui.this.resizeAnimsMenuActionPerformed(evt);
-            }
-        });
-        this.jMenu2.add(this.resizeAnimsMenu);
-        this.nameMenu.setText("Properties");
-        this.nameMenu.setEnabled(false);
-        this.nameMenu.addActionListener(new ActionListener(){
-
-            @Override
-            public void actionPerformed(ActionEvent evt) {
-                Gui.this.nameMenuActionPerformed(evt);
-            }
-        });
-        this.jMenu2.add(this.nameMenu);
-        this.jMenu2.add(this.jSeparator4);
-        this.copyMenu.setAccelerator(KeyStroke.getKeyStroke(116, 0));
-        this.copyMenu.setText("Copy Frame");
-        this.copyMenu.setEnabled(false);
-        this.copyMenu.addActionListener(new ActionListener(){
-
-            @Override
-            public void actionPerformed(ActionEvent evt) {
-                Gui.this.copyMenuActionPerformed(evt);
-            }
-        });
-        this.jMenu2.add(this.copyMenu);
-        this.pasteMenu.setAccelerator(KeyStroke.getKeyStroke(117, 0));
-        this.pasteMenu.setText("Paste Frame");
-        this.pasteMenu.setEnabled(false);
-        this.pasteMenu.addActionListener(new ActionListener(){
-
-            @Override
-            public void actionPerformed(ActionEvent evt) {
-                Gui.this.pasteMenuActionPerformed(evt);
-            }
-        });
-        this.jMenu2.add(this.pasteMenu);
-        this.jMenu2.add(this.jSeparator5);
-        this.pasteMenu1.setText("Decompress Art");
-        this.pasteMenu1.setEnabled(false);
-        this.pasteMenu1.addActionListener(new ActionListener(){
-
-            @Override
-            public void actionPerformed(ActionEvent evt) {
-                Gui.this.pasteMenu1ActionPerformed(evt);
-            }
-        });
-        this.jMenu2.add(this.pasteMenu1);
-        this.jMenuBar1.add(this.jMenu2);
-        this.jMenu3.setText("Help");
-        this.jMenuItem6.setText("About");
-        this.jMenuItem6.addActionListener(new ActionListener(){
-
-            @Override
-            public void actionPerformed(ActionEvent evt) {
-                Gui.this.jMenuItem6ActionPerformed(evt);
-            }
-        });
-        this.jMenu3.add(this.jMenuItem6);
-        this.jMenuBar1.add(this.jMenu3);
-        this.setJMenuBar(this.jMenuBar1);
-        GroupLayout layout = new GroupLayout(this.getContentPane());
-        this.getContentPane().setLayout(layout);
-        layout.setHorizontalGroup(layout.createParallelGroup(GroupLayout.Alignment.LEADING).addComponent(this.mainPanel, -1, -1, 32767));
-        layout.setVerticalGroup(layout.createParallelGroup(GroupLayout.Alignment.LEADING).addComponent(this.mainPanel, -1, -1, 32767));
-        this.pack();
+
+        mainPanel = new javax.swing.JPanel();
+        characterPanel = new javax.swing.JPanel();
+        jLabel1 = new javax.swing.JLabel();
+        characterCombo = new javax.swing.JComboBox();
+        animationPanel = new javax.swing.JPanel();
+        jLabel5 = new javax.swing.JLabel();
+        animationCombo = new javax.swing.JComboBox();
+        jLabel6 = new javax.swing.JLabel();
+        sizeField = new javax.swing.JTextField();
+        framePanel = new javax.swing.JPanel();
+        jLabel7 = new javax.swing.JLabel();
+        delayField = new javax.swing.JTextField();
+        hitPanel = new javax.swing.JPanel();
+        jLabel8 = new javax.swing.JLabel();
+        xField = new javax.swing.JTextField();
+        jLabel9 = new javax.swing.JLabel();
+        yField = new javax.swing.JTextField();
+        jLabel10 = new javax.swing.JLabel();
+        soundField = new javax.swing.JTextField();
+        jLabel11 = new javax.swing.JLabel();
+        damageField = new javax.swing.JTextField();
+        koCheck = new javax.swing.JCheckBox();
+        hitCheck = new javax.swing.JCheckBox();
+        jLabel12 = new javax.swing.JLabel();
+        mapField = new javax.swing.JTextField();
+        jLabel3 = new javax.swing.JLabel();
+        artField = new javax.swing.JTextField();
+        jButton2 = new javax.swing.JButton();
+        jButton3 = new javax.swing.JButton();
+        weaponPanel = new javax.swing.JPanel();
+        jLabel15 = new javax.swing.JLabel();
+        wXField = new javax.swing.JTextField();
+        jLabel16 = new javax.swing.JLabel();
+        wYField = new javax.swing.JTextField();
+        jLabel17 = new javax.swing.JLabel();
+        angleField = new javax.swing.JTextField();
+        behindCheck = new javax.swing.JCheckBox();
+        weaponCheck = new javax.swing.JCheckBox();
+        compressedLabel = new javax.swing.JLabel();
+        previewPanel = new javax.swing.JPanel();
+        scrollPanel = new javax.swing.JScrollPane(imagePanel);
+        playerPanel = new javax.swing.JPanel();
+        backBut = new javax.swing.JButton();
+        previousBut = new javax.swing.JButton();
+        nextBut = new javax.swing.JButton();
+        frontBut = new javax.swing.JButton();
+        playToggle = new javax.swing.JToggleButton();
+        colorsPanel1 = new javax.swing.JPanel();
+        colorPanel2 = new javax.swing.JPanel();
+        colorPanel3 = new javax.swing.JPanel();
+        colorPanel4 = new javax.swing.JPanel();
+        colorPanel5 = new javax.swing.JPanel();
+        colorPanel6 = new javax.swing.JPanel();
+        colorPanel7 = new javax.swing.JPanel();
+        colorPanel8 = new javax.swing.JPanel();
+        colorPanel9 = new javax.swing.JPanel();
+        colorPanel10 = new javax.swing.JPanel();
+        colorPanel11 = new javax.swing.JPanel();
+        colorPanel12 = new javax.swing.JPanel();
+        colorPanel13 = new javax.swing.JPanel();
+        colorPanel14 = new javax.swing.JPanel();
+        colorPanel15 = new javax.swing.JPanel();
+        colorPanel16 = new javax.swing.JPanel();
+        colorPanel1 = new javax.swing.JPanel();
+        characterPanel1 = new javax.swing.JPanel();
+        showHitsCheck = new javax.swing.JCheckBox();
+        showWeaponCheck = new javax.swing.JCheckBox();
+        weaponCombo = new javax.swing.JComboBox();
+        showFacedRightCheck = new javax.swing.JCheckBox();
+        showTileCheck = new javax.swing.JCheckBox();
+        showCenterCheck = new javax.swing.JCheckBox();
+        toolsPanel = new javax.swing.JPanel();
+        pencilRadio = new javax.swing.JRadioButton();
+        brushRadio = new javax.swing.JRadioButton();
+        bucketRadio = new javax.swing.JRadioButton();
+        dragSpriteRadio = new javax.swing.JRadioButton();
+        dragImageRadio = new javax.swing.JRadioButton();
+        noneRadio = new javax.swing.JRadioButton();
+        overridePanel = new javax.swing.JPanel();
+        softReplaceButton = new javax.swing.JButton();
+        jLabel2 = new javax.swing.JLabel();
+        generatePanel = new javax.swing.JPanel();
+        hardReplaceButton = new javax.swing.JButton();
+        jLabel13 = new javax.swing.JLabel();
+        genAddressField = new javax.swing.JTextField();
+        jLabel14 = new javax.swing.JLabel();
+        genPaletteField = new javax.swing.JTextField();
+        jMenuBar1 = new javax.swing.JMenuBar();
+        jMenu1 = new javax.swing.JMenu();
+        openRomMenu = new javax.swing.JMenuItem();
+        jMenuItem4 = new javax.swing.JMenuItem();
+        closeMenu = new javax.swing.JMenuItem();
+        jSeparator2 = new javax.swing.JPopupMenu.Separator();
+        inportMenu = new javax.swing.JMenu();
+        jMenuItem1 = new javax.swing.JMenuItem();
+        jMenuItem2 = new javax.swing.JMenuItem();
+        jSeparator5 = new javax.swing.JPopupMenu.Separator();
+        jMenuItem3 = new javax.swing.JMenuItem();
+        exportMenu = new javax.swing.JMenu();
+        spriteSheetMenu1 = new javax.swing.JMenuItem();
+        spriteSheetMenu = new javax.swing.JMenuItem();
+        jSeparator1 = new javax.swing.JPopupMenu.Separator();
+        jMenuItem5 = new javax.swing.JMenuItem();
+        jMenu2 = new javax.swing.JMenu();
+        jMenu6 = new javax.swing.JMenu();
+        pencilMenu = new javax.swing.JRadioButtonMenuItem();
+        brushMenu = new javax.swing.JRadioButtonMenuItem();
+        bucketMenu = new javax.swing.JRadioButtonMenuItem();
+        dragSpriteMenu = new javax.swing.JRadioButtonMenuItem();
+        dragImageMenu = new javax.swing.JRadioButtonMenuItem();
+        noneMenu = new javax.swing.JRadioButtonMenuItem();
+        jMenu5 = new javax.swing.JMenu();
+        sizeRadioMenu1 = new javax.swing.JRadioButtonMenuItem();
+        sizeRadioMenu2 = new javax.swing.JRadioButtonMenuItem();
+        sizeRadioMenu3 = new javax.swing.JRadioButtonMenuItem();
+        jMenu4 = new javax.swing.JMenu();
+        jMenuItem11 = new javax.swing.JMenuItem();
+        jMenuItem7 = new javax.swing.JMenuItem();
+        jMenuItem9 = new javax.swing.JMenuItem();
+        jMenuItem10 = new javax.swing.JMenuItem();
+        hexIdsMenu = new javax.swing.JCheckBoxMenuItem();
+        jSeparator3 = new javax.swing.JPopupMenu.Separator();
+        resizeAnimsMenu = new javax.swing.JMenuItem();
+        nameMenu = new javax.swing.JMenuItem();
+        jSeparator4 = new javax.swing.JPopupMenu.Separator();
+        copyMenu = new javax.swing.JMenuItem();
+        pasteMenu = new javax.swing.JMenuItem();
+        jSeparator6 = new javax.swing.JPopupMenu.Separator();
+        pasteMenu1 = new javax.swing.JMenuItem();
+        jMenu3 = new javax.swing.JMenu();
+        jMenuItem6 = new javax.swing.JMenuItem();
+
+        setDefaultCloseOperation(javax.swing.WindowConstants.DO_NOTHING_ON_CLOSE);
+        setTitle(TITLE);
+        setLocationByPlatform(true);
+        addMouseWheelListener(new java.awt.event.MouseWheelListener() {
+            public void mouseWheelMoved(java.awt.event.MouseWheelEvent evt) {
+                formMouseWheelMoved(evt);
+            }
+        });
+        addWindowListener(new java.awt.event.WindowAdapter() {
+            public void windowClosing(java.awt.event.WindowEvent evt) {
+                formWindowClosing(evt);
+            }
+        });
+
+        characterPanel.setBackground(new java.awt.Color(229, 235, 235));
+        characterPanel.setBorder(javax.swing.BorderFactory.createTitledBorder(""));
+
+        jLabel1.setFont(new java.awt.Font("Tahoma", 1, 14)); // NOI18N
+        jLabel1.setHorizontalAlignment(javax.swing.SwingConstants.RIGHT);
+        jLabel1.setText("Character:");
+
+        characterCombo.setFont(new java.awt.Font("Tahoma", 0, 14)); // NOI18N
+        characterCombo.setMaximumRowCount(16);
+        characterCombo.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                characterComboActionPerformed(evt);
+            }
+        });
+
+        animationPanel.setBackground(new java.awt.Color(241, 241, 171));
+        animationPanel.setBorder(javax.swing.BorderFactory.createTitledBorder(""));
+
+        jLabel5.setFont(new java.awt.Font("Tahoma", 1, 12)); // NOI18N
+        jLabel5.setHorizontalAlignment(javax.swing.SwingConstants.RIGHT);
+        jLabel5.setText("Animation:");
+
+        animationCombo.setFont(new java.awt.Font("Tahoma", 0, 14)); // NOI18N
+        animationCombo.setMaximumRowCount(16);
+        animationCombo.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                animationComboActionPerformed(evt);
+            }
+        });
+        animationCombo.addKeyListener(new java.awt.event.KeyAdapter() {
+            public void keyPressed(java.awt.event.KeyEvent evt) {
+                animationComboKeyPressed(evt);
+            }
+        });
+
+        jLabel6.setFont(new java.awt.Font("Tahoma", 0, 14)); // NOI18N
+        jLabel6.setHorizontalAlignment(javax.swing.SwingConstants.RIGHT);
+        jLabel6.setText("Size:");
+
+        sizeField.setEditable(false);
+        sizeField.setFont(new java.awt.Font("Courier New", 0, 14)); // NOI18N
+        sizeField.setHorizontalAlignment(javax.swing.JTextField.RIGHT);
+        sizeField.setText("0");
+
+        framePanel.setBackground(new java.awt.Color(240, 226, 157));
+        framePanel.setBorder(javax.swing.BorderFactory.createTitledBorder(null, "Frame #", javax.swing.border.TitledBorder.DEFAULT_JUSTIFICATION, javax.swing.border.TitledBorder.DEFAULT_POSITION, new java.awt.Font("Tahoma", 0, 14))); // NOI18N
+
+        jLabel7.setFont(new java.awt.Font("Tahoma", 0, 14)); // NOI18N
+        jLabel7.setHorizontalAlignment(javax.swing.SwingConstants.RIGHT);
+        jLabel7.setText("Delay:");
+
+        delayField.setFont(new java.awt.Font("Courier New", 0, 14)); // NOI18N
+        delayField.setHorizontalAlignment(javax.swing.JTextField.RIGHT);
+        delayField.setText("0");
+
+        hitPanel.setBackground(new java.awt.Color(236, 209, 127));
+        hitPanel.setBorder(javax.swing.BorderFactory.createTitledBorder("Hit"));
+
+        jLabel8.setFont(new java.awt.Font("Tahoma", 0, 14)); // NOI18N
+        jLabel8.setHorizontalAlignment(javax.swing.SwingConstants.RIGHT);
+        jLabel8.setText("x:");
+
+        xField.setFont(new java.awt.Font("Courier New", 0, 14)); // NOI18N
+        xField.setHorizontalAlignment(javax.swing.JTextField.RIGHT);
+        xField.setText("0");
+
+        jLabel9.setFont(new java.awt.Font("Tahoma", 0, 14)); // NOI18N
+        jLabel9.setHorizontalAlignment(javax.swing.SwingConstants.RIGHT);
+        jLabel9.setText("y:");
+
+        yField.setFont(new java.awt.Font("Courier New", 0, 14)); // NOI18N
+        yField.setHorizontalAlignment(javax.swing.JTextField.RIGHT);
+        yField.setText("0");
+
+        jLabel10.setFont(new java.awt.Font("Tahoma", 0, 14)); // NOI18N
+        jLabel10.setHorizontalAlignment(javax.swing.SwingConstants.RIGHT);
+        jLabel10.setText("sound:");
+
+        soundField.setFont(new java.awt.Font("Courier New", 0, 14)); // NOI18N
+        soundField.setHorizontalAlignment(javax.swing.JTextField.RIGHT);
+        soundField.setText("0");
+
+        jLabel11.setFont(new java.awt.Font("Tahoma", 0, 14)); // NOI18N
+        jLabel11.setHorizontalAlignment(javax.swing.SwingConstants.RIGHT);
+        jLabel11.setText("damage:");
+
+        damageField.setFont(new java.awt.Font("Courier New", 0, 14)); // NOI18N
+        damageField.setHorizontalAlignment(javax.swing.JTextField.RIGHT);
+        damageField.setText("0");
+
+        koCheck.setBackground(new java.awt.Color(236, 209, 127));
+        koCheck.setFont(new java.awt.Font("Tahoma", 0, 14)); // NOI18N
+        koCheck.setText("Knock Down");
+        koCheck.setContentAreaFilled(false);
+        koCheck.setFocusable(false);
+        koCheck.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                koCheckActionPerformed(evt);
+            }
+        });
+
+        javax.swing.GroupLayout hitPanelLayout = new javax.swing.GroupLayout(hitPanel);
+        hitPanel.setLayout(hitPanelLayout);
+        hitPanelLayout.setHorizontalGroup(
+            hitPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGroup(hitPanelLayout.createSequentialGroup()
+                .addGroup(hitPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addGroup(hitPanelLayout.createSequentialGroup()
+                        .addGap(16, 16, 16)
+                        .addComponent(jLabel8, javax.swing.GroupLayout.PREFERRED_SIZE, 22, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                        .addComponent(xField, javax.swing.GroupLayout.PREFERRED_SIZE, 33, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                        .addComponent(jLabel9, javax.swing.GroupLayout.PREFERRED_SIZE, 22, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                        .addComponent(yField, javax.swing.GroupLayout.PREFERRED_SIZE, 33, javax.swing.GroupLayout.PREFERRED_SIZE))
+                    .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, hitPanelLayout.createSequentialGroup()
+                        .addContainerGap()
+                        .addComponent(jLabel11, javax.swing.GroupLayout.PREFERRED_SIZE, 63, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                        .addComponent(damageField, javax.swing.GroupLayout.PREFERRED_SIZE, 33, javax.swing.GroupLayout.PREFERRED_SIZE)))
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+                .addGroup(hitPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
+                    .addComponent(koCheck)
+                    .addGroup(hitPanelLayout.createSequentialGroup()
+                        .addComponent(jLabel10, javax.swing.GroupLayout.PREFERRED_SIZE, 57, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                        .addComponent(soundField, javax.swing.GroupLayout.PREFERRED_SIZE, 33, javax.swing.GroupLayout.PREFERRED_SIZE)))
+                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+        );
+        hitPanelLayout.setVerticalGroup(
+            hitPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGroup(hitPanelLayout.createSequentialGroup()
+                .addGroup(hitPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                    .addComponent(jLabel8)
+                    .addComponent(xField, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(jLabel9)
+                    .addComponent(yField, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(jLabel10)
+                    .addComponent(soundField, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+                .addGroup(hitPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                    .addComponent(jLabel11)
+                    .addComponent(damageField, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(koCheck))
+                .addGap(0, 9, Short.MAX_VALUE))
+        );
+
+        hitCheck.setBackground(new java.awt.Color(240, 226, 157));
+        hitCheck.setFont(new java.awt.Font("Tahoma", 0, 14)); // NOI18N
+        hitCheck.setText("Hit frame");
+        hitCheck.setContentAreaFilled(false);
+        hitCheck.setFocusable(false);
+        hitCheck.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                hitCheckActionPerformed(evt);
+            }
+        });
+
+        jLabel12.setFont(new java.awt.Font("Tahoma", 0, 14)); // NOI18N
+        jLabel12.setHorizontalAlignment(javax.swing.SwingConstants.RIGHT);
+        jLabel12.setText("SpriteMap:");
+
+        mapField.setFont(new java.awt.Font("Courier New", 0, 14)); // NOI18N
+        mapField.setHorizontalAlignment(javax.swing.JTextField.RIGHT);
+        mapField.setText("200");
+
+        jLabel3.setFont(new java.awt.Font("Tahoma", 0, 14)); // NOI18N
+        jLabel3.setHorizontalAlignment(javax.swing.SwingConstants.RIGHT);
+        jLabel3.setText("Art Address:");
+
+        artField.setFont(new java.awt.Font("Courier New", 0, 14)); // NOI18N
+        artField.setHorizontalAlignment(javax.swing.JTextField.RIGHT);
+        artField.setText("200");
+
+        jButton2.setText("<");
+        jButton2.setFocusable(false);
+        jButton2.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                jButton2ActionPerformed(evt);
+            }
+        });
+
+        jButton3.setText(">");
+        jButton3.setFocusable(false);
+        jButton3.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                jButton3ActionPerformed(evt);
+            }
+        });
+
+        weaponPanel.setBackground(new java.awt.Color(217, 227, 154));
+        weaponPanel.setBorder(javax.swing.BorderFactory.createTitledBorder("Weapon Point"));
+
+        jLabel15.setFont(new java.awt.Font("Tahoma", 0, 14)); // NOI18N
+        jLabel15.setHorizontalAlignment(javax.swing.SwingConstants.RIGHT);
+        jLabel15.setText("x:");
+
+        wXField.setFont(new java.awt.Font("Courier New", 0, 14)); // NOI18N
+        wXField.setHorizontalAlignment(javax.swing.JTextField.RIGHT);
+        wXField.setText("0");
+
+        jLabel16.setFont(new java.awt.Font("Tahoma", 0, 14)); // NOI18N
+        jLabel16.setHorizontalAlignment(javax.swing.SwingConstants.RIGHT);
+        jLabel16.setText("y:");
+
+        wYField.setFont(new java.awt.Font("Courier New", 0, 14)); // NOI18N
+        wYField.setHorizontalAlignment(javax.swing.JTextField.RIGHT);
+        wYField.setText("0");
+
+        jLabel17.setFont(new java.awt.Font("Tahoma", 0, 14)); // NOI18N
+        jLabel17.setHorizontalAlignment(javax.swing.SwingConstants.RIGHT);
+        jLabel17.setText("rotation");
+
+        angleField.setFont(new java.awt.Font("Courier New", 0, 14)); // NOI18N
+        angleField.setHorizontalAlignment(javax.swing.JTextField.RIGHT);
+        angleField.setText("0");
+
+        behindCheck.setFont(new java.awt.Font("Tahoma", 0, 14)); // NOI18N
+        behindCheck.setText("Show behind");
+        behindCheck.setContentAreaFilled(false);
+        behindCheck.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                behindCheckActionPerformed(evt);
+            }
+        });
+
+        javax.swing.GroupLayout weaponPanelLayout = new javax.swing.GroupLayout(weaponPanel);
+        weaponPanel.setLayout(weaponPanelLayout);
+        weaponPanelLayout.setHorizontalGroup(
+            weaponPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGroup(weaponPanelLayout.createSequentialGroup()
+                .addComponent(jLabel15, javax.swing.GroupLayout.PREFERRED_SIZE, 22, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addComponent(wXField, javax.swing.GroupLayout.PREFERRED_SIZE, 33, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addComponent(jLabel16, javax.swing.GroupLayout.PREFERRED_SIZE, 22, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addComponent(wYField, javax.swing.GroupLayout.PREFERRED_SIZE, 33, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addComponent(jLabel17, javax.swing.GroupLayout.PREFERRED_SIZE, 51, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addComponent(angleField, javax.swing.GroupLayout.PREFERRED_SIZE, 19, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                .addComponent(behindCheck))
+        );
+        weaponPanelLayout.setVerticalGroup(
+            weaponPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGroup(weaponPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                .addComponent(jLabel15)
+                .addComponent(wXField, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addComponent(jLabel16)
+                .addComponent(wYField, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addComponent(jLabel17)
+                .addComponent(angleField, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addComponent(behindCheck))
+        );
+
+        weaponCheck.setBackground(new java.awt.Color(240, 226, 157));
+        weaponCheck.setFont(new java.awt.Font("Tahoma", 0, 14)); // NOI18N
+        weaponCheck.setText("Weapon Point");
+        weaponCheck.setContentAreaFilled(false);
+        weaponCheck.setFocusable(false);
+        weaponCheck.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                weaponCheckActionPerformed(evt);
+            }
+        });
+
+        javax.swing.GroupLayout framePanelLayout = new javax.swing.GroupLayout(framePanel);
+        framePanel.setLayout(framePanelLayout);
+        framePanelLayout.setHorizontalGroup(
+            framePanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGroup(framePanelLayout.createSequentialGroup()
+                .addComponent(jLabel12, javax.swing.GroupLayout.PREFERRED_SIZE, 79, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addComponent(mapField, javax.swing.GroupLayout.PREFERRED_SIZE, 62, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+                .addComponent(jLabel3, javax.swing.GroupLayout.PREFERRED_SIZE, 79, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addComponent(artField, javax.swing.GroupLayout.PREFERRED_SIZE, 62, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+            .addGroup(framePanelLayout.createSequentialGroup()
+                .addGroup(framePanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
+                    .addGroup(framePanelLayout.createSequentialGroup()
+                        .addComponent(jLabel7)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                        .addComponent(delayField, javax.swing.GroupLayout.PREFERRED_SIZE, 33, javax.swing.GroupLayout.PREFERRED_SIZE))
+                    .addComponent(hitCheck))
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                .addComponent(jButton2)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addComponent(jButton3))
+            .addGroup(framePanelLayout.createSequentialGroup()
+                .addComponent(weaponCheck)
+                .addGap(0, 0, Short.MAX_VALUE))
+            .addComponent(hitPanel, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+            .addComponent(weaponPanel, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+        );
+        framePanelLayout.setVerticalGroup(
+            framePanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGroup(framePanelLayout.createSequentialGroup()
+                .addGroup(framePanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addGroup(framePanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                        .addComponent(jButton2)
+                        .addComponent(jButton3))
+                    .addGroup(framePanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                        .addComponent(jLabel7)
+                        .addComponent(delayField, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)))
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addComponent(hitCheck)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addComponent(hitPanel, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 8, Short.MAX_VALUE)
+                .addComponent(weaponCheck)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+                .addComponent(weaponPanel, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addGroup(framePanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                    .addComponent(jLabel12)
+                    .addComponent(mapField, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(jLabel3)
+                    .addComponent(artField, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)))
+        );
+
+        javax.swing.GroupLayout animationPanelLayout = new javax.swing.GroupLayout(animationPanel);
+        animationPanel.setLayout(animationPanelLayout);
+        animationPanelLayout.setHorizontalGroup(
+            animationPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGroup(animationPanelLayout.createSequentialGroup()
+                .addComponent(jLabel5)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addComponent(animationCombo, javax.swing.GroupLayout.PREFERRED_SIZE, 202, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addComponent(jLabel6)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                .addComponent(sizeField, javax.swing.GroupLayout.PREFERRED_SIZE, 33, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addGap(6, 6, 6))
+            .addComponent(framePanel, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+        );
+        animationPanelLayout.setVerticalGroup(
+            animationPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGroup(animationPanelLayout.createSequentialGroup()
+                .addGroup(animationPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                    .addComponent(jLabel5)
+                    .addComponent(animationCombo, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(sizeField, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(jLabel6))
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+                .addComponent(framePanel, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+        );
+
+        compressedLabel.setFont(new java.awt.Font("Tahoma", 1, 12)); // NOI18N
+        compressedLabel.setForeground(new java.awt.Color(199, 18, 18));
+        compressedLabel.setText("Compressed!");
+
+        javax.swing.GroupLayout characterPanelLayout = new javax.swing.GroupLayout(characterPanel);
+        characterPanel.setLayout(characterPanelLayout);
+        characterPanelLayout.setHorizontalGroup(
+            characterPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGroup(characterPanelLayout.createSequentialGroup()
+                .addGroup(characterPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addGroup(characterPanelLayout.createSequentialGroup()
+                        .addComponent(jLabel1, javax.swing.GroupLayout.PREFERRED_SIZE, 73, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                        .addComponent(characterCombo, javax.swing.GroupLayout.PREFERRED_SIZE, 205, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                        .addComponent(compressedLabel))
+                    .addComponent(animationPanel, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+        );
+        characterPanelLayout.setVerticalGroup(
+            characterPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGroup(characterPanelLayout.createSequentialGroup()
+                .addGroup(characterPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                    .addComponent(jLabel1)
+                    .addComponent(characterCombo, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(compressedLabel))
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addComponent(animationPanel, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+        );
+
+        scrollPanel.setBackground(new java.awt.Color(0, 0, 0));
+        scrollPanel.setFocusable(false);
+
+        backBut.setBackground(new java.awt.Color(241, 241, 171));
+        backBut.setText("|<<");
+        backBut.setFocusable(false);
+        backBut.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                backButActionPerformed(evt);
+            }
+        });
+
+        previousBut.setBackground(new java.awt.Color(240, 226, 157));
+        previousBut.setText("<<");
+        previousBut.setFocusable(false);
+        previousBut.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                previousButActionPerformed(evt);
+            }
+        });
+
+        nextBut.setBackground(new java.awt.Color(240, 226, 157));
+        nextBut.setText(">>");
+        nextBut.setFocusable(false);
+        nextBut.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                nextButActionPerformed(evt);
+            }
+        });
+
+        frontBut.setBackground(new java.awt.Color(241, 241, 171));
+        frontBut.setText(">>|");
+        frontBut.setFocusable(false);
+        frontBut.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                frontButActionPerformed(evt);
+            }
+        });
+
+        playToggle.setBackground(new java.awt.Color(236, 209, 127));
+        playToggle.setText(">");
+        playToggle.setFocusable(false);
+        playToggle.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                playToggleActionPerformed(evt);
+            }
+        });
+
+        javax.swing.GroupLayout playerPanelLayout = new javax.swing.GroupLayout(playerPanel);
+        playerPanel.setLayout(playerPanelLayout);
+        playerPanelLayout.setHorizontalGroup(
+            playerPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, playerPanelLayout.createSequentialGroup()
+                .addComponent(backBut, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addComponent(previousBut, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addComponent(playToggle, javax.swing.GroupLayout.PREFERRED_SIZE, 105, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addComponent(nextBut, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addComponent(frontBut, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+        );
+        playerPanelLayout.setVerticalGroup(
+            playerPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGroup(playerPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                .addComponent(backBut)
+                .addComponent(previousBut)
+                .addComponent(nextBut)
+                .addComponent(frontBut)
+                .addComponent(playToggle))
+        );
+
+        colorsPanel1.setBorder(javax.swing.BorderFactory.createTitledBorder("Palette"));
+        colorsPanel1.setPreferredSize(new java.awt.Dimension(256, 64));
+
+        colorPanel2.setBackground(new java.awt.Color(255, 255, 255));
+        colorPanel2.setCursor(new java.awt.Cursor(java.awt.Cursor.DEFAULT_CURSOR));
+        colorPanel2.setPreferredSize(new java.awt.Dimension(32, 32));
+        colorPanel2.addMouseListener(new java.awt.event.MouseAdapter() {
+            public void mousePressed(java.awt.event.MouseEvent evt) {
+                colorPanel2MousePressed(evt);
+            }
+        });
+
+        javax.swing.GroupLayout colorPanel2Layout = new javax.swing.GroupLayout(colorPanel2);
+        colorPanel2.setLayout(colorPanel2Layout);
+        colorPanel2Layout.setHorizontalGroup(
+            colorPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGap(0, 0, Short.MAX_VALUE)
+        );
+        colorPanel2Layout.setVerticalGroup(
+            colorPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGap(0, 32, Short.MAX_VALUE)
+        );
+
+        colorPanel3.setBackground(new java.awt.Color(255, 255, 255));
+        colorPanel3.setCursor(new java.awt.Cursor(java.awt.Cursor.DEFAULT_CURSOR));
+        colorPanel3.setPreferredSize(new java.awt.Dimension(32, 32));
+        colorPanel3.addMouseListener(new java.awt.event.MouseAdapter() {
+            public void mousePressed(java.awt.event.MouseEvent evt) {
+                colorPanel3MousePressed(evt);
+            }
+        });
+
+        javax.swing.GroupLayout colorPanel3Layout = new javax.swing.GroupLayout(colorPanel3);
+        colorPanel3.setLayout(colorPanel3Layout);
+        colorPanel3Layout.setHorizontalGroup(
+            colorPanel3Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGap(0, 0, Short.MAX_VALUE)
+        );
+        colorPanel3Layout.setVerticalGroup(
+            colorPanel3Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGap(0, 32, Short.MAX_VALUE)
+        );
+
+        colorPanel4.setBackground(new java.awt.Color(255, 255, 255));
+        colorPanel4.setCursor(new java.awt.Cursor(java.awt.Cursor.DEFAULT_CURSOR));
+        colorPanel4.setPreferredSize(new java.awt.Dimension(32, 32));
+        colorPanel4.addMouseListener(new java.awt.event.MouseAdapter() {
+            public void mousePressed(java.awt.event.MouseEvent evt) {
+                colorPanel4MousePressed(evt);
+            }
+        });
+
+        javax.swing.GroupLayout colorPanel4Layout = new javax.swing.GroupLayout(colorPanel4);
+        colorPanel4.setLayout(colorPanel4Layout);
+        colorPanel4Layout.setHorizontalGroup(
+            colorPanel4Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGap(0, 0, Short.MAX_VALUE)
+        );
+        colorPanel4Layout.setVerticalGroup(
+            colorPanel4Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGap(0, 32, Short.MAX_VALUE)
+        );
+
+        colorPanel5.setBackground(new java.awt.Color(255, 255, 255));
+        colorPanel5.setCursor(new java.awt.Cursor(java.awt.Cursor.DEFAULT_CURSOR));
+        colorPanel5.setPreferredSize(new java.awt.Dimension(32, 32));
+        colorPanel5.addMouseListener(new java.awt.event.MouseAdapter() {
+            public void mousePressed(java.awt.event.MouseEvent evt) {
+                colorPanel5MousePressed(evt);
+            }
+        });
+
+        javax.swing.GroupLayout colorPanel5Layout = new javax.swing.GroupLayout(colorPanel5);
+        colorPanel5.setLayout(colorPanel5Layout);
+        colorPanel5Layout.setHorizontalGroup(
+            colorPanel5Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGap(0, 0, Short.MAX_VALUE)
+        );
+        colorPanel5Layout.setVerticalGroup(
+            colorPanel5Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGap(0, 32, Short.MAX_VALUE)
+        );
+
+        colorPanel6.setBackground(new java.awt.Color(255, 255, 255));
+        colorPanel6.setCursor(new java.awt.Cursor(java.awt.Cursor.DEFAULT_CURSOR));
+        colorPanel6.setPreferredSize(new java.awt.Dimension(32, 32));
+        colorPanel6.addMouseListener(new java.awt.event.MouseAdapter() {
+            public void mousePressed(java.awt.event.MouseEvent evt) {
+                colorPanel6MousePressed(evt);
+            }
+        });
+
+        javax.swing.GroupLayout colorPanel6Layout = new javax.swing.GroupLayout(colorPanel6);
+        colorPanel6.setLayout(colorPanel6Layout);
+        colorPanel6Layout.setHorizontalGroup(
+            colorPanel6Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGap(0, 0, Short.MAX_VALUE)
+        );
+        colorPanel6Layout.setVerticalGroup(
+            colorPanel6Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGap(0, 32, Short.MAX_VALUE)
+        );
+
+        colorPanel7.setBackground(new java.awt.Color(255, 255, 255));
+        colorPanel7.setCursor(new java.awt.Cursor(java.awt.Cursor.DEFAULT_CURSOR));
+        colorPanel7.setPreferredSize(new java.awt.Dimension(32, 32));
+        colorPanel7.addMouseListener(new java.awt.event.MouseAdapter() {
+            public void mousePressed(java.awt.event.MouseEvent evt) {
+                colorPanel7MousePressed(evt);
+            }
+        });
+
+        javax.swing.GroupLayout colorPanel7Layout = new javax.swing.GroupLayout(colorPanel7);
+        colorPanel7.setLayout(colorPanel7Layout);
+        colorPanel7Layout.setHorizontalGroup(
+            colorPanel7Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGap(0, 0, Short.MAX_VALUE)
+        );
+        colorPanel7Layout.setVerticalGroup(
+            colorPanel7Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGap(0, 32, Short.MAX_VALUE)
+        );
+
+        colorPanel8.setBackground(new java.awt.Color(255, 255, 255));
+        colorPanel8.setCursor(new java.awt.Cursor(java.awt.Cursor.DEFAULT_CURSOR));
+        colorPanel8.setPreferredSize(new java.awt.Dimension(32, 32));
+        colorPanel8.addMouseListener(new java.awt.event.MouseAdapter() {
+            public void mousePressed(java.awt.event.MouseEvent evt) {
+                colorPanel8MousePressed(evt);
+            }
+        });
+
+        javax.swing.GroupLayout colorPanel8Layout = new javax.swing.GroupLayout(colorPanel8);
+        colorPanel8.setLayout(colorPanel8Layout);
+        colorPanel8Layout.setHorizontalGroup(
+            colorPanel8Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGap(0, 0, Short.MAX_VALUE)
+        );
+        colorPanel8Layout.setVerticalGroup(
+            colorPanel8Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGap(0, 32, Short.MAX_VALUE)
+        );
+
+        colorPanel9.setBackground(new java.awt.Color(255, 255, 255));
+        colorPanel9.setCursor(new java.awt.Cursor(java.awt.Cursor.DEFAULT_CURSOR));
+        colorPanel9.setPreferredSize(new java.awt.Dimension(32, 32));
+        colorPanel9.addMouseListener(new java.awt.event.MouseAdapter() {
+            public void mousePressed(java.awt.event.MouseEvent evt) {
+                colorPanel9MousePressed(evt);
+            }
+        });
+
+        javax.swing.GroupLayout colorPanel9Layout = new javax.swing.GroupLayout(colorPanel9);
+        colorPanel9.setLayout(colorPanel9Layout);
+        colorPanel9Layout.setHorizontalGroup(
+            colorPanel9Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGap(0, 0, Short.MAX_VALUE)
+        );
+        colorPanel9Layout.setVerticalGroup(
+            colorPanel9Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGap(0, 32, Short.MAX_VALUE)
+        );
+
+        colorPanel10.setBackground(new java.awt.Color(255, 255, 255));
+        colorPanel10.setCursor(new java.awt.Cursor(java.awt.Cursor.DEFAULT_CURSOR));
+        colorPanel10.setPreferredSize(new java.awt.Dimension(32, 32));
+        colorPanel10.addMouseListener(new java.awt.event.MouseAdapter() {
+            public void mousePressed(java.awt.event.MouseEvent evt) {
+                colorPanel10MousePressed(evt);
+            }
+        });
+
+        javax.swing.GroupLayout colorPanel10Layout = new javax.swing.GroupLayout(colorPanel10);
+        colorPanel10.setLayout(colorPanel10Layout);
+        colorPanel10Layout.setHorizontalGroup(
+            colorPanel10Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGap(0, 0, Short.MAX_VALUE)
+        );
+        colorPanel10Layout.setVerticalGroup(
+            colorPanel10Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGap(0, 32, Short.MAX_VALUE)
+        );
+
+        colorPanel11.setBackground(new java.awt.Color(255, 255, 255));
+        colorPanel11.setCursor(new java.awt.Cursor(java.awt.Cursor.DEFAULT_CURSOR));
+        colorPanel11.setPreferredSize(new java.awt.Dimension(32, 32));
+        colorPanel11.addMouseListener(new java.awt.event.MouseAdapter() {
+            public void mousePressed(java.awt.event.MouseEvent evt) {
+                colorPanel11MousePressed(evt);
+            }
+        });
+
+        javax.swing.GroupLayout colorPanel11Layout = new javax.swing.GroupLayout(colorPanel11);
+        colorPanel11.setLayout(colorPanel11Layout);
+        colorPanel11Layout.setHorizontalGroup(
+            colorPanel11Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGap(0, 0, Short.MAX_VALUE)
+        );
+        colorPanel11Layout.setVerticalGroup(
+            colorPanel11Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGap(0, 32, Short.MAX_VALUE)
+        );
+
+        colorPanel12.setBackground(new java.awt.Color(255, 255, 255));
+        colorPanel12.setCursor(new java.awt.Cursor(java.awt.Cursor.DEFAULT_CURSOR));
+        colorPanel12.setPreferredSize(new java.awt.Dimension(32, 32));
+        colorPanel12.addMouseListener(new java.awt.event.MouseAdapter() {
+            public void mousePressed(java.awt.event.MouseEvent evt) {
+                colorPanel12MousePressed(evt);
+            }
+        });
+
+        javax.swing.GroupLayout colorPanel12Layout = new javax.swing.GroupLayout(colorPanel12);
+        colorPanel12.setLayout(colorPanel12Layout);
+        colorPanel12Layout.setHorizontalGroup(
+            colorPanel12Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGap(0, 0, Short.MAX_VALUE)
+        );
+        colorPanel12Layout.setVerticalGroup(
+            colorPanel12Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGap(0, 32, Short.MAX_VALUE)
+        );
+
+        colorPanel13.setBackground(new java.awt.Color(255, 255, 255));
+        colorPanel13.setCursor(new java.awt.Cursor(java.awt.Cursor.DEFAULT_CURSOR));
+        colorPanel13.setPreferredSize(new java.awt.Dimension(32, 32));
+        colorPanel13.addMouseListener(new java.awt.event.MouseAdapter() {
+            public void mousePressed(java.awt.event.MouseEvent evt) {
+                colorPanel13MousePressed(evt);
+            }
+        });
+
+        javax.swing.GroupLayout colorPanel13Layout = new javax.swing.GroupLayout(colorPanel13);
+        colorPanel13.setLayout(colorPanel13Layout);
+        colorPanel13Layout.setHorizontalGroup(
+            colorPanel13Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGap(0, 0, Short.MAX_VALUE)
+        );
+        colorPanel13Layout.setVerticalGroup(
+            colorPanel13Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGap(0, 32, Short.MAX_VALUE)
+        );
+
+        colorPanel14.setBackground(new java.awt.Color(255, 255, 255));
+        colorPanel14.setCursor(new java.awt.Cursor(java.awt.Cursor.DEFAULT_CURSOR));
+        colorPanel14.setPreferredSize(new java.awt.Dimension(32, 32));
+        colorPanel14.addMouseListener(new java.awt.event.MouseAdapter() {
+            public void mousePressed(java.awt.event.MouseEvent evt) {
+                colorPanel14MousePressed(evt);
+            }
+        });
+
+        javax.swing.GroupLayout colorPanel14Layout = new javax.swing.GroupLayout(colorPanel14);
+        colorPanel14.setLayout(colorPanel14Layout);
+        colorPanel14Layout.setHorizontalGroup(
+            colorPanel14Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGap(0, 0, Short.MAX_VALUE)
+        );
+        colorPanel14Layout.setVerticalGroup(
+            colorPanel14Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGap(0, 32, Short.MAX_VALUE)
+        );
+
+        colorPanel15.setBackground(new java.awt.Color(255, 255, 255));
+        colorPanel15.setCursor(new java.awt.Cursor(java.awt.Cursor.DEFAULT_CURSOR));
+        colorPanel15.setPreferredSize(new java.awt.Dimension(32, 32));
+        colorPanel15.addMouseListener(new java.awt.event.MouseAdapter() {
+            public void mousePressed(java.awt.event.MouseEvent evt) {
+                colorPanel15MousePressed(evt);
+            }
+        });
+
+        javax.swing.GroupLayout colorPanel15Layout = new javax.swing.GroupLayout(colorPanel15);
+        colorPanel15.setLayout(colorPanel15Layout);
+        colorPanel15Layout.setHorizontalGroup(
+            colorPanel15Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGap(0, 0, Short.MAX_VALUE)
+        );
+        colorPanel15Layout.setVerticalGroup(
+            colorPanel15Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGap(0, 32, Short.MAX_VALUE)
+        );
+
+        colorPanel16.setBackground(new java.awt.Color(255, 255, 255));
+        colorPanel16.setCursor(new java.awt.Cursor(java.awt.Cursor.DEFAULT_CURSOR));
+        colorPanel16.setPreferredSize(new java.awt.Dimension(32, 32));
+        colorPanel16.addMouseListener(new java.awt.event.MouseAdapter() {
+            public void mousePressed(java.awt.event.MouseEvent evt) {
+                colorPanel16MousePressed(evt);
+            }
+        });
+
+        javax.swing.GroupLayout colorPanel16Layout = new javax.swing.GroupLayout(colorPanel16);
+        colorPanel16.setLayout(colorPanel16Layout);
+        colorPanel16Layout.setHorizontalGroup(
+            colorPanel16Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGap(0, 0, Short.MAX_VALUE)
+        );
+        colorPanel16Layout.setVerticalGroup(
+            colorPanel16Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGap(0, 32, Short.MAX_VALUE)
+        );
+
+        colorPanel1.setBackground(new java.awt.Color(255, 255, 255));
+        colorPanel1.setCursor(new java.awt.Cursor(java.awt.Cursor.DEFAULT_CURSOR));
+        colorPanel1.setPreferredSize(new java.awt.Dimension(32, 32));
+        colorPanel1.addMouseListener(new java.awt.event.MouseAdapter() {
+            public void mousePressed(java.awt.event.MouseEvent evt) {
+                colorPanel1MousePressed(evt);
+            }
+        });
+
+        javax.swing.GroupLayout colorPanel1Layout = new javax.swing.GroupLayout(colorPanel1);
+        colorPanel1.setLayout(colorPanel1Layout);
+        colorPanel1Layout.setHorizontalGroup(
+            colorPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGap(0, 0, Short.MAX_VALUE)
+        );
+        colorPanel1Layout.setVerticalGroup(
+            colorPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGap(0, 32, Short.MAX_VALUE)
+        );
+
+        javax.swing.GroupLayout colorsPanel1Layout = new javax.swing.GroupLayout(colorsPanel1);
+        colorsPanel1.setLayout(colorsPanel1Layout);
+        colorsPanel1Layout.setHorizontalGroup(
+            colorsPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
+            .addGroup(colorsPanel1Layout.createSequentialGroup()
+                .addGap(0, 0, 0)
+                .addGroup(colorsPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addComponent(colorPanel1, javax.swing.GroupLayout.DEFAULT_SIZE, 45, Short.MAX_VALUE)
+                    .addComponent(colorPanel9, javax.swing.GroupLayout.DEFAULT_SIZE, 45, Short.MAX_VALUE))
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addGroup(colorsPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addComponent(colorPanel2, javax.swing.GroupLayout.DEFAULT_SIZE, 45, Short.MAX_VALUE)
+                    .addComponent(colorPanel10, javax.swing.GroupLayout.DEFAULT_SIZE, 45, Short.MAX_VALUE))
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addGroup(colorsPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addComponent(colorPanel3, javax.swing.GroupLayout.DEFAULT_SIZE, 49, Short.MAX_VALUE)
+                    .addComponent(colorPanel11, javax.swing.GroupLayout.DEFAULT_SIZE, 49, Short.MAX_VALUE))
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addGroup(colorsPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addComponent(colorPanel4, javax.swing.GroupLayout.DEFAULT_SIZE, 47, Short.MAX_VALUE)
+                    .addComponent(colorPanel12, javax.swing.GroupLayout.DEFAULT_SIZE, 47, Short.MAX_VALUE))
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addGroup(colorsPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addComponent(colorPanel5, javax.swing.GroupLayout.DEFAULT_SIZE, 49, Short.MAX_VALUE)
+                    .addComponent(colorPanel13, javax.swing.GroupLayout.DEFAULT_SIZE, 49, Short.MAX_VALUE))
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addGroup(colorsPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addComponent(colorPanel6, javax.swing.GroupLayout.DEFAULT_SIZE, 47, Short.MAX_VALUE)
+                    .addComponent(colorPanel14, javax.swing.GroupLayout.DEFAULT_SIZE, 47, Short.MAX_VALUE))
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addGroup(colorsPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addComponent(colorPanel7, javax.swing.GroupLayout.DEFAULT_SIZE, 47, Short.MAX_VALUE)
+                    .addComponent(colorPanel15, javax.swing.GroupLayout.DEFAULT_SIZE, 47, Short.MAX_VALUE))
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addGroup(colorsPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addComponent(colorPanel8, javax.swing.GroupLayout.DEFAULT_SIZE, 46, Short.MAX_VALUE)
+                    .addComponent(colorPanel16, javax.swing.GroupLayout.DEFAULT_SIZE, 46, Short.MAX_VALUE)))
+        );
+        colorsPanel1Layout.setVerticalGroup(
+            colorsPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGroup(colorsPanel1Layout.createSequentialGroup()
+                .addGroup(colorsPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addComponent(colorPanel2, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(colorPanel3, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(colorPanel4, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(colorPanel5, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(colorPanel6, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(colorPanel7, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(colorPanel8, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(colorPanel1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 12, Short.MAX_VALUE)
+                .addGroup(colorsPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addComponent(colorPanel10, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(colorPanel11, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(colorPanel12, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(colorPanel13, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(colorPanel14, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(colorPanel15, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(colorPanel16, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(colorPanel9, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)))
+        );
+
+        javax.swing.GroupLayout previewPanelLayout = new javax.swing.GroupLayout(previewPanel);
+        previewPanel.setLayout(previewPanelLayout);
+        previewPanelLayout.setHorizontalGroup(
+            previewPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addComponent(playerPanel, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+            .addComponent(scrollPanel, javax.swing.GroupLayout.Alignment.TRAILING)
+            .addComponent(colorsPanel1, javax.swing.GroupLayout.DEFAULT_SIZE, 429, Short.MAX_VALUE)
+        );
+        previewPanelLayout.setVerticalGroup(
+            previewPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGroup(previewPanelLayout.createSequentialGroup()
+                .addComponent(scrollPanel)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addComponent(playerPanel, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addComponent(colorsPanel1, javax.swing.GroupLayout.PREFERRED_SIZE, 100, javax.swing.GroupLayout.PREFERRED_SIZE))
+        );
+
+        characterPanel1.setBackground(new java.awt.Color(228, 236, 191));
+        characterPanel1.setBorder(javax.swing.BorderFactory.createTitledBorder(null, "View", javax.swing.border.TitledBorder.DEFAULT_JUSTIFICATION, javax.swing.border.TitledBorder.DEFAULT_POSITION, new java.awt.Font("Tahoma", 0, 14))); // NOI18N
+
+        showHitsCheck.setBackground(new java.awt.Color(228, 236, 191));
+        showHitsCheck.setSelected(true);
+        showHitsCheck.setText("Hit Point");
+        showHitsCheck.setContentAreaFilled(false);
+        showHitsCheck.setFocusable(false);
+        showHitsCheck.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                showHitsCheckActionPerformed(evt);
+            }
+        });
+
+        showWeaponCheck.setBackground(new java.awt.Color(228, 236, 191));
+        showWeaponCheck.setSelected(true);
+        showWeaponCheck.setText("Weapon:");
+        showWeaponCheck.setContentAreaFilled(false);
+        showWeaponCheck.setFocusable(false);
+        showWeaponCheck.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                showWeaponCheckActionPerformed(evt);
+            }
+        });
+
+        weaponCombo.setModel(new javax.swing.DefaultComboBoxModel(new String[] { "Knife", "Pipe" }));
+        weaponCombo.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                weaponComboActionPerformed(evt);
+            }
+        });
+
+        showFacedRightCheck.setBackground(new java.awt.Color(228, 236, 191));
+        showFacedRightCheck.setSelected(true);
+        showFacedRightCheck.setText("Faced Right");
+        showFacedRightCheck.setContentAreaFilled(false);
+        showFacedRightCheck.setFocusable(false);
+        showFacedRightCheck.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                showFacedRightCheckActionPerformed(evt);
+            }
+        });
+
+        showTileCheck.setBackground(new java.awt.Color(228, 236, 191));
+        showTileCheck.setSelected(true);
+        showTileCheck.setText("Tile Space");
+        showTileCheck.setContentAreaFilled(false);
+        showTileCheck.setFocusable(false);
+        showTileCheck.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                showTileCheckActionPerformed(evt);
+            }
+        });
+
+        showCenterCheck.setBackground(new java.awt.Color(228, 236, 191));
+        showCenterCheck.setText("Ghost");
+        showCenterCheck.setContentAreaFilled(false);
+        showCenterCheck.setFocusable(false);
+        showCenterCheck.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                showCenterCheckActionPerformed(evt);
+            }
+        });
+
+        javax.swing.GroupLayout characterPanel1Layout = new javax.swing.GroupLayout(characterPanel1);
+        characterPanel1.setLayout(characterPanel1Layout);
+        characterPanel1Layout.setHorizontalGroup(
+            characterPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGroup(characterPanel1Layout.createSequentialGroup()
+                .addGroup(characterPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addComponent(showWeaponCheck)
+                    .addComponent(showCenterCheck)
+                    .addComponent(showHitsCheck))
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+                .addGroup(characterPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addComponent(weaponCombo, javax.swing.GroupLayout.PREFERRED_SIZE, 83, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(showFacedRightCheck)
+                    .addComponent(showTileCheck))
+                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+        );
+        characterPanel1Layout.setVerticalGroup(
+            characterPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
+            .addGroup(characterPanel1Layout.createSequentialGroup()
+                .addGap(1, 1, 1)
+                .addGroup(characterPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                    .addComponent(showFacedRightCheck)
+                    .addComponent(showCenterCheck))
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addGroup(characterPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                    .addComponent(showTileCheck)
+                    .addComponent(showHitsCheck))
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                .addGroup(characterPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                    .addComponent(weaponCombo, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(showWeaponCheck)))
+        );
+
+        toolsPanel.setBackground(new java.awt.Color(230, 230, 235));
+        toolsPanel.setBorder(javax.swing.BorderFactory.createTitledBorder(null, "Tools", javax.swing.border.TitledBorder.DEFAULT_JUSTIFICATION, javax.swing.border.TitledBorder.DEFAULT_POSITION, new java.awt.Font("Tahoma", 0, 14))); // NOI18N
+
+        pencilRadio.setBackground(new java.awt.Color(230, 226, 235));
+        pencilRadio.setText("Pencil");
+        pencilRadio.setContentAreaFilled(false);
+        pencilRadio.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                pencilRadioActionPerformed(evt);
+            }
+        });
+
+        brushRadio.setBackground(new java.awt.Color(230, 226, 235));
+        brushRadio.setText("Brush");
+        brushRadio.setContentAreaFilled(false);
+        brushRadio.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                brushRadioActionPerformed(evt);
+            }
+        });
+
+        bucketRadio.setBackground(new java.awt.Color(230, 226, 235));
+        bucketRadio.setText("Paint Bucket");
+        bucketRadio.setContentAreaFilled(false);
+        bucketRadio.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                bucketRadioActionPerformed(evt);
+            }
+        });
+
+        dragSpriteRadio.setBackground(new java.awt.Color(230, 226, 235));
+        dragSpriteRadio.setText("Drag Sprite");
+        dragSpriteRadio.setContentAreaFilled(false);
+        dragSpriteRadio.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                dragSpriteRadioActionPerformed(evt);
+            }
+        });
+
+        dragImageRadio.setBackground(new java.awt.Color(230, 226, 235));
+        dragImageRadio.setText("Drag Image");
+        dragImageRadio.setContentAreaFilled(false);
+        dragImageRadio.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                dragImageRadioActionPerformed(evt);
+            }
+        });
+
+        noneRadio.setBackground(new java.awt.Color(230, 226, 235));
+        noneRadio.setSelected(true);
+        noneRadio.setText("None");
+        noneRadio.setContentAreaFilled(false);
+        noneRadio.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                noneRadioActionPerformed(evt);
+            }
+        });
+
+        javax.swing.GroupLayout toolsPanelLayout = new javax.swing.GroupLayout(toolsPanel);
+        toolsPanel.setLayout(toolsPanelLayout);
+        toolsPanelLayout.setHorizontalGroup(
+            toolsPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGroup(toolsPanelLayout.createSequentialGroup()
+                .addContainerGap()
+                .addGroup(toolsPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addComponent(pencilRadio)
+                    .addComponent(brushRadio)
+                    .addComponent(bucketRadio))
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                .addGroup(toolsPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addGroup(toolsPanelLayout.createSequentialGroup()
+                        .addGap(2, 2, 2)
+                        .addComponent(dragSpriteRadio))
+                    .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, toolsPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
+                        .addComponent(dragImageRadio, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                        .addComponent(noneRadio, javax.swing.GroupLayout.PREFERRED_SIZE, 81, javax.swing.GroupLayout.PREFERRED_SIZE))))
+        );
+        toolsPanelLayout.setVerticalGroup(
+            toolsPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGroup(toolsPanelLayout.createSequentialGroup()
+                .addGroup(toolsPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                    .addComponent(pencilRadio)
+                    .addComponent(dragSpriteRadio))
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addGroup(toolsPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                    .addComponent(brushRadio)
+                    .addComponent(dragImageRadio))
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                .addGroup(toolsPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                    .addComponent(bucketRadio)
+                    .addComponent(noneRadio)))
+        );
+
+        overridePanel.setBackground(new java.awt.Color(240, 233, 221));
+        overridePanel.setBorder(javax.swing.BorderFactory.createTitledBorder(null, "Override Art", javax.swing.border.TitledBorder.DEFAULT_JUSTIFICATION, javax.swing.border.TitledBorder.DEFAULT_POSITION, new java.awt.Font("Tahoma", 0, 14))); // NOI18N
+
+        softReplaceButton.setText("Replace from Image");
+        softReplaceButton.setFocusable(false);
+        softReplaceButton.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                softReplaceButtonActionPerformed(evt);
+            }
+        });
+
+        jLabel2.setText("Replace art using same tiles");
+
+        javax.swing.GroupLayout overridePanelLayout = new javax.swing.GroupLayout(overridePanel);
+        overridePanel.setLayout(overridePanelLayout);
+        overridePanelLayout.setHorizontalGroup(
+            overridePanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGroup(overridePanelLayout.createSequentialGroup()
+                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                .addGroup(overridePanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, overridePanelLayout.createSequentialGroup()
+                        .addComponent(softReplaceButton)
+                        .addGap(18, 18, 18))
+                    .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, overridePanelLayout.createSequentialGroup()
+                        .addComponent(jLabel2)
+                        .addContainerGap())))
+        );
+        overridePanelLayout.setVerticalGroup(
+            overridePanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, overridePanelLayout.createSequentialGroup()
+                .addGap(19, 19, 19)
+                .addComponent(jLabel2)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 27, Short.MAX_VALUE)
+                .addComponent(softReplaceButton))
+        );
+
+        generatePanel.setBackground(new java.awt.Color(240, 221, 221));
+        generatePanel.setBorder(javax.swing.BorderFactory.createTitledBorder(null, "Generate Sprite", javax.swing.border.TitledBorder.DEFAULT_JUSTIFICATION, javax.swing.border.TitledBorder.DEFAULT_POSITION, new java.awt.Font("Tahoma", 0, 14))); // NOI18N
+
+        hardReplaceButton.setText("Generate From Image");
+        hardReplaceButton.setFocusable(false);
+        hardReplaceButton.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                hardReplaceButtonActionPerformed(evt);
+            }
+        });
+
+        jLabel13.setFont(new java.awt.Font("Tahoma", 0, 14)); // NOI18N
+        jLabel13.setHorizontalAlignment(javax.swing.SwingConstants.RIGHT);
+        jLabel13.setText("Address:");
+
+        genAddressField.setFont(new java.awt.Font("Courier New", 0, 14)); // NOI18N
+        genAddressField.setHorizontalAlignment(javax.swing.JTextField.RIGHT);
+        genAddressField.setText("200");
+
+        jLabel14.setFont(new java.awt.Font("Tahoma", 0, 14)); // NOI18N
+        jLabel14.setHorizontalAlignment(javax.swing.SwingConstants.RIGHT);
+        jLabel14.setText("Palette Line:");
+
+        genPaletteField.setFont(new java.awt.Font("Courier New", 0, 14)); // NOI18N
+        genPaletteField.setHorizontalAlignment(javax.swing.JTextField.RIGHT);
+        genPaletteField.setText("0");
+
+        javax.swing.GroupLayout generatePanelLayout = new javax.swing.GroupLayout(generatePanel);
+        generatePanel.setLayout(generatePanelLayout);
+        generatePanelLayout.setHorizontalGroup(
+            generatePanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGroup(generatePanelLayout.createSequentialGroup()
+                .addGroup(generatePanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addGroup(generatePanelLayout.createSequentialGroup()
+                        .addGap(18, 18, 18)
+                        .addGroup(generatePanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
+                            .addGroup(generatePanelLayout.createSequentialGroup()
+                                .addComponent(jLabel13, javax.swing.GroupLayout.PREFERRED_SIZE, 61, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                                .addComponent(genAddressField))
+                            .addGroup(generatePanelLayout.createSequentialGroup()
+                                .addComponent(jLabel14, javax.swing.GroupLayout.PREFERRED_SIZE, 79, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                .addGap(18, 18, 18)
+                                .addComponent(genPaletteField, javax.swing.GroupLayout.PREFERRED_SIZE, 24, javax.swing.GroupLayout.PREFERRED_SIZE))))
+                    .addGroup(generatePanelLayout.createSequentialGroup()
+                        .addContainerGap()
+                        .addComponent(hardReplaceButton)))
+                .addGap(0, 25, Short.MAX_VALUE))
+        );
+        generatePanelLayout.setVerticalGroup(
+            generatePanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, generatePanelLayout.createSequentialGroup()
+                .addGroup(generatePanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                    .addComponent(jLabel13)
+                    .addComponent(genAddressField, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                .addGroup(generatePanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addComponent(jLabel14, javax.swing.GroupLayout.Alignment.TRAILING)
+                    .addComponent(genPaletteField, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addComponent(hardReplaceButton))
+        );
+
+        javax.swing.GroupLayout mainPanelLayout = new javax.swing.GroupLayout(mainPanel);
+        mainPanel.setLayout(mainPanelLayout);
+        mainPanelLayout.setHorizontalGroup(
+            mainPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGroup(mainPanelLayout.createSequentialGroup()
+                .addGroup(mainPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
+                    .addGroup(mainPanelLayout.createSequentialGroup()
+                        .addGroup(mainPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                            .addComponent(characterPanel1, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                            .addComponent(overridePanel, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                        .addGroup(mainPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                            .addComponent(toolsPanel, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                            .addComponent(generatePanel, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)))
+                    .addComponent(characterPanel, javax.swing.GroupLayout.PREFERRED_SIZE, 376, javax.swing.GroupLayout.PREFERRED_SIZE))
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addComponent(previewPanel, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+        );
+        mainPanelLayout.setVerticalGroup(
+            mainPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGroup(mainPanelLayout.createSequentialGroup()
+                .addComponent(characterPanel, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addGroup(mainPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addComponent(characterPanel1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(toolsPanel, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addGroup(mainPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addComponent(overridePanel, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(generatePanel, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)))
+            .addComponent(previewPanel, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+        );
+
+        jMenu1.setText("File");
+
+        openRomMenu.setAccelerator(javax.swing.KeyStroke.getKeyStroke(java.awt.event.KeyEvent.VK_R, java.awt.event.InputEvent.CTRL_MASK));
+        openRomMenu.setText("Open Rom");
+        openRomMenu.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                openRomMenuActionPerformed(evt);
+            }
+        });
+        jMenu1.add(openRomMenu);
+
+        jMenuItem4.setText("Open with Specific Guide");
+        jMenuItem4.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                jMenuItem4ActionPerformed(evt);
+            }
+        });
+        jMenu1.add(jMenuItem4);
+
+        closeMenu.setText("Close");
+        closeMenu.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                closeMenuActionPerformed(evt);
+            }
+        });
+        jMenu1.add(closeMenu);
+        jMenu1.add(jSeparator2);
+
+        inportMenu.setText("Inport Character...");
+
+        jMenuItem1.setText("Replace from Spritesheet");
+        jMenuItem1.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                jMenuItem1ActionPerformed(evt);
+            }
+        });
+        inportMenu.add(jMenuItem1);
+
+        jMenuItem2.setText("Generate from Spritesheet");
+        jMenuItem2.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                jMenuItem2ActionPerformed(evt);
+            }
+        });
+        inportMenu.add(jMenuItem2);
+        inportMenu.add(jSeparator5);
+
+        jMenuItem3.setText("Import from other ROM");
+        jMenuItem3.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                jMenuItem3ActionPerformed(evt);
+            }
+        });
+        inportMenu.add(jMenuItem3);
+
+        jMenu1.add(inportMenu);
+
+        exportMenu.setText("Export Character...");
+
+        spriteSheetMenu1.setText("Individual Frames");
+        spriteSheetMenu1.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                spriteSheetMenu1ActionPerformed(evt);
+            }
+        });
+        exportMenu.add(spriteSheetMenu1);
+
+        spriteSheetMenu.setText("Spritesheet");
+        spriteSheetMenu.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                spriteSheetMenuActionPerformed(evt);
+            }
+        });
+        exportMenu.add(spriteSheetMenu);
+
+        jMenu1.add(exportMenu);
+        jMenu1.add(jSeparator1);
+
+        jMenuItem5.setAccelerator(javax.swing.KeyStroke.getKeyStroke(java.awt.event.KeyEvent.VK_F4, java.awt.event.InputEvent.ALT_MASK));
+        jMenuItem5.setText("Exit");
+        jMenuItem5.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                jMenuItem5ActionPerformed(evt);
+            }
+        });
+        jMenu1.add(jMenuItem5);
+
+        jMenuBar1.add(jMenu1);
+
+        jMenu2.setText("Edit");
+
+        jMenu6.setText("Tool");
+
+        pencilMenu.setAccelerator(javax.swing.KeyStroke.getKeyStroke(java.awt.event.KeyEvent.VK_1, java.awt.event.InputEvent.ALT_MASK));
+        pencilMenu.setText("Pencil");
+        pencilMenu.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                pencilMenuActionPerformed(evt);
+            }
+        });
+        jMenu6.add(pencilMenu);
+
+        brushMenu.setAccelerator(javax.swing.KeyStroke.getKeyStroke(java.awt.event.KeyEvent.VK_2, java.awt.event.InputEvent.ALT_MASK));
+        brushMenu.setText("Brush");
+        brushMenu.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                brushMenuActionPerformed(evt);
+            }
+        });
+        jMenu6.add(brushMenu);
+
+        bucketMenu.setAccelerator(javax.swing.KeyStroke.getKeyStroke(java.awt.event.KeyEvent.VK_3, java.awt.event.InputEvent.ALT_MASK));
+        bucketMenu.setText("Paint Bucket");
+        bucketMenu.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                bucketMenuActionPerformed(evt);
+            }
+        });
+        jMenu6.add(bucketMenu);
+
+        dragSpriteMenu.setAccelerator(javax.swing.KeyStroke.getKeyStroke(java.awt.event.KeyEvent.VK_4, java.awt.event.InputEvent.ALT_MASK));
+        dragSpriteMenu.setText("Drag Sprite");
+        dragSpriteMenu.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                dragSpriteMenuActionPerformed(evt);
+            }
+        });
+        jMenu6.add(dragSpriteMenu);
+
+        dragImageMenu.setAccelerator(javax.swing.KeyStroke.getKeyStroke(java.awt.event.KeyEvent.VK_5, java.awt.event.InputEvent.ALT_MASK));
+        dragImageMenu.setText("Drag Image");
+        dragImageMenu.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                dragImageMenuActionPerformed(evt);
+            }
+        });
+        jMenu6.add(dragImageMenu);
+
+        noneMenu.setAccelerator(javax.swing.KeyStroke.getKeyStroke(java.awt.event.KeyEvent.VK_6, java.awt.event.InputEvent.ALT_MASK));
+        noneMenu.setSelected(true);
+        noneMenu.setText("None");
+        noneMenu.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                noneMenuActionPerformed(evt);
+            }
+        });
+        jMenu6.add(noneMenu);
+
+        jMenu2.add(jMenu6);
+
+        jMenu5.setText("Brush Size");
+
+        sizeRadioMenu1.setAccelerator(javax.swing.KeyStroke.getKeyStroke(java.awt.event.KeyEvent.VK_1, java.awt.event.InputEvent.SHIFT_MASK));
+        sizeRadioMenu1.setSelected(true);
+        sizeRadioMenu1.setText("3 pixels");
+        sizeRadioMenu1.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                sizeRadioMenu1ActionPerformed(evt);
+            }
+        });
+        jMenu5.add(sizeRadioMenu1);
+
+        sizeRadioMenu2.setAccelerator(javax.swing.KeyStroke.getKeyStroke(java.awt.event.KeyEvent.VK_2, java.awt.event.InputEvent.SHIFT_MASK));
+        sizeRadioMenu2.setText("5 pixels");
+        sizeRadioMenu2.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                sizeRadioMenu2ActionPerformed(evt);
+            }
+        });
+        jMenu5.add(sizeRadioMenu2);
+
+        sizeRadioMenu3.setAccelerator(javax.swing.KeyStroke.getKeyStroke(java.awt.event.KeyEvent.VK_3, java.awt.event.InputEvent.SHIFT_MASK));
+        sizeRadioMenu3.setText("10 pixels");
+        sizeRadioMenu3.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                sizeRadioMenu3ActionPerformed(evt);
+            }
+        });
+        jMenu5.add(sizeRadioMenu3);
+
+        jMenu2.add(jMenu5);
+
+        jMenu4.setText("Scale");
+
+        jMenuItem11.setAccelerator(javax.swing.KeyStroke.getKeyStroke(java.awt.event.KeyEvent.VK_1, java.awt.event.InputEvent.CTRL_MASK));
+        jMenuItem11.setText("Reset Scale");
+        jMenuItem11.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                jMenuItem11ActionPerformed(evt);
+            }
+        });
+        jMenu4.add(jMenuItem11);
+
+        jMenuItem7.setAccelerator(javax.swing.KeyStroke.getKeyStroke(java.awt.event.KeyEvent.VK_2, java.awt.event.InputEvent.CTRL_MASK));
+        jMenuItem7.setText("2x Scale");
+        jMenuItem7.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                jMenuItem7ActionPerformed(evt);
+            }
+        });
+        jMenu4.add(jMenuItem7);
+
+        jMenuItem9.setAccelerator(javax.swing.KeyStroke.getKeyStroke(java.awt.event.KeyEvent.VK_3, java.awt.event.InputEvent.CTRL_MASK));
+        jMenuItem9.setText("6x Scale");
+        jMenuItem9.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                jMenuItem9ActionPerformed(evt);
+            }
+        });
+        jMenu4.add(jMenuItem9);
+
+        jMenuItem10.setAccelerator(javax.swing.KeyStroke.getKeyStroke(java.awt.event.KeyEvent.VK_4, java.awt.event.InputEvent.CTRL_MASK));
+        jMenuItem10.setText("12x Scale");
+        jMenuItem10.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                jMenuItem10ActionPerformed(evt);
+            }
+        });
+        jMenu4.add(jMenuItem10);
+
+        jMenu2.add(jMenu4);
+
+        hexIdsMenu.setText("See IDs as Hex");
+        hexIdsMenu.setEnabled(false);
+        hexIdsMenu.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                hexIdsMenuActionPerformed(evt);
+            }
+        });
+        jMenu2.add(hexIdsMenu);
+        jMenu2.add(jSeparator3);
+
+        resizeAnimsMenu.setText("Resize Animations");
+        resizeAnimsMenu.setEnabled(false);
+        resizeAnimsMenu.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                resizeAnimsMenuActionPerformed(evt);
+            }
+        });
+        jMenu2.add(resizeAnimsMenu);
+
+        nameMenu.setText("Properties");
+        nameMenu.setEnabled(false);
+        nameMenu.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                nameMenuActionPerformed(evt);
+            }
+        });
+        jMenu2.add(nameMenu);
+        jMenu2.add(jSeparator4);
+
+        copyMenu.setAccelerator(javax.swing.KeyStroke.getKeyStroke(java.awt.event.KeyEvent.VK_F5, 0));
+        copyMenu.setText("Copy Frame");
+        copyMenu.setEnabled(false);
+        copyMenu.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                copyMenuActionPerformed(evt);
+            }
+        });
+        jMenu2.add(copyMenu);
+
+        pasteMenu.setAccelerator(javax.swing.KeyStroke.getKeyStroke(java.awt.event.KeyEvent.VK_F6, 0));
+        pasteMenu.setText("Paste Frame");
+        pasteMenu.setEnabled(false);
+        pasteMenu.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                pasteMenuActionPerformed(evt);
+            }
+        });
+        jMenu2.add(pasteMenu);
+        jMenu2.add(jSeparator6);
+
+        pasteMenu1.setText("Decompress Art");
+        pasteMenu1.setEnabled(false);
+        pasteMenu1.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                pasteMenu1ActionPerformed(evt);
+            }
+        });
+        jMenu2.add(pasteMenu1);
+
+        jMenuBar1.add(jMenu2);
+
+        jMenu3.setText("Help");
+
+        jMenuItem6.setText("About");
+        jMenuItem6.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                jMenuItem6ActionPerformed(evt);
+            }
+        });
+        jMenu3.add(jMenuItem6);
+
+        jMenuBar1.add(jMenu3);
+
+        setJMenuBar(jMenuBar1);
+
+        javax.swing.GroupLayout layout = new javax.swing.GroupLayout(getContentPane());
+        getContentPane().setLayout(layout);
+        layout.setHorizontalGroup(
+            layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addComponent(mainPanel, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+        );
+        layout.setVerticalGroup(
+            layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addComponent(mainPanel, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+        );
+
+        pack();
     }// </editor-fold>//GEN-END:initComponents
 
     private void colorPanel2MousePressed(MouseEvent evt) {//GEN-FIRST:event_colorPanel2MousePressed
@@ -2944,7 +3424,7 @@ TheListener {
     }//GEN-LAST:event_behindCheckActionPerformed
 
     private void jMenuItem6ActionPerformed(ActionEvent evt) {//GEN-FIRST:event_jMenuItem6ActionPerformed
-        JOptionPane.showMessageDialog(this, "Pancake 2 v1.6b\n\u00a9 Gil Costa 2012\n\nAcknowledgment on derived work\nwould be appreciated but is not required\n\nPk2 is free software. The author can not be held responsible\nfor any illicit use of this program.\n", "About", 1);
+        JOptionPane.showMessageDialog(this, "Pancake 2 v1.7\n\u00a9 gsaurus 2012-2018\n\nAcknowledgment on derived work\nwould be appreciated but is not required\n\nPk2 is free software. The author can not be held responsible\nfor any illicit use of this program.\n", "About", 1);
     }//GEN-LAST:event_jMenuItem6ActionPerformed
 
     private void spriteSheetMenuActionPerformed(ActionEvent evt) {//GEN-FIRST:event_spriteSheetMenuActionPerformed
@@ -3264,11 +3744,66 @@ TheListener {
         JOptionPane.showMessageDialog(this, "Character sucessfully imported", "Done!", 1);
     }//GEN-LAST:event_jMenuItem3ActionPerformed
 
-    private void hexIdsMenuActionPerformed(ActionEvent evt) {//GEN-FIRST:event_hexIdsMenuActionPerformed
+    private void hexIdsMenuActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_hexIdsMenuActionPerformed
         this.setupCharacterCombo();
         this.setupAnimationCombo();
     }//GEN-LAST:event_hexIdsMenuActionPerformed
 
+    
+    private void speedMenuActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_speedMenuActionPerformed
+        int charId = manager.getCurrentCharacterId();
+        int currSpeed = 0;
+        try{
+            currSpeed = manager.readSpeed();
+        }catch(IOException e){
+            showError("Unable to read character speed");
+            return;
+        }
+        String charName = guide.getCharName(guide.getFakeCharId(charId));
+        JTextField speedField = new JTextField();
+        speedField.setText(currSpeed + "");
+        final JComponent[] inputs = new JComponent[]{
+            new JLabel("Set " + charName + " walking speed"),
+            speedField
+        };
+        int res = JOptionPane.showConfirmDialog(null, inputs, "Speed modifier", JOptionPane.OK_CANCEL_OPTION);
+        if (res == JOptionPane.OK_OPTION){
+            int newSpeed = getIntFromField(speedField);
+            try{
+                manager.writeSpeed(newSpeed);
+            }catch(IOException e){
+                showError("Unable to write character speed");
+                return;
+            }
+        }
+    }//GEN-LAST:event_speedMenuActionPerformed
+    
+    
+    private void portraitMenuActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_portraitMenuActionPerformed
+        int returnVal = imageChooser.showOpenDialog(this);        
+        if (returnVal == JFileChooser.APPROVE_OPTION) {
+            File file = imageChooser.getSelectedFile();
+            BufferedImage img;
+            try {
+                img = ImageIO.read(file);                
+                img = processReplaceImg(img, false);                
+            } catch (IOException ex) {
+                showError("Unable to read image file: " + file.getName());
+                return;
+            }
+            if (img.getWidth() < 16 || img.getHeight() < 16){
+                showError("Image too small");
+                return;
+            }
+            try {
+                manager.writePortrait(img);
+            } catch (IOException ex) {
+                showError("Unable to save portrait");
+            }
+        }
+    }//GEN-LAST:event_portraitMenuActionPerformed
+    
+    
     private void setSizeRadioMenusOff() {
         this.sizeRadioMenu1.setSelected(false);
         this.sizeRadioMenu2.setSelected(false);
@@ -4089,7 +4624,6 @@ TheListener {
                         processed.add(anim);
                         int animSize = anim.getNumFrames();
                         for (int j = 0; j < animSize; ++j) {
-                            long newAddress;
                             anim.setSpritesModified(j, true);
                             long mapAddress = anim.getFrame((int)j).mapAddress;
                             if (maps.containsKey(mapAddress)) {
@@ -4105,7 +4639,7 @@ TheListener {
                             if (Gui.this.imagePanel.isFacedRight()) {
                                 img = ImagePanel.flipImage(img);
                             }
-                            if ((newAddress = Gui.this.replaceSprite(img, i, j, cx, cy)) == Long.MIN_VALUE) {
+                            if (Gui.this.replaceSprite(img, i, j, cx, cy) == Long.MIN_VALUE) {
                                 this.finish();
                                 Gui.this.showError("Unable to replace sprites");
                                 return;

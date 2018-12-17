@@ -59,6 +59,16 @@
                     <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="jMenuItem2ActionPerformed"/>
                   </Events>
                 </MenuItem>
+                <MenuItem class="javax.swing.JPopupMenu$Separator" name="jSeparator5">
+                </MenuItem>
+                <MenuItem class="javax.swing.JMenuItem" name="jMenuItem3">
+                  <Properties>
+                    <Property name="text" type="java.lang.String" value="Import from other ROM"/>
+                  </Properties>
+                  <Events>
+                    <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="jMenuItem3ActionPerformed"/>
+                  </Events>
+                </MenuItem>
               </SubComponents>
             </Menu>
             <Menu class="javax.swing.JMenu" name="exportMenu">
@@ -270,6 +280,15 @@
                 </MenuItem>
               </SubComponents>
             </Menu>
+            <MenuItem class="javax.swing.JCheckBoxMenuItem" name="hexIdsMenu">
+              <Properties>
+                <Property name="text" type="java.lang.String" value="See IDs as Hex"/>
+                <Property name="enabled" type="boolean" value="false"/>
+              </Properties>
+              <Events>
+                <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="hexIdsMenuActionPerformed"/>
+              </Events>
+            </MenuItem>
             <MenuItem class="javax.swing.JPopupMenu$Separator" name="jSeparator3">
             </MenuItem>
             <MenuItem class="javax.swing.JMenuItem" name="resizeAnimsMenu">
@@ -283,29 +302,11 @@
             </MenuItem>
             <MenuItem class="javax.swing.JMenuItem" name="nameMenu">
               <Properties>
-                <Property name="text" type="java.lang.String" value="Name"/>
+                <Property name="text" type="java.lang.String" value="Properties"/>
                 <Property name="enabled" type="boolean" value="false"/>
               </Properties>
               <Events>
                 <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="nameMenuActionPerformed"/>
-              </Events>
-            </MenuItem>
-            <MenuItem class="javax.swing.JMenuItem" name="speedMenu">
-              <Properties>
-                <Property name="text" type="java.lang.String" value="Speed"/>
-                <Property name="enabled" type="boolean" value="false"/>
-              </Properties>
-              <Events>
-                <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="speedMenuActionPerformed"/>
-              </Events>
-            </MenuItem>
-            <MenuItem class="javax.swing.JMenuItem" name="portraitMenu">
-              <Properties>
-                <Property name="text" type="java.lang.String" value="Mini-Portrait"/>
-                <Property name="enabled" type="boolean" value="false"/>
-              </Properties>
-              <Events>
-                <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="portraitMenuActionPerformed"/>
               </Events>
             </MenuItem>
             <MenuItem class="javax.swing.JPopupMenu$Separator" name="jSeparator4">
@@ -332,6 +333,17 @@
               </Properties>
               <Events>
                 <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="pasteMenuActionPerformed"/>
+              </Events>
+            </MenuItem>
+            <MenuItem class="javax.swing.JPopupMenu$Separator" name="jSeparator6">
+            </MenuItem>
+            <MenuItem class="javax.swing.JMenuItem" name="pasteMenu1">
+              <Properties>
+                <Property name="text" type="java.lang.String" value="Decompress Art"/>
+                <Property name="enabled" type="boolean" value="false"/>
+              </Properties>
+              <Events>
+                <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="pasteMenu1ActionPerformed"/>
               </Events>
             </MenuItem>
           </SubComponents>
@@ -604,7 +616,6 @@
                       <Border info="org.netbeans.modules.form.compat2.border.TitledBorderInfo">
                         <TitledBorder title="Frame #">
                           <Font PropertyName="font" name="Tahoma" size="14" style="0"/>
-                          <Color PropertyName="color" blue="0" green="0" red="0" type="rgb"/>
                         </TitledBorder>
                       </Border>
                     </Property>
@@ -703,9 +714,7 @@
                         </Property>
                         <Property name="border" type="javax.swing.border.Border" editor="org.netbeans.modules.form.editors2.BorderEditor">
                           <Border info="org.netbeans.modules.form.compat2.border.TitledBorderInfo">
-                            <TitledBorder title="Hit">
-                              <Color PropertyName="color" blue="0" green="0" red="0" type="rgb"/>
-                            </TitledBorder>
+                            <TitledBorder title="Hit"/>
                           </Border>
                         </Property>
                       </Properties>
@@ -935,9 +944,7 @@
                         </Property>
                         <Property name="border" type="javax.swing.border.Border" editor="org.netbeans.modules.form.editors2.BorderEditor">
                           <Border info="org.netbeans.modules.form.compat2.border.TitledBorderInfo">
-                            <TitledBorder title="Weapon Point">
-                              <Color PropertyName="color" blue="0" green="0" red="0" type="rgb"/>
-                            </TitledBorder>
+                            <TitledBorder title="Weapon Point"/>
                           </Border>
                         </Property>
                       </Properties>
@@ -1085,7 +1092,7 @@
               <Group type="103" groupAlignment="0" attributes="0">
                   <Component id="playerPanel" alignment="1" max="32767" attributes="0"/>
                   <Component id="scrollPanel" alignment="1" max="32767" attributes="0"/>
-                  <Component id="colorsPanel1" alignment="0" pref="333" max="32767" attributes="0"/>
+                  <Component id="colorsPanel1" alignment="0" pref="429" max="32767" attributes="0"/>
               </Group>
             </DimensionLayout>
             <DimensionLayout dim="1">
@@ -1211,9 +1218,7 @@
               <Properties>
                 <Property name="border" type="javax.swing.border.Border" editor="org.netbeans.modules.form.editors2.BorderEditor">
                   <Border info="org.netbeans.modules.form.compat2.border.TitledBorderInfo">
-                    <TitledBorder title="Palette">
-                      <Color PropertyName="color" blue="0" green="0" red="0" type="rgb"/>
-                    </TitledBorder>
+                    <TitledBorder title="Palette"/>
                   </Border>
                 </Property>
                 <Property name="preferredSize" type="java.awt.Dimension" editor="org.netbeans.beaninfo.editors.DimensionEditor">
@@ -1227,43 +1232,43 @@
                       <Group type="102" alignment="1" attributes="0">
                           <EmptySpace min="-2" pref="0" max="-2" attributes="0"/>
                           <Group type="103" groupAlignment="0" attributes="0">
-                              <Component id="colorPanel1" pref="33" max="32767" attributes="0"/>
-                              <Component id="colorPanel9" pref="33" max="32767" attributes="0"/>
+                              <Component id="colorPanel1" pref="45" max="32767" attributes="0"/>
+                              <Component id="colorPanel9" pref="45" max="32767" attributes="0"/>
                           </Group>
                           <EmptySpace min="-2" max="-2" attributes="0"/>
                           <Group type="103" groupAlignment="0" attributes="0">
-                              <Component id="colorPanel2" pref="33" max="32767" attributes="0"/>
-                              <Component id="colorPanel10" pref="33" max="32767" attributes="0"/>
+                              <Component id="colorPanel2" pref="45" max="32767" attributes="0"/>
+                              <Component id="colorPanel10" pref="45" max="32767" attributes="0"/>
                           </Group>
                           <EmptySpace min="-2" max="-2" attributes="0"/>
                           <Group type="103" groupAlignment="0" attributes="0">
-                              <Component id="colorPanel3" pref="37" max="32767" attributes="0"/>
-                              <Component id="colorPanel11" pref="37" max="32767" attributes="0"/>
+                              <Component id="colorPanel3" pref="49" max="32767" attributes="0"/>
+                              <Component id="colorPanel11" pref="49" max="32767" attributes="0"/>
                           </Group>
                           <EmptySpace min="-2" max="-2" attributes="0"/>
                           <Group type="103" groupAlignment="0" attributes="0">
-                              <Component id="colorPanel4" pref="35" max="32767" attributes="0"/>
-                              <Component id="colorPanel12" pref="35" max="32767" attributes="0"/>
+                              <Component id="colorPanel4" pref="47" max="32767" attributes="0"/>
+                              <Component id="colorPanel12" pref="47" max="32767" attributes="0"/>
                           </Group>
                           <EmptySpace min="-2" max="-2" attributes="0"/>
                           <Group type="103" groupAlignment="0" attributes="0">
-                              <Component id="colorPanel5" pref="37" max="32767" attributes="0"/>
-                              <Component id="colorPanel13" pref="37" max="32767" attributes="0"/>
+                              <Component id="colorPanel5" pref="49" max="32767" attributes="0"/>
+                              <Component id="colorPanel13" pref="49" max="32767" attributes="0"/>
                           </Group>
                           <EmptySpace min="-2" max="-2" attributes="0"/>
                           <Group type="103" groupAlignment="0" attributes="0">
-                              <Component id="colorPanel6" pref="35" max="32767" attributes="0"/>
-                              <Component id="colorPanel14" pref="35" max="32767" attributes="0"/>
+                              <Component id="colorPanel6" pref="47" max="32767" attributes="0"/>
+                              <Component id="colorPanel14" pref="47" max="32767" attributes="0"/>
                           </Group>
                           <EmptySpace min="-2" max="-2" attributes="0"/>
                           <Group type="103" groupAlignment="0" attributes="0">
-                              <Component id="colorPanel7" pref="35" max="32767" attributes="0"/>
-                              <Component id="colorPanel15" pref="35" max="32767" attributes="0"/>
+                              <Component id="colorPanel7" pref="47" max="32767" attributes="0"/>
+                              <Component id="colorPanel15" pref="47" max="32767" attributes="0"/>
                           </Group>
                           <EmptySpace min="-2" max="-2" attributes="0"/>
                           <Group type="103" groupAlignment="0" attributes="0">
-                              <Component id="colorPanel8" pref="34" max="32767" attributes="0"/>
-                              <Component id="colorPanel16" pref="34" max="32767" attributes="0"/>
+                              <Component id="colorPanel8" pref="46" max="32767" attributes="0"/>
+                              <Component id="colorPanel16" pref="46" max="32767" attributes="0"/>
                           </Group>
                       </Group>
                   </Group>
@@ -1281,7 +1286,7 @@
                               <Component id="colorPanel8" alignment="0" min="-2" max="-2" attributes="0"/>
                               <Component id="colorPanel1" min="-2" max="-2" attributes="0"/>
                           </Group>
-                          <EmptySpace pref="13" max="32767" attributes="0"/>
+                          <EmptySpace pref="12" max="32767" attributes="0"/>
                           <Group type="103" groupAlignment="0" attributes="0">
                               <Component id="colorPanel10" alignment="1" min="-2" max="-2" attributes="0"/>
                               <Component id="colorPanel11" alignment="1" min="-2" max="-2" attributes="0"/>
@@ -1774,7 +1779,6 @@
               <Border info="org.netbeans.modules.form.compat2.border.TitledBorderInfo">
                 <TitledBorder title="View">
                   <Font PropertyName="font" name="Tahoma" size="14" style="0"/>
-                  <Color PropertyName="color" blue="0" green="0" red="0" type="rgb"/>
                 </TitledBorder>
               </Border>
             </Property>
@@ -1812,7 +1816,7 @@
                           <Component id="showTileCheck" alignment="3" min="-2" max="-2" attributes="0"/>
                           <Component id="showHitsCheck" alignment="3" min="-2" max="-2" attributes="0"/>
                       </Group>
-                      <EmptySpace pref="3" max="32767" attributes="0"/>
+                      <EmptySpace max="32767" attributes="0"/>
                       <Group type="103" groupAlignment="3" attributes="0">
                           <Component id="weaponCombo" alignment="3" min="-2" max="-2" attributes="0"/>
                           <Component id="showWeaponCheck" alignment="3" min="-2" max="-2" attributes="0"/>
@@ -1915,7 +1919,6 @@
               <Border info="org.netbeans.modules.form.compat2.border.TitledBorderInfo">
                 <TitledBorder title="Tools">
                   <Font PropertyName="font" name="Tahoma" size="14" style="0"/>
-                  <Color PropertyName="color" blue="0" green="0" red="0" type="rgb"/>
                 </TitledBorder>
               </Border>
             </Property>
@@ -2051,7 +2054,6 @@
               <Border info="org.netbeans.modules.form.compat2.border.TitledBorderInfo">
                 <TitledBorder title="Override Art">
                   <Font PropertyName="font" name="Tahoma" size="14" style="0"/>
-                  <Color PropertyName="color" blue="0" green="0" red="0" type="rgb"/>
                 </TitledBorder>
               </Border>
             </Property>
@@ -2112,7 +2114,6 @@
               <Border info="org.netbeans.modules.form.compat2.border.TitledBorderInfo">
                 <TitledBorder title="Generate Sprite">
                   <Font PropertyName="font" name="Tahoma" size="14" style="0"/>
-                  <Color PropertyName="color" blue="0" green="0" red="0" type="rgb"/>
                 </TitledBorder>
               </Border>
             </Property>
