@@ -10,7 +10,6 @@ import java.io.IOException;
 import java.io.RandomAccessFile;
 import lib.RandomDataStream;
 import lib.Renderable;
-import lib.map.Palette;
 
 public class Tile
 implements Renderable {
@@ -103,6 +102,12 @@ implements Renderable {
             rom.writeByte(p1 << 4 & 240 | p2 & 15);
         }
     }
+    
+    
+    public static long getSizeInBytes(){
+        return 32L;
+    }
+    
 
     public void write(RandomAccessFile rom, long address) throws IOException {
         rom.seek(address);

@@ -5,16 +5,12 @@ package lib.map;
 
 import java.awt.Color;
 import java.awt.Graphics2D;
-import java.awt.Image;
 import java.awt.image.BufferedImage;
-import java.awt.image.ImageObserver;
 import java.io.IOException;
 import java.io.RandomAccessFile;
 import java.util.TreeMap;
 import lib.RandomDataStream;
 import lib.Renderable;
-import lib.map.Palette;
-import lib.map.Tile;
 
 public class Piece
 implements Renderable {
@@ -116,6 +112,11 @@ implements Renderable {
             }
         }
     }
+    
+    public long getSizeInBytes(){
+        return this.width * this.getHeight() * Tile.getSizeInBytes();
+    }
+    
 
     public void write(RandomAccessFile rom, long address) throws IOException {
         for (int i = 0; i < this.tiles.length; ++i) {

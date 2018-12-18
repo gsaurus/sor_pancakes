@@ -8,12 +8,9 @@ import java.awt.image.BufferedImage;
 import java.io.File;
 import java.io.FileOutputStream;
 import java.io.IOException;
-import java.io.PrintStream;
 import java.util.ArrayList;
 import java.util.HashSet;
 import java.util.TreeMap;
-import lib.RandomDataStream;
-import lib.Rom;
 import lib.anim.AnimFrame;
 import lib.anim.Animation;
 import lib.anim.Character;
@@ -310,10 +307,10 @@ public class Manager {
                 for (int j = 0; j < anim.getNumFrames(); ++j) {
                     AnimFrame frame = anim.getFrame(j);
                     if (processed.contains(frame)) continue;
-                    processed.add(frame);
-                    long mapAddress = rom.length();
+                    processed.add(frame);                    
                     Sprite sprite = originalRom.readSprite(frame.mapAddress, frame.artAddress);
                     BufferedImage img = sprite.asImage(this.palette);
+                    long mapAddress = rom.length();
                     long artAddress = mapAddress + 6L + sprite.getNumPieces() * 6L;
                     frame.mapAddress = mapAddress;
                     frame.artAddress = artAddress;

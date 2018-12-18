@@ -5,20 +5,15 @@ package lib.map;
 
 import java.awt.Color;
 import java.awt.Graphics2D;
-import java.awt.Image;
 import java.awt.Rectangle;
 import java.awt.geom.AffineTransform;
 import java.awt.image.AffineTransformOp;
 import java.awt.image.BufferedImage;
-import java.awt.image.ImageObserver;
 import java.io.IOException;
 import java.io.RandomAccessFile;
 import java.util.ArrayList;
 import lib.RandomDataStream;
 import lib.Renderable;
-import lib.map.Palette;
-import lib.map.Piece;
-import lib.map.SpritePiece;
 
 public class Sprite
 implements Renderable {
@@ -232,6 +227,14 @@ implements Renderable {
             }
             tp.writeArt(rom, artAddress + (long)(p.spriteIndex * 32), tileImage, palette);
         }
+    }
+    
+    public long getMappingsSizeInBytes(){
+        return 6L + (long)pieces.size() * 6L;
+    }
+    
+    public long getArtSizeInBytes(){        
+        return numTiles * Tile.getSizeInBytes();
     }
 
     public long getNumPieces() {
