@@ -41,7 +41,7 @@ public class FreeAddressesManager {
         // Merge with existing chunks if possible
         for (FreeChunk chunk : freeChunks){
             long chunckFinalAddress = chunk.address + chunk.length;
-            if (chunk.address <= address && chunckFinalAddress >= address){
+            if (address >= chunk.address && address <= chunckFinalAddress){
                 // Add tail
                 long finalAddress = Math.max(chunckFinalAddress, addedChunkFinalAddress);
                 chunk.length = finalAddress - chunk.address;
@@ -59,25 +59,35 @@ public class FreeAddressesManager {
     }
     
     public static void consumeChunk(long address, long length){
-        long addedChunkFinalAddress = address + length;
+        long consummedChunkFinalAddress = address + length;
         // Consume existing chunks crossing the given chunk
+        List<FreeChunk> addedChunks = new ArrayList<FreeChunk>();
+        List<FreeChunk> removedChunks = new ArrayList<FreeChunk>();
         for (FreeChunk chunk : freeChunks){
             long chunckFinalAddress = chunk.address + chunk.length;
-            // TODO: this
-//            if (chunk.address >= address && )
-//            if (chunk.address <= address && chunk.address + chunk.length > address){
-//                // Remove tail
-//                chunk.length = address - chunk.address;
-//                if (chunk.length <= 0)
-//                return;
-//            }else if (address <= chunk.address && addedChunkFinalAddress > chunk.address){
-//                // Remove head
-//                long finalAddress = Math.max(chunk.address + chunk.length, addedChunkFinalAddress);
-//                chunk.address = address;                
-//                chunk.length = finalAddress - chunk.address;
-//                return;
-//            }
+            if (address <= chunk.address && consummedChunkFinalAddress > chunk.address && consummedChunkFinalAddress < chunckFinalAddress){
+                // Shrink left
+                chunk.address = consummedChunkFinalAddress;
+            }else if (address > chunk.address && address < chunckFinalAddress && consummedChunkFinalAddress >= chunckFinalAddress){
+                // Shrink right
+                chunk.length = address - chunk.address;
+            }else if (address <= chunk.address && consummedChunkFinalAddress >= chunckFinalAddress){
+                // Consume entire chunk
+                removedChunks.add(chunk);
+            }else if (address > chunk.address && consummedChunkFinalAddress < chunckFinalAddress){
+                // Split in two chuncks                
+                // Chunk one:
+                FreeChunk newChunk = new FreeChunk(chunk.address, address - chunk.address);
+                addedChunks.add(newChunk);
+                // Chunk two:
+                chunk.address = consummedChunkFinalAddress;
+                chunk.length = chunckFinalAddress - consummedChunkFinalAddress;
+            }            
         }
+        // Remove all removed chunks
+        freeChunks.removeAll(removedChunks);
+        // Add all added chunks (splits)
+        freeChunks.addAll(addedChunks);
     }
     
 }
