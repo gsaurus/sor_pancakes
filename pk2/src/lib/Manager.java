@@ -247,26 +247,26 @@ public class Manager {
         this.currCharacter.setSpritesModified(false);
     }
 
-    public void replaceCharacterFromManager(Manager manager) throws IOException {
+    public void replaceCharacterFromManager(Manager otherManager) throws IOException {
         Rom rom = new Rom(new File(this.romFileName));
         long romSize = rom.length();
         rom.close();
-        boolean newHits = this.currCharacter.getHitsSize() < manager.currCharacter.getHitsSize();
-        boolean newWeapons = this.currCharacter.getWeaponsSize() < manager.currCharacter.getWeaponsSize();
+        boolean newHits = this.currCharacter.getHitsSize() < otherManager.currCharacter.getHitsSize();
+        boolean newWeapons = this.currCharacter.getWeaponsSize() < otherManager.currCharacter.getWeaponsSize();
         boolean newAnimationScripts = newHits || newWeapons;
         int newType = this.currCharacter.getAnimation((int)0).getFrame((int)0).type;
         if (!newAnimationScripts) {
             for (int i = 0; i < this.currCharacter.getNumAnimations(); ++i) {
-                if (this.currCharacter.getAnimation(i).getMaxNumFrames() >= manager.currCharacter.getAnimation(i).getNumFrames()) continue;
+                if (this.currCharacter.getAnimation(i).getMaxNumFrames() >= otherManager.currCharacter.getAnimation(i).getNumFrames()) continue;
                 newAnimationScripts = true;
                 break;
             }
         }
-        this.currCharacter = manager.currCharacter;
+        this.currCharacter = otherManager.currCharacter;
         if (newAnimationScripts) {
             this.writeNewScripts(romSize, newHits, newWeapons);
         }
-        rom = new Rom(new File(manager.romFileName));
+        rom = new Rom(new File(otherManager.romFileName));
         try {
             this.importSprites(this.currCharacter, rom);
         }
@@ -277,53 +277,57 @@ public class Manager {
         rom.close();
         this.currCharacter.setModified(true);
         this.save();
-        String name = manager.readName();
+        String name = otherManager.readName();
         if (name.length() > this.namesSize) {
             name = name.substring(0, this.namesSize);
         }
         this.writeName(name);
-        int speed = manager.readSpeed();
+        int speed = otherManager.readSpeed();
         this.writeSpeed(speed);
-        BufferedImage icon = manager.readPortrait();
+        BufferedImage icon = otherManager.readPortrait();
         this.writePortrait(icon);
-        int val = manager.readPowerStats();
+        int val = otherManager.readPowerStats();
         this.writePowerStats(val);
-        val = manager.readTechniqueStats();
+        val = otherManager.readTechniqueStats();
         this.writeTechniqueStats(val);
-        val = manager.readSpeedStats();
+        val = otherManager.readSpeedStats();
         this.writeSpeedStats(val);
-        val = manager.readJumpStats();
+        val = otherManager.readJumpStats();
         this.writeJumpStats(val);
-        val = manager.readStaminaStats();
+        val = otherManager.readStaminaStats();
         this.writeStaminaStats(val);
     }
 
-    private void importSprites(Character character, Rom originalRom) throws IOException {
-        Rom rom = new Rom(new File(this.romFileName));
+    private void importSprites(Character otherCharacter, Rom otherRom) throws IOException {
+        Rom ourRom = new Rom(new File(this.romFileName));
         try {
             HashSet<AnimFrame> processed = new HashSet<AnimFrame>();
-            for (int i = 0; i < character.getNumAnimations(); ++i) {
-                Animation anim = character.getAnimation(i);
+            for (int i = 0; i < otherCharacter.getNumAnimations(); ++i) {
+                Animation anim = otherCharacter.getAnimation(i);
                 for (int j = 0; j < anim.getNumFrames(); ++j) {
                     AnimFrame frame = anim.getFrame(j);
                     if (processed.contains(frame)) continue;
-                    processed.add(frame);                    
-                    Sprite sprite = originalRom.readSprite(frame.mapAddress, frame.artAddress);
-                    BufferedImage img = sprite.asImage(this.palette);
-                    long mapAddress = rom.length();
-                    long artAddress = mapAddress + 6L + sprite.getNumPieces() * 6L;
+                    processed.add(frame);
+                    Sprite newSprite = otherRom.readSprite(frame.mapAddress, frame.artAddress);
+                    BufferedImage img = newSprite.asImage(this.palette);
+                    // Free space from ours
+//                    Sprite sprite = rom.readSprite(frame.mapAddress, frame.artAddress);
+//                    FreeAddressesManager.freeChunk(frame.mapAddress, sprite.getMappingsSizeInBytes());
+//                    FreeAddressesManager.freeChunk(frame.artAddress, sprite.getArtSizeInBytes());
+                    long mapAddress = FreeAddressesManager.useBestSuitedAddress(newSprite.getMappingsSizeInBytes(), romSize());
+                    ourRom.writeSpriteOnly(newSprite, mapAddress);
+                    long artAddress = FreeAddressesManager.useBestSuitedAddress(newSprite.getArtSizeInBytes(), romSize());
+                    ourRom.writeSpriteArt(newSprite, artAddress, img, this.palette);
                     frame.mapAddress = mapAddress;
-                    frame.artAddress = artAddress;
-                    rom.writeSpriteOnly(sprite, mapAddress);
-                    rom.writeSpriteArt(sprite, artAddress, img, this.palette);
+                    frame.artAddress = artAddress;                    
                 }
             }
         }
         catch (IOException e) {
-            rom.close();
+            ourRom.close();
             throw e;
         }
-        rom.close();
+        ourRom.close();
     }
 
     public Sprite readSprite(int animationId, int frameId) throws IOException {
