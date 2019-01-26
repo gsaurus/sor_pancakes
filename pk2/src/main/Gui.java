@@ -4285,17 +4285,17 @@ TheListener {
         }
     }
 
-    private long regenerateSprite(BufferedImage img, int animId, int frameId, int cx, int cy) {
+    private boolean regenerateSprite(BufferedImage img, int animId, int frameId, int cx, int cy) {
         int width = img.getWidth();
         int height = img.getHeight();
         AnimFrame frame = this.manager.getCharacter().getAnimFrame(animId, frameId);
         if (frame.type == 3) {
-            return frame.mapAddress;
+            return true;
         }        
         int paletteLine = this.getIntFromField(this.genPaletteField);
         if (paletteLine == Integer.MIN_VALUE || paletteLine < 0 || paletteLine > 3) {
             this.showError("Invalid palette line");
-            return Long.MIN_VALUE;
+            return false;
         }
         
         // Free space from original sprite
@@ -4305,6 +4305,7 @@ TheListener {
             FreeAddressesManager.freeChunk(frame.artAddress, originalSprite.getArtSizeInBytes());
         } catch (IOException ex) {
             // No freed space? It's ok I guess?
+            System.out.println("Failed to free some space in rom");
         }
         Sprite sprite = new Sprite();
         int numTiles = 0;
@@ -4348,7 +4349,7 @@ TheListener {
         catch (IOException ex) {
             ex.printStackTrace();
             this.showError("Unable to write sprite map");
-            return Long.MIN_VALUE;
+            return false;
         }
         frame.mapAddress = mapAddress;        
         long artAddress = FreeAddressesManager.useBestSuitedAddress(sprite.getArtSizeInBytes(), getRomSize());
@@ -4358,7 +4359,7 @@ TheListener {
         catch (IOException ex) {
             ex.printStackTrace();
             this.showError("Unable to write sprite map");
-            return Long.MIN_VALUE;
+            return false;
         }
         frame.artAddress = artAddress;
         BufferedImage extended = this.expandImage(img, cx, cy);
@@ -4370,9 +4371,9 @@ TheListener {
         catch (IOException e) {
             e.printStackTrace();
             this.showError("Unable to render the new sprite");
-            return Long.MIN_VALUE;
+            return false;
         }
-        return mapAddress;
+        return true;
     }
 
     @Override
@@ -4668,7 +4669,7 @@ TheListener {
                             if (Gui.this.imagePanel.isFacedRight()) {
                                 img = ImagePanel.flipImage(img);
                             }
-                            if (Gui.this.regenerateSprite(img, i, j, cx, cy) == Long.MIN_VALUE) {
+                            if (!regenerateSprite(img, i, j, cx, cy)) {
                                 this.finish();
                                 Gui.this.showError("Unable to replace sprites");
                                 return;
