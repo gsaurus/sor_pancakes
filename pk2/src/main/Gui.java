@@ -3816,7 +3816,7 @@ TheListener {
         String characterName = this.guide.getCharName(this.guide.getFakeCharId(this.manager.getCurrentCharacterId()));
         int option = JOptionPane.showConfirmDialog(this, "Are you sure you want to DELETE the character " + characterName, "Delete " + characterName, 1);
         if (option == 0) {
-            // TODO: delete character
+            deleteCharacterArtAndMaps();
         }
     }//GEN-LAST:event_pasteMenu2ActionPerformed
     
@@ -4616,6 +4616,7 @@ TheListener {
             ex.printStackTrace();
             this.showError("Unable to read character #" + charId);
         }
+        this.deleteCharacterArtAndMaps();
         try {
             this.manager.replaceCharacterFromManager(otherManager);
         }
@@ -4987,6 +4988,33 @@ TheListener {
                 Toolkit.getDefaultToolkit().beep();
             }
         }).start();
+    }
+    
+    
+    // Delete character!
+    private void deleteCharacterArtAndMaps(){
+        final Character ch = this.manager.getCharacter();
+        final int numAnims = ch.getNumAnimations();            
+        HashSet<Animation> processed = new HashSet<Animation>();
+        for (int i = 0; i < numAnims; ++i) {
+            Animation anim = ch.getAnimation(i);
+            if (!processed.contains(anim)) {
+                processed.add(anim);
+                int animSize = anim.getNumFrames();
+                for (int j = 0; j < animSize; ++j) {
+                    AnimFrame frame = anim.getFrame(j);
+                    Sprite sprite;
+                    try {
+                        sprite = manager.readSprite(i, j);
+                    } catch (IOException ex) {
+                        showError("Failled to free space for anim " + i + ", frame " + j);
+                        return;
+                    }
+                    FreeAddressesManager.freeChunk(frame.mapAddress, sprite.getMappingsSizeInBytes());
+                    FreeAddressesManager.freeChunk(frame.artAddress, sprite.getArtSizeInBytes());
+                }
+            }
+        }
     }
 
     
