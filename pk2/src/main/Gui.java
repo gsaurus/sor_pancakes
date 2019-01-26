@@ -1206,7 +1206,7 @@ TheListener {
         catch (IOException ex) {
             // empty catch block
         }
-        this.timer = new Timer(1, this);
+        this.timer = new Timer(16, this);
     }
 
     private void postInitComponents() {
