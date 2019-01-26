@@ -1216,7 +1216,7 @@ TheListener {
         this.scrollPanel.setWheelScrollingEnabled(false);
         this.scrollPanel.setAutoscrolls(true);
         this.initColorPanels();
-        this.updateEnablings();
+        this.updateEnablings();        
     }
 
     public Gui() {
@@ -3304,7 +3304,7 @@ TheListener {
                 }
                 int cx = this.lastcX;
                 int cy = this.lastcY;
-                this.regenerateSprite(replaceImg, this.currAnimation, this.currFrame, cx, cy);
+                this.regenerateSprite(replaceImg, this.currAnimation, this.currFrame, cx, cy, true);
                 this.wasFrameReplaced = true;
                 try {
                     this.manager.bufferAnimFrame(this.currAnimation, this.currFrame);
@@ -4285,7 +4285,7 @@ TheListener {
         }
     }
 
-    private boolean regenerateSprite(BufferedImage img, int animId, int frameId, int cx, int cy) {
+    private boolean regenerateSprite(BufferedImage img, int animId, int frameId, int cx, int cy, boolean eraseOld) {
         int width = img.getWidth();
         int height = img.getHeight();
         AnimFrame frame = this.manager.getCharacter().getAnimFrame(animId, frameId);
@@ -4299,13 +4299,15 @@ TheListener {
         }
         
         // Free space from original sprite
-        try {
-            Sprite originalSprite = manager.readSprite(animId, frameId);
-            FreeAddressesManager.freeChunk(frame.mapAddress, originalSprite.getMappingsSizeInBytes());
-            FreeAddressesManager.freeChunk(frame.artAddress, originalSprite.getArtSizeInBytes());
-        } catch (IOException ex) {
-            // No freed space? It's ok I guess?
-            System.out.println("Failed to free some space in rom");
+        if (eraseOld){
+            try {
+                Sprite originalSprite = manager.readSprite(animId, frameId);
+                FreeAddressesManager.freeChunk(frame.mapAddress, originalSprite.getMappingsSizeInBytes());            
+                FreeAddressesManager.freeChunk(frame.artAddress, originalSprite.getArtSizeInBytes());
+            } catch (IOException ex) {
+                // No freed space? It's ok I guess?
+                System.out.println("Failed to free some space in rom");
+            }
         }
         Sprite sprite = new Sprite();
         int numTiles = 0;
@@ -4351,7 +4353,7 @@ TheListener {
             this.showError("Unable to write sprite map");
             return false;
         }
-        frame.mapAddress = mapAddress;        
+        frame.mapAddress = mapAddress;  
         long artAddress = FreeAddressesManager.useBestSuitedAddress(sprite.getArtSizeInBytes(), getRomSize());
         try {
             manager.writeSpriteArtOnly(sprite, artAddress);
@@ -4373,6 +4375,7 @@ TheListener {
             this.showError("Unable to render the new sprite");
             return false;
         }
+        
         return true;
     }
 
@@ -4647,6 +4650,7 @@ TheListener {
                 Gui.this.setEnabled(false);
                 int index = 0;
                 TreeMap<Long, AddressesPair> maps = new TreeMap<Long, AddressesPair>();
+                TreeMap<Long, AddressesPair> arts = new TreeMap<Long, AddressesPair>();
                 HashSet<Animation> processed = new HashSet<Animation>();
                 for (int i = 0; i < numAnims; ++i) {
                     Animation anim = ch.getAnimation(i);
@@ -4654,6 +4658,7 @@ TheListener {
                         processed.add(anim);
                         int animSize = anim.getNumFrames();
                         for (int j = 0; j < animSize; ++j) {
+                            boolean eraseOld = true;
                             anim.setSpritesModified(j, true);
                             long mapAddress = anim.getFrame((int)j).mapAddress;
                             if (maps.containsKey(mapAddress)) {
@@ -4663,18 +4668,30 @@ TheListener {
                                 anim.setImage(j, p.img);
                                 continue;
                             }
+                            long artAddress = anim.getFrame((int)j).artAddress;
+                            if (arts.containsKey(artAddress)){
+                                AddressesPair p = (AddressesPair)arts.get(artAddress);
+                                anim.getFrame((int)j).mapAddress = p.a;
+                                anim.getFrame((int)j).artAddress = p.b;
+                                anim.setImage(j, p.img);
+                                // Same art with different sprite mappings, sounds really dangerous!
+                                // Keep original art, and regenerate frame somewhere else
+                                eraseOld = false;
+                            }
+                            
                             int x = index % columns * frameWidth;
                             int y = index / columns * frameHeight;
                             BufferedImage img = sheet.getSubimage(x, y, frameWidth, frameHeight);
                             if (Gui.this.imagePanel.isFacedRight()) {
                                 img = ImagePanel.flipImage(img);
                             }
-                            if (!regenerateSprite(img, i, j, cx, cy)) {
+                            if (!regenerateSprite(img, i, j, cx, cy, eraseOld)) {
                                 this.finish();
                                 Gui.this.showError("Unable to replace sprites");
                                 return;
                             }
                             maps.put(mapAddress, new AddressesPair(anim.getFrame((int)j).mapAddress, anim.getFrame((int)j).artAddress, anim.getImage(j)));
+                            arts.put(artAddress, new AddressesPair(anim.getFrame((int)j).mapAddress, anim.getFrame((int)j).artAddress, anim.getImage(j)));
                             if (++index != maxId) continue;
                             this.finish();
                             Toolkit.getDefaultToolkit().beep();
