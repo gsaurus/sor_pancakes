@@ -40,7 +40,7 @@ extends JLabel {
     private BufferedImage previewImage;
     private int imgX;
     private int imgY;
-    private float scale = 1.0f;
+    private float scale = 2.0f;
     private int hitX;
     private int hitY;
     private boolean hasHit;
@@ -679,7 +679,7 @@ extends JLabel {
                         x = 255 - x;
                         oldX = 255 - oldX;
                     }
-                    if (x >= 0 && y >= 0 && x <= 255 && y <= 255 && oldX >= 0 && oldY >= 0 && oldX <= 255 && oldY <= 255 && this.shadow.getRGB(x, y) != 0 && this.shadow.getRGB(oldX, oldY) != 0) {
+                    if (x >= 0 && y >= 0 && x <= 255 && y <= 255 && oldX >= 0 && oldY >= 0 && oldX <= 255 && oldY <= 255 && shadow != null && this.shadow.getRGB(x, y) != 0 && this.shadow.getRGB(oldX, oldY) != 0) {
                         this.imgModified = true;
                         Graphics2D g2d = this.image.createGraphics();
                         if (this.paintColor == null) {
