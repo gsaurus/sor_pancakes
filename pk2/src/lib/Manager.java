@@ -364,6 +364,17 @@ public class Manager {
         }
         rom.close();
     }
+    public void writeSpriteArtOnly(Sprite sprite, long artAddress) throws IOException {
+        Rom rom = new Rom(new File(this.romFileName));
+        try {
+            rom.writeSpriteArtOnly(sprite, artAddress);
+        }
+        catch (IOException e) {
+            rom.close();
+            throw e;
+        }
+        rom.close();
+    }
 
     public void writeNewAnimations(long newAddress) throws IOException {
         Rom rom = new Rom(new File(this.romFileName));

@@ -36,7 +36,7 @@ public class FreeAddressesManager {
     
     private static List<FreeChunk> freeChunks = new ArrayList<FreeChunk>(10);
     
-    public static void addChunk(long address, long length){
+    public static void freeChunk(long address, long length){
         long addedChunkFinalAddress = address + length;
         // Merge with existing chunks if possible
         for (FreeChunk chunk : freeChunks){
@@ -58,7 +58,7 @@ public class FreeAddressesManager {
         freeChunks.add(new FreeChunk(address, length));
     }
     
-    public static void consumeChunk(long address, long length){
+    public static long useChunk(long address, long length){
         long consummedChunkFinalAddress = address + length;
         // Consume existing chunks crossing the given chunk
         List<FreeChunk> addedChunks = new ArrayList<FreeChunk>();
@@ -68,6 +68,7 @@ public class FreeAddressesManager {
             if (address <= chunk.address && consummedChunkFinalAddress > chunk.address && consummedChunkFinalAddress < chunckFinalAddress){
                 // Shrink left
                 chunk.address = consummedChunkFinalAddress;
+                chunk.length = chunckFinalAddress - consummedChunkFinalAddress;                
             }else if (address > chunk.address && address < chunckFinalAddress && consummedChunkFinalAddress >= chunckFinalAddress){
                 // Shrink right
                 chunk.length = address - chunk.address;
@@ -88,6 +89,23 @@ public class FreeAddressesManager {
         freeChunks.removeAll(removedChunks);
         // Add all added chunks (splits)
         freeChunks.addAll(addedChunks);
+        return address;
+    }
+    
+    
+    public static long useBestSuitedAddress(long length, long fallbackAddress){
+        if (!freeChunks.isEmpty()){
+            FreeChunk smallestChunkThatFits = null;
+            for (FreeChunk chunk : freeChunks){
+                if (chunk.length >= length && (smallestChunkThatFits == null || chunk.length < smallestChunkThatFits.length)){
+                    smallestChunkThatFits = chunk;
+                }
+            }
+            if (smallestChunkThatFits != null){
+                return useChunk(smallestChunkThatFits.address, length);
+            }
+        }
+        return fallbackAddress;
     }
     
 }

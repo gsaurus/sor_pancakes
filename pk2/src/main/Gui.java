@@ -50,6 +50,7 @@ import javax.swing.border.TitledBorder;
 import javax.swing.event.DocumentEvent;
 import javax.swing.event.DocumentListener;
 import javax.swing.filechooser.FileFilter;
+import lib.FreeAddressesManager;
 import lib.Manager;
 import lib.anim.AnimFrame;
 import lib.anim.Animation;
@@ -148,7 +149,6 @@ TheListener {
     private javax.swing.JMenu exportMenu;
     private javax.swing.JPanel framePanel;
     private javax.swing.JButton frontBut;
-    private javax.swing.JTextField genAddressField;
     private javax.swing.JTextField genPaletteField;
     private javax.swing.JPanel generatePanel;
     private javax.swing.JButton hardReplaceButton;
@@ -162,13 +162,13 @@ TheListener {
     private javax.swing.JLabel jLabel10;
     private javax.swing.JLabel jLabel11;
     private javax.swing.JLabel jLabel12;
-    private javax.swing.JLabel jLabel13;
     private javax.swing.JLabel jLabel14;
     private javax.swing.JLabel jLabel15;
     private javax.swing.JLabel jLabel16;
     private javax.swing.JLabel jLabel17;
     private javax.swing.JLabel jLabel2;
     private javax.swing.JLabel jLabel3;
+    private javax.swing.JLabel jLabel4;
     private javax.swing.JLabel jLabel5;
     private javax.swing.JLabel jLabel6;
     private javax.swing.JLabel jLabel7;
@@ -197,6 +197,7 @@ TheListener {
     private javax.swing.JPopupMenu.Separator jSeparator4;
     private javax.swing.JPopupMenu.Separator jSeparator5;
     private javax.swing.JPopupMenu.Separator jSeparator6;
+    private javax.swing.JPopupMenu.Separator jSeparator7;
     private javax.swing.JCheckBox koCheck;
     private javax.swing.JPanel mainPanel;
     private javax.swing.JTextField mapField;
@@ -208,6 +209,7 @@ TheListener {
     private javax.swing.JPanel overridePanel;
     private javax.swing.JMenuItem pasteMenu;
     private javax.swing.JMenuItem pasteMenu1;
+    private javax.swing.JMenuItem pasteMenu2;
     private javax.swing.JRadioButtonMenuItem pencilMenu;
     private javax.swing.JRadioButton pencilRadio;
     private javax.swing.JToggleButton playToggle;
@@ -429,7 +431,6 @@ TheListener {
         } else {
             this.setAnimation(backupCurrAnim);
         }
-        this.updateGenAddress();
         this.nameMenu.setEnabled(charId < this.guide.getPlayableChars());
     }
 
@@ -525,6 +526,7 @@ TheListener {
             this.pasteMenu.setEnabled(false);
             this.nameMenu.setEnabled(false);
             this.pasteMenu1.setEnabled(false);
+            this.pasteMenu2.setEnabled(false);
             this.resizeAnimsMenu.setEnabled(false);
             this.hexIdsMenu.setEnabled(false);
             this.imagePanel.setImage(null, null);
@@ -622,7 +624,8 @@ TheListener {
         this.resizeAnimsMenu.setEnabled(this.manager != null);
         this.copyMenu.setEnabled(this.manager != null);
         this.pasteMenu.setEnabled(this.manager != null && this.copiedMap != 0L);
-        this.pasteMenu1.setEnabled(this.manager != null);
+        //this.pasteMenu1.setEnabled(this.manager != null); // disabled for now
+        this.pasteMenu2.setEnabled(this.manager != null);
         this.hexIdsMenu.setEnabled(this.manager != null);
         if (this.manager != null) {
             this.updateHitFrameEnabling();
@@ -1473,10 +1476,9 @@ TheListener {
         jLabel2 = new javax.swing.JLabel();
         generatePanel = new javax.swing.JPanel();
         hardReplaceButton = new javax.swing.JButton();
-        jLabel13 = new javax.swing.JLabel();
-        genAddressField = new javax.swing.JTextField();
         jLabel14 = new javax.swing.JLabel();
         genPaletteField = new javax.swing.JTextField();
+        jLabel4 = new javax.swing.JLabel();
         jMenuBar1 = new javax.swing.JMenuBar();
         jMenu1 = new javax.swing.JMenu();
         openRomMenu = new javax.swing.JMenuItem();
@@ -1519,6 +1521,8 @@ TheListener {
         pasteMenu = new javax.swing.JMenuItem();
         jSeparator6 = new javax.swing.JPopupMenu.Separator();
         pasteMenu1 = new javax.swing.JMenuItem();
+        jSeparator7 = new javax.swing.JPopupMenu.Separator();
+        pasteMenu2 = new javax.swing.JMenuItem();
         jMenu3 = new javax.swing.JMenu();
         jMenuItem6 = new javax.swing.JMenuItem();
 
@@ -1699,6 +1703,7 @@ TheListener {
         jLabel12.setHorizontalAlignment(javax.swing.SwingConstants.RIGHT);
         jLabel12.setText("SpriteMap:");
 
+        mapField.setEditable(false);
         mapField.setFont(new java.awt.Font("Courier New", 0, 14)); // NOI18N
         mapField.setHorizontalAlignment(javax.swing.JTextField.RIGHT);
         mapField.setText("200");
@@ -1707,6 +1712,7 @@ TheListener {
         jLabel3.setHorizontalAlignment(javax.swing.SwingConstants.RIGHT);
         jLabel3.setText("Art Address:");
 
+        artField.setEditable(false);
         artField.setFont(new java.awt.Font("Courier New", 0, 14)); // NOI18N
         artField.setHorizontalAlignment(javax.swing.JTextField.RIGHT);
         artField.setText("200");
@@ -1868,10 +1874,10 @@ TheListener {
             .addGroup(animationPanelLayout.createSequentialGroup()
                 .addComponent(jLabel5)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addComponent(animationCombo, javax.swing.GroupLayout.PREFERRED_SIZE, 202, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addComponent(jLabel6)
+                .addComponent(animationCombo, javax.swing.GroupLayout.PREFERRED_SIZE, 208, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                .addComponent(jLabel6)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addComponent(sizeField, javax.swing.GroupLayout.PREFERRED_SIZE, 33, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addGap(6, 6, 6))
             .addComponent(framePanel, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
@@ -1897,15 +1903,13 @@ TheListener {
         characterPanelLayout.setHorizontalGroup(
             characterPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(characterPanelLayout.createSequentialGroup()
-                .addGroup(characterPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addGroup(characterPanelLayout.createSequentialGroup()
-                        .addComponent(jLabel1, javax.swing.GroupLayout.PREFERRED_SIZE, 73, javax.swing.GroupLayout.PREFERRED_SIZE)
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                        .addComponent(characterCombo, javax.swing.GroupLayout.PREFERRED_SIZE, 205, javax.swing.GroupLayout.PREFERRED_SIZE)
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                        .addComponent(compressedLabel))
-                    .addComponent(animationPanel, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                .addComponent(jLabel1, javax.swing.GroupLayout.PREFERRED_SIZE, 73, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addComponent(characterCombo, javax.swing.GroupLayout.PREFERRED_SIZE, 205, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addComponent(compressedLabel)
                 .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+            .addComponent(animationPanel, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
         );
         characterPanelLayout.setVerticalGroup(
             characterPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
@@ -1971,15 +1975,15 @@ TheListener {
         playerPanelLayout.setHorizontalGroup(
             playerPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, playerPanelLayout.createSequentialGroup()
-                .addComponent(backBut, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                .addComponent(backBut, javax.swing.GroupLayout.DEFAULT_SIZE, 87, Short.MAX_VALUE)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addComponent(previousBut, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                .addComponent(previousBut, javax.swing.GroupLayout.DEFAULT_SIZE, 87, Short.MAX_VALUE)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addComponent(playToggle, javax.swing.GroupLayout.PREFERRED_SIZE, 105, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addComponent(nextBut, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                .addComponent(nextBut, javax.swing.GroupLayout.DEFAULT_SIZE, 87, Short.MAX_VALUE)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addComponent(frontBut, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+                .addComponent(frontBut, javax.swing.GroupLayout.DEFAULT_SIZE, 88, Short.MAX_VALUE))
         );
         playerPanelLayout.setVerticalGroup(
             playerPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
@@ -2321,36 +2325,36 @@ TheListener {
             .addGroup(colorsPanel1Layout.createSequentialGroup()
                 .addGap(0, 0, 0)
                 .addGroup(colorsPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addComponent(colorPanel1, javax.swing.GroupLayout.DEFAULT_SIZE, 45, Short.MAX_VALUE)
-                    .addComponent(colorPanel9, javax.swing.GroupLayout.DEFAULT_SIZE, 45, Short.MAX_VALUE))
+                    .addComponent(colorPanel1, javax.swing.GroupLayout.DEFAULT_SIZE, 52, Short.MAX_VALUE)
+                    .addComponent(colorPanel9, javax.swing.GroupLayout.DEFAULT_SIZE, 52, Short.MAX_VALUE))
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addGroup(colorsPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addComponent(colorPanel2, javax.swing.GroupLayout.DEFAULT_SIZE, 45, Short.MAX_VALUE)
-                    .addComponent(colorPanel10, javax.swing.GroupLayout.DEFAULT_SIZE, 45, Short.MAX_VALUE))
+                    .addComponent(colorPanel2, javax.swing.GroupLayout.DEFAULT_SIZE, 52, Short.MAX_VALUE)
+                    .addComponent(colorPanel10, javax.swing.GroupLayout.DEFAULT_SIZE, 52, Short.MAX_VALUE))
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addGroup(colorsPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addComponent(colorPanel3, javax.swing.GroupLayout.DEFAULT_SIZE, 49, Short.MAX_VALUE)
-                    .addComponent(colorPanel11, javax.swing.GroupLayout.DEFAULT_SIZE, 49, Short.MAX_VALUE))
+                    .addComponent(colorPanel3, javax.swing.GroupLayout.DEFAULT_SIZE, 54, Short.MAX_VALUE)
+                    .addComponent(colorPanel11, javax.swing.GroupLayout.DEFAULT_SIZE, 54, Short.MAX_VALUE))
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addGroup(colorsPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addComponent(colorPanel4, javax.swing.GroupLayout.DEFAULT_SIZE, 47, Short.MAX_VALUE)
-                    .addComponent(colorPanel12, javax.swing.GroupLayout.DEFAULT_SIZE, 47, Short.MAX_VALUE))
+                    .addComponent(colorPanel4, javax.swing.GroupLayout.DEFAULT_SIZE, 52, Short.MAX_VALUE)
+                    .addComponent(colorPanel12, javax.swing.GroupLayout.DEFAULT_SIZE, 52, Short.MAX_VALUE))
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addGroup(colorsPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addComponent(colorPanel5, javax.swing.GroupLayout.DEFAULT_SIZE, 49, Short.MAX_VALUE)
-                    .addComponent(colorPanel13, javax.swing.GroupLayout.DEFAULT_SIZE, 49, Short.MAX_VALUE))
+                    .addComponent(colorPanel5, javax.swing.GroupLayout.DEFAULT_SIZE, 54, Short.MAX_VALUE)
+                    .addComponent(colorPanel13, javax.swing.GroupLayout.DEFAULT_SIZE, 54, Short.MAX_VALUE))
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addGroup(colorsPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addComponent(colorPanel6, javax.swing.GroupLayout.DEFAULT_SIZE, 47, Short.MAX_VALUE)
-                    .addComponent(colorPanel14, javax.swing.GroupLayout.DEFAULT_SIZE, 47, Short.MAX_VALUE))
+                    .addComponent(colorPanel6, javax.swing.GroupLayout.DEFAULT_SIZE, 52, Short.MAX_VALUE)
+                    .addComponent(colorPanel14, javax.swing.GroupLayout.DEFAULT_SIZE, 52, Short.MAX_VALUE))
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addGroup(colorsPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addComponent(colorPanel7, javax.swing.GroupLayout.DEFAULT_SIZE, 47, Short.MAX_VALUE)
-                    .addComponent(colorPanel15, javax.swing.GroupLayout.DEFAULT_SIZE, 47, Short.MAX_VALUE))
+                    .addComponent(colorPanel7, javax.swing.GroupLayout.DEFAULT_SIZE, 52, Short.MAX_VALUE)
+                    .addComponent(colorPanel15, javax.swing.GroupLayout.DEFAULT_SIZE, 52, Short.MAX_VALUE))
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addGroup(colorsPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addComponent(colorPanel8, javax.swing.GroupLayout.DEFAULT_SIZE, 46, Short.MAX_VALUE)
-                    .addComponent(colorPanel16, javax.swing.GroupLayout.DEFAULT_SIZE, 46, Short.MAX_VALUE)))
+                    .addComponent(colorPanel8, javax.swing.GroupLayout.DEFAULT_SIZE, 56, Short.MAX_VALUE)
+                    .addComponent(colorPanel16, javax.swing.GroupLayout.DEFAULT_SIZE, 56, Short.MAX_VALUE)))
         );
         colorsPanel1Layout.setVerticalGroup(
             colorsPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
@@ -2381,8 +2385,8 @@ TheListener {
         previewPanelLayout.setHorizontalGroup(
             previewPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addComponent(playerPanel, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+            .addComponent(colorsPanel1, javax.swing.GroupLayout.DEFAULT_SIZE, 478, Short.MAX_VALUE)
             .addComponent(scrollPanel, javax.swing.GroupLayout.Alignment.TRAILING)
-            .addComponent(colorsPanel1, javax.swing.GroupLayout.DEFAULT_SIZE, 429, Short.MAX_VALUE)
         );
         previewPanelLayout.setVerticalGroup(
             previewPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
@@ -2467,12 +2471,11 @@ TheListener {
                     .addComponent(showWeaponCheck)
                     .addComponent(showCenterCheck)
                     .addComponent(showHitsCheck))
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addGroup(characterPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                     .addComponent(weaponCombo, javax.swing.GroupLayout.PREFERRED_SIZE, 83, javax.swing.GroupLayout.PREFERRED_SIZE)
                     .addComponent(showFacedRightCheck)
-                    .addComponent(showTileCheck))
-                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+                    .addComponent(showTileCheck)))
         );
         characterPanel1Layout.setVerticalGroup(
             characterPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
@@ -2556,17 +2559,22 @@ TheListener {
             .addGroup(toolsPanelLayout.createSequentialGroup()
                 .addContainerGap()
                 .addGroup(toolsPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addComponent(pencilRadio)
-                    .addComponent(brushRadio)
-                    .addComponent(bucketRadio))
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                .addGroup(toolsPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                     .addGroup(toolsPanelLayout.createSequentialGroup()
-                        .addGap(2, 2, 2)
-                        .addComponent(dragSpriteRadio))
-                    .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, toolsPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
-                        .addComponent(dragImageRadio, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                        .addComponent(noneRadio, javax.swing.GroupLayout.PREFERRED_SIZE, 81, javax.swing.GroupLayout.PREFERRED_SIZE))))
+                        .addComponent(bucketRadio)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                        .addComponent(noneRadio, javax.swing.GroupLayout.PREFERRED_SIZE, 81, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addGap(23, 23, 23))
+                    .addGroup(toolsPanelLayout.createSequentialGroup()
+                        .addGroup(toolsPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                            .addGroup(toolsPanelLayout.createSequentialGroup()
+                                .addComponent(pencilRadio)
+                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                                .addComponent(dragSpriteRadio))
+                            .addGroup(toolsPanelLayout.createSequentialGroup()
+                                .addComponent(brushRadio)
+                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                                .addComponent(dragImageRadio)))
+                        .addGap(0, 0, Short.MAX_VALUE))))
         );
         toolsPanelLayout.setVerticalGroup(
             toolsPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
@@ -2631,14 +2639,6 @@ TheListener {
             }
         });
 
-        jLabel13.setFont(new java.awt.Font("Tahoma", 0, 14)); // NOI18N
-        jLabel13.setHorizontalAlignment(javax.swing.SwingConstants.RIGHT);
-        jLabel13.setText("Address:");
-
-        genAddressField.setFont(new java.awt.Font("Courier New", 0, 14)); // NOI18N
-        genAddressField.setHorizontalAlignment(javax.swing.JTextField.RIGHT);
-        genAddressField.setText("200");
-
         jLabel14.setFont(new java.awt.Font("Tahoma", 0, 14)); // NOI18N
         jLabel14.setHorizontalAlignment(javax.swing.SwingConstants.RIGHT);
         jLabel14.setText("Palette Line:");
@@ -2647,6 +2647,8 @@ TheListener {
         genPaletteField.setHorizontalAlignment(javax.swing.JTextField.RIGHT);
         genPaletteField.setText("0");
 
+        jLabel4.setText("Produce new tiles");
+
         javax.swing.GroupLayout generatePanelLayout = new javax.swing.GroupLayout(generatePanel);
         generatePanel.setLayout(generatePanelLayout);
         generatePanelLayout.setHorizontalGroup(
@@ -2654,31 +2656,27 @@ TheListener {
             .addGroup(generatePanelLayout.createSequentialGroup()
                 .addGroup(generatePanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                     .addGroup(generatePanelLayout.createSequentialGroup()
+                        .addContainerGap()
+                        .addComponent(hardReplaceButton))
+                    .addGroup(generatePanelLayout.createSequentialGroup()
                         .addGap(18, 18, 18)
-                        .addGroup(generatePanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
-                            .addGroup(generatePanelLayout.createSequentialGroup()
-                                .addComponent(jLabel13, javax.swing.GroupLayout.PREFERRED_SIZE, 61, javax.swing.GroupLayout.PREFERRED_SIZE)
-                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                                .addComponent(genAddressField))
+                        .addGroup(generatePanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                            .addComponent(jLabel4)
                             .addGroup(generatePanelLayout.createSequentialGroup()
                                 .addComponent(jLabel14, javax.swing.GroupLayout.PREFERRED_SIZE, 79, javax.swing.GroupLayout.PREFERRED_SIZE)
                                 .addGap(18, 18, 18)
-                                .addComponent(genPaletteField, javax.swing.GroupLayout.PREFERRED_SIZE, 24, javax.swing.GroupLayout.PREFERRED_SIZE))))
-                    .addGroup(generatePanelLayout.createSequentialGroup()
-                        .addContainerGap()
-                        .addComponent(hardReplaceButton)))
-                .addGap(0, 25, Short.MAX_VALUE))
+                                .addComponent(genPaletteField, javax.swing.GroupLayout.PREFERRED_SIZE, 24, javax.swing.GroupLayout.PREFERRED_SIZE)))))
+                .addGap(0, 2, Short.MAX_VALUE))
         );
         generatePanelLayout.setVerticalGroup(
             generatePanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, generatePanelLayout.createSequentialGroup()
-                .addGroup(generatePanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                    .addComponent(jLabel13)
-                    .addComponent(genAddressField, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                .addGroup(generatePanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addComponent(jLabel14, javax.swing.GroupLayout.Alignment.TRAILING)
-                    .addComponent(genPaletteField, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                .addContainerGap(11, Short.MAX_VALUE)
+                .addComponent(jLabel4)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addGroup(generatePanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
+                    .addComponent(genPaletteField)
+                    .addComponent(jLabel14, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addComponent(hardReplaceButton))
         );
@@ -2690,14 +2688,14 @@ TheListener {
             .addGroup(mainPanelLayout.createSequentialGroup()
                 .addGroup(mainPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
                     .addGroup(mainPanelLayout.createSequentialGroup()
-                        .addGroup(mainPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                            .addComponent(characterPanel1, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                        .addGroup(mainPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
+                            .addComponent(characterPanel1, javax.swing.GroupLayout.PREFERRED_SIZE, 204, javax.swing.GroupLayout.PREFERRED_SIZE)
                             .addComponent(overridePanel, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                        .addGroup(mainPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                            .addComponent(toolsPanel, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                            .addComponent(generatePanel, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)))
-                    .addComponent(characterPanel, javax.swing.GroupLayout.PREFERRED_SIZE, 376, javax.swing.GroupLayout.PREFERRED_SIZE))
+                        .addGroup(mainPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
+                            .addComponent(toolsPanel, javax.swing.GroupLayout.PREFERRED_SIZE, 197, javax.swing.GroupLayout.PREFERRED_SIZE)
+                            .addComponent(generatePanel, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)))
+                    .addComponent(characterPanel, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addComponent(previewPanel, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
         );
@@ -2996,6 +2994,17 @@ TheListener {
             }
         });
         jMenu2.add(pasteMenu1);
+        jMenu2.add(jSeparator7);
+
+        pasteMenu2.setText("Delete Character !!");
+        pasteMenu2.setActionCommand("Delete Character");
+        pasteMenu2.setEnabled(false);
+        pasteMenu2.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                pasteMenu2ActionPerformed(evt);
+            }
+        });
+        jMenu2.add(pasteMenu2);
 
         jMenuBar1.add(jMenu2);
 
@@ -3295,7 +3304,7 @@ TheListener {
                 }
                 int cx = this.lastcX;
                 int cy = this.lastcY;
-                this.replaceSprite(replaceImg, this.currAnimation, this.currFrame, cx, cy);
+                this.regenerateSprite(replaceImg, this.currAnimation, this.currFrame, cx, cy);
                 this.wasFrameReplaced = true;
                 try {
                     this.manager.bufferAnimFrame(this.currAnimation, this.currFrame);
@@ -3802,6 +3811,14 @@ TheListener {
             }
         }
     }//GEN-LAST:event_portraitMenuActionPerformed
+
+    private void pasteMenu2ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_pasteMenu2ActionPerformed
+        String characterName = this.guide.getCharName(this.guide.getFakeCharId(this.manager.getCurrentCharacterId()));
+        int option = JOptionPane.showConfirmDialog(this, "Are you sure you want to DELETE the character " + characterName, "Delete " + characterName, 1);
+        if (option == 0) {
+            // TODO: delete character
+        }
+    }//GEN-LAST:event_pasteMenu2ActionPerformed
     
     
     private void setSizeRadioMenusOff() {
@@ -3995,16 +4012,6 @@ TheListener {
             }
         }
         return false;
-    }
-
-    private void updateGenAddress() {
-        try {
-            long mapAddress = this.manager.romSize();
-            this.setFieldAsHex(this.genAddressField, mapAddress);
-        }
-        catch (IOException ex) {
-            ex.printStackTrace();
-        }
     }
 
     private Piece optimizedPiece1(boolean[][] mx, boolean[][] done, int xi, int yi) {
@@ -4267,24 +4274,37 @@ TheListener {
         }
         return 0;
     }
+    
+    private long getRomSize(){
+        try {
+            return manager.romSize();
+        } catch (IOException ex) {
+            ex.printStackTrace();
+            this.showError("Failed to identify rom size");
+            return Long.MIN_VALUE;
+        }
+    }
 
-    private long replaceSprite(BufferedImage img, int animId, int frameId, int cx, int cy) {
+    private long regenerateSprite(BufferedImage img, int animId, int frameId, int cx, int cy) {
         int width = img.getWidth();
         int height = img.getHeight();
         AnimFrame frame = this.manager.getCharacter().getAnimFrame(animId, frameId);
         if (frame.type == 3) {
             return frame.mapAddress;
-        }
-        long mapAddress = this.getHexFromField(this.genAddressField);
+        }        
         int paletteLine = this.getIntFromField(this.genPaletteField);
         if (paletteLine == Integer.MIN_VALUE || paletteLine < 0 || paletteLine > 3) {
             this.showError("Invalid palette line");
             return Long.MIN_VALUE;
         }
-        if (mapAddress == Long.MIN_VALUE || mapAddress < 0L) {
-            this.showError("Invalid address");
-            this.updateGenAddress();
-            return Long.MIN_VALUE;
+        
+        // Free space from original sprite
+        try {
+            Sprite originalSprite = manager.readSprite(animId, frameId);
+            FreeAddressesManager.freeChunk(frame.mapAddress, originalSprite.getMappingsSizeInBytes());
+            FreeAddressesManager.freeChunk(frame.artAddress, originalSprite.getArtSizeInBytes());
+        } catch (IOException ex) {
+            // No freed space? It's ok I guess?
         }
         Sprite sprite = new Sprite();
         int numTiles = 0;
@@ -4320,18 +4340,27 @@ TheListener {
                 sprite.addPiece(sp, p);
             }
         }
-        long artAddress = mapAddress + 6L + sprite.getNumPieces() * 6L;
-        frame.mapAddress = mapAddress;
-        frame.artAddress = artAddress;
+        // Find available space for new sprite
+        long mapAddress = FreeAddressesManager.useBestSuitedAddress(sprite.getMappingsSizeInBytes(), getRomSize());
         try {
-            this.manager.writeSprite(sprite, mapAddress, artAddress);
+            manager.writeSpriteOnly(sprite, mapAddress);
         }
         catch (IOException ex) {
             ex.printStackTrace();
-            this.showError("Unable to create the new sprite");
+            this.showError("Unable to write sprite map");
             return Long.MIN_VALUE;
         }
-        this.updateGenAddress();
+        frame.mapAddress = mapAddress;        
+        long artAddress = FreeAddressesManager.useBestSuitedAddress(sprite.getArtSizeInBytes(), getRomSize());
+        try {
+            manager.writeSpriteArtOnly(sprite, artAddress);
+        }        
+        catch (IOException ex) {
+            ex.printStackTrace();
+            this.showError("Unable to write sprite map");
+            return Long.MIN_VALUE;
+        }
+        frame.artAddress = artAddress;
         BufferedImage extended = this.expandImage(img, cx, cy);
         Animation anim = this.manager.getCharacter().getAnimation(animId);
         anim.setImage(frameId, extended);
@@ -4553,38 +4582,38 @@ TheListener {
         if (guide == null) {
             return;
         }
-        String romName = null;
-        Manager manager = null;
+        String otherRomName = null;
+        Manager otherManager = null;
         returnVal = this.romChooser.showOpenDialog(this);
         if (returnVal == 0) {
             File file = this.romChooser.getSelectedFile();
-            romName = file.getAbsolutePath();
+            otherRomName = file.getAbsolutePath();
             try {
-                manager = new Manager(romName, guide);
+                otherManager = new Manager(otherRomName, guide);
             }
             catch (FileNotFoundException ex) {
                 ex.printStackTrace();
-                this.showError("File '" + romName + "' not found");
+                this.showError("File '" + otherRomName + "' not found");
             }
             catch (IOException ex) {
                 ex.printStackTrace();
-                this.showError("File '" + romName + "' is not a valid Streets of Rage 2 ROM");
+                this.showError("File '" + otherRomName + "' is not a valid Streets of Rage 2 ROM");
             }
         }
-        if (manager == null) {
+        if (otherManager == null) {
             return;
         }
         int charId = this.manager.getCurrentCharacterId();
         int fakeId = guide.getFakeCharId(charId);
         try {
-            manager.setCharacter(charId, guide.getAnimsCount(fakeId), guide.getType(fakeId));
+            otherManager.setCharacter(charId, guide.getAnimsCount(fakeId), guide.getType(fakeId));
         }
         catch (IOException ex) {
             ex.printStackTrace();
             this.showError("Unable to read character #" + charId);
         }
         try {
-            this.manager.replaceCharacterFromManager(manager);
+            this.manager.replaceCharacterFromManager(otherManager);
         }
         catch (IOException ex) {
             ex.printStackTrace();
@@ -4639,7 +4668,7 @@ TheListener {
                             if (Gui.this.imagePanel.isFacedRight()) {
                                 img = ImagePanel.flipImage(img);
                             }
-                            if (Gui.this.replaceSprite(img, i, j, cx, cy) == Long.MIN_VALUE) {
+                            if (Gui.this.regenerateSprite(img, i, j, cx, cy) == Long.MIN_VALUE) {
                                 this.finish();
                                 Gui.this.showError("Unable to replace sprites");
                                 return;
@@ -4923,7 +4952,8 @@ TheListener {
                 progressMonitor.setProgress(numAnims);
                 long newAnimsAddress = 0L;
                 if (newArea) {
-                    newAnimsAddress = Gui.this.getHexFromField(Gui.this.genAddressField);
+                    // TODO: also re-use space here
+                    newAnimsAddress = getRomSize();
                 }
                 try {
                     Gui.this.manager.writeNewScripts(newAnimsAddress, newHits, newWeapons);
@@ -4934,7 +4964,6 @@ TheListener {
                     Gui.this.showError("Failed to convert the animations script");
                     return;
                 }
-                Gui.this.updateGenAddress();
                 Gui.this.hardRefresh();
                 this.finish();
                 Toolkit.getDefaultToolkit().beep();
@@ -4942,6 +4971,9 @@ TheListener {
         }).start();
     }
 
+    
+    // Unused
+    /*
     private void uncompressChar(final int type) {
         final Character ch = this.manager.getCharacter();
         final int numAnims = ch.getNumAnimations();
@@ -4963,9 +4995,8 @@ TheListener {
             public void run() {
                 Gui.this.setEnabled(false);
                 int index = 0;
-                long newAnimsAddress = Gui.this.getHexFromField(Gui.this.genAddressField);
+                long newAnimsAddress = getRomSize();
                 int animsSyzeInBytes = ch.getAnimsSize(type);
-                Gui.this.setFieldAsHex(Gui.this.genAddressField, newAnimsAddress + (long)animsSyzeInBytes);
                 TreeMap<Long, AddressesPair> maps = new TreeMap<Long, AddressesPair>();
                 for (int i = 0; i < numAnims; ++i) {
                     Animation anim = ch.getAnimation(i);
@@ -4994,7 +5025,7 @@ TheListener {
                         }
                         BufferedImage img = anim.getImage(j);
                         anim.setAnimType(type);
-                        long newAddress = Gui.this.replaceSprite(img, i, j, 128, 128);
+                        long newAddress = Gui.this.regenerateSprite(img, i, j, 128, 128);
                         if (newAddress == Long.MIN_VALUE) {
                             this.finish();
                             Gui.this.showError("Unable to replace the compressed sprites");
@@ -5020,7 +5051,6 @@ TheListener {
                     Gui.this.showError("Failed to convert the animations script");
                     return;
                 }
-                Gui.this.updateGenAddress();
                 Gui.this.guide.setAnimType(Gui.this.guide.getFakeCharId(Gui.this.manager.getCurrentCharacterId()), type);
                 Gui.this.hardRefresh();
                 this.finish();
@@ -5028,6 +5058,7 @@ TheListener {
             }
         }).start();
     }
+*/
 
     class AddressesPair {
         public BufferedImage img;

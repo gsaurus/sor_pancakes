@@ -9,7 +9,6 @@ import java.io.DataInputStream;
 import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.IOException;
-import java.io.InputStream;
 import java.io.RandomAccessFile;
 import java.util.HashMap;
 import lib.KMPMatch;
@@ -121,6 +120,10 @@ public class Rom {
 
     public void writeSpriteOnly(Sprite sprite, long mapAddress) throws IOException {
         sprite.writeSpriteOnly(this.rom, mapAddress);
+    }
+    
+    public void writeSpriteArtOnly(Sprite sprite, long artAddress) throws IOException {
+        sprite.writeArtOnly(this.rom, artAddress);
     }
 
     public void writeAnimFrame(AnimFrame frame, long address) throws IOException {
