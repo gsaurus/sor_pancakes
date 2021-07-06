@@ -249,6 +249,8 @@ public final class Sor2LevelEditor extends javax.swing.JFrame {
         int deltaObjectId = guide.numberOfMainCharacters - this.guide.numberOfMainCharacters;
         // Object ID is always even
         deltaObjectId *= 2;
+        // randomize!!! DEBUG
+        levels.levels.get(0).randomizeEnemiesListOne(enemyNames.address);
         // save
          try {
             levels.write(rom.getRomFile(), guide.levelsLoadcuesAddress, deltaObjectId);
@@ -404,7 +406,7 @@ public final class Sor2LevelEditor extends javax.swing.JFrame {
     
     void updateNumberOfScenes(){
         int currentLevel = levelComboBox.getSelectedIndex();
-        int numberOfScenes = levels.levels.get(currentLevel).getTotalNumberOfScenes();
+        int numberOfScenes = levels.levels.get(currentLevel).getTotalNumberOfScenes() + 1;
         String[] sceneOptions = new String[numberOfScenes];
         for (int i = 0 ; i < numberOfScenes; ++i){
             sceneOptions[i] = Integer.toString(i+1);

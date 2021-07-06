@@ -31,6 +31,10 @@ public final class LevelLoadcues {
     public final List<CharacterObject> enemiesPart1 = new ArrayList<>(70);
     public final List<CharacterObject> enemiesPart2 = new ArrayList<>(20);
     public final List<ItemObject> goodies = new ArrayList<>(20);
+    // DEBUG!!!!
+    private final int extraOffset = 0;//0x4100;
+    private final boolean onlyEnemiesSet1 = true; //false
+    private final boolean generateRandomEnemies = true; // false
     
     public LevelLoadcues(RandomAccessFile rom, long address) throws IOException{
         this.address = address;
@@ -55,6 +59,7 @@ public final class LevelLoadcues {
     }
     
     void readCharactersList(RandomAccessFile rom, List<CharacterObject> list, long address) throws IOException{
+        address += extraOffset;
         rom.seek(address);
         while (rom.readUnsignedShort() != 0xFFFF){
             list.add(new CharacterObject(rom, address));
@@ -73,6 +78,7 @@ public final class LevelLoadcues {
     }
     
     void writeCharactersList(RandomAccessFile rom, List<CharacterObject> list, long address, int deltaObjectId) throws IOException{
+        address += extraOffset;
         rom.seek(address);
         for (CharacterObject obj : list){
             obj.write(rom, address, deltaObjectId);
@@ -105,6 +111,8 @@ public final class LevelLoadcues {
         long enemiesAddress2 = rom.readInt();
         long goodiesAddress = rom.readInt();
         writeCharactersList(rom, enemiesPart1, enemiesAddress1, deltaObjectId);
+        if (onlyEnemiesSet1) 
+            return;
         writeCharactersList(rom, enemiesPart2, enemiesAddress2, deltaObjectId);
         writeItemsList(rom, goodies, goodiesAddress, deltaObjectId);
     }
@@ -121,6 +129,16 @@ public final class LevelLoadcues {
             rom.close();
         } catch (IOException ex) {
             ex.printStackTrace();
+        }
+    }
+
+    public void randomizeEnemiesListOne(long enemyNamesAddress) {
+        if (!generateRandomEnemies)
+            return;
+        List<CharacterObject> enemies = enemiesPart1;
+        for (int i = 0; i < enemies.size(); ++i) {
+            float progress = (float)i / (enemies.size() - 1);
+            enemies.get(i).randomize(progress, enemyNamesAddress);
         }
     }
     

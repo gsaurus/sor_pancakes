@@ -27,7 +27,7 @@ import lib.Rom;
  * @author gil.costa
  */
 public class AllLevelsLoadcues {
-    public static final int NUM_LEVELS = 9;
+    public static final int NUM_LEVELS = 1;//9;
     public long address;
     public final List<LevelLoadcues> levels = new ArrayList<LevelLoadcues>(NUM_LEVELS);
     
