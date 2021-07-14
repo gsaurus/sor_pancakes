@@ -136,9 +136,9 @@ public final class LevelLoadcues {
         if (!generateRandomEnemies)
             return;
         List<CharacterObject> enemies = enemiesPart1;
+        CharacterObject.prepareForRandomization();
         for (int i = 0; i < enemies.size(); ++i) {
-            float progress = (float)i / (enemies.size() - 1);
-            enemies.get(i).randomize(progress, enemyNamesAddress);
+            enemies.get(i).randomize(i, enemies.size() - 1, enemyNamesAddress);
         }
     }
     

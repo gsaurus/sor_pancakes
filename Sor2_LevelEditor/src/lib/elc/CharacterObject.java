@@ -83,8 +83,8 @@ public class CharacterObject extends BaseObject {
         introductionType &= 0x0F;
         triggerArgument = rom.readUnsignedShort();
 
-        posX = rom.readUnsignedShort();
-        posY = rom.readUnsignedShort();
+        posX = rom.readShort();
+        posY = rom.readShort();
 
         health = rom.read();
         collisionWidth = rom.read();
@@ -261,9 +261,9 @@ public class CharacterObject extends BaseObject {
     private static final RngSettings[] allRngSettings = new RngSettings[] {
         // Galsia
         new RngSettings(0xE,
-                0f, 0.75f, // Progress
-                15, 3,    // Weight 
-                1, 4,     // Health
+                0f, 0.9f, // Progress
+                18, 2,    // Weight 
+                2, 4,     // Health
                 3, 9,     // Clock
                 new float[] { 12, 0, 0, 1, 0, 0, 0, 2}, // Spawn type weight (min)
                 new float[] { 1, 0, 0, 4, 0, 0, 0, 2},  // Spawn type weight (max)
@@ -274,10 +274,10 @@ public class CharacterObject extends BaseObject {
         ),
         // Donovan
         new RngSettings(0x10,
-                0.0001f, 0.75f, // Progress
-                12, 2,    // Weight 
-                2, 5,     // Health
-                3, 9,     // Clock
+                0.0001f, 0.85f, // Progress
+                15, 4,    // Weight 
+                3, 6,     // Health
+                2, 9,     // Clock
                 new float[] { 12, 0, 0, 0, 1, 0, 0, 2}, // Spawn type weight (min)
                 new float[] { 1, 0, 0, 0, 2, 0, 0, 2},  // Spawn type weight (max)
                 new SpawnTypeLocation[] { SpawnTypeLocation.inPlaceLeftRight, SpawnTypeLocation.inPlaceLeftRight, SpawnTypeLocation.inPlaceLeftRight, SpawnTypeLocation.inPlaceLeftRight, SpawnTypeLocation.inPlaceLeftRight, SpawnTypeLocation.inPlaceLeftRight, SpawnTypeLocation.inPlaceLeftRight, SpawnTypeLocation.top},
@@ -287,10 +287,10 @@ public class CharacterObject extends BaseObject {
         ),
         // Signal
         new RngSettings(0x18,
-                0.0025f, 0.6f, // Progress
-                9, 3,     // Weight 
-                3, 6,     // Health
-                3, 9,     // Clock
+                0.01f, 0.8f, // Progress
+                11, 1,     // Weight 
+                4, 8,   // Health
+                2, 9,     // Clock
                 new float[] {1}, // Spawn type weight (min)
                 new float[] {1},  // Spawn type weight (max)
                 new SpawnTypeLocation[] { SpawnTypeLocation.inPlaceLeftRight},
@@ -300,22 +300,22 @@ public class CharacterObject extends BaseObject {
         ),
         // Biker
         new RngSettings(0x1A,
-                0.01f, 0.75f, // Progress
+                0.15f, 0.9f, // Progress
                 5, 1,    // Weight 
-                2, 4,    // Health
+                4, 6,    // Health
                 3, 12,   // Clock
-                new float[] {10, 2, 1, 0, 0, 8, 8}, // Spawn type weight (min)
-                new float[] {5, 5, 0, 5, 3, 0, 0}, // Spawn type weight (max)
-                new SpawnTypeLocation[] { SpawnTypeLocation.inPlaceLeftRight, SpawnTypeLocation.inPlaceLeftRight, SpawnTypeLocation.inPlaceLeftRight, SpawnTypeLocation.inPlaceLeftRight, SpawnTypeLocation.inPlaceLeftRight, SpawnTypeLocation.inPlaceLeftRight, SpawnTypeLocation.inPlaceLeftRight},
+                new float[] {10, 2, 0, 0, 0}, // Spawn type weight (min)
+                new float[] {5, 5, 0, 5, 0}, // Spawn type weight (max)
+                new SpawnTypeLocation[] { SpawnTypeLocation.inPlaceLeftRight, SpawnTypeLocation.inPlaceLeftRight, SpawnTypeLocation.inPlaceLeftRight, SpawnTypeLocation.inPlaceLeftRight, SpawnTypeLocation.inPlaceLeftRight},
                 20, 31, // names
                 0, 0.6f, // biker pipe %
                 0, 10  // clones
         ),
         // Bongo
         new RngSettings(0x1E,
-                0.06f, 0.8f, // Progress
-                5, 2,    // Weight 
-                4, 7,    // Health
+                0.25f, 0.95f, // Progress
+                5, 2,       // Weight 
+                8, 0x10,    // Health
                 2, 6,    // Clock
                 new float[] {1, 0, 0, 1},     // Spawn type weight (min)
                 new float[] {0.1f, 0, 0, 1},  // Spawn type weight (max)
@@ -326,9 +326,9 @@ public class CharacterObject extends BaseObject {
         ),
         // Hakuyo
         new RngSettings(0x20,
-                0.04f, 0.7f, // Progress
+                0.07f, 0.87f, // Progress
                 5, 3,    // Weight 
-                3, 6,    // Health
+                5, 0xA,    // Health
                 2, 10,   // Clock
                 new float[] {1, 0, 0, 1},     // Spawn type weight (min)
                 new float[] {0.1f, 0, 0, 1},  // Spawn type weight (max)
@@ -339,9 +339,9 @@ public class CharacterObject extends BaseObject {
         ),
         // Kickboxer
         new RngSettings(0x24,
-                0.1f, 0.78f, // Progress
+                0.40f, 0.92f, // Progress
                 5, 2,    // Weight 
-                4, 7,    // Health
+                6, 0x10,    // Health
                 2, 7,    // Clock
                 new float[] {1, 0, 0, 2},     // Spawn type weight (min)
                 new float[] {5, 0, 0, 1},  // Spawn type weight (max)
@@ -352,9 +352,9 @@ public class CharacterObject extends BaseObject {
         ),
         // Ninja
         new RngSettings(0x1C,
-                0.12f, 0.4f, // Progress
+                0.35f, 0.5f, // Progress
                 5, 1,    // Weight 
-                3, 6,    // Health
+                6, 0x10,    // Health
                 2, 7,    // Clock
                 new float[] {5, 0, 0, 1},     // Spawn type weight (min)
                 new float[] {1, 0, 0, 5},  // Spawn type weight (max)
@@ -365,9 +365,9 @@ public class CharacterObject extends BaseObject {
         ),
         // Ninja Kunai
         new RngSettings(0x3A,
-                0.17f, 0.75f, // Progress
+                0.45f, 0.91f, // Progress
                 1, 3,    // Weight 
-                3, 6,    // Health
+                6, 0x10, // Health
                 2, 7,    // Clock
                 new float[] {5, 0, 0, 1},     // Spawn type weight (min)
                 new float[] {1, 0, 0, 2},  // Spawn type weight (max)
@@ -378,9 +378,9 @@ public class CharacterObject extends BaseObject {
         ),
         // Ninja Sword
         new RngSettings(0x3C,
-                0.17f, 0.78f, // Progress
+                0.5f, 0.88f, // Progress
                 1, 3,    // Weight 
-                3, 6,    // Health
+                6, 0x10, // Health
                 2, 7,    // Clock
                 new float[] {5, 0, 0, 1},     // Spawn type weight (min)
                 new float[] {1, 0, 0, 2},  // Spawn type weight (max)
@@ -391,9 +391,9 @@ public class CharacterObject extends BaseObject {
         ),
         // Jack
         new RngSettings(0x12,
-                0.003f, 0.75f, // Progress
+                0.01f, 0.75f, // Progress
                 2, 1,     // Weight 
-                4, 7,     // Health
+                0xA, 0x18,  // Health
                 1, 5,     // Clock
                 new float[] {1}, // Spawn type weight (min)
                 new float[] {1},  // Spawn type weight (max)
@@ -404,9 +404,9 @@ public class CharacterObject extends BaseObject {
         ),
         // Electra
         new RngSettings(0x16,
-                0.005f, 0.76f, // Progress
+                0.035f, 0.76f, // Progress
                 4, 1,     // Weight 
-                3, 6,     // Health
+                6, 0x0E,  // Health
                 1, 9,     // Clock
                 new float[] {5, 0, 0, 1},  // Spawn type weight (min)
                 new float[] {1, 0, 0, 5},  // Spawn type weight (max)
@@ -417,9 +417,9 @@ public class CharacterObject extends BaseObject {
         ),
         // Particle
         new RngSettings(0x32,
-                0.008f, 0.68f, // Progress
+                0.20f, 0.75f, // Progress
                 1, 1,     // Weight 
-                3, 7,     // Health
+                4, 0x10,  // Health
                 2, 12,    // Clock
                 new float[] {3, 0, 0, 1},  // Spawn type weight (min)
                 new float[] {4, 0, 0, 1},  // Spawn type weight (max)
@@ -430,9 +430,22 @@ public class CharacterObject extends BaseObject {
         ),
         // Barbon
         new RngSettings(0x14,
-                0.004f, 0.71f, // Progress
-                1, 3,     // Weight 
-                6, 0xE,   // Health
+                0.04f, 0.68f, // Progress
+                2, 3,         // Weight 
+                0x10, 0x1A,   // Health
+                0, 4,     // Clock
+                new float[] {0, 0, 2, 0, 1},  // Spawn type weight (min)
+                new float[] {0, 0, 2, 0, 1},  // Spawn type weight (max)
+                new SpawnTypeLocation[] { SpawnTypeLocation.inPlaceLeftRight, SpawnTypeLocation.inPlaceLeftRight, SpawnTypeLocation.inPlaceLeftRight, SpawnTypeLocation.inPlaceLeftRight, SpawnTypeLocation.middle},
+                110, 112, // names
+                0, 0,     // biker pipe %
+                0, 2      // clones
+        ),
+        // Barbon
+        new RngSettings(0x14,
+                0.68f, 0.975f, // Progress
+                3, 1,         // Weight 
+                0x10, 0x1A,   // Health
                 0, 4,     // Clock
                 new float[] {0, 0, 2, 0, 1},  // Spawn type weight (min)
                 new float[] {0, 0, 2, 0, 1},  // Spawn type weight (max)
@@ -443,9 +456,9 @@ public class CharacterObject extends BaseObject {
         ),
         // Jet
         new RngSettings(0x26,
-                0.2f, 0.9f, // Progress
+                0.6f, 0.95f, // Progress
                 1, 4,       // Weight 
-                3, 8,       // Health
+                8, 0x10,    // Health
                 0, 6,       // Clock
                 new float[] {1},  // Spawn type weight (min)
                 new float[] {1},  // Spawn type weight (max)
@@ -456,49 +469,49 @@ public class CharacterObject extends BaseObject {
         ),
         // Zamza
         new RngSettings(0x28,
-                0.05f, 0.82f, // Progress
-                2, 3,     // Weight 
-                6, 0x10,  // Health
+                0.175f, 0.97f, // Progress
+                2, 2,     // Weight 
+                8, 0x18,// Health
                 0, 4,     // Clock
                 new float[] {0, 0, 0, 1},  // Spawn type weight (min)
                 new float[] {0, 0, 0, 1},  // Spawn type weight (max)
-                new SpawnTypeLocation[] { SpawnTypeLocation.inPlaceLeftRight, SpawnTypeLocation.inPlaceLeftRight, SpawnTypeLocation.inPlaceLeftRight, SpawnTypeLocation.top},
+                new SpawnTypeLocation[] { SpawnTypeLocation.inPlaceLeftRight, SpawnTypeLocation.inPlaceLeftRight, SpawnTypeLocation.inPlaceLeftRight, SpawnTypeLocation.middle},
                 124, 126, // names
                 0, 0,     // biker pipe %
                 0, 2      // clones
         ),
         // Abadede
         new RngSettings(0x2C,
-                0.3f, 0.9f, // Progress
-                1, 3,     // Weight 
-                6, 0x12,  // Health
-                0, 4,     // Clock
+                0.4f, 0.98f, // Progress
+                2, 3,      // Weight 
+                0x14, 0x20,// Health
+                0, 4,      // Clock
                 new float[] {0, 0, 1},  // Spawn type weight (min)
                 new float[] {0, 0, 1},  // Spawn type weight (max)
-                new SpawnTypeLocation[] { SpawnTypeLocation.inPlaceLeftRight, SpawnTypeLocation.inPlaceLeftRight, SpawnTypeLocation.top},
+                new SpawnTypeLocation[] { SpawnTypeLocation.inPlaceLeftRight, SpawnTypeLocation.inPlaceLeftRight, SpawnTypeLocation.middle},
                 127, 128, // names
                 0, 0,     // biker pipe %
                 0, 1      // clones
         ),
         // R.Bear
         new RngSettings(0x2A,
-                0.4f, 0.9f, // Progress
-                1, 3,     // Weight 
-                6, 0x14,  // Health
-                0, 4,     // Clock
+                0.6f, 0.977f, // Progress
+                2, 1,       // Weight 
+                0x18, 0x24, // Health
+                0, 4,       // Clock
                 new float[] {0, 0, 1},  // Spawn type weight (min)
                 new float[] {0, 0, 1},  // Spawn type weight (max)
-                new SpawnTypeLocation[] { SpawnTypeLocation.inPlaceLeftRight, SpawnTypeLocation.inPlaceLeftRight, SpawnTypeLocation.top},
+                new SpawnTypeLocation[] { SpawnTypeLocation.inPlaceLeftRight, SpawnTypeLocation.inPlaceLeftRight, SpawnTypeLocation.middle},
                 129, 130, // names
                 0, 0,     // biker pipe %
                 0, 0      // clones
         ),
         // Shiva
         new RngSettings(0x38,
-                0.65f, 1f, // Progress
-                1, 5,   // Weight 
-                0xA, 0x18,      // Health
-                0, 7,           // Clock
+                0.85f, 1f,   // Progress
+                1, 5,        // Weight 
+                0x10, 0x20,  // Health
+                0, 7,        // Clock
                 new float[] {0, 0, 1},  // Spawn type weight (min)
                 new float[] {0, 0, 1},  // Spawn type weight (max)
                 new SpawnTypeLocation[] { SpawnTypeLocation.inPlaceLeftRight, SpawnTypeLocation.inPlaceLeftRight, SpawnTypeLocation.inPlaceLeftRight},
@@ -510,7 +523,7 @@ public class CharacterObject extends BaseObject {
         new RngSettings(0x36,
                 0.999f, 1f, // Progress
                 9999, 9999,   // Weight 
-                6, 0x50,      // Health
+                0x35, 0x35,   // Health
                 8, 8,         // Clock
                 new float[] {0, 0, 1},  // Spawn type weight (min)
                 new float[] {0, 0, 1},  // Spawn type weight (max)
@@ -519,13 +532,107 @@ public class CharacterObject extends BaseObject {
                 0, 0,     // biker pipe %
                 0, 0      // clones
         ),
+        // Max
+//        new RngSettings(0x0,
+//                0f, 1f, // Progress
+//                1, 1,    // Weight 
+//                4, 4,     // Health
+//                3, 9,     // Clock
+//                new float[] { 1}, // Spawn type weight (min)
+//                new float[] { 1},  // Spawn type weight (max)
+//                new SpawnTypeLocation[] { SpawnTypeLocation.inPlaceLeftRight},
+//                0, 0, // names
+//                0, 0, // biker pipe %
+//                0, 0  // clones
+//        ),
+//        // Axel
+//        new RngSettings(0x2,
+//                0f, 1f, // Progress
+//                1, 1,    // Weight 
+//                4, 4,     // Health
+//                3, 9,     // Clock
+//                new float[] { 1}, // Spawn type weight (min)
+//                new float[] { 1},  // Spawn type weight (max)
+//                new SpawnTypeLocation[] { SpawnTypeLocation.inPlaceLeftRight},
+//                0, 0, // names
+//                0, 0, // biker pipe %
+//                0, 0  // clones
+//        ),
+//        // Blaze
+//        new RngSettings(0x4,
+//                0f, 1f, // Progress
+//                1, 1,    // Weight 
+//                4, 4,     // Health
+//                3, 9,     // Clock
+//                new float[] { 1}, // Spawn type weight (min)
+//                new float[] { 1},  // Spawn type weight (max)
+//                new SpawnTypeLocation[] { SpawnTypeLocation.inPlaceLeftRight},
+//                0, 0, // names
+//                0, 0, // biker pipe %
+//                0, 0  // clones
+//        ),
+//        // Skate
+//        new RngSettings(0x6,
+//                0f, 1f, // Progress
+//                1, 1,    // Weight 
+//                4, 4,     // Health
+//                3, 9,     // Clock
+//                new float[] { 1}, // Spawn type weight (min)
+//                new float[] { 1},  // Spawn type weight (max)
+//                new SpawnTypeLocation[] { SpawnTypeLocation.inPlaceLeftRight},
+//                0, 0, // names
+//                0, 0, // biker pipe %
+//                0, 0  // clones
+//        ),
+//        // Adam
+//        new RngSettings(0x8,
+//                0f, 1f, // Progress
+//                1, 1,    // Weight 
+//                4, 4,     // Health
+//                3, 9,     // Clock
+//                new float[] { 1}, // Spawn type weight (min)
+//                new float[] { 1},  // Spawn type weight (max)
+//                new SpawnTypeLocation[] { SpawnTypeLocation.inPlaceLeftRight},
+//                0, 0, // names
+//                0, 0, // biker pipe %
+//                0, 0  // clones
+//        ),
+//        // Zan
+//        new RngSettings(0xA,
+//                0f, 1f, // Progress
+//                1, 1,    // Weight 
+//                4, 4,     // Health
+//                3, 9,     // Clock
+//                new float[] { 1}, // Spawn type weight (min)
+//                new float[] { 1},  // Spawn type weight (max)
+//                new SpawnTypeLocation[] { SpawnTypeLocation.inPlaceLeftRight},
+//                0, 0, // names
+//                0, 0, // biker pipe %
+//                0, 0  // clones
+//        ),
+//        // Roo
+//        new RngSettings(0xC,
+//                0f, 1f, // Progress
+//                1, 1,    // Weight 
+//                4, 4,     // Health
+//                3, 9,     // Clock
+//                new float[] { 1}, // Spawn type weight (min)
+//                new float[] { 1},  // Spawn type weight (max)
+//                new SpawnTypeLocation[] { SpawnTypeLocation.inPlaceLeftRight},
+//                0, 0, // names
+//                0, 0, // biker pipe %
+//                0, 0  // clones
+//        ),
+        
     };
     
     private static float[] accumulatedProbabilities;
     
     private static RngSettings currentRngSetting;
     
-    private static final int MaxLevels = 21;
+    private static final int MaxLevels = 31;
+    private static final float healthMultiplier = 1.5f;
+    private static boolean previousWasAlternatePalette;
     
     private static float lerp(float min, float max, float progress) {
         return min + (max - min) * progress;
@@ -577,78 +684,110 @@ public class CharacterObject extends BaseObject {
         }
         return currentRngSetting;
     }
+    
+    public static void prepareForRandomization() {
+        currentRngSetting = null;
+    }
             
 
-    public void randomize(float progress, long enemyNamesAddress) {
-        Random random = new Random();
-        
-        sceneId = (int)(progress * MaxLevels) * 2;        
-        // Exponential difficulty
-        progress *= progress;
-        RngSettings settings = getNextSetting(random, progress);
-        
-        
-        // No brainers
-        objectId = settings.objectId;
-        triggerType = 2;
-        enemyAgressiveness = (int)Math.ceil(progress + random.nextFloat()*(1 - progress) * 0xF);
-        useAlternativePalette = random.nextFloat() > 0.7f; // Might want a better function
-        useBossSlot = false;
-        collisionWidth = 14;
-        collisionHeight = 72;
-        collisionDept = 6;
-        
-        health = (int) lerp(settings.initialHealth, settings.finalHealth + 1, settings.relativeProgress);
-        
-        // Name
-        int nameIndex = settings.minNamesIndex + random.nextInt(settings.maxNamesIndex - settings.minNamesIndex + 1);
-        nameAddress = enemyNamesAddress + nameIndex * AllEnemyNames.NAME_SIZE;
-        // Clock
-        int clockValue = (int) lerp(settings.initialMaxClock, settings.finalMaxClock + 1, settings.relativeProgress);
-        clockValue = (int) Math.ceil(clockValue / 2f);
-        if (clockValue > 0) {
-            clockValue = clockValue + random.nextInt(clockValue + 1);
+    public void randomize(int enemyId, int size, long enemyNamesAddress) {
+        float progress = (float)enemyId / size;
+//        Random random = new Random();
+//        
+        sceneId = (int)(progress * MaxLevels) * 2;
+//        
+//        // Linear progression
+//        enemyAgressiveness = (int)Math.ceil(progress + random.nextFloat()*(1 - progress) * 0xF);
+//        
+//        // Exponential difficulty
+//        // progress *= progress;
+//        RngSettings settings = getNextSetting(random, progress);
+//        
+//        
+//        // No brainers
+//        objectId = settings.objectId;
+//        minimumDifficulty = 0;
+//        triggerType = 2;
+//        if (previousWasAlternatePalette && random.nextBoolean()) {
+//            useAlternativePalette = true;
+//        }
+//        else {
+//            useAlternativePalette = random.nextFloat() > 0.6f;
+//            previousWasAlternatePalette = useAlternativePalette;
+//        }
+//        
+//        useBossSlot = false;
+//        collisionWidth = 14;
+//        collisionHeight = 72;
+//        collisionDept = 6;
+//        initialState = 0;
+//        
+//        health = (int) lerp(settings.initialHealth * healthMultiplier, settings.finalHealth * healthMultiplier + 1, settings.relativeProgress);
+//        
+//        // Name
+//        int nameIndex = settings.minNamesIndex + random.nextInt(settings.maxNamesIndex - settings.minNamesIndex + 1);
+//        nameAddress = enemyNamesAddress + nameIndex * AllEnemyNames.NAME_SIZE;
+//        // Clock
+//        int clockValue = (int) lerp(settings.initialMaxClock, settings.finalMaxClock + 1, settings.relativeProgress);
+//        clockValue = (int) Math.ceil(clockValue / 2f);
+//        if (clockValue > 0) {
+//            clockValue = clockValue + random.nextInt(clockValue + 1);
+//        }
+//        triggerArgument = (clockValue & 0xFF);
+//        
+//        float weaponFlagProbability = lerp(settings.initialBikerWeaponFlagProbability, settings.finalBikerWeaponFlagProbability, settings.relativeProgress);
+//        bikerWeaponFlag = random.nextFloat() < weaponFlagProbability;
+//        
+//            
+//        deathScore = (health + 1) * 8; // TODO: better score function?
+//        
+//        
+//        // Spawn type
+//        float[] lerpedSpawnAccumProbabilities = settings.getlerpedSpawnTypeAccumProbabilities();
+//        introductionType = 0;
+//        float randomValue = enemyId < 4 ? 0 : random.nextFloat();
+//        for (int i = 0; i < lerpedSpawnAccumProbabilities.length; ++i) {
+//            if (lerpedSpawnAccumProbabilities[i] > randomValue) {
+//                introductionType = i;
+//                break;
+//            }
+//        }
+//        
+//        // Positioning
+//        SpawnTypeLocation locationType = settings.spawnTypeLocations[introductionType];
+//        //System.out.println(introductionType + " ==> " + locationType);
+//        switch(locationType) {
+//            case inPlaceLeftRight: {
+//                posX = -40 -random.nextInt(160);
+//                if (enemyId < 4 || random.nextBoolean()) {
+//                    posX = 400 - posX;
+//                }
+//                posY = 176 + random.nextInt(230 - 176);
+//            } break;
+//            case top: {
+//                posX = 90 + random.nextInt(330 - 90);
+//                posY = 0;
+//            } break;
+//            case middle: {
+//                posX = 90 + random.nextInt(400 - 90);
+//                posY = 176 + random.nextInt(230 - 176);
+//            } break;
+//        }
+//        
+//        // Mr.X
+        if (sceneId >= MaxLevels * 2) {
+            sceneId = MaxLevels * 2 - 2;
+            useAlternativePalette = true;
         }
-        triggerArgument = (clockValue & 0xFF);
-        
-        float weaponFlagProbability = lerp(settings.initialBikerWeaponFlagProbability, settings.finalBikerWeaponFlagProbability, settings.relativeProgress);
-        bikerWeaponFlag = random.nextFloat() < weaponFlagProbability;
-        
+//        
+//        // corrections...
+//        while (posX > 800)  {
+//            posX = -40 -random.nextInt(160);
+//            if (enemyId < 4 || random.nextBoolean()) {
+//                posX = 400 - posX;
+//            }
+//        }
             
-        deathScore = (health + 1) * 8; // TODO: better score function?
-        
-        
-        // Spawn type
-        float[] lerpedSpawnAccumProbabilities = settings.getlerpedSpawnTypeAccumProbabilities();
-        introductionType = 0;
-        float randomValue = random.nextFloat();
-        for (int i = 0; i < lerpedSpawnAccumProbabilities.length; ++i) {
-            if (lerpedSpawnAccumProbabilities[i] > randomValue) {
-                introductionType = i;
-                break;
-            }
-        }
-        
-        // Positioning
-        SpawnTypeLocation locationType = settings.spawnTypeLocations[introductionType];
-        //System.out.println(introductionType + " ==> " + locationType);
-        switch(locationType) {
-            case inPlaceLeftRight: {
-                posX = -40 -random.nextInt(200);
-                if (random.nextBoolean()) {
-                    posX = 400 - posX;
-                }
-                posY = 165 + random.nextInt(230 - 165);
-            } break;
-            case top: {
-                posX = 90 + random.nextInt(330 - 90);
-                posY = 0;
-            } break;
-            case middle: {
-                posX = 90 + random.nextInt(400 - 90);
-                posY = 176 + random.nextInt(230 - 176);
-            } break;
-        }
         
     }
 
