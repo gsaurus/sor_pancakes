@@ -47,7 +47,7 @@ import lib.names.AllEnemyNames;
  */
 public final class Sor2LevelEditor extends javax.swing.JFrame {
     
-    private static final String VERSION = " v1.0";    
+    private static final String VERSION = " v1.1";    
     private static final String TITLE = "SoR2 Level Editor" + VERSION;
     
     private static final String ORIGINAL_GUIDE_NAME = "guides/default.txt";
@@ -985,7 +985,7 @@ public final class Sor2LevelEditor extends javax.swing.JFrame {
 
     private void jMenuItem4ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jMenuItem4ActionPerformed
         JOptionPane.showMessageDialog(this,
-            "<html><h2>" + TITLE + " 2018</h2><br><br>" +
+            "<html><h2>" + TITLE + " 2021</h2><br><br>" +
             "Tool: <b>gsaurus</b><br>" +
             "Knowledge expert: <b>Red Crimson</b><br>" +
             "Backgrounds by: <b>darrenagar</b><br><br>" +
