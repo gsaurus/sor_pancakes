@@ -22,12 +22,14 @@ import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.List;
 import javax.swing.ComboBoxModel;
 import javax.swing.DefaultComboBoxModel;
 import javax.swing.JFileChooser;
 import javax.swing.JMenu;
 import javax.swing.JMenuItem;
 import javax.swing.JOptionPane;
+import static javax.swing.JOptionPane.ERROR_MESSAGE;
 import javax.swing.filechooser.FileFilter;
 import lib.ExceptionUtils;
 import lib.NumberUtils;
@@ -36,6 +38,7 @@ import lib.elc.AllLevelsLoadcues;
 import lib.elc.BaseObject;
 import lib.elc.CharacterObject;
 import lib.elc.ItemObject;
+import lib.elc.LevelLoadcues;
 import lib.names.AllEnemyNames;
 
 /**
@@ -49,6 +52,7 @@ public final class Sor2LevelEditor extends javax.swing.JFrame {
     
     private static final String ORIGINAL_GUIDE_NAME = "guides/default.txt";
     private static final String SW_GUIDE_NAME = "guides/syndicate_wars_v2.txt";
+    private static final String SW_SURVIVAL_GUIDE_NAME = "guides/syndicate_wars_v2 - survival.txt";
     
     private JFileChooser romChooser;
     private JFileChooser guideChooser;
@@ -84,6 +88,18 @@ public final class Sor2LevelEditor extends javax.swing.JFrame {
         setupMapListeners();
     }
     
+    private boolean ReloadRandomizerSettings() {
+        try {
+            CharacterObject.readRandomizer();
+        } catch(Exception e) {
+            e.printStackTrace(System.err);
+            JOptionPane.showMessageDialog(null, e, "Failed to parse randomizer.txt", ERROR_MESSAGE);
+            return false;
+        }
+        return true;
+    }
+    
+        
     
     private Component[] getComponents(Component container) {
         ArrayList<Component> list = null;
@@ -249,8 +265,7 @@ public final class Sor2LevelEditor extends javax.swing.JFrame {
         int deltaObjectId = guide.numberOfMainCharacters - this.guide.numberOfMainCharacters;
         // Object ID is always even
         deltaObjectId *= 2;
-        // randomize!!! DEBUG
-        levels.levels.get(0).randomizeEnemiesListOne(enemyNames.address);
+
         // save
          try {
             levels.write(rom.getRomFile(), guide.levelsLoadcuesAddress, deltaObjectId);
@@ -332,7 +347,7 @@ public final class Sor2LevelEditor extends javax.swing.JFrame {
     
     boolean loadLevels(Rom rom){
         try {
-            levels = new AllLevelsLoadcues(rom.getRomFile(), guide.levelsLoadcuesAddress);
+            levels = new AllLevelsLoadcues(rom.getRomFile(), guide.levelsLoadcuesAddress, guide.numberOfLevels);
             return true;
         } catch (IOException ex) {
             ExceptionUtils.showError(this, "Unable to load levels", ex);
@@ -362,6 +377,7 @@ public final class Sor2LevelEditor extends javax.swing.JFrame {
                 guide = openGuide(guideName, rom);
                 if (guide != null && loadLevels(rom) && loadEnemyNames(rom)){
                     setEnabledRecursively(true);
+                    updateNumberOfLevels();
                     updateNumberOfScenes();
                     reloadMap(false);
                 }else{
@@ -404,9 +420,20 @@ public final class Sor2LevelEditor extends javax.swing.JFrame {
 /////////////////////////////////////////////////////////////
     
     
+    void updateNumberOfLevels(){
+        int maxLevels = guide.numberOfLevels;
+        String[] levelOptions = new String[maxLevels];
+        for (int i = 0 ; i < maxLevels; ++i){
+            levelOptions[i] = Integer.toString(i+1);
+        }
+        ComboBoxModel model = new DefaultComboBoxModel(levelOptions);
+        levelComboBox.setModel(model);
+        levelComboBox.setSelectedIndex(0);
+    }
+    
     void updateNumberOfScenes(){
         int currentLevel = levelComboBox.getSelectedIndex();
-        int numberOfScenes = levels.levels.get(currentLevel).getTotalNumberOfScenes() + 1;
+        int numberOfScenes = levels.levels.get(currentLevel).getTotalNumberOfScenes();
         String[] sceneOptions = new String[numberOfScenes];
         for (int i = 0 ; i < numberOfScenes; ++i){
             sceneOptions[i] = Integer.toString(i+1);
@@ -460,6 +487,7 @@ public final class Sor2LevelEditor extends javax.swing.JFrame {
         jMenu5 = new javax.swing.JMenu();
         openOriginalMenuItem = new javax.swing.JMenuItem();
         openSWMenuItem = new javax.swing.JMenuItem();
+        openSWMenuItem1 = new javax.swing.JMenuItem();
         jSeparator5 = new javax.swing.JPopupMenu.Separator();
         jMenuItem5 = new javax.swing.JMenuItem();
         jSeparator3 = new javax.swing.JPopupMenu.Separator();
@@ -468,6 +496,9 @@ public final class Sor2LevelEditor extends javax.swing.JFrame {
         jMenuItem6 = new javax.swing.JMenuItem();
         jMenuItem7 = new javax.swing.JMenuItem();
         jSeparator2 = new javax.swing.JPopupMenu.Separator();
+        randomizeSurvivalMenuItem = new javax.swing.JMenuItem();
+        randomizeAllStagesMenuItem = new javax.swing.JMenuItem();
+        jSeparator4 = new javax.swing.JPopupMenu.Separator();
         exitMenuItem = new javax.swing.JMenuItem();
         jMenu2 = new javax.swing.JMenu();
         jMenuItem1 = new javax.swing.JMenuItem();
@@ -593,7 +624,6 @@ public final class Sor2LevelEditor extends javax.swing.JFrame {
         objectIndexLabel.setToolTipText("<html>Spawning order of the selected enemy or object</html>");
         objectIndexLabel.setFocusable(false);
         objectIndexLabel.setHorizontalTextPosition(javax.swing.SwingConstants.CENTER);
-        objectIndexLabel.setSize(new java.awt.Dimension(30, 16));
 
         javax.swing.GroupLayout jPanel3Layout = new javax.swing.GroupLayout(jPanel3);
         jPanel3.setLayout(jPanel3Layout);
@@ -636,7 +666,7 @@ public final class Sor2LevelEditor extends javax.swing.JFrame {
                         .addComponent(showEnemiesPack2CheckBox)
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                         .addComponent(editNamesButton, javax.swing.GroupLayout.DEFAULT_SIZE, 142, Short.MAX_VALUE)))
-                .addContainerGap(396, Short.MAX_VALUE))
+                .addContainerGap(485, Short.MAX_VALUE))
         );
         jPanel3Layout.setVerticalGroup(
             jPanel3Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
@@ -665,17 +695,7 @@ public final class Sor2LevelEditor extends javax.swing.JFrame {
                 .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
         );
 
-        javax.swing.GroupLayout mapPanelLayout = new javax.swing.GroupLayout(mapPanel);
-        mapPanel.setLayout(mapPanelLayout);
-        mapPanelLayout.setHorizontalGroup(
-            mapPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGap(0, Short.MAX_VALUE, Short.MAX_VALUE)
-        );
-        mapPanelLayout.setVerticalGroup(
-            mapPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGap(0, 515, Short.MAX_VALUE)
-        );
-
+        mapPanel.setLayout(new java.awt.BorderLayout());
         jScrollPane1.setViewportView(mapPanel);
 
         objectContainerPanel.setBorder(javax.swing.BorderFactory.createLineBorder(new java.awt.Color(0, 0, 0)));
@@ -701,6 +721,14 @@ public final class Sor2LevelEditor extends javax.swing.JFrame {
             }
         });
         jMenu5.add(openSWMenuItem);
+
+        openSWMenuItem1.setText("SW 2.x Survival");
+        openSWMenuItem1.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                openSWMenuItem1ActionPerformed(evt);
+            }
+        });
+        jMenu5.add(openSWMenuItem1);
         jMenu5.add(jSeparator5);
 
         jMenuItem5.setText("Specific Guide");
@@ -714,7 +742,7 @@ public final class Sor2LevelEditor extends javax.swing.JFrame {
         jMenu1.add(jMenu5);
         jMenu1.add(jSeparator3);
 
-        saveMenuItem.setAccelerator(javax.swing.KeyStroke.getKeyStroke(java.awt.event.KeyEvent.VK_S, java.awt.event.InputEvent.META_MASK));
+        saveMenuItem.setAccelerator(javax.swing.KeyStroke.getKeyStroke(java.awt.event.KeyEvent.VK_S, java.awt.event.InputEvent.META_DOWN_MASK));
         saveMenuItem.setText("Save");
         saveMenuItem.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
@@ -744,7 +772,26 @@ public final class Sor2LevelEditor extends javax.swing.JFrame {
         jMenu1.add(jMenu4);
         jMenu1.add(jSeparator2);
 
-        exitMenuItem.setAccelerator(javax.swing.KeyStroke.getKeyStroke(java.awt.event.KeyEvent.VK_Q, java.awt.event.InputEvent.META_MASK));
+        randomizeSurvivalMenuItem.setAccelerator(javax.swing.KeyStroke.getKeyStroke(java.awt.event.KeyEvent.VK_F10, 0));
+        randomizeSurvivalMenuItem.setText("Randomize Survival");
+        randomizeSurvivalMenuItem.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                randomizeSurvivalMenuItemActionPerformed(evt);
+            }
+        });
+        jMenu1.add(randomizeSurvivalMenuItem);
+
+        randomizeAllStagesMenuItem.setAccelerator(javax.swing.KeyStroke.getKeyStroke(java.awt.event.KeyEvent.VK_F11, 0));
+        randomizeAllStagesMenuItem.setText("Randomize All Stages");
+        randomizeAllStagesMenuItem.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                randomizeAllStagesMenuItemActionPerformed(evt);
+            }
+        });
+        jMenu1.add(randomizeAllStagesMenuItem);
+        jMenu1.add(jSeparator4);
+
+        exitMenuItem.setAccelerator(javax.swing.KeyStroke.getKeyStroke(java.awt.event.KeyEvent.VK_Q, java.awt.event.InputEvent.META_DOWN_MASK));
         exitMenuItem.setText("Exit");
         exitMenuItem.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
@@ -806,26 +853,25 @@ public final class Sor2LevelEditor extends javax.swing.JFrame {
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addComponent(jPanel3, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
             .addGroup(layout.createSequentialGroup()
-                .addContainerGap()
-                .addComponent(objectContainerPanel, javax.swing.GroupLayout.PREFERRED_SIZE, 235, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+                .addComponent(objectContainerPanel, javax.swing.GroupLayout.PREFERRED_SIZE, 245, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addGap(0, 0, Short.MAX_VALUE))
             .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                 .addGroup(layout.createSequentialGroup()
-                    .addGap(242, 242, 242)
-                    .addComponent(jScrollPane1, javax.swing.GroupLayout.PREFERRED_SIZE, 884, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addGap(0, 0, Short.MAX_VALUE)))
+                    .addGap(244, 244, 244)
+                    .addComponent(jScrollPane1, javax.swing.GroupLayout.DEFAULT_SIZE, 882, Short.MAX_VALUE)
+                    .addContainerGap()))
         );
         layout.setVerticalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(layout.createSequentialGroup()
                 .addComponent(jPanel3, javax.swing.GroupLayout.PREFERRED_SIZE, 58, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addComponent(objectContainerPanel, javax.swing.GroupLayout.DEFAULT_SIZE, 591, Short.MAX_VALUE))
+                .addComponent(objectContainerPanel, javax.swing.GroupLayout.DEFAULT_SIZE, 602, Short.MAX_VALUE))
             .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                 .addGroup(layout.createSequentialGroup()
-                    .addGap(61, 61, 61)
-                    .addComponent(jScrollPane1, javax.swing.GroupLayout.PREFERRED_SIZE, 594, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addGap(0, 0, Short.MAX_VALUE)))
+                    .addGap(64, 64, 64)
+                    .addComponent(jScrollPane1, javax.swing.GroupLayout.DEFAULT_SIZE, 602, Short.MAX_VALUE)
+                    .addGap(0, 0, 0)))
         );
 
         pack();
@@ -965,6 +1011,38 @@ public final class Sor2LevelEditor extends javax.swing.JFrame {
         }
     }//GEN-LAST:event_jMenuItem5ActionPerformed
 
+    private void randomizeSurvivalMenuItemActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_randomizeSurvivalMenuItemActionPerformed
+        if (rom == null || guide == null || !ReloadRandomizerSettings()){
+            return;
+        }
+        requestFocusInWindow();
+        storeUnsavedDataInJPanels();
+        levels.levels.get(0).randomizeEnemiesListOne(enemyNames.address);
+        reloadMap(true);
+    }//GEN-LAST:event_randomizeSurvivalMenuItemActionPerformed
+
+    private void randomizeAllStagesMenuItemActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_randomizeAllStagesMenuItemActionPerformed
+       if (rom == null || guide == null || !ReloadRandomizerSettings()){
+            return;
+        }
+        requestFocusInWindow();
+        storeUnsavedDataInJPanels();
+        List<LevelLoadcues> allLevels = levels.levels;
+        int totalEnemies = 0;
+        for (LevelLoadcues level: allLevels) {
+            totalEnemies += level.getTotalEnemies();
+        }
+        int spawnCount = 0;
+        for (LevelLoadcues level: allLevels) {
+            spawnCount = level.randomizeEnemies(enemyNames.address, spawnCount, totalEnemies);
+        }
+        reloadMap(true);
+    }//GEN-LAST:event_randomizeAllStagesMenuItemActionPerformed
+
+    private void openSWMenuItem1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_openSWMenuItem1ActionPerformed
+        openProject(SW_SURVIVAL_GUIDE_NAME);
+    }//GEN-LAST:event_openSWMenuItem1ActionPerformed
+
     /**
      * @param args the command line arguments
      */
@@ -1029,6 +1107,7 @@ public final class Sor2LevelEditor extends javax.swing.JFrame {
     private javax.swing.JPopupMenu.Separator jSeparator1;
     private javax.swing.JPopupMenu.Separator jSeparator2;
     private javax.swing.JPopupMenu.Separator jSeparator3;
+    private javax.swing.JPopupMenu.Separator jSeparator4;
     private javax.swing.JPopupMenu.Separator jSeparator5;
     private javax.swing.JComboBox<String> levelComboBox;
     private main.MapPanel mapPanel;
@@ -1037,6 +1116,9 @@ public final class Sor2LevelEditor extends javax.swing.JFrame {
     private javax.swing.JLabel objectIndexLabel;
     private javax.swing.JMenuItem openOriginalMenuItem;
     private javax.swing.JMenuItem openSWMenuItem;
+    private javax.swing.JMenuItem openSWMenuItem1;
+    private javax.swing.JMenuItem randomizeAllStagesMenuItem;
+    private javax.swing.JMenuItem randomizeSurvivalMenuItem;
     private javax.swing.JMenuItem saveMenuItem;
     private javax.swing.JComboBox<String> sceneComboBox;
     private javax.swing.JCheckBox showBackgroundCheckBox;

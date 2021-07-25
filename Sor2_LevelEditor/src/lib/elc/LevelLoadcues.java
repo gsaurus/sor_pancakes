@@ -34,7 +34,6 @@ public final class LevelLoadcues {
     // DEBUG!!!!
     private final int extraOffset = 0;//0x4100;
     private final boolean onlyEnemiesSet1 = true; //false
-    private final boolean generateRandomEnemies = true; // false
     
     public LevelLoadcues(RandomAccessFile rom, long address) throws IOException{
         this.address = address;
@@ -131,15 +130,26 @@ public final class LevelLoadcues {
             ex.printStackTrace();
         }
     }
-
+    
     public void randomizeEnemiesListOne(long enemyNamesAddress) {
-        if (!generateRandomEnemies)
-            return;
-        List<CharacterObject> enemies = enemiesPart1;
+        randomizeEnemiesList(enemyNamesAddress, enemiesPart1, 0, enemiesPart1.size() - 1, true);
+    }
+
+    public int randomizeEnemiesList(long enemyNamesAddress, List<CharacterObject> enemies, int accum, int total, boolean updateScene) {
         CharacterObject.prepareForRandomization();
         for (int i = 0; i < enemies.size(); ++i) {
-            enemies.get(i).randomize(i, enemies.size() - 1, enemyNamesAddress);
+            enemies.get(i).randomize(accum++, total, enemyNamesAddress, updateScene);
         }
+        return accum;
+    }
+    
+    public int randomizeEnemies(long enemyNamesAddress, int accum, int total) {
+        accum = randomizeEnemiesList(enemyNamesAddress, enemiesPart1, accum, total, false);
+        return randomizeEnemiesList(enemyNamesAddress, enemiesPart2, accum, total, false);
+    }
+    
+    public int getTotalEnemies() {
+        return enemiesPart1.size() + enemiesPart2.size();
     }
     
 }

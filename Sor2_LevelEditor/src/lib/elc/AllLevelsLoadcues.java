@@ -27,12 +27,14 @@ import lib.Rom;
  * @author gil.costa
  */
 public class AllLevelsLoadcues {
-    public static final int NUM_LEVELS = 1;//9;
+    public final int NUM_LEVELS;
     public long address;
-    public final List<LevelLoadcues> levels = new ArrayList<LevelLoadcues>(NUM_LEVELS);
+    public final List<LevelLoadcues> levels;
     
-    public AllLevelsLoadcues(RandomAccessFile rom, long address) throws IOException{
+    public AllLevelsLoadcues(RandomAccessFile rom, long address, int numLevels) throws IOException{
         this.address = address;
+        NUM_LEVELS = numLevels;
+        levels = new ArrayList<LevelLoadcues>(NUM_LEVELS);
         for (int i = 0; i < NUM_LEVELS ; ++i){
             rom.seek(address);
             long levelElcAddress = address + rom.readUnsignedShort();            
@@ -66,7 +68,7 @@ public class AllLevelsLoadcues {
 //            Rom rom = new Rom(new File("sor2.bin"));
 //            AllLevelsLoadcues obj = new AllLevelsLoadcues(rom.getRomFile(), 0x1EF49C);
             Rom rom = new Rom(new File("sor2built 2.bin"));
-            AllLevelsLoadcues obj = new AllLevelsLoadcues(rom.getRomFile(), 0x15411e);
+            AllLevelsLoadcues obj = new AllLevelsLoadcues(rom.getRomFile(), 0x15411e, 8);
             obj.write(rom.getRomFile());
             rom.close();
         } catch (Exception ex) {

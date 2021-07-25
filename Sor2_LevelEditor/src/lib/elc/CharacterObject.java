@@ -16,9 +16,13 @@
 package lib.elc;
 
 import java.io.File;
+import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.io.RandomAccessFile;
+import java.util.ArrayList;
+import java.util.List;
 import java.util.Random;
+import java.util.Scanner;
 import lib.Rom;
 import lib.names.AllEnemyNames;
 
@@ -29,6 +33,8 @@ import lib.names.AllEnemyNames;
 public class CharacterObject extends BaseObject {
 
     public static final int SIZE = 0x18;
+    
+    private static final String randomizerFileName = "randomizer.txt";
 
     /**
      * dc.b	; Character ID dc.b 0	; 1 = Level (scene) dc.b 1	; 2 = Spawn Type
@@ -163,9 +169,10 @@ public class CharacterObject extends BaseObject {
 
     // TODO: refactor, move this away from here
     enum SpawnTypeLocation {
+        invalid,
         inPlaceLeftRight,
         top,
-        middle
+        middle,
     }
     
     static class RngSettings {
@@ -258,7 +265,130 @@ public class CharacterObject extends BaseObject {
         }
     }
     
-    private static final RngSettings[] allRngSettings = new RngSettings[] {
+    private static RngSettings[] allRngSettings; 
+    
+    private static int nextInitialInt(Scanner sc) {
+        while (sc.hasNext() && !(sc.hasNext("0x.*") || sc.hasNextInt())) {
+            skipTheRestOfTheLine(sc);
+        }
+        return nextInt(sc);
+    }
+    
+    private static int nextInt(Scanner sc) {
+        if (sc.hasNext("0x.*")) {
+            String hexValue = sc.next("0x.*").substring(2);
+            return Integer.parseInt(hexValue, 16);
+        }
+         if (sc.hasNextInt()) return sc.nextInt();
+        return -1;
+    }
+    
+    private static float nextInitialFloat(Scanner sc) {
+        while (sc.hasNext() && !sc.hasNextFloat()) {
+            skipTheRestOfTheLine(sc);
+        }
+        return nextFloat(sc);
+    }
+    
+    private static float nextFloat(Scanner sc) {
+        if (sc.hasNextFloat()) return sc.nextFloat();
+        return Float.NaN;
+    }
+    
+    private static void skipTheRestOfTheLine(Scanner sc) {
+        sc.nextLine();
+    }
+    
+    private static SpawnTypeLocation nextInitialSpawnTypeLocation(Scanner sc) {
+        while (sc.hasNext("//.*")) {
+            skipTheRestOfTheLine(sc);
+        }
+        return nextSpawnTypeLocation(sc);
+    }
+    
+    private static SpawnTypeLocation nextSpawnTypeLocation(Scanner sc) {
+        if (!sc.hasNext())
+            return SpawnTypeLocation.invalid;
+        String value = sc.next();
+        try {
+            return SpawnTypeLocation.valueOf(value);
+        }
+        catch(Exception ex) {
+            // ignore
+        }
+        return SpawnTypeLocation.invalid;
+    }
+    
+    public static void readRandomizer() throws FileNotFoundException {
+        File file = new File(randomizerFileName);
+        if (!file.exists()) {
+            System.err.println(randomizerFileName + " not found");
+            return;
+        }
+        System.out.println("Reading " + randomizerFileName);
+        Scanner sc = new Scanner(file);
+        // Settings
+        MaxLevels = nextInitialInt(sc) + 1;
+        healthMultiplier = nextInitialFloat(sc);
+        deathScoreMultiplier = nextInitialFloat(sc);
+        alternatePaletteInitialProbability = nextInitialFloat(sc);
+        alternatePaletteSequencialProbability = nextInitialFloat(sc);
+        
+        readAllRngSettings(sc);
+        System.out.println("Finished reading randozimer settings");
+    }
+    
+    private static float[] nextListOfFloats(Scanner sc) {
+        List<Float> floats = new ArrayList<Float>();
+        float value = nextInitialFloat(sc);
+        while (!Float.isNaN(value)) {
+            floats.add(value);
+            value = nextFloat(sc);
+        }
+        float[] result = new float[floats.size()];
+        for (int i = 0 ; i < floats.size(); ++i) {
+            result[i] = floats.get(i);
+        }
+        return result;
+    }
+    
+    private static SpawnTypeLocation[] nextListOfSpawnTypeLocations(Scanner sc) {
+        List<SpawnTypeLocation> locations = new ArrayList<SpawnTypeLocation>();
+        SpawnTypeLocation value = nextInitialSpawnTypeLocation(sc);
+        Scanner restOfTheLine = new Scanner(sc.nextLine());
+        while (value != SpawnTypeLocation.invalid) {
+            locations.add(value);
+            value = nextSpawnTypeLocation(restOfTheLine);
+        }
+        return locations.toArray(new SpawnTypeLocation[0]);
+    }
+    
+    private static void readAllRngSettings(Scanner sc) {
+        List<RngSettings> allSettings = new ArrayList<RngSettings>(20);
+        int characterId = nextInitialInt(sc);
+        while (characterId >= 0){
+            allSettings.add(new RngSettings(
+                characterId, // ID
+                nextInitialFloat(sc), nextFloat(sc), // Progress
+                nextInitialFloat(sc), nextFloat(sc), // Weight 
+                nextInitialInt(sc), nextInt(sc),     // Health
+                nextInitialInt(sc), nextInt(sc),    // Clock
+                nextListOfFloats(sc), // Spawn type weight (min)
+                nextListOfFloats(sc),  // Spawn type weight (max)
+                nextListOfSpawnTypeLocations(sc),
+                nextInitialInt(sc), nextInt(sc), // names
+                nextInitialFloat(sc), nextFloat(sc), // biker pipe %
+                nextInitialInt(sc), nextInt(sc)  // clones
+            ));
+            characterId = nextInitialInt(sc);
+        }
+        allRngSettings = allSettings.toArray(new RngSettings[0]);
+    }
+    
+    
+     {
+    /*
+    = new RngSettings[] {
         // Galsia
         new RngSettings(0xE,
                 0f, 0.9f, // Progress
@@ -625,13 +755,21 @@ public class CharacterObject extends BaseObject {
 //        ),
         
     };
+*/
+}     
+    
     
     private static float[] accumulatedProbabilities;
     
     private static RngSettings currentRngSetting;
     
-    private static final int MaxLevels = 31;
-    private static final float healthMultiplier = 1.5f;
+    // Configurable
+    private static int MaxLevels = 31;
+    private static float healthMultiplier = 1.5f;
+    private static float deathScoreMultiplier = 8;
+    private static float alternatePaletteInitialProbability = 0.6f;
+    private static float alternatePaletteSequencialProbability = 0.5f;
+    
     private static boolean previousWasAlternatePalette;
     
     private static float lerp(float min, float max, float progress) {
@@ -639,7 +777,7 @@ public class CharacterObject extends BaseObject {
     }
     
     
-    private void updateProbabilities(float progress) {
+    private static void updateProbabilities(float progress) {
         accumulatedProbabilities = new float[allRngSettings.length];
         float accumulatedWeight = 0;
         for (int i = 0; i < allRngSettings.length; ++i) {
@@ -660,7 +798,7 @@ public class CharacterObject extends BaseObject {
     }
             
     
-    private RngSettings getNextSetting(Random random, float progress) {
+    private static RngSettings getNextSetting(Random random, float progress) {
         if (currentRngSetting != null && currentRngSetting.remainingClones > 0) {
             RngSettings returnSetting = currentRngSetting;
             if (--currentRngSetting.remainingClones == 0) {
@@ -688,105 +826,108 @@ public class CharacterObject extends BaseObject {
     public static void prepareForRandomization() {
         currentRngSetting = null;
     }
+    
+    private boolean isSpecialEnemy() {
+        return (objectId == 0x16 && introductionType == 1) // Electra singing
+            || (objectId == 0x14 && introductionType == 0) // Barbon coktailing
+            || (objectId == 0x38 && introductionType == 0) // Shiva right hand of Mr.X
+            || (objectId == 0x36 && introductionType == 0); // Mr.X final boss
+    }
             
 
-    public void randomize(int enemyId, int size, long enemyNamesAddress) {
-        float progress = (float)enemyId / size;
-//        Random random = new Random();
-//        
-        sceneId = (int)(progress * MaxLevels) * 2;
-//        
-//        // Linear progression
-//        enemyAgressiveness = (int)Math.ceil(progress + random.nextFloat()*(1 - progress) * 0xF);
-//        
-//        // Exponential difficulty
-//        // progress *= progress;
-//        RngSettings settings = getNextSetting(random, progress);
-//        
-//        
-//        // No brainers
-//        objectId = settings.objectId;
-//        minimumDifficulty = 0;
-//        triggerType = 2;
-//        if (previousWasAlternatePalette && random.nextBoolean()) {
-//            useAlternativePalette = true;
-//        }
-//        else {
-//            useAlternativePalette = random.nextFloat() > 0.6f;
-//            previousWasAlternatePalette = useAlternativePalette;
-//        }
-//        
-//        useBossSlot = false;
-//        collisionWidth = 14;
-//        collisionHeight = 72;
-//        collisionDept = 6;
-//        initialState = 0;
-//        
-//        health = (int) lerp(settings.initialHealth * healthMultiplier, settings.finalHealth * healthMultiplier + 1, settings.relativeProgress);
-//        
-//        // Name
-//        int nameIndex = settings.minNamesIndex + random.nextInt(settings.maxNamesIndex - settings.minNamesIndex + 1);
-//        nameAddress = enemyNamesAddress + nameIndex * AllEnemyNames.NAME_SIZE;
-//        // Clock
-//        int clockValue = (int) lerp(settings.initialMaxClock, settings.finalMaxClock + 1, settings.relativeProgress);
-//        clockValue = (int) Math.ceil(clockValue / 2f);
-//        if (clockValue > 0) {
-//            clockValue = clockValue + random.nextInt(clockValue + 1);
-//        }
-//        triggerArgument = (clockValue & 0xFF);
-//        
-//        float weaponFlagProbability = lerp(settings.initialBikerWeaponFlagProbability, settings.finalBikerWeaponFlagProbability, settings.relativeProgress);
-//        bikerWeaponFlag = random.nextFloat() < weaponFlagProbability;
-//        
-//            
-//        deathScore = (health + 1) * 8; // TODO: better score function?
-//        
-//        
-//        // Spawn type
-//        float[] lerpedSpawnAccumProbabilities = settings.getlerpedSpawnTypeAccumProbabilities();
-//        introductionType = 0;
-//        float randomValue = enemyId < 4 ? 0 : random.nextFloat();
-//        for (int i = 0; i < lerpedSpawnAccumProbabilities.length; ++i) {
-//            if (lerpedSpawnAccumProbabilities[i] > randomValue) {
-//                introductionType = i;
-//                break;
-//            }
-//        }
-//        
-//        // Positioning
-//        SpawnTypeLocation locationType = settings.spawnTypeLocations[introductionType];
-//        //System.out.println(introductionType + " ==> " + locationType);
-//        switch(locationType) {
-//            case inPlaceLeftRight: {
-//                posX = -40 -random.nextInt(160);
-//                if (enemyId < 4 || random.nextBoolean()) {
-//                    posX = 400 - posX;
-//                }
-//                posY = 176 + random.nextInt(230 - 176);
-//            } break;
-//            case top: {
-//                posX = 90 + random.nextInt(330 - 90);
-//                posY = 0;
-//            } break;
-//            case middle: {
-//                posX = 90 + random.nextInt(400 - 90);
-//                posY = 176 + random.nextInt(230 - 176);
-//            } break;
-//        }
-//        
-//        // Mr.X
-        if (sceneId >= MaxLevels * 2) {
-            sceneId = MaxLevels * 2 - 2;
+    public void randomize(int spawnNum, int totalSpawns, long enemyNamesAddress, boolean updateScene) {
+        if (!updateScene && isSpecialEnemy()) {
+            return;
+        }
+        float progress = (float)spawnNum / totalSpawns;
+        Random random = new Random();
+        RngSettings settings = getNextSetting(random, progress);
+        
+        if (updateScene) {
+            sceneId = (int)(progress * MaxLevels) * 2;
+            // Last enemy still fits in last sceneId
+            if (sceneId >= MaxLevels * 2) {
+                sceneId = MaxLevels * 2 - 2;
+            }
+        }
+        enemyAgressiveness = (int)Math.ceil(progress + random.nextFloat()*(1 - progress) * 0xF);
+        objectId = settings.objectId;
+        minimumDifficulty = 0;
+        triggerType = 2;
+        if (previousWasAlternatePalette && random.nextFloat() > alternatePaletteSequencialProbability) {
             useAlternativePalette = true;
         }
-//        
-//        // corrections...
-//        while (posX > 800)  {
-//            posX = -40 -random.nextInt(160);
-//            if (enemyId < 4 || random.nextBoolean()) {
-//                posX = 400 - posX;
-//            }
-//        }
+        else {
+            useAlternativePalette = random.nextFloat() > alternatePaletteInitialProbability;
+            previousWasAlternatePalette = useAlternativePalette;
+        }
+        
+        useBossSlot = false;
+        collisionWidth = 14;
+        collisionHeight = 72;
+        collisionDept = 6;
+        initialState = 0;
+        
+        health = (int) lerp(settings.initialHealth * healthMultiplier, settings.finalHealth * healthMultiplier + 1, settings.relativeProgress);
+        
+        // Name
+        int nameIndex = settings.minNamesIndex + random.nextInt(settings.maxNamesIndex - settings.minNamesIndex + 1);
+        nameAddress = enemyNamesAddress + nameIndex * AllEnemyNames.NAME_SIZE;
+        // Clock
+        int clockValue = (int) lerp(settings.initialMaxClock, settings.finalMaxClock + 1, settings.relativeProgress);
+        clockValue = (int) Math.ceil(clockValue / 2f);
+        if (clockValue > 0) {
+            clockValue = clockValue + random.nextInt(clockValue + 1);
+        }
+        triggerArgument = (clockValue & 0xFF);
+        
+        float weaponFlagProbability = lerp(settings.initialBikerWeaponFlagProbability, settings.finalBikerWeaponFlagProbability, settings.relativeProgress);
+        bikerWeaponFlag = random.nextFloat() < weaponFlagProbability;
+        
+            
+        deathScore = (int)((health + 1) * deathScoreMultiplier); // TODO: better score function?
+        
+        
+        // Spawn type
+        float[] lerpedSpawnAccumProbabilities = settings.getlerpedSpawnTypeAccumProbabilities();
+        introductionType = 0;
+        float randomValue = spawnNum < 4 ? 0 : random.nextFloat();
+        for (int i = 0; i < lerpedSpawnAccumProbabilities.length; ++i) {
+            if (lerpedSpawnAccumProbabilities[i] > randomValue) {
+                introductionType = i;
+                break;
+            }
+        }
+        
+        // Positioning
+        SpawnTypeLocation locationType = settings.spawnTypeLocations[introductionType];
+        //System.out.println(introductionType + " ==> " + locationType);
+        switch(locationType) {
+            case inPlaceLeftRight: {
+                posX = -40 -random.nextInt(160);
+                if (spawnNum < 4 || random.nextBoolean()) {
+                    posX = 400 - posX;
+                }
+                if (!updateScene) posY = 0;
+                else posY = 176 + random.nextInt(230 - 176);
+            } break;
+            case top: {
+                posX = 90 + random.nextInt(330 - 90);
+                posY = 0;
+            } break;
+            case middle: {
+                posX = 90 + random.nextInt(400 - 90);
+                posY = 176 + random.nextInt(230 - 176);
+            } break;
+        }
+        
+        // corrections...
+        while (posX > 800)  {
+            posX = -40 -random.nextInt(160);
+            if (spawnNum < 4 || random.nextBoolean()) {
+                posX = 400 - posX;
+            }
+        }
             
         
     }

@@ -1,0 +1,266 @@
+PK_ELC_INDEX    // Address of levels object spawning list in rom
+PK_ENAME        // Address of enemy names
+143             // Number of enemy names
+7               // Number of main characters
+1               // Number of levels
+
+// Each character is followed by a list of spawning modes
+// Ending with at least one empty line
+
+Max
+
+Axel
+
+Blaze
+
+Skate
+
+Adam
+
+Zan
+
+Roo
+
+Galsia 1
+Standing
+Sit
+Manhole
+w/ Knife
+w/ Pipe
+Lying Down
+Fall from distance
+Fall
+Check Distance
+
+Donovan
+Standing
+Sit
+Manhole
+w/ Knife
+w/ Pipe
+Lying Down
+Fall from distance
+Fall
+Check Distance
+
+Jack
+Green
+Fade-in
+Dark
+
+Barbon
+Cocktail
+Boss
+Dark Standing
+Dark Waiting
+Orange Fall
+
+Electra
+Standing
+Singing
+Fall on Proximity
+Fall Immediately
+
+Signal
+Standing
+Waiting
+Jump in
+Play Arcade
+
+Biker
+Standing
+Bike Wait
+Bike Ride
+Bike Jump Off
+Bike Grenade
+Bike High Left
+Bike High Right
+Wait Behind (turn weapon ON)
+Sit
+Sit Above
+Cheer 1
+Cheer 2
+Cheer 3
+
+
+Ninja 1
+Standing
+Sit
+Hooked
+Fall
+
+Bongo
+Stand
+Wait
+Fall on Proximity
+Fall Immediately
+
+Hakuyo
+Standing
+Wait
+Fall on Proximity
+
+
+x
+
+Kickboxer
+Standing
+Lying Down
+Fall on Proximity
+Fall Immediately
+
+Jet
+Standing
+Boss
+Unused Sub-Boss
+
+Zamza
+Standing Boss
+Wait Boss
+Shadow Boss
+Fall Immediately
+
+R Bear
+Standing
+Wait Sub-Boss
+Fall Immediately
+
+Abadede
+Standing
+Wait Sub-Boss
+Fall Immediately
+
+
+x
+
+x
+
+Particle
+Standing
+Wait
+Fall on Proximity
+Fall Immediately
+
+x
+
+Mr X
+Boss
+
+Shiva
+Boss
+
+Ninja 2
+Standing
+Sit
+Hooked
+Fall
+
+Ninja 3
+Standing
+Sit
+Hooked
+Fall
+
+Grenade 1
+
+Vehelits 1
+
+Knife
+
+Pipe
+
+Galsia 2
+
+Sword
+
+Kunai
+
+Grenade 2
+
+Galsia 3
+
+Barbon Jacket
+
+Bin
+
+Manhole
+
+Lamp
+
+Menu
+
+Table 1
+
+Table 2
+
+Table 3
+
+Table 4
+
+Chair
+
+Trash Can
+
+Oil Barrel
+
+Obj A 1
+
+Obj A 2
+
+Electrical Box A
+
+Electrical Box B
+
+Barrier
+
+Light
+
+Arcade
+
+Ship Pole
+
+Obj B
+
+Obj C
+
+Obj D
+
+Sandbag 1
+
+Sandbag 2
+
+Sandbag 3
+
+Sandbag 4
+
+Crate 1
+
+Obj E
+
+Vehelits 2
+
+Crate 2
+
+Crate 3
+
+Alien Egg
+
+Cash
+
+Gold
+
+1UP
+
+Apple
+
+Chicken
+
+Arrow
+
+1P
+
+2P
+
+Go
+
+Alphabet
