@@ -47,7 +47,7 @@ import lib.names.AllEnemyNames;
  */
 public final class Sor2LevelEditor extends javax.swing.JFrame {
     
-    private static final String VERSION = " v1.1";    
+    private static final String VERSION = " v1.1.1";    
     private static final String TITLE = "SoR2 Level Editor" + VERSION;
     
     private static final String ORIGINAL_GUIDE_NAME = "guides/default.txt";

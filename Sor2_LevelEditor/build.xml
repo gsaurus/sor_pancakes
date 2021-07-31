@@ -7,8 +7,8 @@
 <!-- the Compile on Some Feature is turned off for the project. -->
 <!-- You can turn off the Compile on Save (or Deploy on Save) setting -->
 <!-- in the project's Project Properties dialog box.-->
-<project name="PK2" default="default" basedir=".">
-    <description>Builds, tests, and runs the project Sor Pancake.</description>
+<project name="SoR2LevelEditor" default="default" basedir=".">
+    <description>Builds, tests, and runs the project SoR2LevelEditor.</description>
     <import file="nbproject/build-impl.xml"/>
 
 	<target name="-post-compile">
