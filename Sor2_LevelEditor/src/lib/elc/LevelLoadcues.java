@@ -33,7 +33,6 @@ public final class LevelLoadcues {
     public final List<ItemObject> goodies = new ArrayList<>(20);
     // DEBUG!!!!
     private final int extraOffset = 0;//0x4100;
-    private final boolean onlyEnemiesSet1 = true; //false
     
     public LevelLoadcues(RandomAccessFile rom, long address) throws IOException{
         this.address = address;
@@ -110,8 +109,6 @@ public final class LevelLoadcues {
         long enemiesAddress2 = rom.readInt();
         long goodiesAddress = rom.readInt();
         writeCharactersList(rom, enemiesPart1, enemiesAddress1, deltaObjectId);
-        if (onlyEnemiesSet1) 
-            return;
         writeCharactersList(rom, enemiesPart2, enemiesAddress2, deltaObjectId);
         writeItemsList(rom, goodies, goodiesAddress, deltaObjectId);
     }

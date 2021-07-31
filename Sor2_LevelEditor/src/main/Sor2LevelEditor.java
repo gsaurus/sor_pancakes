@@ -1017,7 +1017,9 @@ public final class Sor2LevelEditor extends javax.swing.JFrame {
         }
         requestFocusInWindow();
         storeUnsavedDataInJPanels();
-        levels.levels.get(0).randomizeEnemiesListOne(enemyNames.address);
+        LevelLoadcues loadcues = levels.levels.get(0);
+        loadcues.randomizeEnemiesListOne(enemyNames.address);
+        loadcues.enemiesPart2.clear();
         reloadMap(true);
     }//GEN-LAST:event_randomizeSurvivalMenuItemActionPerformed
 

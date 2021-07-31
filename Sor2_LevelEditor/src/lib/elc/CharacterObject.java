@@ -335,6 +335,7 @@ public class CharacterObject extends BaseObject {
         alternatePaletteSequencialProbability = nextInitialFloat(sc);
         
         readAllRngSettings(sc);
+        sc.close();
         System.out.println("Finished reading randozimer settings");
     }
     
