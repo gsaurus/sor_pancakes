@@ -518,22 +518,22 @@ public class CharacterObject extends BaseObject {
         
         // Positioning
         SpawnTypeLocation locationType = settings.spawnTypeLocations[introductionType];
-        //System.out.println(introductionType + " ==> " + locationType);
+        int rightLimit = updateScene ? 400 : 290;
         switch(locationType) {
             case inPlaceLeftRight: {
                 posX = -40 -random.nextInt(160);
                 if (spawnNum < 4 || random.nextBoolean()) {
-                    posX = 400 - posX;
+                    posX = rightLimit - posX;
                 }
                 if (!updateScene) posY = 0;
                 else posY = 176 + random.nextInt(230 - 176);
             } break;
             case top: {
-                posX = 90 + random.nextInt(330 - 90);
+                posX = 90 + random.nextInt(rightLimit - 90);
                 posY = 0;
             } break;
             case middle: {
-                posX = 90 + random.nextInt(400 - 90);
+                posX = 90 + random.nextInt(rightLimit - 90);
                 posY = 176 + random.nextInt(230 - 176);
             } break;
         }
