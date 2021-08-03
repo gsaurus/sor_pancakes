@@ -1,0 +1,181 @@
+1				// 1 = labeled addresses 0 = global addresses
+PK_LOADCUES		// Characters index
+1				// 1 = global collision pointers 0 = word offsets
+PK_COLLISIONS	// Collisions index
+1				// 1 = global weapon pointers 0 = word offsets
+PK_WEAPONS		// Weapons index
+PK_ICONS		// Icons index
+
+8				// number of letters per name (original is 5)
+PK_NAMES		// Names index
+PK_STATISTIC	// Statistics index
+PK_SPEED		// Characters speed
+
+26	// 26 playable chars excluding invalid entries
+26	// 26 objects in total excluding invalid entries
+
+Max
+PK_DEFAULT##
+0
+50
+animations/max.txt
+
+Axel
+PK_DEFAULT##
+0
+50
+animations/axel.txt
+
+Blaze
+PK_DEFAULT##
+0
+50
+animations/blaze.txt
+
+Skate
+PK_DEFAULT##
+0
+50
+animations/skate.txt
+
+Adam
+PK_DEFAULT##
+0
+50
+animations/adam.txt
+
+Galsia
+PK_DEFAULT##
+0
+35
+animations/galsia.txt
+
+Donovan
+PK_DEFAULT##
+0
+35
+animations/donovan.txt
+
+Jack
+PK_DEFAULT##
+0
+33
+animations/jack.txt
+
+Barbon
+PK_DEFAULT##
+0
+32
+animations/barbon.txt
+
+Electra
+PK_DEFAULT##
+3
+PK1SUB_ART0F20
+29
+animations/electra.txt
+
+Signal
+PK_DEFAULT##
+0
+28
+animations/signal.txt
+
+Biker
+PK_DEFAULT##
+0
+35
+animations/biker.txt
+
+Ninja
+PK_DEFAULT##
+3
+PK1SUB_ART0F20
+39
+animations/ninja.txt
+
+Bongo
+PK_DEFAULT##
+3
+PK1SUB_ART0F20
+30
+animations/bongo.txt
+
+Hakuyo
+PK_DEFAULT##
+0
+29
+animations/hakuyo.txt
+
+x
+
+Kickboxer
+PK_DEFAULT##
+0
+29
+animations/kickboxer.txt
+
+Jet
+PK_DEFAULT##
+0
+28
+animations/jet.txt
+
+Zamza
+PK_DEFAULT##
+0
+31
+animations/zanza.txt
+
+R Bear
+PK_DEFAULT##
+0
+32
+animations/rbear.txt
+
+Abadede
+PK_DEFAULT##
+0
+35
+animations/abadede.txt
+
+x
+
+x
+
+Particle
+PK_DEFAULT##
+3
+PK1SUB_ART0F20
+29
+animations/particle.txt
+
+x
+
+Mr X
+PK_DEFAULT##
+3
+PK1SUB_ART0F20
+44
+animations/mrx.txt
+
+Shiva
+PK_DEFAULT##
+0
+36
+animations/shiva.txt
+
+Ninja (b)
+PK_DEFAULT##
+3
+PK3SUB_ART0040
+10
+-
+
+Ninja (katana)
+PK_DEFAULT##
+3
+PK3SUB_ART0040
+10
+-
+

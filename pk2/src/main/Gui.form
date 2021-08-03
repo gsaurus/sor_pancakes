@@ -59,6 +59,16 @@
                     <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="jMenuItem2ActionPerformed"/>
                   </Events>
                 </MenuItem>
+                <MenuItem class="javax.swing.JPopupMenu$Separator" name="jSeparator5">
+                </MenuItem>
+                <MenuItem class="javax.swing.JMenuItem" name="jMenuItem3">
+                  <Properties>
+                    <Property name="text" type="java.lang.String" value="Import from other ROM"/>
+                  </Properties>
+                  <Events>
+                    <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="jMenuItem3ActionPerformed"/>
+                  </Events>
+                </MenuItem>
               </SubComponents>
             </Menu>
             <Menu class="javax.swing.JMenu" name="exportMenu">
@@ -270,6 +280,15 @@
                 </MenuItem>
               </SubComponents>
             </Menu>
+            <MenuItem class="javax.swing.JCheckBoxMenuItem" name="hexIdsMenu">
+              <Properties>
+                <Property name="text" type="java.lang.String" value="See IDs as Hex"/>
+                <Property name="enabled" type="boolean" value="false"/>
+              </Properties>
+              <Events>
+                <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="hexIdsMenuActionPerformed"/>
+              </Events>
+            </MenuItem>
             <MenuItem class="javax.swing.JPopupMenu$Separator" name="jSeparator3">
             </MenuItem>
             <MenuItem class="javax.swing.JMenuItem" name="resizeAnimsMenu">
@@ -283,29 +302,11 @@
             </MenuItem>
             <MenuItem class="javax.swing.JMenuItem" name="nameMenu">
               <Properties>
-                <Property name="text" type="java.lang.String" value="Name"/>
+                <Property name="text" type="java.lang.String" value="Properties"/>
                 <Property name="enabled" type="boolean" value="false"/>
               </Properties>
               <Events>
                 <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="nameMenuActionPerformed"/>
-              </Events>
-            </MenuItem>
-            <MenuItem class="javax.swing.JMenuItem" name="speedMenu">
-              <Properties>
-                <Property name="text" type="java.lang.String" value="Speed"/>
-                <Property name="enabled" type="boolean" value="false"/>
-              </Properties>
-              <Events>
-                <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="speedMenuActionPerformed"/>
-              </Events>
-            </MenuItem>
-            <MenuItem class="javax.swing.JMenuItem" name="portraitMenu">
-              <Properties>
-                <Property name="text" type="java.lang.String" value="Mini-Portrait"/>
-                <Property name="enabled" type="boolean" value="false"/>
-              </Properties>
-              <Events>
-                <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="portraitMenuActionPerformed"/>
               </Events>
             </MenuItem>
             <MenuItem class="javax.swing.JPopupMenu$Separator" name="jSeparator4">
@@ -332,6 +333,29 @@
               </Properties>
               <Events>
                 <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="pasteMenuActionPerformed"/>
+              </Events>
+            </MenuItem>
+            <MenuItem class="javax.swing.JPopupMenu$Separator" name="jSeparator6">
+            </MenuItem>
+            <MenuItem class="javax.swing.JMenuItem" name="pasteMenu1">
+              <Properties>
+                <Property name="text" type="java.lang.String" value="Decompress Art"/>
+                <Property name="enabled" type="boolean" value="false"/>
+              </Properties>
+              <Events>
+                <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="pasteMenu1ActionPerformed"/>
+              </Events>
+            </MenuItem>
+            <MenuItem class="javax.swing.JPopupMenu$Separator" name="jSeparator7">
+            </MenuItem>
+            <MenuItem class="javax.swing.JMenuItem" name="pasteMenu2">
+              <Properties>
+                <Property name="text" type="java.lang.String" value="Delete Character !!"/>
+                <Property name="actionCommand" type="java.lang.String" value="Delete Character"/>
+                <Property name="enabled" type="boolean" value="false"/>
+              </Properties>
+              <Events>
+                <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="pasteMenu2ActionPerformed"/>
               </Events>
             </MenuItem>
           </SubComponents>
@@ -403,19 +427,19 @@
               <Group type="102" alignment="0" attributes="0">
                   <Group type="103" groupAlignment="0" max="-2" attributes="0">
                       <Group type="102" attributes="0">
-                          <Group type="103" groupAlignment="0" attributes="0">
-                              <Component id="characterPanel1" max="32767" attributes="0"/>
+                          <Group type="103" groupAlignment="0" max="-2" attributes="0">
+                              <Component id="characterPanel1" min="-2" pref="204" max="-2" attributes="0"/>
                               <Component id="overridePanel" max="32767" attributes="0"/>
                           </Group>
                           <EmptySpace max="-2" attributes="0"/>
-                          <Group type="103" groupAlignment="0" attributes="0">
-                              <Component id="toolsPanel" alignment="1" min="-2" max="-2" attributes="0"/>
-                              <Component id="generatePanel" alignment="1" min="-2" max="-2" attributes="0"/>
+                          <Group type="103" groupAlignment="0" max="-2" attributes="0">
+                              <Component id="toolsPanel" min="-2" pref="197" max="-2" attributes="0"/>
+                              <Component id="generatePanel" min="-2" max="-2" attributes="0"/>
                           </Group>
                       </Group>
-                      <Component id="characterPanel" min="-2" pref="376" max="-2" attributes="0"/>
+                      <Component id="characterPanel" max="32767" attributes="0"/>
                   </Group>
-                  <EmptySpace max="-2" attributes="0"/>
+                  <EmptySpace min="-2" max="-2" attributes="0"/>
                   <Component id="previewPanel" max="32767" attributes="0"/>
               </Group>
           </Group>
@@ -456,18 +480,14 @@
             <DimensionLayout dim="0">
               <Group type="103" groupAlignment="0" attributes="0">
                   <Group type="102" attributes="0">
-                      <Group type="103" groupAlignment="0" attributes="0">
-                          <Group type="102" attributes="0">
-                              <Component id="jLabel1" min="-2" pref="73" max="-2" attributes="0"/>
-                              <EmptySpace max="-2" attributes="0"/>
-                              <Component id="characterCombo" min="-2" pref="205" max="-2" attributes="0"/>
-                              <EmptySpace max="-2" attributes="0"/>
-                              <Component id="compressedLabel" min="-2" max="-2" attributes="0"/>
-                          </Group>
-                          <Component id="animationPanel" min="-2" max="-2" attributes="0"/>
-                      </Group>
+                      <Component id="jLabel1" min="-2" pref="73" max="-2" attributes="0"/>
+                      <EmptySpace max="-2" attributes="0"/>
+                      <Component id="characterCombo" min="-2" pref="205" max="-2" attributes="0"/>
+                      <EmptySpace max="-2" attributes="0"/>
+                      <Component id="compressedLabel" min="-2" max="-2" attributes="0"/>
                       <EmptySpace max="32767" attributes="0"/>
                   </Group>
+                  <Component id="animationPanel" alignment="0" max="32767" attributes="0"/>
               </Group>
             </DimensionLayout>
             <DimensionLayout dim="1">
@@ -526,10 +546,10 @@
                       <Group type="102" attributes="0">
                           <Component id="jLabel5" min="-2" max="-2" attributes="0"/>
                           <EmptySpace max="-2" attributes="0"/>
-                          <Component id="animationCombo" min="-2" pref="202" max="-2" attributes="0"/>
-                          <EmptySpace max="-2" attributes="0"/>
-                          <Component id="jLabel6" min="-2" max="-2" attributes="0"/>
+                          <Component id="animationCombo" min="-2" pref="208" max="-2" attributes="0"/>
                           <EmptySpace max="32767" attributes="0"/>
+                          <Component id="jLabel6" min="-2" max="-2" attributes="0"/>
+                          <EmptySpace max="-2" attributes="0"/>
                           <Component id="sizeField" min="-2" pref="33" max="-2" attributes="0"/>
                           <EmptySpace min="-2" pref="6" max="-2" attributes="0"/>
                       </Group>
@@ -604,7 +624,6 @@
                       <Border info="org.netbeans.modules.form.compat2.border.TitledBorderInfo">
                         <TitledBorder title="Frame #">
                           <Font PropertyName="font" name="Tahoma" size="14" style="0"/>
-                          <Color PropertyName="color" blue="0" green="0" red="0" type="rgb"/>
                         </TitledBorder>
                       </Border>
                     </Property>
@@ -703,9 +722,7 @@
                         </Property>
                         <Property name="border" type="javax.swing.border.Border" editor="org.netbeans.modules.form.editors2.BorderEditor">
                           <Border info="org.netbeans.modules.form.compat2.border.TitledBorderInfo">
-                            <TitledBorder title="Hit">
-                              <Color PropertyName="color" blue="0" green="0" red="0" type="rgb"/>
-                            </TitledBorder>
+                            <TitledBorder title="Hit"/>
                           </Border>
                         </Property>
                       </Properties>
@@ -885,6 +902,7 @@
                     </Component>
                     <Component class="javax.swing.JTextField" name="mapField">
                       <Properties>
+                        <Property name="editable" type="boolean" value="false"/>
                         <Property name="font" type="java.awt.Font" editor="org.netbeans.beaninfo.editors.FontEditor">
                           <Font name="Courier New" size="14" style="0"/>
                         </Property>
@@ -903,6 +921,7 @@
                     </Component>
                     <Component class="javax.swing.JTextField" name="artField">
                       <Properties>
+                        <Property name="editable" type="boolean" value="false"/>
                         <Property name="font" type="java.awt.Font" editor="org.netbeans.beaninfo.editors.FontEditor">
                           <Font name="Courier New" size="14" style="0"/>
                         </Property>
@@ -935,9 +954,7 @@
                         </Property>
                         <Property name="border" type="javax.swing.border.Border" editor="org.netbeans.modules.form.editors2.BorderEditor">
                           <Border info="org.netbeans.modules.form.compat2.border.TitledBorderInfo">
-                            <TitledBorder title="Weapon Point">
-                              <Color PropertyName="color" blue="0" green="0" red="0" type="rgb"/>
-                            </TitledBorder>
+                            <TitledBorder title="Weapon Point"/>
                           </Border>
                         </Property>
                       </Properties>
@@ -1084,8 +1101,8 @@
             <DimensionLayout dim="0">
               <Group type="103" groupAlignment="0" attributes="0">
                   <Component id="playerPanel" alignment="1" max="32767" attributes="0"/>
+                  <Component id="colorsPanel1" alignment="0" pref="478" max="32767" attributes="0"/>
                   <Component id="scrollPanel" alignment="1" max="32767" attributes="0"/>
-                  <Component id="colorsPanel1" alignment="0" pref="333" max="32767" attributes="0"/>
               </Group>
             </DimensionLayout>
             <DimensionLayout dim="1">
@@ -1120,15 +1137,15 @@
                 <DimensionLayout dim="0">
                   <Group type="103" groupAlignment="0" attributes="0">
                       <Group type="102" alignment="1" attributes="0">
-                          <Component id="backBut" max="32767" attributes="0"/>
+                          <Component id="backBut" pref="87" max="32767" attributes="0"/>
                           <EmptySpace min="-2" max="-2" attributes="0"/>
-                          <Component id="previousBut" max="32767" attributes="0"/>
+                          <Component id="previousBut" pref="87" max="32767" attributes="0"/>
                           <EmptySpace max="-2" attributes="0"/>
                           <Component id="playToggle" min="-2" pref="105" max="-2" attributes="0"/>
                           <EmptySpace max="-2" attributes="0"/>
-                          <Component id="nextBut" max="32767" attributes="0"/>
+                          <Component id="nextBut" pref="87" max="32767" attributes="0"/>
                           <EmptySpace min="-2" max="-2" attributes="0"/>
-                          <Component id="frontBut" max="32767" attributes="0"/>
+                          <Component id="frontBut" pref="88" max="32767" attributes="0"/>
                       </Group>
                   </Group>
                 </DimensionLayout>
@@ -1211,9 +1228,7 @@
               <Properties>
                 <Property name="border" type="javax.swing.border.Border" editor="org.netbeans.modules.form.editors2.BorderEditor">
                   <Border info="org.netbeans.modules.form.compat2.border.TitledBorderInfo">
-                    <TitledBorder title="Palette">
-                      <Color PropertyName="color" blue="0" green="0" red="0" type="rgb"/>
-                    </TitledBorder>
+                    <TitledBorder title="Palette"/>
                   </Border>
                 </Property>
                 <Property name="preferredSize" type="java.awt.Dimension" editor="org.netbeans.beaninfo.editors.DimensionEditor">
@@ -1227,43 +1242,43 @@
                       <Group type="102" alignment="1" attributes="0">
                           <EmptySpace min="-2" pref="0" max="-2" attributes="0"/>
                           <Group type="103" groupAlignment="0" attributes="0">
-                              <Component id="colorPanel1" pref="33" max="32767" attributes="0"/>
-                              <Component id="colorPanel9" pref="33" max="32767" attributes="0"/>
+                              <Component id="colorPanel1" pref="52" max="32767" attributes="0"/>
+                              <Component id="colorPanel9" pref="52" max="32767" attributes="0"/>
                           </Group>
                           <EmptySpace min="-2" max="-2" attributes="0"/>
                           <Group type="103" groupAlignment="0" attributes="0">
-                              <Component id="colorPanel2" pref="33" max="32767" attributes="0"/>
-                              <Component id="colorPanel10" pref="33" max="32767" attributes="0"/>
+                              <Component id="colorPanel2" pref="52" max="32767" attributes="0"/>
+                              <Component id="colorPanel10" pref="52" max="32767" attributes="0"/>
                           </Group>
                           <EmptySpace min="-2" max="-2" attributes="0"/>
                           <Group type="103" groupAlignment="0" attributes="0">
-                              <Component id="colorPanel3" pref="37" max="32767" attributes="0"/>
-                              <Component id="colorPanel11" pref="37" max="32767" attributes="0"/>
+                              <Component id="colorPanel3" pref="54" max="32767" attributes="0"/>
+                              <Component id="colorPanel11" pref="54" max="32767" attributes="0"/>
                           </Group>
                           <EmptySpace min="-2" max="-2" attributes="0"/>
                           <Group type="103" groupAlignment="0" attributes="0">
-                              <Component id="colorPanel4" pref="35" max="32767" attributes="0"/>
-                              <Component id="colorPanel12" pref="35" max="32767" attributes="0"/>
+                              <Component id="colorPanel4" pref="52" max="32767" attributes="0"/>
+                              <Component id="colorPanel12" pref="52" max="32767" attributes="0"/>
                           </Group>
                           <EmptySpace min="-2" max="-2" attributes="0"/>
                           <Group type="103" groupAlignment="0" attributes="0">
-                              <Component id="colorPanel5" pref="37" max="32767" attributes="0"/>
-                              <Component id="colorPanel13" pref="37" max="32767" attributes="0"/>
+                              <Component id="colorPanel5" pref="54" max="32767" attributes="0"/>
+                              <Component id="colorPanel13" pref="54" max="32767" attributes="0"/>
                           </Group>
                           <EmptySpace min="-2" max="-2" attributes="0"/>
                           <Group type="103" groupAlignment="0" attributes="0">
-                              <Component id="colorPanel6" pref="35" max="32767" attributes="0"/>
-                              <Component id="colorPanel14" pref="35" max="32767" attributes="0"/>
+                              <Component id="colorPanel6" pref="52" max="32767" attributes="0"/>
+                              <Component id="colorPanel14" pref="52" max="32767" attributes="0"/>
                           </Group>
                           <EmptySpace min="-2" max="-2" attributes="0"/>
                           <Group type="103" groupAlignment="0" attributes="0">
-                              <Component id="colorPanel7" pref="35" max="32767" attributes="0"/>
-                              <Component id="colorPanel15" pref="35" max="32767" attributes="0"/>
+                              <Component id="colorPanel7" pref="52" max="32767" attributes="0"/>
+                              <Component id="colorPanel15" pref="52" max="32767" attributes="0"/>
                           </Group>
                           <EmptySpace min="-2" max="-2" attributes="0"/>
                           <Group type="103" groupAlignment="0" attributes="0">
-                              <Component id="colorPanel8" pref="34" max="32767" attributes="0"/>
-                              <Component id="colorPanel16" pref="34" max="32767" attributes="0"/>
+                              <Component id="colorPanel8" pref="56" max="32767" attributes="0"/>
+                              <Component id="colorPanel16" pref="56" max="32767" attributes="0"/>
                           </Group>
                       </Group>
                   </Group>
@@ -1281,7 +1296,7 @@
                               <Component id="colorPanel8" alignment="0" min="-2" max="-2" attributes="0"/>
                               <Component id="colorPanel1" min="-2" max="-2" attributes="0"/>
                           </Group>
-                          <EmptySpace pref="13" max="32767" attributes="0"/>
+                          <EmptySpace pref="12" max="32767" attributes="0"/>
                           <Group type="103" groupAlignment="0" attributes="0">
                               <Component id="colorPanel10" alignment="1" min="-2" max="-2" attributes="0"/>
                               <Component id="colorPanel11" alignment="1" min="-2" max="-2" attributes="0"/>
@@ -1774,7 +1789,6 @@
               <Border info="org.netbeans.modules.form.compat2.border.TitledBorderInfo">
                 <TitledBorder title="View">
                   <Font PropertyName="font" name="Tahoma" size="14" style="0"/>
-                  <Color PropertyName="color" blue="0" green="0" red="0" type="rgb"/>
                 </TitledBorder>
               </Border>
             </Property>
@@ -1789,13 +1803,12 @@
                           <Component id="showCenterCheck" min="-2" max="-2" attributes="0"/>
                           <Component id="showHitsCheck" alignment="0" min="-2" max="-2" attributes="0"/>
                       </Group>
-                      <EmptySpace type="unrelated" max="-2" attributes="0"/>
+                      <EmptySpace max="-2" attributes="0"/>
                       <Group type="103" groupAlignment="0" attributes="0">
                           <Component id="weaponCombo" min="-2" pref="83" max="-2" attributes="0"/>
                           <Component id="showFacedRightCheck" alignment="0" min="-2" max="-2" attributes="0"/>
                           <Component id="showTileCheck" alignment="0" min="-2" max="-2" attributes="0"/>
                       </Group>
-                      <EmptySpace max="32767" attributes="0"/>
                   </Group>
               </Group>
             </DimensionLayout>
@@ -1812,7 +1825,7 @@
                           <Component id="showTileCheck" alignment="3" min="-2" max="-2" attributes="0"/>
                           <Component id="showHitsCheck" alignment="3" min="-2" max="-2" attributes="0"/>
                       </Group>
-                      <EmptySpace pref="3" max="32767" attributes="0"/>
+                      <EmptySpace max="32767" attributes="0"/>
                       <Group type="103" groupAlignment="3" attributes="0">
                           <Component id="weaponCombo" alignment="3" min="-2" max="-2" attributes="0"/>
                           <Component id="showWeaponCheck" alignment="3" min="-2" max="-2" attributes="0"/>
@@ -1915,7 +1928,6 @@
               <Border info="org.netbeans.modules.form.compat2.border.TitledBorderInfo">
                 <TitledBorder title="Tools">
                   <Font PropertyName="font" name="Tahoma" size="14" style="0"/>
-                  <Color PropertyName="color" blue="0" green="0" red="0" type="rgb"/>
                 </TitledBorder>
               </Border>
             </Property>
@@ -1927,19 +1939,26 @@
                   <Group type="102" attributes="0">
                       <EmptySpace max="-2" attributes="0"/>
                       <Group type="103" groupAlignment="0" attributes="0">
-                          <Component id="pencilRadio" alignment="0" min="-2" max="-2" attributes="0"/>
-                          <Component id="brushRadio" alignment="0" min="-2" max="-2" attributes="0"/>
-                          <Component id="bucketRadio" alignment="0" min="-2" max="-2" attributes="0"/>
-                      </Group>
-                      <EmptySpace max="32767" attributes="0"/>
-                      <Group type="103" groupAlignment="0" attributes="0">
                           <Group type="102" alignment="0" attributes="0">
-                              <EmptySpace min="2" pref="2" max="-2" attributes="0"/>
-                              <Component id="dragSpriteRadio" min="-2" max="-2" attributes="0"/>
-                          </Group>
-                          <Group type="103" alignment="1" groupAlignment="0" max="-2" attributes="0">
-                              <Component id="dragImageRadio" max="32767" attributes="0"/>
+                              <Component id="bucketRadio" min="-2" max="-2" attributes="0"/>
+                              <EmptySpace max="32767" attributes="0"/>
                               <Component id="noneRadio" min="-2" pref="81" max="-2" attributes="0"/>
+                              <EmptySpace min="-2" pref="23" max="-2" attributes="0"/>
+                          </Group>
+                          <Group type="102" attributes="0">
+                              <Group type="103" groupAlignment="0" attributes="0">
+                                  <Group type="102" alignment="0" attributes="0">
+                                      <Component id="pencilRadio" min="-2" max="-2" attributes="0"/>
+                                      <EmptySpace max="-2" attributes="0"/>
+                                      <Component id="dragSpriteRadio" min="-2" max="-2" attributes="0"/>
+                                  </Group>
+                                  <Group type="102" alignment="0" attributes="0">
+                                      <Component id="brushRadio" min="-2" max="-2" attributes="0"/>
+                                      <EmptySpace max="-2" attributes="0"/>
+                                      <Component id="dragImageRadio" min="-2" max="-2" attributes="0"/>
+                                  </Group>
+                              </Group>
+                              <EmptySpace min="0" pref="0" max="32767" attributes="0"/>
                           </Group>
                       </Group>
                   </Group>
@@ -2051,7 +2070,6 @@
               <Border info="org.netbeans.modules.form.compat2.border.TitledBorderInfo">
                 <TitledBorder title="Override Art">
                   <Font PropertyName="font" name="Tahoma" size="14" style="0"/>
-                  <Color PropertyName="color" blue="0" green="0" red="0" type="rgb"/>
                 </TitledBorder>
               </Border>
             </Property>
@@ -2112,7 +2130,6 @@
               <Border info="org.netbeans.modules.form.compat2.border.TitledBorderInfo">
                 <TitledBorder title="Generate Sprite">
                   <Font PropertyName="font" name="Tahoma" size="14" style="0"/>
-                  <Color PropertyName="color" blue="0" green="0" red="0" type="rgb"/>
                 </TitledBorder>
               </Border>
             </Property>
@@ -2123,41 +2140,35 @@
               <Group type="103" groupAlignment="0" attributes="0">
                   <Group type="102" attributes="0">
                       <Group type="103" groupAlignment="0" attributes="0">
-                          <Group type="102" attributes="0">
+                          <Group type="102" alignment="0" attributes="0">
+                              <EmptySpace max="-2" attributes="0"/>
+                              <Component id="hardReplaceButton" min="-2" max="-2" attributes="0"/>
+                          </Group>
+                          <Group type="102" alignment="0" attributes="0">
                               <EmptySpace min="-2" pref="18" max="-2" attributes="0"/>
-                              <Group type="103" groupAlignment="0" max="-2" attributes="0">
+                              <Group type="103" groupAlignment="0" attributes="0">
+                                  <Component id="jLabel4" min="-2" max="-2" attributes="0"/>
                                   <Group type="102" attributes="0">
-                                      <Component id="jLabel13" min="-2" pref="61" max="-2" attributes="0"/>
-                                      <EmptySpace max="-2" attributes="0"/>
-                                      <Component id="genAddressField" max="32767" attributes="0"/>
-                                  </Group>
-                                  <Group type="102" alignment="0" attributes="0">
                                       <Component id="jLabel14" min="-2" pref="79" max="-2" attributes="0"/>
                                       <EmptySpace type="separate" max="-2" attributes="0"/>
                                       <Component id="genPaletteField" min="-2" pref="24" max="-2" attributes="0"/>
                                   </Group>
                               </Group>
                           </Group>
-                          <Group type="102" alignment="0" attributes="0">
-                              <EmptySpace max="-2" attributes="0"/>
-                              <Component id="hardReplaceButton" min="-2" max="-2" attributes="0"/>
-                          </Group>
                       </Group>
-                      <EmptySpace min="0" pref="25" max="32767" attributes="0"/>
+                      <EmptySpace min="0" pref="2" max="32767" attributes="0"/>
                   </Group>
               </Group>
             </DimensionLayout>
             <DimensionLayout dim="1">
               <Group type="103" groupAlignment="0" attributes="0">
                   <Group type="102" alignment="1" attributes="0">
-                      <Group type="103" groupAlignment="3" attributes="0">
-                          <Component id="jLabel13" alignment="3" min="-2" max="-2" attributes="0"/>
-                          <Component id="genAddressField" alignment="3" min="-2" max="-2" attributes="0"/>
-                      </Group>
-                      <EmptySpace max="32767" attributes="0"/>
-                      <Group type="103" groupAlignment="0" attributes="0">
-                          <Component id="jLabel14" alignment="1" min="-2" max="-2" attributes="0"/>
-                          <Component id="genPaletteField" alignment="1" min="-2" max="-2" attributes="0"/>
+                      <EmptySpace pref="11" max="32767" attributes="0"/>
+                      <Component id="jLabel4" min="-2" max="-2" attributes="0"/>
+                      <EmptySpace max="-2" attributes="0"/>
+                      <Group type="103" groupAlignment="0" max="-2" attributes="0">
+                          <Component id="genPaletteField" max="32767" attributes="0"/>
+                          <Component id="jLabel14" max="32767" attributes="0"/>
                       </Group>
                       <EmptySpace max="-2" attributes="0"/>
                       <Component id="hardReplaceButton" min="-2" max="-2" attributes="0"/>
@@ -2175,24 +2186,6 @@
                 <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="hardReplaceButtonActionPerformed"/>
               </Events>
             </Component>
-            <Component class="javax.swing.JLabel" name="jLabel13">
-              <Properties>
-                <Property name="font" type="java.awt.Font" editor="org.netbeans.beaninfo.editors.FontEditor">
-                  <Font name="Tahoma" size="14" style="0"/>
-                </Property>
-                <Property name="horizontalAlignment" type="int" value="4"/>
-                <Property name="text" type="java.lang.String" value="Address:"/>
-              </Properties>
-            </Component>
-            <Component class="javax.swing.JTextField" name="genAddressField">
-              <Properties>
-                <Property name="font" type="java.awt.Font" editor="org.netbeans.beaninfo.editors.FontEditor">
-                  <Font name="Courier New" size="14" style="0"/>
-                </Property>
-                <Property name="horizontalAlignment" type="int" value="4"/>
-                <Property name="text" type="java.lang.String" value="200"/>
-              </Properties>
-            </Component>
             <Component class="javax.swing.JLabel" name="jLabel14">
               <Properties>
                 <Property name="font" type="java.awt.Font" editor="org.netbeans.beaninfo.editors.FontEditor">
@@ -2209,6 +2202,11 @@
                 </Property>
                 <Property name="horizontalAlignment" type="int" value="4"/>
                 <Property name="text" type="java.lang.String" value="0"/>
+              </Properties>
+            </Component>
+            <Component class="javax.swing.JLabel" name="jLabel4">
+              <Properties>
+                <Property name="text" type="java.lang.String" value="Produce new tiles"/>
               </Properties>
             </Component>
           </SubComponents>

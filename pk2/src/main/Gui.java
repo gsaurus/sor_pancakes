@@ -1,1141 +1,1388 @@
-/* 
- * Copyright 2017 Gil Costa.
- *
- * Licensed under the Apache License, Version 2.0 (the "License");
- * you may not use this file except in compliance with the License.
- * You may obtain a copy of the License at
- *
- *      http://www.apache.org/licenses/LICENSE-2.0
- *
- * Unless required by applicable law or agreed to in writing, software
- * distributed under the License is distributed on an "AS IS" BASIS,
- * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
- * See the License for the specific language governing permissions and
- * limitations under the License.
+/*
+ * Decompiled with CFR 0_132.
  */
 package main;
 
-import java.awt.*;
+import java.awt.Color;
+import java.awt.Component;
+import java.awt.EventQueue;
+import java.awt.Font;
+import java.awt.Graphics2D;
+import java.awt.Point;
+import java.awt.Rectangle;
+import java.awt.Toolkit;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.awt.event.KeyEvent;
 import java.awt.event.MouseEvent;
-import java.awt.event.MouseMotionListener;
+import java.awt.event.MouseWheelEvent;
+import java.awt.event.WindowEvent;
 import java.awt.image.BufferedImage;
-import java.io.*;
-import java.util.*;
-import java.util.Map.Entry;
-import java.util.logging.Level;
-import java.util.logging.Logger;
+import java.awt.image.RenderedImage;
+import java.io.File;
+import java.io.FileNotFoundException;
+import java.io.FileOutputStream;
+import java.io.IOException;
+import java.util.ArrayList;
+import java.util.HashSet;
+import java.util.Map;
+import java.util.Scanner;
+import java.util.TreeMap;
+import java.util.TreeSet;
 import javax.imageio.ImageIO;
-import javax.swing.*;
+import javax.swing.BorderFactory;
+import javax.swing.JCheckBox;
+import javax.swing.JComboBox;
+import javax.swing.JComponent;
+import javax.swing.JFileChooser;
+import javax.swing.JFrame;
+import javax.swing.JLabel;
+import javax.swing.JOptionPane;
+import javax.swing.JPanel;
+import javax.swing.JScrollBar;
+import javax.swing.JTextField;
+import javax.swing.ProgressMonitor;
 import javax.swing.Timer;
+import javax.swing.UIManager;
 import javax.swing.border.Border;
 import javax.swing.border.LineBorder;
 import javax.swing.border.TitledBorder;
-import javax.swing.event.ChangeEvent;
-import javax.swing.event.ChangeListener;
 import javax.swing.event.DocumentEvent;
 import javax.swing.event.DocumentListener;
 import javax.swing.filechooser.FileFilter;
+import lib.FreeAddressesManager;
 import lib.Manager;
 import lib.anim.AnimFrame;
 import lib.anim.Animation;
+import lib.anim.Character;
 import lib.anim.HitFrame;
 import lib.anim.WeaponFrame;
-import lib.map.*;
+import lib.map.Palette;
+import lib.map.Piece;
+import lib.map.Sprite;
+import lib.map.SpritePiece;
+import lib.map.Tile;
 
-
-
-
-//class FieldSetter implements Runnable{
-//    private JTextField field;
-//    private String value;
-//
-//    public FieldSetter(JTextField field, String value) {
-//        this.field = field;
-//        this.value = value;
-//    }
-//    
-//    @Override
-//    public void run() {
-//        if (!field.getText().equals(value))
-//            field.setText(value);
-//    }
-//    
-//}
-
-
-/**
- *
- * @author Gil
- */
-public class Gui extends javax.swing.JFrame implements ActionListener, TheListener{
-    private static final String VERSION = " v1.5";    
-    private static final String TITLE = "Pancake 2" + VERSION;
-    
+public class Gui
+extends JFrame
+implements ActionListener,
+TheListener {
+    private static final String VERSION = " v1.6b";
+    private static final String TITLE = "Pancake 2 v1.6b";
     private static final int INVALID_INT = Integer.MIN_VALUE;
     private static final long INVALID_LONG = Long.MIN_VALUE;
-    
     private String romName;
     private String currentDirectory;
     private JFileChooser romChooser;
     private JFileChooser guideChooser;
-    private JFileChooser imageChooser;
+    public JFileChooser imageChooser;
     private JFileChooser imageSaver;
     private JFileChooser resizerChooser;
-    
     private ImagePanel imagePanel;
     private Manager manager;
     private Guide guide;
-    
     private JPanel[] colorPanels;
     private Border selectionBorder;
-    
-    private javax.swing.Timer timer;
+    private Timer timer;
     private int frameDelayCount;
-    
     private int currAnimation;
     private int currFrame;
-    
     private HashSet<JTextField> inUse;
     private int selectedColor;
-    
     private long copiedMap;
     private long copiedArt;
-    private boolean copiedHasHit, copiedKnockDown, copiedHasWeapon, copiedWpShowBehind;
-    private int copiedHitX, copiedHitY, copiedHitSound, copiedHitDamage;
-    private int copiedWpX, copiedWpY, copiedWpRotation;
-//    private int copiedDelay;
-    
-    private int lastcX, lastcY;
+    private boolean copiedHasHit;
+    private boolean copiedKnockDown;
+    private boolean copiedHasWeapon;
+    private boolean copiedWpShowBehind;
+    private int copiedHitX;
+    private int copiedHitY;
+    private int copiedHitSound;
+    private int copiedHitDamage;
+    private int copiedWpX;
+    private int copiedWpY;
+    private int copiedWpRotation;
+    private int lastcX;
+    private int lastcY;
     private boolean wasFrameReplaced;
-        
-    
-    
-    private void setupAnimationCombo(){
-        int charId = guide.getFakeCharId(manager.getCurrentCharacterId());
-        int count = guide.getAnimsCount(charId);
-        animationCombo.removeAllItems();
-        for (int i = 0 ; i < count ; ++i){
-            animationCombo.addItem(guide.getAnimName(charId, i));
-        }
-    }
-    
-    private void setupCharacterCombo(){
-        int count = guide.getNumChars();
-        characterCombo.removeAllItems();
-        for (int i = 0 ; i < count ; ++i){
-            characterCombo.addItem(i + 1 + " - " +guide.getCharName(i));
-        }
-    }
-    
-    private void updateTitle(){
-        lib.anim.Character ch = manager.getCharacter();
-        if (ch.wasModified()) setTitle(TITLE + " - "  + new File(romName).getName() + "*");
-        else setTitle(TITLE + " - "  + new File(romName).getName());
-    }
-    
-    
-    private void verifyModifications(){
-        if (manager == null) return;
-        // check image modifications
-        if (imagePanel.wasImageModified()){
-            BufferedImage img = imagePanel.getImage();
-            Animation anim = manager.getCharacter().getAnimation(currAnimation);
-            anim.setImage(currFrame, img);
-            manager.getCharacter().setModified(true);
-            manager.getCharacter().setSpritesModified(true);
-            anim.setSpritesModified(currFrame, true);
-            dragImageRadio.setEnabled(false);
-        }
-    }
-    
-    private void changeFrame(int frameId){
-        verifyModifications();
-        if (manager != null && manager.getCharacter() != null){
-            if (manager.getCharacter().wasModified()){
-                saveRom();
+
+    // Variables declaration - do not modify//GEN-BEGIN:variables
+    private javax.swing.JTextField angleField;
+    private javax.swing.JComboBox animationCombo;
+    private javax.swing.JPanel animationPanel;
+    private javax.swing.JTextField artField;
+    private javax.swing.JButton backBut;
+    private javax.swing.JCheckBox behindCheck;
+    private javax.swing.JRadioButtonMenuItem brushMenu;
+    private javax.swing.JRadioButton brushRadio;
+    private javax.swing.JRadioButtonMenuItem bucketMenu;
+    private javax.swing.JRadioButton bucketRadio;
+    private javax.swing.JComboBox characterCombo;
+    private javax.swing.JPanel characterPanel;
+    private javax.swing.JPanel characterPanel1;
+    private javax.swing.JMenuItem closeMenu;
+    private javax.swing.JPanel colorPanel1;
+    private javax.swing.JPanel colorPanel10;
+    private javax.swing.JPanel colorPanel11;
+    private javax.swing.JPanel colorPanel12;
+    private javax.swing.JPanel colorPanel13;
+    private javax.swing.JPanel colorPanel14;
+    private javax.swing.JPanel colorPanel15;
+    private javax.swing.JPanel colorPanel16;
+    private javax.swing.JPanel colorPanel2;
+    private javax.swing.JPanel colorPanel3;
+    private javax.swing.JPanel colorPanel4;
+    private javax.swing.JPanel colorPanel5;
+    private javax.swing.JPanel colorPanel6;
+    private javax.swing.JPanel colorPanel7;
+    private javax.swing.JPanel colorPanel8;
+    private javax.swing.JPanel colorPanel9;
+    private javax.swing.JPanel colorsPanel1;
+    private javax.swing.JLabel compressedLabel;
+    private javax.swing.JMenuItem copyMenu;
+    private javax.swing.JTextField damageField;
+    private javax.swing.JTextField delayField;
+    private javax.swing.JRadioButtonMenuItem dragImageMenu;
+    private javax.swing.JRadioButton dragImageRadio;
+    private javax.swing.JRadioButtonMenuItem dragSpriteMenu;
+    private javax.swing.JRadioButton dragSpriteRadio;
+    private javax.swing.JMenu exportMenu;
+    private javax.swing.JPanel framePanel;
+    private javax.swing.JButton frontBut;
+    private javax.swing.JTextField genPaletteField;
+    private javax.swing.JPanel generatePanel;
+    private javax.swing.JButton hardReplaceButton;
+    private javax.swing.JCheckBoxMenuItem hexIdsMenu;
+    private javax.swing.JCheckBox hitCheck;
+    private javax.swing.JPanel hitPanel;
+    private javax.swing.JMenu inportMenu;
+    private javax.swing.JButton jButton2;
+    private javax.swing.JButton jButton3;
+    private javax.swing.JLabel jLabel1;
+    private javax.swing.JLabel jLabel10;
+    private javax.swing.JLabel jLabel11;
+    private javax.swing.JLabel jLabel12;
+    private javax.swing.JLabel jLabel14;
+    private javax.swing.JLabel jLabel15;
+    private javax.swing.JLabel jLabel16;
+    private javax.swing.JLabel jLabel17;
+    private javax.swing.JLabel jLabel2;
+    private javax.swing.JLabel jLabel3;
+    private javax.swing.JLabel jLabel4;
+    private javax.swing.JLabel jLabel5;
+    private javax.swing.JLabel jLabel6;
+    private javax.swing.JLabel jLabel7;
+    private javax.swing.JLabel jLabel8;
+    private javax.swing.JLabel jLabel9;
+    private javax.swing.JMenu jMenu1;
+    private javax.swing.JMenu jMenu2;
+    private javax.swing.JMenu jMenu3;
+    private javax.swing.JMenu jMenu4;
+    private javax.swing.JMenu jMenu5;
+    private javax.swing.JMenu jMenu6;
+    private javax.swing.JMenuBar jMenuBar1;
+    private javax.swing.JMenuItem jMenuItem1;
+    private javax.swing.JMenuItem jMenuItem10;
+    private javax.swing.JMenuItem jMenuItem11;
+    private javax.swing.JMenuItem jMenuItem2;
+    private javax.swing.JMenuItem jMenuItem3;
+    private javax.swing.JMenuItem jMenuItem4;
+    private javax.swing.JMenuItem jMenuItem5;
+    private javax.swing.JMenuItem jMenuItem6;
+    private javax.swing.JMenuItem jMenuItem7;
+    private javax.swing.JMenuItem jMenuItem9;
+    private javax.swing.JPopupMenu.Separator jSeparator1;
+    private javax.swing.JPopupMenu.Separator jSeparator2;
+    private javax.swing.JPopupMenu.Separator jSeparator3;
+    private javax.swing.JPopupMenu.Separator jSeparator4;
+    private javax.swing.JPopupMenu.Separator jSeparator5;
+    private javax.swing.JPopupMenu.Separator jSeparator6;
+    private javax.swing.JPopupMenu.Separator jSeparator7;
+    private javax.swing.JCheckBox koCheck;
+    private javax.swing.JPanel mainPanel;
+    private javax.swing.JTextField mapField;
+    private javax.swing.JMenuItem nameMenu;
+    private javax.swing.JButton nextBut;
+    private javax.swing.JRadioButtonMenuItem noneMenu;
+    private javax.swing.JRadioButton noneRadio;
+    private javax.swing.JMenuItem openRomMenu;
+    private javax.swing.JPanel overridePanel;
+    private javax.swing.JMenuItem pasteMenu;
+    private javax.swing.JMenuItem pasteMenu1;
+    private javax.swing.JMenuItem pasteMenu2;
+    private javax.swing.JRadioButtonMenuItem pencilMenu;
+    private javax.swing.JRadioButton pencilRadio;
+    private javax.swing.JToggleButton playToggle;
+    private javax.swing.JPanel playerPanel;
+    private javax.swing.JPanel previewPanel;
+    private javax.swing.JButton previousBut;
+    private javax.swing.JMenuItem resizeAnimsMenu;
+    private javax.swing.JScrollPane scrollPanel;
+    private javax.swing.JCheckBox showCenterCheck;
+    private javax.swing.JCheckBox showFacedRightCheck;
+    private javax.swing.JCheckBox showHitsCheck;
+    private javax.swing.JCheckBox showTileCheck;
+    private javax.swing.JCheckBox showWeaponCheck;
+    private javax.swing.JTextField sizeField;
+    private javax.swing.JRadioButtonMenuItem sizeRadioMenu1;
+    private javax.swing.JRadioButtonMenuItem sizeRadioMenu2;
+    private javax.swing.JRadioButtonMenuItem sizeRadioMenu3;
+    private javax.swing.JButton softReplaceButton;
+    private javax.swing.JTextField soundField;
+    private javax.swing.JMenuItem spriteSheetMenu;
+    private javax.swing.JMenuItem spriteSheetMenu1;
+    private javax.swing.JPanel toolsPanel;
+    private javax.swing.JTextField wXField;
+    private javax.swing.JTextField wYField;
+    private javax.swing.JCheckBox weaponCheck;
+    private javax.swing.JComboBox weaponCombo;
+    private javax.swing.JPanel weaponPanel;
+    private javax.swing.JTextField xField;
+    private javax.swing.JTextField yField;
+    // End of variables declaration//GEN-END:variables
+
+    private void setupAnimationCombo() {
+        int charId = this.guide.getFakeCharId(this.manager.getCurrentCharacterId());
+        int count = this.guide.getAnimsCount(charId);
+        this.animationCombo.removeAllItems();
+        if (this.areIdsHex()) {
+            for (int i = 0; i < count; ++i) {
+                this.animationCombo.addItem(Integer.toHexString(i * 2) + " - " + this.guide.getAnimName(charId, i));
             }
-            setFrame(frameId);
+        } else {
+            for (int i = 0; i < count; ++i) {
+                this.animationCombo.addItem("" + (i + 1) + " - " + this.guide.getAnimName(charId, i));
+            }
         }
     }
-    
-    private void changeAnimation(int animId){
-        verifyModifications();
-        setAnimation(animId);
-    }
-    
-    private void changeCharacter(int charId) throws IOException{
-        verifyModifications();
-        setCharacter(charId);
-    }
-    
-    private void setFrame(int frameId){
-        if (currFrame != frameId){
-            wasFrameReplaced = false;
-            imagePanel.updateGhost();
-        }
-        currFrame = frameId;
-        lib.anim.Character ch = manager.getCharacter();
-        AnimFrame animFrame = ch.getAnimFrame(currAnimation, currFrame);       
-        HitFrame hitFrame = ch.getHitFrame(currAnimation, currFrame);
-        WeaponFrame weaponFrame = ch.getWeaponFrame(currAnimation, currFrame);
-        
-        // update frame text
-        final TitledBorder border = (TitledBorder)framePanel.getBorder();
-        border.setTitle("Frame " + Integer.toString(currFrame+1));
-        framePanel.repaint();
 
-        // update animFrame fields:
-        setField(delayField, animFrame.delay);
-        setFieldAsHex(mapField, animFrame.mapAddress);
-        setFieldAsHex(artField, animFrame.artAddress);
-
-        // update hitFrame fields:
-        if (hitFrame != null){
-            setField(xField,hitFrame.x);
-            setField(yField,hitFrame.y);
-            setField(damageField,hitFrame.damage);
-            setField(soundField,hitFrame.sound);
-            setCheck(koCheck, hitFrame.knockDown);
-            setCheck(hitCheck, hitFrame.isEnabled());
-            if (hitFrame.isEnabled()){
-                imagePanel.setHit(hitFrame.x, hitFrame.y, hitFrame.knockDown);
-            } else imagePanel.removeHit();
-        }else{
-            setCheck(hitCheck, false);
-            imagePanel.removeHit();
-        }
-        updateHitFrameEnabling();
-        
-        // update weaponFrame fields:
-        if (weaponFrame != null){
-            setField(wXField,weaponFrame.x);
-            setField(wYField,-weaponFrame.y);
-            setField(angleField,weaponFrame.angle);  
-            setCheck(behindCheck, weaponFrame.showBehind);
-            setCheck(weaponCheck, weaponFrame.isEnabled());
-            if (weaponFrame.isEnabled()){
-                imagePanel.setWeapon(weaponFrame.x, weaponFrame.y, weaponFrame.angle, weaponFrame.showBehind);
-            }else imagePanel.removeWeapon();
-        }else{
-            imagePanel.removeWeapon();
-        }
-        updateWeaponFrameEnabling();
-        
-        // update imagePanel
-        frameDelayCount = 0;
-        setImage(manager.getImage(currAnimation, currFrame), manager.getShadow(currAnimation, currFrame));
-        // update tittle
-        updateTitle();     
-        copyMenu.setEnabled(true);
-        pasteMenu.setEnabled(copiedMap != 0);
+    private boolean areIdsHex() {
+        return this.hexIdsMenu.isSelected();
     }
-    
-    private void setAnimation(int animId){
-        if (currAnimation != animId) imagePanel.updateGhost();
-        currAnimation = animId;
-        try {
-            manager.bufferAnimation(currAnimation);
-        } catch (IOException ex) {
-            showError("Unable to read animation graphics");
-            ex.printStackTrace();
+
+    private void setupCharacterCombo() {
+        int count = this.guide.getNumChars();
+        this.characterCombo.removeAllItems();
+        if (this.areIdsHex()) {
+            for (int i = 0; i < count; ++i) {
+                this.characterCombo.addItem(Integer.toHexString(i * 2) + " - " + this.guide.getCharName(i));
+            }
+        } else {
+            for (int i = 0; i < count; ++i) {
+                this.characterCombo.addItem("" + (i + 1) + " - " + this.guide.getCharName(i));
+            }
+        }
+    }
+
+    private void updateTitle() {
+        Character ch = this.manager.getCharacter();
+        if (ch.wasModified()) {
+            this.setTitle("Pancake 2 v1.6b - " + new File(this.romName).getName() + "*");
+        } else {
+            this.setTitle("Pancake 2 v1.6b - " + new File(this.romName).getName());
+        }
+    }
+
+    private void verifyModifications() {
+        if (this.manager == null) {
             return;
         }
-        setComboSelection(animationCombo, currAnimation);
-        lib.anim.Character ch = manager.getCharacter();
-        int animSize = ch.getAnimation(currAnimation).getNumFrames();
-        setField(sizeField,animSize);
-        
-        boolean isCompressed = ch.getAnimation(currAnimation).isCompressed();
-        artField.setEnabled(!isCompressed);
-        setEnable(toolsPanel,!isCompressed);
-        setEnable(overridePanel,!isCompressed);
-        setEnable(generatePanel,!isCompressed);
-        inportMenu.setEnabled(!isCompressed);
-        resizeAnimsMenu.setEnabled(!isCompressed);
-        if (isCompressed) imagePanel.setMode(Mode.none);
-//        uncompressMenu.setEnabled(isCompressed);
-        
-        // update current frame
-        setFrame(0);
-    }
-    
-    private void setCharacter(int charId) throws IOException{
-        // save current art stuff:
-        changeFrame(currFrame);  
-        if (manager == null) return;
-        lib.anim.Character ch = manager.getCharacter();
-        if (ch != null && ch.wasModified()){
-            //if (!askSaveRom()) return;
-            saveRom();
+        if (this.imagePanel.wasImageModified()) {
+            BufferedImage img = this.imagePanel.getImage();
+            Animation anim = this.manager.getCharacter().getAnimation(this.currAnimation);
+            anim.setImage(this.currFrame, img);
+            this.manager.getCharacter().setModified(true);
+            this.manager.getCharacter().setSpritesModified(true);
+            anim.setSpritesModified(this.currFrame, true);
+            this.dragImageRadio.setEnabled(false);
         }
-        int backupCurrAnim = currAnimation;
-        int fakeId = guide.getFakeCharId(charId);
-        final int type = guide.getType(fakeId);
-        if (type == 1){
-            AnimFrame.providedArtAddress = guide.getCompressedArtAddress(charId);
+    }
+
+    private void changeFrame(int frameId) {
+        this.verifyModifications();
+        if (this.manager != null && this.manager.getCharacter() != null) {
+            if (this.manager.getCharacter().wasModified()) {
+                this.saveRom();
+            }
+            this.setFrame(frameId);
         }
-        manager.setCharacter(charId, guide.getAnimsCount(fakeId), guide.getPaletteAddress(fakeId), type);
-        compressedLabel.setVisible(type == 1);
-        setComboSelection(characterCombo, fakeId);
-        setupAnimationCombo();
-        int numAnimations = manager.getCharacter().getNumAnimations();
-        
-        // update palette
-        updatePalettePanels();
-        
-        // update current animation
-        if (backupCurrAnim == -1) setAnimation(0);
-        else if (backupCurrAnim >= numAnimations) setAnimation(numAnimations-1);
-        else setAnimation(backupCurrAnim);
-        
-        updateGenAddress();
-        speedMenu.setEnabled(charId < 4);
-        nameMenu.setEnabled(charId < 4);
-        portraitMenu.setEnabled(true);
     }
-    
-    
-    private void guideChanged(){
-        setupCharacterCombo();
+
+    private void changeAnimation(int animId) {
+        this.verifyModifications();
+        this.setAnimation(animId);
     }
-    
-    private boolean openCustomGuide(){
-        int returnVal = guideChooser.showOpenDialog(this);        
-        if (returnVal == JFileChooser.APPROVE_OPTION) {
-            File file = guideChooser.getSelectedFile();
+
+    private void changeCharacter(int charId) throws IOException {
+        this.verifyModifications();
+        this.setCharacter(charId);
+    }
+
+    private void setFrame(int frameId) {
+        if (this.currFrame != frameId) {
+            this.wasFrameReplaced = false;
+            this.imagePanel.updateGhost();
+        }
+        this.currFrame = frameId;
+        Character ch = this.manager.getCharacter();
+        AnimFrame animFrame = ch.getAnimFrame(this.currAnimation, this.currFrame);
+        HitFrame hitFrame = ch.getHitFrame(this.currAnimation, this.currFrame);
+        WeaponFrame weaponFrame = ch.getWeaponFrame(this.currAnimation, this.currFrame);
+        TitledBorder border = (TitledBorder)this.framePanel.getBorder();
+        border.setTitle("Frame " + Integer.toString(this.currFrame + 1));
+        this.framePanel.repaint();
+        this.setField(this.delayField, animFrame.delay);
+        this.setFieldAsHex(this.mapField, animFrame.mapAddress);
+        this.setFieldAsHex(this.artField, animFrame.artAddress);
+        if (hitFrame != null) {
+            this.setField(this.xField, hitFrame.x);
+            this.setField(this.yField, hitFrame.y);
+            this.setField(this.damageField, hitFrame.damage);
+            this.setField(this.soundField, hitFrame.sound);
+            this.setCheck(this.koCheck, hitFrame.knockDown);
+            this.setCheck(this.hitCheck, hitFrame.isEnabled());
+            if (hitFrame.isEnabled()) {
+                this.imagePanel.setHit(hitFrame.x, hitFrame.y, hitFrame.knockDown);
+            } else {
+                this.imagePanel.removeHit();
+            }
+        } else {
+            this.setCheck(this.hitCheck, false);
+            this.imagePanel.removeHit();
+        }
+        this.updateHitFrameEnabling();
+        if (weaponFrame != null) {
+            this.setField(this.wXField, weaponFrame.x);
+            this.setField(this.wYField, - weaponFrame.y);
+            this.setField(this.angleField, weaponFrame.angle);
+            this.setCheck(this.behindCheck, weaponFrame.showBehind);
+            this.setCheck(this.weaponCheck, weaponFrame.isEnabled());
+            if (weaponFrame.isEnabled()) {
+                this.imagePanel.setWeapon(weaponFrame.x, weaponFrame.y, weaponFrame.angle, weaponFrame.showBehind);
+            } else {
+                this.imagePanel.removeWeapon();
+            }
+        } else {
+            this.imagePanel.removeWeapon();
+        }
+        this.updateWeaponFrameEnabling();
+        this.frameDelayCount = 0;
+        this.setImage(this.manager.getImage(this.currAnimation, this.currFrame), this.manager.getShadow(this.currAnimation, this.currFrame));
+        this.updateTitle();
+        this.copyMenu.setEnabled(true);
+        this.pasteMenu.setEnabled(this.copiedMap != 0L);
+    }
+
+    private void setAnimation(int animId) {
+        if (this.currAnimation != animId) {
+            this.imagePanel.updateGhost();
+        }
+        this.currAnimation = animId;
+        try {
+            this.manager.bufferAnimation(this.currAnimation);
+        }
+        catch (IOException ex) {
+            ex.printStackTrace();
+            this.showError("Unable to read animation graphics");
+            return;
+        }
+        this.setComboSelection(this.animationCombo, this.currAnimation);
+        Character ch = this.manager.getCharacter();
+        int animSize = ch.getAnimation(this.currAnimation).getNumFrames();
+        this.setField(this.sizeField, animSize);
+        boolean isCompressed = ch.getAnimation(this.currAnimation).isCompressed();
+        this.artField.setEnabled(!isCompressed);
+        Gui.setEnable(this.toolsPanel, !isCompressed);
+        Gui.setEnable(this.overridePanel, !isCompressed);
+        Gui.setEnable(this.generatePanel, !isCompressed);
+        this.inportMenu.setEnabled(!isCompressed);
+        this.resizeAnimsMenu.setEnabled(!isCompressed);
+        if (isCompressed) {
+            this.imagePanel.setMode(Mode.none);
+        }
+        this.setFrame(0);
+    }
+
+    private void setCharacter(int charId) throws IOException {
+        this.changeFrame(this.currFrame);
+        if (this.manager == null) {
+            return;
+        }
+        Character ch = this.manager.getCharacter();
+        if (ch != null && ch.wasModified()) {
+            this.saveRom();
+        }
+        int backupCurrAnim = this.currAnimation;
+        int fakeId = this.guide.getFakeCharId(charId);
+        int type = this.guide.getType(fakeId);
+        if (type == 1) {
+            AnimFrame.providedArtAddress = this.guide.getCompressedArtAddress(charId);
+        }
+        this.manager.setCharacter(charId, this.guide.getAnimsCount(fakeId), type);
+        this.compressedLabel.setVisible(type == 1);
+        this.setComboSelection(this.characterCombo, fakeId);
+        this.setupAnimationCombo();
+        int numAnimations = this.manager.getCharacter().getNumAnimations();
+        this.updatePalettePanels();
+        if (backupCurrAnim == -1) {
+            this.setAnimation(0);
+        } else if (backupCurrAnim >= numAnimations) {
+            this.setAnimation(numAnimations - 1);
+        } else {
+            this.setAnimation(backupCurrAnim);
+        }
+        this.nameMenu.setEnabled(charId < this.guide.getPlayableChars());
+    }
+
+    private void guideChanged() {
+        this.setupCharacterCombo();
+    }
+
+    private boolean openCustomGuide() {
+        int returnVal = this.guideChooser.showOpenDialog(this);
+        if (returnVal == 0) {
+            File file = this.guideChooser.getSelectedFile();
             try {
-                guide = new Guide(file.getAbsolutePath());
-                guideChanged();
+                this.guide = new Guide(file.getAbsolutePath());
+                this.guideChanged();
                 return true;
-            } catch (FileNotFoundException ex) {
-                showError("Guide file \'" + file.getName() + "\' not found");
-            } catch (Exception ex) {
-                showError("Unable to open guide \'" + file.getName() + "\'");
+            }
+            catch (FileNotFoundException ex) {
+                ex.printStackTrace();
+                this.showError("Guide file '" + file.getName() + "' not found");
+            }
+            catch (Exception ex) {
+                ex.printStackTrace();
+                this.showError("Unable to open guide '" + file.getName() + "'");
             }
         }
         return false;
-    }  
-    private boolean openDefaultGuide(){
-        try{
-            guide = new Guide(Guide.GUIDES_DIR + "default.txt");
-            guideChanged();
-        }catch(Exception e){
-            return false;
-        }
-        return true;
     }
-    
-    private boolean setupManager(String romName) {
-        Manager oldManager = manager;
+
+    private boolean openDefaultGuide() {
         try {
-            manager = new Manager(romName, guide.getAnimsListAddress(), guide.getHitsListAddress(), guide.getWeaponsListAddress(), guide.getPortraitsListAddress());
-            changeCharacter(0);
-        } catch (FileNotFoundException ex) {
-            showError("File \'" + romName + "\' not found");
-            manager = oldManager;
-            return false;
-        } catch (IOException ex) {
-            showError("File \'" + romName + "\' is not a valid Streets of Rage 2 ROM");
-            manager = oldManager;
+            this.guide = new Guide(Guide.GUIDES_DIR + "default.txt");
+            this.guideChanged();
+        }
+        catch (Exception e) {
             return false;
         }
-        Manager newManager = manager;
-        manager = oldManager;
-        closeRom();
-        manager = newManager;
         return true;
     }
-    
-    private void openRom(){
-        // close rom first
-        if (!askSaveRom()) return;
-        
-        // open rom
-        int returnVal = romChooser.showOpenDialog(this);        
-        if (returnVal == JFileChooser.APPROVE_OPTION) {
-            File file = romChooser.getSelectedFile();
-            romName = file.getAbsolutePath();
-            if (setupManager(romName)){
-                setTitle(TITLE + " - "  + file.getName());
-                updateEnablings();
+
+    private boolean setupManager(String romName) {
+        Manager oldManager = this.manager;
+        try {
+            this.manager = new Manager(romName, this.guide);
+            this.changeCharacter(0);
+        }
+        catch (FileNotFoundException ex) {
+            ex.printStackTrace();
+            this.showError("File '" + romName + "' not found");
+            this.manager = oldManager;
+            return false;
+        }
+        catch (IOException ex) {
+            ex.printStackTrace();
+            this.showError("File '" + romName + "' is not a valid Streets of Rage 2 ROM");
+            this.manager = oldManager;
+            return false;
+        }
+        Manager newManager = this.manager;
+        this.manager = oldManager;
+        this.closeRom();
+        this.manager = newManager;
+        return true;
+    }
+
+    private boolean openRom() {
+        if (!this.askSaveRom()) {
+            return false;
+        }
+        int returnVal = this.romChooser.showOpenDialog(this);
+        if (returnVal == 0) {
+            File file = this.romChooser.getSelectedFile();
+            this.romName = file.getAbsolutePath();
+            if (this.setupManager(this.romName)) {
+                this.setTitle("Pancake 2 v1.6b - " + file.getName());
+                this.updateEnablings();
             }
         }
         try {
-            setCharacter(0);
-        } catch (IOException ex) {
-            showError("Unable to read first character");
+            this.setCharacter(0);
         }
-    }
-    
-    
-    private void closeRom(){
-        if (askSaveRom()){
-            manager = null;
-            copyMenu.setEnabled(false);
-            pasteMenu.setEnabled(false);
-            speedMenu.setEnabled(false);
-            nameMenu.setEnabled(false);
-            portraitMenu.setEnabled(false);
-            resizeAnimsMenu.setEnabled(false);
-//            uncompressMenu.setEnabled(false);
-            imagePanel.setImage(null, null);
-            imagePanel.setReplaceImage(null);
-            imagePanel.removeHit();
-            imagePanel.removeWeapon();
-            updateEnablings();
-        }
-    }
-    
-    private boolean saveRom(){
-        // save
-         try {
-            manager.save();
-            updateTitle();
-            return true;
-        } catch (IOException ex) {
-            showError("Unable to save rom");
-            return false;
-        }
-    }
-    
-    private boolean askSaveRom(){
-        if (guide == null || manager == null) return true;
-        lib.anim.Character ch = manager.getCharacter();
-        if (!ch.wasModified()) return true;
-        int option = JOptionPane.showConfirmDialog(this,
-            guide.getCharName(guide.getFakeCharId(manager.getCurrentCharacterId())) + " was modified.\n"
-            + "Save changes?",
-            "Character modified",
-            JOptionPane.YES_NO_CANCEL_OPTION
-        );
-        if (option == JOptionPane.YES_OPTION){
-            return saveRom();
-        }else if (option != JOptionPane.NO_OPTION){
-            // cancel or close, return false
+        catch (IOException ex) {
+            ex.printStackTrace();
+            this.showError("Unable to read first character");
             return false;
         }
         return true;
     }
-    
-    
-    private void setRadiosOff(){
-        pencilRadio.setSelected(false);
-        brushRadio.setSelected(false);
-        bucketRadio.setSelected(false);
-        dragSpriteRadio.setSelected(false);
-        dragImageRadio.setSelected(false);
-        noneRadio.setSelected(false);
-        pencilMenu.setSelected(false);
-        brushMenu.setSelected(false);
-        bucketMenu.setSelected(false);
-        dragSpriteMenu.setSelected(false);
-        dragImageMenu.setSelected(false);
-        noneMenu.setSelected(false);
-    }
-    
-    private static void setEnable(JComponent component, boolean enabled){
-        if (component.isEnabled() == enabled) return;
-        component.setEnabled(enabled);
-        Component[] com = component.getComponents();  
-        for (int a = 0; a < com.length; a++) {  
-            if (com[a] instanceof JComponent)
-                setEnable((JComponent)com[a], enabled);
-            else com[a].setEnabled(enabled);
-        } 
-    }
-    
-    private void updateHitFrameEnabling(){
-        lib.anim.Character ch = manager.getCharacter();
-        HitFrame hitFrame = ch.getHitFrame(currAnimation, currFrame);
-        boolean enabled = hitFrame != null && hitFrame.isEnabled();
-        setEnable(hitPanel, enabled);
-        hitCheck.setSelected(enabled);
-        hitCheck.setEnabled(hitFrame != null);
-        
-    }
-    
-    private void updateWeaponFrameEnabling(){
-        lib.anim.Character ch = manager.getCharacter();
-        WeaponFrame weaponFrame = ch.getWeaponFrame(currAnimation, currFrame);
-        boolean enabled = weaponFrame != null && weaponFrame.isEnabled();
-        setEnable(weaponPanel, enabled);
-        weaponCheck.setSelected(enabled);
-        weaponCheck.setEnabled(weaponFrame != null);
-    }
-    
-    private void updateEnablings(){
-        setEnable(mainPanel, manager != null && guide != null);
-        openRomMenu.setEnabled(guide != null);
-        closeMenu.setEnabled(manager != null);
-        inportMenu.setEnabled(manager != null);        
-        exportMenu.setEnabled(manager != null);
-        resizeAnimsMenu.setEnabled(manager != null);
-        copyMenu.setEnabled(manager != null);
-        pasteMenu.setEnabled(manager != null && copiedMap != 0);
-        if (manager != null){
-            updateHitFrameEnabling();
-            updateWeaponFrameEnabling();
+
+    private void closeRom() {
+        if (this.askSaveRom()) {
+            this.manager = null;
+            this.copyMenu.setEnabled(false);
+            this.pasteMenu.setEnabled(false);
+            this.nameMenu.setEnabled(false);
+            this.pasteMenu1.setEnabled(false);
+            this.pasteMenu2.setEnabled(false);
+            this.resizeAnimsMenu.setEnabled(false);
+            this.hexIdsMenu.setEnabled(false);
+            this.imagePanel.setImage(null, null);
+            this.imagePanel.setReplaceImage(null);
+            this.imagePanel.removeHit();
+            this.imagePanel.removeWeapon();
+            this.updateEnablings();
         }
     }
-    
-    private void sizeChanged(){
-        if (inUse.contains(sizeField)) return; // in use, ignore input
-        inUse.add(sizeField);
-        lib.anim.Character ch = manager.getCharacter();
-        Animation anim = ch.getAnimation(currAnimation);
+
+    private boolean saveRom() {
+        try {
+            this.manager.save();
+            this.updateTitle();
+            return true;
+        }
+        catch (IOException ex) {
+            ex.printStackTrace();
+            this.showError("Unable to save rom");
+            return false;
+        }
+    }
+
+    private boolean askSaveRom() {
+        if (this.guide == null || this.manager == null) {
+            return true;
+        }
+        Character ch = this.manager.getCharacter();
+        if (!ch.wasModified()) {
+            return true;
+        }
+        int option = JOptionPane.showConfirmDialog(this, this.guide.getCharName(this.guide.getFakeCharId(this.manager.getCurrentCharacterId())) + " was modified.\n" + "Save changes?", "Character modified", 1);
+        if (option == 0) {
+            return this.saveRom();
+        }
+        if (option != 1) {
+            return false;
+        }
+        return true;
+    }
+
+    private void setRadiosOff() {
+        this.pencilRadio.setSelected(false);
+        this.brushRadio.setSelected(false);
+        this.bucketRadio.setSelected(false);
+        this.dragSpriteRadio.setSelected(false);
+        this.dragImageRadio.setSelected(false);
+        this.noneRadio.setSelected(false);
+        this.pencilMenu.setSelected(false);
+        this.brushMenu.setSelected(false);
+        this.bucketMenu.setSelected(false);
+        this.dragSpriteMenu.setSelected(false);
+        this.dragImageMenu.setSelected(false);
+        this.noneMenu.setSelected(false);
+    }
+
+    private static void setEnable(JComponent component, boolean enabled) {
+        if (component.isEnabled() == enabled) {
+            return;
+        }
+        component.setEnabled(enabled);
+        Component[] com = component.getComponents();
+        for (int a = 0; a < com.length; ++a) {
+            if (com[a] instanceof JComponent) {
+                Gui.setEnable((JComponent)com[a], enabled);
+                continue;
+            }
+            com[a].setEnabled(enabled);
+        }
+    }
+
+    private void updateHitFrameEnabling() {
+        Character ch = this.manager.getCharacter();
+        HitFrame hitFrame = ch.getHitFrame(this.currAnimation, this.currFrame);
+        boolean enabled = hitFrame != null && hitFrame.isEnabled();
+        Gui.setEnable(this.hitPanel, enabled);
+        this.hitCheck.setSelected(enabled);
+        this.hitCheck.setEnabled(hitFrame != null);
+    }
+
+    private void updateWeaponFrameEnabling() {
+        Character ch = this.manager.getCharacter();
+        WeaponFrame weaponFrame = ch.getWeaponFrame(this.currAnimation, this.currFrame);
+        boolean enabled = weaponFrame != null && weaponFrame.isEnabled();
+        Gui.setEnable(this.weaponPanel, enabled);
+        this.weaponCheck.setSelected(enabled);
+        this.weaponCheck.setEnabled(weaponFrame != null);
+    }
+
+    private void updateEnablings() {
+        Gui.setEnable(this.mainPanel, this.manager != null && this.guide != null);
+        this.closeMenu.setEnabled(this.manager != null);
+        this.inportMenu.setEnabled(this.manager != null);
+        this.exportMenu.setEnabled(this.manager != null);
+        this.resizeAnimsMenu.setEnabled(this.manager != null);
+        this.copyMenu.setEnabled(this.manager != null);
+        this.pasteMenu.setEnabled(this.manager != null && this.copiedMap != 0L);
+        //this.pasteMenu1.setEnabled(this.manager != null); // disabled for now
+        this.pasteMenu2.setEnabled(this.manager != null);
+        this.hexIdsMenu.setEnabled(this.manager != null);
+        if (this.manager != null) {
+            this.updateHitFrameEnabling();
+            this.updateWeaponFrameEnabling();
+        }
+    }
+
+    private void sizeChanged() {
+        if (this.inUse.contains(this.sizeField)) {
+            return;
+        }
+        this.inUse.add(this.sizeField);
+        Character ch = this.manager.getCharacter();
+        Animation anim = ch.getAnimation(this.currAnimation);
         int maxSize = anim.getMaxNumFrames();
-        int newSize = getIntFromField(sizeField, 1, maxSize);
-        if (newSize == INVALID_INT){
-            sizeField.setBackground(Color.red);
-        } else{
-            sizeField.setBackground(Color.white);
-            if (newSize != anim.getNumFrames()){
+        int newSize = this.getIntFromField(this.sizeField, 1, maxSize);
+        if (newSize == Integer.MIN_VALUE) {
+            this.sizeField.setBackground(Color.red);
+        } else {
+            this.sizeField.setBackground(Color.white);
+            if (newSize != anim.getNumFrames()) {
                 anim.setNumFrames(newSize);
                 ch.setModified(true);
-                changeAnimation(currAnimation);
+                this.changeAnimation(this.currAnimation);
             }
         }
-        inUse.remove(sizeField);
+        this.inUse.remove(this.sizeField);
     }
-    private void delayChanged(){
-        if (inUse.contains(delayField)) return; // in use, ignore input
-        inUse.add(delayField);
-        lib.anim.Character ch = manager.getCharacter();
-        Animation anim = ch.getAnimation(currAnimation);
-        AnimFrame frame = anim.getFrame(currFrame);
-        int newDelay = getIntFromField(delayField, 1, 255);
-        if (newDelay == INVALID_INT){
-            delayField.setBackground(Color.red);
-        } else{
-            delayField.setBackground(Color.white);
-            if (newDelay != frame.delay){
+
+    private void delayChanged() {
+        if (this.inUse.contains(this.delayField)) {
+            return;
+        }
+        this.inUse.add(this.delayField);
+        Character ch = this.manager.getCharacter();
+        Animation anim = ch.getAnimation(this.currAnimation);
+        AnimFrame frame = anim.getFrame(this.currFrame);
+        int newDelay = this.getIntFromField(this.delayField, 1, 255);
+        if (newDelay == Integer.MIN_VALUE) {
+            this.delayField.setBackground(Color.red);
+        } else {
+            this.delayField.setBackground(Color.white);
+            if (newDelay != frame.delay) {
                 frame.delay = newDelay;
                 ch.setModified(true);
-                refresh();
+                this.refresh();
             }
         }
-        inUse.remove(delayField);
+        this.inUse.remove(this.delayField);
     }
-    private void hitXChanged(){
-        if (inUse.contains(xField)) return; // in use, ignore input
-        inUse.add(xField);
-        lib.anim.Character ch = manager.getCharacter();
-        HitFrame frame = ch.getHitFrame(currAnimation, currFrame);
-        int newX = getIntFromField(xField, -127, 127);
-        if (newX == INVALID_INT){
-            xField.setBackground(Color.red);
-        } else{
-            xField.setBackground(Color.white);
-            if (newX != frame.x){
+
+    private void hitXChanged() {
+        if (this.inUse.contains(this.xField)) {
+            return;
+        }
+        this.inUse.add(this.xField);
+        Character ch = this.manager.getCharacter();
+        HitFrame frame = ch.getHitFrame(this.currAnimation, this.currFrame);
+        int newX = this.getIntFromField(this.xField, -127, 127);
+        if (newX == Integer.MIN_VALUE) {
+            this.xField.setBackground(Color.red);
+        } else {
+            this.xField.setBackground(Color.white);
+            if (newX != frame.x) {
                 frame.x = newX;
                 ch.setModified(true);
-                refresh();
+                this.refresh();
             }
         }
-        inUse.remove(xField);
+        this.inUse.remove(this.xField);
     }
-    private void hitYChanged(){
-        if (inUse.contains(yField)) return; // in use, ignore input
-        inUse.add(yField);
-        lib.anim.Character ch = manager.getCharacter();
-        HitFrame frame = ch.getHitFrame(currAnimation, currFrame);
-        int newY = getIntFromField(yField, -127, 127);
-        if (newY == INVALID_INT){
-            yField.setBackground(Color.red);
-        } else{
-            yField.setBackground(Color.white);
-            if (newY != frame.y){
+
+    private void hitYChanged() {
+        if (this.inUse.contains(this.yField)) {
+            return;
+        }
+        this.inUse.add(this.yField);
+        Character ch = this.manager.getCharacter();
+        HitFrame frame = ch.getHitFrame(this.currAnimation, this.currFrame);
+        int newY = this.getIntFromField(this.yField, -127, 127);
+        if (newY == Integer.MIN_VALUE) {
+            this.yField.setBackground(Color.red);
+        } else {
+            this.yField.setBackground(Color.white);
+            if (newY != frame.y) {
                 frame.y = newY;
                 ch.setModified(true);
-                refresh();
+                this.refresh();
             }
         }
-        inUse.remove(yField);
+        this.inUse.remove(this.yField);
     }
-    private void hitSoundChanged(){
-        if (inUse.contains(soundField)) return; // in use, ignore input
-        inUse.add(soundField);
-        lib.anim.Character ch = manager.getCharacter();
-        HitFrame frame = ch.getHitFrame(currAnimation, currFrame);
-        int newSound = getIntFromField(soundField, 0, 255);
-        if (newSound == INVALID_INT){
-            soundField.setBackground(Color.red);
-        } else{
-            soundField.setBackground(Color.white);
-            if (newSound != frame.sound){
+
+    private void hitSoundChanged() {
+        if (this.inUse.contains(this.soundField)) {
+            return;
+        }
+        this.inUse.add(this.soundField);
+        Character ch = this.manager.getCharacter();
+        HitFrame frame = ch.getHitFrame(this.currAnimation, this.currFrame);
+        int newSound = this.getIntFromField(this.soundField, 0, 255);
+        if (newSound == Integer.MIN_VALUE) {
+            this.soundField.setBackground(Color.red);
+        } else {
+            this.soundField.setBackground(Color.white);
+            if (newSound != frame.sound) {
                 frame.sound = newSound;
                 ch.setModified(true);
-                refresh();
+                this.refresh();
             }
         }
-        inUse.remove(soundField);
+        this.inUse.remove(this.soundField);
     }
-    private void hitDamageChanged(){
-        if (inUse.contains(damageField)) return; // in use, ignore input
-        inUse.add(damageField);
-        lib.anim.Character ch = manager.getCharacter();
-        HitFrame frame = ch.getHitFrame(currAnimation, currFrame);
-        int newDamage = getIntFromField(damageField, -127, 127);
-        if (newDamage == INVALID_INT){
-            damageField.setBackground(Color.red);
-        } else{
-            damageField.setBackground(Color.white);
-            if (newDamage != frame.damage){
+
+    private void hitDamageChanged() {
+        if (this.inUse.contains(this.damageField)) {
+            return;
+        }
+        this.inUse.add(this.damageField);
+        Character ch = this.manager.getCharacter();
+        HitFrame frame = ch.getHitFrame(this.currAnimation, this.currFrame);
+        int newDamage = this.getIntFromField(this.damageField, -127, 127);
+        if (newDamage == Integer.MIN_VALUE) {
+            this.damageField.setBackground(Color.red);
+        } else {
+            this.damageField.setBackground(Color.white);
+            if (newDamage != frame.damage) {
                 frame.damage = newDamage;
                 ch.setModified(true);
-                refresh();
+                this.refresh();
             }
         }
-        inUse.remove(damageField);
+        this.inUse.remove(this.damageField);
     }
-    private void weaponXChanged(){
-        if (inUse.contains(wXField)) return; // in use, ignore input
-        inUse.add(wXField);
-        lib.anim.Character ch = manager.getCharacter();
-        WeaponFrame frame = ch.getWeaponFrame(currAnimation, currFrame);
-        int newX = getIntFromField(wXField, -127, 127);
-        if (newX == INVALID_INT){
-            wXField.setBackground(Color.red);
-        } else{
-            wXField.setBackground(Color.white);
-            if (newX != frame.x){
+
+    private void weaponXChanged() {
+        if (this.inUse.contains(this.wXField)) {
+            return;
+        }
+        this.inUse.add(this.wXField);
+        Character ch = this.manager.getCharacter();
+        WeaponFrame frame = ch.getWeaponFrame(this.currAnimation, this.currFrame);
+        int newX = this.getIntFromField(this.wXField, -127, 127);
+        if (newX == Integer.MIN_VALUE) {
+            this.wXField.setBackground(Color.red);
+        } else {
+            this.wXField.setBackground(Color.white);
+            if (newX != frame.x) {
                 frame.x = newX;
                 ch.setModified(true);
-                refresh();
+                this.refresh();
             }
         }
-        inUse.remove(wXField);
+        this.inUse.remove(this.wXField);
     }
-    private void weaponYChanged(){
-        if (inUse.contains(wYField)) return; // in use, ignore input
-        inUse.add(wYField);
-        lib.anim.Character ch = manager.getCharacter();
-        WeaponFrame frame = ch.getWeaponFrame(currAnimation, currFrame);
-        int newY = getIntFromField(wYField, -127, 127);
-        if (newY == INVALID_INT){
-            wYField.setBackground(Color.red);
-        } else{
-            newY = -newY;
-            wYField.setBackground(Color.white);
-            if (newY != frame.y){
+
+    private void weaponYChanged() {
+        if (this.inUse.contains(this.wYField)) {
+            return;
+        }
+        this.inUse.add(this.wYField);
+        Character ch = this.manager.getCharacter();
+        WeaponFrame frame = ch.getWeaponFrame(this.currAnimation, this.currFrame);
+        int newY = this.getIntFromField(this.wYField, -127, 127);
+        if (newY == Integer.MIN_VALUE) {
+            this.wYField.setBackground(Color.red);
+        } else {
+            newY = - newY;
+            this.wYField.setBackground(Color.white);
+            if (newY != frame.y) {
                 frame.y = newY;
                 ch.setModified(true);
-                refresh();
+                this.refresh();
             }
         }
-        inUse.remove(wYField);
+        this.inUse.remove(this.wYField);
     }
-    private void weaponAngleChanged(){
-        if (inUse.contains(angleField)) return; // in use, ignore input
-        inUse.add(angleField);
-        lib.anim.Character ch = manager.getCharacter();
-        WeaponFrame frame = ch.getWeaponFrame(currAnimation, currFrame);
-        int newAngle = getIntFromField(angleField, -127, 127);
-        if (newAngle == INVALID_INT || newAngle < 0 || newAngle > 7){
-            if (frame.isEnabled())
-                angleField.setBackground(Color.red);
-        } else{
-            angleField.setBackground(Color.white);
-            if (newAngle != frame.angle){
+
+    private void weaponAngleChanged() {
+        if (this.inUse.contains(this.angleField)) {
+            return;
+        }
+        this.inUse.add(this.angleField);
+        Character ch = this.manager.getCharacter();
+        WeaponFrame frame = ch.getWeaponFrame(this.currAnimation, this.currFrame);
+        int newAngle = this.getIntFromField(this.angleField, -127, 127);
+        if (newAngle == Integer.MIN_VALUE || newAngle < 0 || newAngle > 7) {
+            if (frame.isEnabled()) {
+                this.angleField.setBackground(Color.red);
+            }
+        } else {
+            this.angleField.setBackground(Color.white);
+            if (newAngle != frame.angle) {
                 frame.angle = newAngle;
                 ch.setModified(true);
-                refresh();
+                this.refresh();
             }
         }
-        inUse.remove(angleField);
+        this.inUse.remove(this.angleField);
     }
-    private void mapAddressChanged(){
-        if (inUse.contains(mapField)) return; // in use, ignore input
-        inUse.add(mapField);
-        lib.anim.Character ch = manager.getCharacter();
-        Animation anim = ch.getAnimation(currAnimation);
-        AnimFrame frame = anim.getFrame(currFrame);
-        long newMap = getHexFromField(mapField);
-        if (newMap == INVALID_LONG){
-            mapField.setBackground(Color.red);
-        } else{
-            mapField.setBackground(Color.white);
-            if (newMap != frame.mapAddress){
+
+    private void mapAddressChanged() {
+        if (this.inUse.contains(this.mapField)) {
+            return;
+        }
+        this.inUse.add(this.mapField);
+        Character ch = this.manager.getCharacter();
+        Animation anim = ch.getAnimation(this.currAnimation);
+        AnimFrame frame = anim.getFrame(this.currFrame);
+        long newMap = this.getHexFromField(this.mapField);
+        if (newMap == Long.MIN_VALUE) {
+            this.mapField.setBackground(Color.red);
+        } else {
+            this.mapField.setBackground(Color.white);
+            if (newMap != frame.mapAddress) {
                 long oldMap = frame.mapAddress;
                 frame.mapAddress = newMap;
                 try {
-                    manager.bufferAnimFrame(currAnimation, currFrame);
+                    this.manager.bufferAnimFrame(this.currAnimation, this.currFrame);
                     ch.setModified(true);
-                    refresh();
-                } catch (IOException ex) {
+                    this.refresh();
+                }
+                catch (IOException ex) {
                     frame.mapAddress = oldMap;
-                    mapField.setBackground(Color.red);
-                }                
+                    this.mapField.setBackground(Color.red);
+                }
             }
         }
-        inUse.remove(mapField);
+        this.inUse.remove(this.mapField);
     }
-    private void artAddressChanged(){
-        if (inUse.contains(artField)) return; // in use, ignore input
-        inUse.add(artField);
-        lib.anim.Character ch = manager.getCharacter();
-        Animation anim = ch.getAnimation(currAnimation);
-        AnimFrame frame = anim.getFrame(currFrame);
-        long newArt = getHexFromField(artField);
-        if (newArt == INVALID_LONG){
-            artField.setBackground(Color.red);
-        } else{
-            artField.setBackground(Color.white);
-            if (newArt != frame.artAddress){
+
+    private void artAddressChanged() {
+        if (this.inUse.contains(this.artField)) {
+            return;
+        }
+        this.inUse.add(this.artField);
+        Character ch = this.manager.getCharacter();
+        Animation anim = ch.getAnimation(this.currAnimation);
+        AnimFrame frame = anim.getFrame(this.currFrame);
+        long newArt = this.getHexFromField(this.artField);
+        if (newArt == Long.MIN_VALUE) {
+            this.artField.setBackground(Color.red);
+        } else {
+            this.artField.setBackground(Color.white);
+            if (newArt != frame.artAddress) {
                 long oldArt = frame.artAddress;
                 frame.artAddress = newArt;
                 try {
-                    manager.bufferAnimFrame(currAnimation, currFrame);
+                    this.manager.bufferAnimFrame(this.currAnimation, this.currFrame);
                     ch.setModified(true);
-                    refresh();
-                } catch (IOException ex) {
+                    this.refresh();
+                }
+                catch (IOException ex) {
                     frame.artAddress = oldArt;
-                    artField.setBackground(Color.red);
-                }                
+                    this.artField.setBackground(Color.red);
+                }
             }
         }
-        inUse.remove(artField);
+        this.inUse.remove(this.artField);
     }
-    
-    private void setupFields(){
-        sizeField.getDocument().addDocumentListener(new DocumentListener() {
+
+    private void setupFields() {
+        this.sizeField.getDocument().addDocumentListener(new DocumentListener(){
+
             @Override
             public void changedUpdate(DocumentEvent e) {
-                sizeChanged();
+                Gui.this.sizeChanged();
             }
+
             @Override
             public void removeUpdate(DocumentEvent e) {
-                sizeChanged();
+                Gui.this.sizeChanged();
             }
+
             @Override
             public void insertUpdate(DocumentEvent e) {
-                sizeChanged();
-            }
-        });        
-        delayField.getDocument().addDocumentListener(new DocumentListener() {
-            @Override
-            public void changedUpdate(DocumentEvent e) {
-                delayChanged();
-            }
-            @Override
-            public void removeUpdate(DocumentEvent e) {
-                delayChanged();
-            }
-            @Override
-            public void insertUpdate(DocumentEvent e) {
-                delayChanged();
+                Gui.this.sizeChanged();
             }
         });
-        xField.getDocument().addDocumentListener(new DocumentListener() {
+        this.delayField.getDocument().addDocumentListener(new DocumentListener(){
+
             @Override
             public void changedUpdate(DocumentEvent e) {
-                hitXChanged();
+                Gui.this.delayChanged();
             }
+
             @Override
             public void removeUpdate(DocumentEvent e) {
-                hitXChanged();
+                Gui.this.delayChanged();
             }
+
             @Override
             public void insertUpdate(DocumentEvent e) {
-                hitXChanged();
+                Gui.this.delayChanged();
             }
         });
-        yField.getDocument().addDocumentListener(new DocumentListener() {
+        this.xField.getDocument().addDocumentListener(new DocumentListener(){
+
             @Override
             public void changedUpdate(DocumentEvent e) {
-                hitYChanged();
+                Gui.this.hitXChanged();
             }
+
             @Override
             public void removeUpdate(DocumentEvent e) {
-                hitYChanged();
+                Gui.this.hitXChanged();
             }
+
             @Override
             public void insertUpdate(DocumentEvent e) {
-                hitYChanged();
+                Gui.this.hitXChanged();
             }
         });
-        soundField.getDocument().addDocumentListener(new DocumentListener() {
+        this.yField.getDocument().addDocumentListener(new DocumentListener(){
+
             @Override
             public void changedUpdate(DocumentEvent e) {
-                hitSoundChanged();
+                Gui.this.hitYChanged();
             }
+
             @Override
             public void removeUpdate(DocumentEvent e) {
-                hitSoundChanged();
+                Gui.this.hitYChanged();
             }
+
             @Override
             public void insertUpdate(DocumentEvent e) {
-                hitSoundChanged();
+                Gui.this.hitYChanged();
             }
         });
-        damageField.getDocument().addDocumentListener(new DocumentListener() {
+        this.soundField.getDocument().addDocumentListener(new DocumentListener(){
+
             @Override
             public void changedUpdate(DocumentEvent e) {
-                hitDamageChanged();
+                Gui.this.hitSoundChanged();
             }
+
             @Override
             public void removeUpdate(DocumentEvent e) {
-                hitDamageChanged();
+                Gui.this.hitSoundChanged();
             }
+
             @Override
             public void insertUpdate(DocumentEvent e) {
-                hitDamageChanged();
+                Gui.this.hitSoundChanged();
             }
         });
-        wXField.getDocument().addDocumentListener(new DocumentListener() {
+        this.damageField.getDocument().addDocumentListener(new DocumentListener(){
+
             @Override
             public void changedUpdate(DocumentEvent e) {
-                weaponXChanged();
+                Gui.this.hitDamageChanged();
             }
+
             @Override
             public void removeUpdate(DocumentEvent e) {
-                weaponXChanged();
+                Gui.this.hitDamageChanged();
             }
+
             @Override
             public void insertUpdate(DocumentEvent e) {
-                weaponXChanged();
+                Gui.this.hitDamageChanged();
             }
         });
-        wYField.getDocument().addDocumentListener(new DocumentListener() {
+        this.wXField.getDocument().addDocumentListener(new DocumentListener(){
+
             @Override
             public void changedUpdate(DocumentEvent e) {
-                weaponYChanged();
+                Gui.this.weaponXChanged();
             }
+
             @Override
             public void removeUpdate(DocumentEvent e) {
-                weaponYChanged();
+                Gui.this.weaponXChanged();
             }
+
             @Override
             public void insertUpdate(DocumentEvent e) {
-                weaponYChanged();
+                Gui.this.weaponXChanged();
             }
         });
-        angleField.getDocument().addDocumentListener(new DocumentListener() {
+        this.wYField.getDocument().addDocumentListener(new DocumentListener(){
+
             @Override
             public void changedUpdate(DocumentEvent e) {
-                weaponAngleChanged();
+                Gui.this.weaponYChanged();
             }
+
             @Override
             public void removeUpdate(DocumentEvent e) {
-                weaponAngleChanged();
+                Gui.this.weaponYChanged();
             }
+
             @Override
             public void insertUpdate(DocumentEvent e) {
-                weaponAngleChanged();
+                Gui.this.weaponYChanged();
             }
         });
-        mapField.getDocument().addDocumentListener(new DocumentListener() {
+        this.angleField.getDocument().addDocumentListener(new DocumentListener(){
+
             @Override
             public void changedUpdate(DocumentEvent e) {
-                mapAddressChanged();
+                Gui.this.weaponAngleChanged();
             }
+
             @Override
             public void removeUpdate(DocumentEvent e) {
-                mapAddressChanged();
+                Gui.this.weaponAngleChanged();
             }
+
             @Override
             public void insertUpdate(DocumentEvent e) {
-                mapAddressChanged();
+                Gui.this.weaponAngleChanged();
             }
         });
-        artField.getDocument().addDocumentListener(new DocumentListener() {
+        this.mapField.getDocument().addDocumentListener(new DocumentListener(){
+
             @Override
             public void changedUpdate(DocumentEvent e) {
-                artAddressChanged();
+                Gui.this.mapAddressChanged();
             }
+
             @Override
             public void removeUpdate(DocumentEvent e) {
-                artAddressChanged();
+                Gui.this.mapAddressChanged();
             }
+
             @Override
             public void insertUpdate(DocumentEvent e) {
-                artAddressChanged();
+                Gui.this.mapAddressChanged();
             }
         });
-        
-    }    
-    private void setupFileChoosers(){
-        romChooser.addChoosableFileFilter(new FileFilter(){
+        this.artField.getDocument().addDocumentListener(new DocumentListener(){
+
+            @Override
+            public void changedUpdate(DocumentEvent e) {
+                Gui.this.artAddressChanged();
+            }
+
+            @Override
+            public void removeUpdate(DocumentEvent e) {
+                Gui.this.artAddressChanged();
+            }
+
+            @Override
+            public void insertUpdate(DocumentEvent e) {
+                Gui.this.artAddressChanged();
+            }
+        });
+    }
+
+    private void setupFileChoosers() {
+        this.romChooser.addChoosableFileFilter(new FileFilter(){
+
             @Override
             public boolean accept(File file) {
-                if (file.isDirectory()) return true;
+                if (file.isDirectory()) {
+                    return true;
+                }
                 String filename = file.getName();
                 return filename.endsWith(".bin");
             }
+
             @Override
             public String getDescription() {
                 return "*.bin";
-            }            
-        });        
-        guideChooser.addChoosableFileFilter(new FileFilter(){
+            }
+        });
+        this.guideChooser.addChoosableFileFilter(new FileFilter(){
+
             @Override
             public boolean accept(File file) {
-                if (file.isDirectory()) return true;
+                if (file.isDirectory()) {
+                    return true;
+                }
                 String filename = file.getName();
                 return filename.endsWith(".txt");
             }
+
             @Override
             public String getDescription() {
                 return "*.txt";
-            }            
+            }
         });
-        resizerChooser.addChoosableFileFilter(new FileFilter(){
+        this.resizerChooser.addChoosableFileFilter(new FileFilter(){
+
             @Override
             public boolean accept(File file) {
-                if (file.isDirectory()) return true;
+                if (file.isDirectory()) {
+                    return true;
+                }
                 String filename = file.getName();
                 return filename.endsWith(".txt");
             }
+
             @Override
             public String getDescription() {
                 return "*.txt";
-            }            
+            }
         });
-        imageChooser.addChoosableFileFilter(new FileFilter(){
+        this.imageChooser.addChoosableFileFilter(new FileFilter(){
+
             @Override
             public boolean accept(File file) {
-                if (file.isDirectory()) return true;
+                if (file.isDirectory()) {
+                    return true;
+                }
                 String filename = file.getName();
                 return filename.endsWith(".png") || filename.endsWith(".gif") || filename.endsWith(".jpg") || filename.endsWith(".bmp");
             }
+
             @Override
             public String getDescription() {
                 return "Image (*.png, *.gif, *.jpg, *.bmp)";
-            }            
-        });  
-        imageSaver.addChoosableFileFilter(new FileFilter(){
+            }
+        });
+        this.imageSaver.addChoosableFileFilter(new FileFilter(){
+
             @Override
             public boolean accept(File file) {
-                if (file.isDirectory()) return true;
+                if (file.isDirectory()) {
+                    return true;
+                }
                 String filename = file.getName();
                 return filename.endsWith(".png");
             }
+
             @Override
             public String getDescription() {
                 return "*.png";
-            }            
-        }); 
-    }      
-    private void initColorPanels(){
-        colorPanels = new JPanel[16];
-        colorPanels[0] = colorPanel1;
-        colorPanels[1] = colorPanel2;
-        colorPanels[2] = colorPanel3;
-        colorPanels[3] = colorPanel4;
-        colorPanels[4] = colorPanel5;
-        colorPanels[5] = colorPanel6;
-        colorPanels[6] = colorPanel7;
-        colorPanels[7] = colorPanel8;
-        colorPanels[8] = colorPanel9;
-        colorPanels[9] = colorPanel10;
-        colorPanels[10] = colorPanel11;
-        colorPanels[11] = colorPanel12;
-        colorPanels[12] = colorPanel13;
-        colorPanels[13] = colorPanel14;
-        colorPanels[14] = colorPanel15;
-        colorPanels[15] = colorPanel16;
-        selectionBorder = BorderFactory.createCompoundBorder(
-                new LineBorder(java.awt.Color.white, 2),
-                new LineBorder(java.awt.Color.black)
-        );
-        selectionBorder = BorderFactory.createCompoundBorder(
-                new LineBorder(java.awt.Color.black), selectionBorder
-        );
-        colorPanel1.setBorder(selectionBorder);
-        
+            }
+        });
     }
-    private void preInitComponents(){
-        lastcX = lastcY = -1;
-        inUse = new HashSet<JTextField>();
-        imagePanel = new ImagePanel(this);
-        currentDirectory = new File(".").getAbsolutePath();
-        romChooser = new JFileChooser(currentDirectory);
-        romChooser.setDialogTitle("Open the \'Streets of Rage 2\' ROM to edit");
-        guideChooser = new JFileChooser(currentDirectory + "/" + Guide.GUIDES_DIR);
-        guideChooser.setDialogTitle("Open characters guide");
-        imageChooser = new JFileChooser(currentDirectory);
-        imageChooser.setDialogTitle("Open image");
-        imageSaver = new JFileChooser(currentDirectory);
-        imageSaver.setDialogTitle("Save image");
-        resizerChooser = new JFileChooser(currentDirectory);
-        resizerChooser.setDialogTitle("Open resizing script");
-        
-        try {            
-            Image icon = ImageIO.read(new File("images/icon.png"));
-            this.setIconImage(icon);
-        } catch (IOException ex) { /* Ignore */ }
-        
-        timer = new Timer(16,this);
-    }
-    
-    private void postInitComponents(){
-        compressedLabel.setVisible(false);
-        setupFields();                
-        setupFileChoosers();
-        scrollPanel.setWheelScrollingEnabled(false);
-        scrollPanel.setAutoscrolls(true);
 
-        initColorPanels();
-        if (!openDefaultGuide()){
-            openCustomGuide();
-        }
-        updateEnablings();
+    private void initColorPanels() {
+        this.colorPanels = new JPanel[16];
+        this.colorPanels[0] = this.colorPanel1;
+        this.colorPanels[1] = this.colorPanel2;
+        this.colorPanels[2] = this.colorPanel3;
+        this.colorPanels[3] = this.colorPanel4;
+        this.colorPanels[4] = this.colorPanel5;
+        this.colorPanels[5] = this.colorPanel6;
+        this.colorPanels[6] = this.colorPanel7;
+        this.colorPanels[7] = this.colorPanel8;
+        this.colorPanels[8] = this.colorPanel9;
+        this.colorPanels[9] = this.colorPanel10;
+        this.colorPanels[10] = this.colorPanel11;
+        this.colorPanels[11] = this.colorPanel12;
+        this.colorPanels[12] = this.colorPanel13;
+        this.colorPanels[13] = this.colorPanel14;
+        this.colorPanels[14] = this.colorPanel15;
+        this.colorPanels[15] = this.colorPanel16;
+        this.selectionBorder = BorderFactory.createCompoundBorder(new LineBorder(Color.white, 2), new LineBorder(Color.black));
+        this.selectionBorder = BorderFactory.createCompoundBorder(new LineBorder(Color.black), this.selectionBorder);
+        this.colorPanel1.setBorder(this.selectionBorder);
     }
-    
-    /**
-     * Creates new form Gui
-     */
+
+    private void preInitComponents() {
+        this.lastcY = -1;
+        this.lastcX = -1;
+        this.inUse = new HashSet();
+        this.imagePanel = new ImagePanel(this);
+        this.currentDirectory = new File(".").getAbsolutePath();
+        this.romChooser = new JFileChooser(this.currentDirectory);
+        this.romChooser.setDialogTitle("Open the 'Streets of Rage 2' ROM to edit");
+        this.guideChooser = new JFileChooser(this.currentDirectory + "/" + Guide.GUIDES_DIR);
+        this.guideChooser.setDialogTitle("Open characters guide");
+        this.imageChooser = new JFileChooser(this.currentDirectory);
+        this.imageChooser.setDialogTitle("Open image");
+        this.imageSaver = new JFileChooser(this.currentDirectory);
+        this.imageSaver.setDialogTitle("Save image");
+        this.resizerChooser = new JFileChooser(this.currentDirectory);
+        this.resizerChooser.setDialogTitle("Open resizing script");
+        try {
+            BufferedImage icon = ImageIO.read(new File("images/icon.png"));
+            this.setIconImage(icon);
+        }
+        catch (IOException ex) {
+            // empty catch block
+        }
+        this.timer = new Timer(16, this);
+    }
+
+    private void postInitComponents() {
+        this.compressedLabel.setVisible(false);
+        this.setupFields();
+        this.setupFileChoosers();
+        this.scrollPanel.setWheelScrollingEnabled(false);
+        this.scrollPanel.setAutoscrolls(true);
+        this.initColorPanels();
+        this.updateEnablings();        
+    }
+
     public Gui() {
-        preInitComponents();
-        initComponents();
-        setVisible(true);
-        postInitComponents();
+        this.preInitComponents();
+        this.initComponents();
+        this.setVisible(true);
+        this.postInitComponents();
     }
-    
-     private void setImagePanelScale(float newScale){
-         // Save the previous coordinates
-        float oldScale = imagePanel.getScale();
-        Rectangle oldView = scrollPanel.getViewport().getViewRect();
-        // resize the panel for the new zoom
-        imagePanel.setScale(newScale);
-        // calculate the new view position
+
+    private void setImagePanelScale(float newScale) {
+        float oldScale = this.imagePanel.getScale();
+        Rectangle oldView = this.scrollPanel.getViewport().getViewRect();
+        this.imagePanel.setScale(newScale);
         Point newViewPos = new Point();
-        newViewPos.x = (int)(Math.max(0, (oldView.x + oldView.width / 2) * newScale / oldScale - oldView.width / 2));
-        newViewPos.y = (int)(Math.max(0, (oldView.y + oldView.height / 2) * newScale / oldScale - oldView.height / 2));
-        scrollPanel.getViewport().setViewPosition(newViewPos);
-     }
-    
-     private void scaleImagePanel(float zoom){
-        setImagePanelScale(imagePanel.getScale() + zoom);
+        newViewPos.x = (int)Math.max(0.0f, (float)(oldView.x + oldView.width / 2) * newScale / oldScale - (float)(oldView.width / 2));
+        newViewPos.y = (int)Math.max(0.0f, (float)(oldView.y + oldView.height / 2) * newScale / oldScale - (float)(oldView.height / 2));
+        this.scrollPanel.getViewport().setViewPosition(newViewPos);
     }
-     
-     private void showError(String text){
+
+    private void scaleImagePanel(float zoom) {
+        this.setImagePanelScale(this.imagePanel.getScale() + zoom);
+    }
+
+    public void showError(String text) {
         String title = "Wops!";
-        JOptionPane.showMessageDialog(this,
-            text, title,
-            JOptionPane.ERROR_MESSAGE
-        );
+        JOptionPane.showMessageDialog(this, text, title, 0);
     }
-     
-     private int getIntFromField(JTextField field, int lowerLim, int upperLim){
-         String text = field.getText();
-         if (text.isEmpty()) return INVALID_INT;
-         try{
+
+    public int getIntFromField(JTextField field, int lowerLim, int upperLim) {
+        String text = field.getText();
+        if (text.isEmpty()) {
+            return Integer.MIN_VALUE;
+        }
+        try {
             int res = Integer.parseInt(text);
-            if (res < lowerLim || res > upperLim) return INVALID_INT;
+            if (res < lowerLim || res > upperLim) {
+                return Integer.MIN_VALUE;
+            }
             return res;
-         }catch(Exception e){
-            return INVALID_INT;
         }
-     }
-     private int getPositiveIntFromField(JTextField field){
-         return getIntFromField(field, 0, Integer.MAX_VALUE);
-     }
-     private int getIntFromField(JTextField field){
-         String text = field.getText();
-         if (text.isEmpty()) return INVALID_INT;
-         try{
+        catch (Exception e) {
+            return Integer.MIN_VALUE;
+        }
+    }
+
+    public int getPositiveIntFromField(JTextField field) {
+        return this.getIntFromField(field, 0, Integer.MAX_VALUE);
+    }
+
+    public int getIntFromField(JTextField field) {
+        String text = field.getText();
+        if (text.isEmpty()) {
+            return Integer.MIN_VALUE;
+        }
+        try {
             return Integer.parseInt(text);
-         }catch(Exception e){
-            return INVALID_INT;
         }
-     }
-     private long getHexFromField(JTextField field){
-         String text = field.getText();
-         if (text.isEmpty()) return INVALID_LONG;
-         try{
+        catch (Exception e) {
+            return Integer.MIN_VALUE;
+        }
+    }
+
+    public long getHexFromField(JTextField field) {
+        String text = field.getText();
+        if (text.isEmpty()) {
+            return Long.MIN_VALUE;
+        }
+        try {
             return Long.parseLong(text, 16);
-         }catch(Exception e){
-            return INVALID_LONG;
         }
-     }
-     private void setField(JTextField field, String value){
-         if (inUse.contains(field)) return; // in use, ignore
-         if (!field.getText().equals(value)){
-             inUse.add(field);
-             field.setBackground(Color.white);
-             field.setText(value);  
-             inUse.remove(field);
-         }
-     }
-     private void setField(JTextField field, int value){
-         setField(field, Integer.toString(value));
-     }
-     private void setField(JTextField field, long value){
-         setField(field, Long.toString(value));
-     }
-     private void setFieldAsHex(JTextField field, long value){
-         setField(field, Long.toString(value, 16));
-     }
-     private void setCheck(JCheckBox check, boolean value){
-         if (check.isSelected() != value)
+        catch (Exception e) {
+            return Long.MIN_VALUE;
+        }
+    }
+
+    private void setField(JTextField field, String value) {
+        if (this.inUse.contains(field)) {
+            return;
+        }
+        if (!field.getText().equals(value)) {
+            this.inUse.add(field);
+            field.setBackground(Color.white);
+            field.setText(value);
+            this.inUse.remove(field);
+        }
+    }
+
+    private void setField(JTextField field, int value) {
+        this.setField(field, Integer.toString(value));
+    }
+
+    private void setField(JTextField field, long value) {
+        this.setField(field, Long.toString(value));
+    }
+
+    private void setFieldAsHex(JTextField field, long value) {
+        this.setField(field, Long.toString(value, 16));
+    }
+
+    private void setCheck(JCheckBox check, boolean value) {
+        if (check.isSelected() != value) {
             check.setSelected(value);
-     }
-     private void setComboSelection(JComboBox combo, int newIndex) {
-        if (combo.getSelectedIndex() != newIndex){
+        }
+    }
+
+    private void setComboSelection(JComboBox combo, int newIndex) {
+        if (combo.getSelectedIndex() != newIndex) {
             combo.setSelectedIndex(newIndex);
         }
     }
-     
-     private void setImage(BufferedImage image, BufferedImage shadow) {
-         // don't even ask what this is... Revalidate etc didn't work
-        JScrollBar horizontalScrollBar = scrollPanel.getHorizontalScrollBar();
-        JScrollBar verticalScrollBar = scrollPanel.getVerticalScrollBar();
+
+    private void setImage(BufferedImage image, BufferedImage shadow) {
+        JScrollBar horizontalScrollBar = this.scrollPanel.getHorizontalScrollBar();
+        JScrollBar verticalScrollBar = this.scrollPanel.getVerticalScrollBar();
         int x = horizontalScrollBar.getValue();
         int y = verticalScrollBar.getValue();
-        imagePanel.setImage(image, shadow);
-        horizontalScrollBar.setValue(x+1);
+        this.imagePanel.setImage(image, shadow);
+        horizontalScrollBar.setValue(x + 1);
         horizontalScrollBar.setValue(x);
-        verticalScrollBar.setValue(y+1);
-        verticalScrollBar.setValue(y);    
-        dragImageRadio.setEnabled(false);
+        verticalScrollBar.setValue(y + 1);
+        verticalScrollBar.setValue(y);
+        this.dragImageRadio.setEnabled(false);
     }
-     
-     
+
     private void setNextAnimation() {
-        int nextAnimation = currAnimation+1;
-        if (nextAnimation >= manager.getCharacter().getNumAnimations()){
+        int nextAnimation = this.currAnimation + 1;
+        if (nextAnimation >= this.manager.getCharacter().getNumAnimations()) {
             nextAnimation = 0;
         }
-        changeAnimation(nextAnimation);
+        this.changeAnimation(nextAnimation);
     }
-    
+
     private void setPreviousAnimation() {
-        int previousAnimation = currAnimation-1;
-        if (previousAnimation < 0){
-            previousAnimation = manager.getCharacter().getNumAnimations()-1;
+        int previousAnimation = this.currAnimation - 1;
+        if (previousAnimation < 0) {
+            previousAnimation = this.manager.getCharacter().getNumAnimations() - 1;
         }
-        changeAnimation(previousAnimation);
+        this.changeAnimation(previousAnimation);
     }
-    
+
     private void setNextFrame() {
-        int nextFrame = currFrame+1;
-        if (nextFrame >= manager.getCharacter().getAnimation(currAnimation).getNumFrames()){
+        int nextFrame = this.currFrame + 1;
+        if (nextFrame >= this.manager.getCharacter().getAnimation(this.currAnimation).getNumFrames()) {
             nextFrame = 0;
         }
-        changeFrame(nextFrame);
+        this.changeFrame(nextFrame);
     }
 
     private void setPreviousFrame() {
-        int previousFrame = currFrame+-1;
-        if (previousFrame < 0){
-            previousFrame = manager.getCharacter().getAnimation(currAnimation).getNumFrames()-1;
+        int previousFrame = this.currFrame + -1;
+        if (previousFrame < 0) {
+            previousFrame = this.manager.getCharacter().getAnimation(this.currAnimation).getNumFrames() - 1;
         }
-        changeFrame(previousFrame);
+        this.changeFrame(previousFrame);
     }
-    
-    private void updatePalettePanels(){
-        Palette palette = manager.getPalette();
-        if (palette == null){
+
+    private void updatePalettePanels() {
+        Palette palette = this.manager.getPalette();
+        if (palette == null) {
             palette = new Palette();
         }
-        for (int i = 0 ; i < 16 ; ++i){
-            colorPanels[i].setBackground(new Color(palette.getColor(i)));
+        for (int i = 0; i < 16; ++i) {
+            this.colorPanels[i].setBackground(new Color(palette.getColor(i)));
         }
     }
-   
+    
 
     /**
      * This method is called from within the constructor to initialize the form.
@@ -1229,10 +1476,9 @@ public class Gui extends javax.swing.JFrame implements ActionListener, TheListen
         jLabel2 = new javax.swing.JLabel();
         generatePanel = new javax.swing.JPanel();
         hardReplaceButton = new javax.swing.JButton();
-        jLabel13 = new javax.swing.JLabel();
-        genAddressField = new javax.swing.JTextField();
         jLabel14 = new javax.swing.JLabel();
         genPaletteField = new javax.swing.JTextField();
+        jLabel4 = new javax.swing.JLabel();
         jMenuBar1 = new javax.swing.JMenuBar();
         jMenu1 = new javax.swing.JMenu();
         openRomMenu = new javax.swing.JMenuItem();
@@ -1242,6 +1488,8 @@ public class Gui extends javax.swing.JFrame implements ActionListener, TheListen
         inportMenu = new javax.swing.JMenu();
         jMenuItem1 = new javax.swing.JMenuItem();
         jMenuItem2 = new javax.swing.JMenuItem();
+        jSeparator5 = new javax.swing.JPopupMenu.Separator();
+        jMenuItem3 = new javax.swing.JMenuItem();
         exportMenu = new javax.swing.JMenu();
         spriteSheetMenu1 = new javax.swing.JMenuItem();
         spriteSheetMenu = new javax.swing.JMenuItem();
@@ -1264,14 +1512,17 @@ public class Gui extends javax.swing.JFrame implements ActionListener, TheListen
         jMenuItem7 = new javax.swing.JMenuItem();
         jMenuItem9 = new javax.swing.JMenuItem();
         jMenuItem10 = new javax.swing.JMenuItem();
+        hexIdsMenu = new javax.swing.JCheckBoxMenuItem();
         jSeparator3 = new javax.swing.JPopupMenu.Separator();
         resizeAnimsMenu = new javax.swing.JMenuItem();
         nameMenu = new javax.swing.JMenuItem();
-        speedMenu = new javax.swing.JMenuItem();
-        portraitMenu = new javax.swing.JMenuItem();
         jSeparator4 = new javax.swing.JPopupMenu.Separator();
         copyMenu = new javax.swing.JMenuItem();
         pasteMenu = new javax.swing.JMenuItem();
+        jSeparator6 = new javax.swing.JPopupMenu.Separator();
+        pasteMenu1 = new javax.swing.JMenuItem();
+        jSeparator7 = new javax.swing.JPopupMenu.Separator();
+        pasteMenu2 = new javax.swing.JMenuItem();
         jMenu3 = new javax.swing.JMenu();
         jMenuItem6 = new javax.swing.JMenuItem();
 
@@ -1334,7 +1585,7 @@ public class Gui extends javax.swing.JFrame implements ActionListener, TheListen
         sizeField.setText("0");
 
         framePanel.setBackground(new java.awt.Color(240, 226, 157));
-        framePanel.setBorder(javax.swing.BorderFactory.createTitledBorder(null, "Frame #", javax.swing.border.TitledBorder.DEFAULT_JUSTIFICATION, javax.swing.border.TitledBorder.DEFAULT_POSITION, new java.awt.Font("Tahoma", 0, 14), new java.awt.Color(0, 0, 0))); // NOI18N
+        framePanel.setBorder(javax.swing.BorderFactory.createTitledBorder(null, "Frame #", javax.swing.border.TitledBorder.DEFAULT_JUSTIFICATION, javax.swing.border.TitledBorder.DEFAULT_POSITION, new java.awt.Font("Tahoma", 0, 14))); // NOI18N
 
         jLabel7.setFont(new java.awt.Font("Tahoma", 0, 14)); // NOI18N
         jLabel7.setHorizontalAlignment(javax.swing.SwingConstants.RIGHT);
@@ -1345,7 +1596,7 @@ public class Gui extends javax.swing.JFrame implements ActionListener, TheListen
         delayField.setText("0");
 
         hitPanel.setBackground(new java.awt.Color(236, 209, 127));
-        hitPanel.setBorder(javax.swing.BorderFactory.createTitledBorder(null, "Hit", javax.swing.border.TitledBorder.DEFAULT_JUSTIFICATION, javax.swing.border.TitledBorder.DEFAULT_POSITION, new java.awt.Font("Tahoma", 0, 11), new java.awt.Color(0, 0, 0))); // NOI18N
+        hitPanel.setBorder(javax.swing.BorderFactory.createTitledBorder("Hit"));
 
         jLabel8.setFont(new java.awt.Font("Tahoma", 0, 14)); // NOI18N
         jLabel8.setHorizontalAlignment(javax.swing.SwingConstants.RIGHT);
@@ -1452,6 +1703,7 @@ public class Gui extends javax.swing.JFrame implements ActionListener, TheListen
         jLabel12.setHorizontalAlignment(javax.swing.SwingConstants.RIGHT);
         jLabel12.setText("SpriteMap:");
 
+        mapField.setEditable(false);
         mapField.setFont(new java.awt.Font("Courier New", 0, 14)); // NOI18N
         mapField.setHorizontalAlignment(javax.swing.JTextField.RIGHT);
         mapField.setText("200");
@@ -1460,6 +1712,7 @@ public class Gui extends javax.swing.JFrame implements ActionListener, TheListen
         jLabel3.setHorizontalAlignment(javax.swing.SwingConstants.RIGHT);
         jLabel3.setText("Art Address:");
 
+        artField.setEditable(false);
         artField.setFont(new java.awt.Font("Courier New", 0, 14)); // NOI18N
         artField.setHorizontalAlignment(javax.swing.JTextField.RIGHT);
         artField.setText("200");
@@ -1481,7 +1734,7 @@ public class Gui extends javax.swing.JFrame implements ActionListener, TheListen
         });
 
         weaponPanel.setBackground(new java.awt.Color(217, 227, 154));
-        weaponPanel.setBorder(javax.swing.BorderFactory.createTitledBorder(null, "Weapon Point", javax.swing.border.TitledBorder.DEFAULT_JUSTIFICATION, javax.swing.border.TitledBorder.DEFAULT_POSITION, new java.awt.Font("Tahoma", 0, 11), new java.awt.Color(0, 0, 0))); // NOI18N
+        weaponPanel.setBorder(javax.swing.BorderFactory.createTitledBorder("Weapon Point"));
 
         jLabel15.setFont(new java.awt.Font("Tahoma", 0, 14)); // NOI18N
         jLabel15.setHorizontalAlignment(javax.swing.SwingConstants.RIGHT);
@@ -1570,7 +1823,7 @@ public class Gui extends javax.swing.JFrame implements ActionListener, TheListen
                 .addComponent(jLabel3, javax.swing.GroupLayout.PREFERRED_SIZE, 79, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addComponent(artField, javax.swing.GroupLayout.PREFERRED_SIZE, 62, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addContainerGap())
+                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
             .addGroup(framePanelLayout.createSequentialGroup()
                 .addGroup(framePanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
                     .addGroup(framePanelLayout.createSequentialGroup()
@@ -1621,10 +1874,10 @@ public class Gui extends javax.swing.JFrame implements ActionListener, TheListen
             .addGroup(animationPanelLayout.createSequentialGroup()
                 .addComponent(jLabel5)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addComponent(animationCombo, javax.swing.GroupLayout.PREFERRED_SIZE, 202, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addComponent(jLabel6)
+                .addComponent(animationCombo, javax.swing.GroupLayout.PREFERRED_SIZE, 208, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                .addComponent(jLabel6)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addComponent(sizeField, javax.swing.GroupLayout.PREFERRED_SIZE, 33, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addGap(6, 6, 6))
             .addComponent(framePanel, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
@@ -1650,15 +1903,13 @@ public class Gui extends javax.swing.JFrame implements ActionListener, TheListen
         characterPanelLayout.setHorizontalGroup(
             characterPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(characterPanelLayout.createSequentialGroup()
-                .addGroup(characterPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addGroup(characterPanelLayout.createSequentialGroup()
-                        .addComponent(jLabel1, javax.swing.GroupLayout.PREFERRED_SIZE, 73, javax.swing.GroupLayout.PREFERRED_SIZE)
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                        .addComponent(characterCombo, javax.swing.GroupLayout.PREFERRED_SIZE, 205, javax.swing.GroupLayout.PREFERRED_SIZE)
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                        .addComponent(compressedLabel))
-                    .addComponent(animationPanel, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                .addComponent(jLabel1, javax.swing.GroupLayout.PREFERRED_SIZE, 73, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addComponent(characterCombo, javax.swing.GroupLayout.PREFERRED_SIZE, 205, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addComponent(compressedLabel)
                 .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+            .addComponent(animationPanel, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
         );
         characterPanelLayout.setVerticalGroup(
             characterPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
@@ -1724,15 +1975,15 @@ public class Gui extends javax.swing.JFrame implements ActionListener, TheListen
         playerPanelLayout.setHorizontalGroup(
             playerPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, playerPanelLayout.createSequentialGroup()
-                .addComponent(backBut, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                .addComponent(backBut, javax.swing.GroupLayout.DEFAULT_SIZE, 87, Short.MAX_VALUE)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addComponent(previousBut, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                .addComponent(previousBut, javax.swing.GroupLayout.DEFAULT_SIZE, 87, Short.MAX_VALUE)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addComponent(playToggle, javax.swing.GroupLayout.PREFERRED_SIZE, 105, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addComponent(nextBut, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                .addComponent(nextBut, javax.swing.GroupLayout.DEFAULT_SIZE, 87, Short.MAX_VALUE)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addComponent(frontBut, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+                .addComponent(frontBut, javax.swing.GroupLayout.DEFAULT_SIZE, 88, Short.MAX_VALUE))
         );
         playerPanelLayout.setVerticalGroup(
             playerPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
@@ -1744,7 +1995,7 @@ public class Gui extends javax.swing.JFrame implements ActionListener, TheListen
                 .addComponent(playToggle))
         );
 
-        colorsPanel1.setBorder(javax.swing.BorderFactory.createTitledBorder(null, "Palette", javax.swing.border.TitledBorder.DEFAULT_JUSTIFICATION, javax.swing.border.TitledBorder.DEFAULT_POSITION, new java.awt.Font("Tahoma", 0, 11), new java.awt.Color(0, 0, 0))); // NOI18N
+        colorsPanel1.setBorder(javax.swing.BorderFactory.createTitledBorder("Palette"));
         colorsPanel1.setPreferredSize(new java.awt.Dimension(256, 64));
 
         colorPanel2.setBackground(new java.awt.Color(255, 255, 255));
@@ -2074,36 +2325,36 @@ public class Gui extends javax.swing.JFrame implements ActionListener, TheListen
             .addGroup(colorsPanel1Layout.createSequentialGroup()
                 .addGap(0, 0, 0)
                 .addGroup(colorsPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addComponent(colorPanel1, javax.swing.GroupLayout.DEFAULT_SIZE, 33, Short.MAX_VALUE)
-                    .addComponent(colorPanel9, javax.swing.GroupLayout.DEFAULT_SIZE, 33, Short.MAX_VALUE))
+                    .addComponent(colorPanel1, javax.swing.GroupLayout.DEFAULT_SIZE, 52, Short.MAX_VALUE)
+                    .addComponent(colorPanel9, javax.swing.GroupLayout.DEFAULT_SIZE, 52, Short.MAX_VALUE))
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addGroup(colorsPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addComponent(colorPanel2, javax.swing.GroupLayout.DEFAULT_SIZE, 33, Short.MAX_VALUE)
-                    .addComponent(colorPanel10, javax.swing.GroupLayout.DEFAULT_SIZE, 33, Short.MAX_VALUE))
+                    .addComponent(colorPanel2, javax.swing.GroupLayout.DEFAULT_SIZE, 52, Short.MAX_VALUE)
+                    .addComponent(colorPanel10, javax.swing.GroupLayout.DEFAULT_SIZE, 52, Short.MAX_VALUE))
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addGroup(colorsPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addComponent(colorPanel3, javax.swing.GroupLayout.DEFAULT_SIZE, 33, Short.MAX_VALUE)
-                    .addComponent(colorPanel11, javax.swing.GroupLayout.DEFAULT_SIZE, 33, Short.MAX_VALUE))
+                    .addComponent(colorPanel3, javax.swing.GroupLayout.DEFAULT_SIZE, 54, Short.MAX_VALUE)
+                    .addComponent(colorPanel11, javax.swing.GroupLayout.DEFAULT_SIZE, 54, Short.MAX_VALUE))
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addGroup(colorsPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addComponent(colorPanel4, javax.swing.GroupLayout.DEFAULT_SIZE, 35, Short.MAX_VALUE)
-                    .addComponent(colorPanel12, javax.swing.GroupLayout.DEFAULT_SIZE, 35, Short.MAX_VALUE))
+                    .addComponent(colorPanel4, javax.swing.GroupLayout.DEFAULT_SIZE, 52, Short.MAX_VALUE)
+                    .addComponent(colorPanel12, javax.swing.GroupLayout.DEFAULT_SIZE, 52, Short.MAX_VALUE))
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addGroup(colorsPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addComponent(colorPanel5, javax.swing.GroupLayout.DEFAULT_SIZE, 37, Short.MAX_VALUE)
-                    .addComponent(colorPanel13, javax.swing.GroupLayout.DEFAULT_SIZE, 37, Short.MAX_VALUE))
+                    .addComponent(colorPanel5, javax.swing.GroupLayout.DEFAULT_SIZE, 54, Short.MAX_VALUE)
+                    .addComponent(colorPanel13, javax.swing.GroupLayout.DEFAULT_SIZE, 54, Short.MAX_VALUE))
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addGroup(colorsPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addComponent(colorPanel6, javax.swing.GroupLayout.DEFAULT_SIZE, 35, Short.MAX_VALUE)
-                    .addComponent(colorPanel14, javax.swing.GroupLayout.DEFAULT_SIZE, 35, Short.MAX_VALUE))
+                    .addComponent(colorPanel6, javax.swing.GroupLayout.DEFAULT_SIZE, 52, Short.MAX_VALUE)
+                    .addComponent(colorPanel14, javax.swing.GroupLayout.DEFAULT_SIZE, 52, Short.MAX_VALUE))
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addGroup(colorsPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addComponent(colorPanel7, javax.swing.GroupLayout.DEFAULT_SIZE, 35, Short.MAX_VALUE)
-                    .addComponent(colorPanel15, javax.swing.GroupLayout.DEFAULT_SIZE, 35, Short.MAX_VALUE))
+                    .addComponent(colorPanel7, javax.swing.GroupLayout.DEFAULT_SIZE, 52, Short.MAX_VALUE)
+                    .addComponent(colorPanel15, javax.swing.GroupLayout.DEFAULT_SIZE, 52, Short.MAX_VALUE))
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addGroup(colorsPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addComponent(colorPanel8, javax.swing.GroupLayout.DEFAULT_SIZE, 34, Short.MAX_VALUE)
-                    .addComponent(colorPanel16, javax.swing.GroupLayout.DEFAULT_SIZE, 34, Short.MAX_VALUE)))
+                    .addComponent(colorPanel8, javax.swing.GroupLayout.DEFAULT_SIZE, 56, Short.MAX_VALUE)
+                    .addComponent(colorPanel16, javax.swing.GroupLayout.DEFAULT_SIZE, 56, Short.MAX_VALUE)))
         );
         colorsPanel1Layout.setVerticalGroup(
             colorsPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
@@ -2117,7 +2368,7 @@ public class Gui extends javax.swing.JFrame implements ActionListener, TheListen
                     .addComponent(colorPanel7, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                     .addComponent(colorPanel8, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                     .addComponent(colorPanel1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 12, Short.MAX_VALUE)
                 .addGroup(colorsPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                     .addComponent(colorPanel10, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                     .addComponent(colorPanel11, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
@@ -2134,8 +2385,8 @@ public class Gui extends javax.swing.JFrame implements ActionListener, TheListen
         previewPanelLayout.setHorizontalGroup(
             previewPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addComponent(playerPanel, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+            .addComponent(colorsPanel1, javax.swing.GroupLayout.DEFAULT_SIZE, 478, Short.MAX_VALUE)
             .addComponent(scrollPanel, javax.swing.GroupLayout.Alignment.TRAILING)
-            .addComponent(colorsPanel1, javax.swing.GroupLayout.DEFAULT_SIZE, 333, Short.MAX_VALUE)
         );
         previewPanelLayout.setVerticalGroup(
             previewPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
@@ -2148,7 +2399,7 @@ public class Gui extends javax.swing.JFrame implements ActionListener, TheListen
         );
 
         characterPanel1.setBackground(new java.awt.Color(228, 236, 191));
-        characterPanel1.setBorder(javax.swing.BorderFactory.createTitledBorder(null, "View", javax.swing.border.TitledBorder.DEFAULT_JUSTIFICATION, javax.swing.border.TitledBorder.DEFAULT_POSITION, new java.awt.Font("Tahoma", 0, 14), new java.awt.Color(0, 0, 0))); // NOI18N
+        characterPanel1.setBorder(javax.swing.BorderFactory.createTitledBorder(null, "View", javax.swing.border.TitledBorder.DEFAULT_JUSTIFICATION, javax.swing.border.TitledBorder.DEFAULT_POSITION, new java.awt.Font("Tahoma", 0, 14))); // NOI18N
 
         showHitsCheck.setBackground(new java.awt.Color(228, 236, 191));
         showHitsCheck.setSelected(true);
@@ -2220,12 +2471,11 @@ public class Gui extends javax.swing.JFrame implements ActionListener, TheListen
                     .addComponent(showWeaponCheck)
                     .addComponent(showCenterCheck)
                     .addComponent(showHitsCheck))
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addGroup(characterPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                     .addComponent(weaponCombo, javax.swing.GroupLayout.PREFERRED_SIZE, 83, javax.swing.GroupLayout.PREFERRED_SIZE)
                     .addComponent(showFacedRightCheck)
-                    .addComponent(showTileCheck))
-                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+                    .addComponent(showTileCheck)))
         );
         characterPanel1Layout.setVerticalGroup(
             characterPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
@@ -2238,14 +2488,14 @@ public class Gui extends javax.swing.JFrame implements ActionListener, TheListen
                 .addGroup(characterPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(showTileCheck)
                     .addComponent(showHitsCheck))
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 3, Short.MAX_VALUE)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                 .addGroup(characterPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(weaponCombo, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                     .addComponent(showWeaponCheck)))
         );
 
         toolsPanel.setBackground(new java.awt.Color(230, 230, 235));
-        toolsPanel.setBorder(javax.swing.BorderFactory.createTitledBorder(null, "Tools", javax.swing.border.TitledBorder.DEFAULT_JUSTIFICATION, javax.swing.border.TitledBorder.DEFAULT_POSITION, new java.awt.Font("Tahoma", 0, 14), new java.awt.Color(0, 0, 0))); // NOI18N
+        toolsPanel.setBorder(javax.swing.BorderFactory.createTitledBorder(null, "Tools", javax.swing.border.TitledBorder.DEFAULT_JUSTIFICATION, javax.swing.border.TitledBorder.DEFAULT_POSITION, new java.awt.Font("Tahoma", 0, 14))); // NOI18N
 
         pencilRadio.setBackground(new java.awt.Color(230, 226, 235));
         pencilRadio.setText("Pencil");
@@ -2309,17 +2559,22 @@ public class Gui extends javax.swing.JFrame implements ActionListener, TheListen
             .addGroup(toolsPanelLayout.createSequentialGroup()
                 .addContainerGap()
                 .addGroup(toolsPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addComponent(pencilRadio)
-                    .addComponent(brushRadio)
-                    .addComponent(bucketRadio))
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                .addGroup(toolsPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                     .addGroup(toolsPanelLayout.createSequentialGroup()
-                        .addGap(2, 2, 2)
-                        .addComponent(dragSpriteRadio))
-                    .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, toolsPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
-                        .addComponent(dragImageRadio, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                        .addComponent(noneRadio, javax.swing.GroupLayout.PREFERRED_SIZE, 81, javax.swing.GroupLayout.PREFERRED_SIZE))))
+                        .addComponent(bucketRadio)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                        .addComponent(noneRadio, javax.swing.GroupLayout.PREFERRED_SIZE, 81, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addGap(23, 23, 23))
+                    .addGroup(toolsPanelLayout.createSequentialGroup()
+                        .addGroup(toolsPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                            .addGroup(toolsPanelLayout.createSequentialGroup()
+                                .addComponent(pencilRadio)
+                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                                .addComponent(dragSpriteRadio))
+                            .addGroup(toolsPanelLayout.createSequentialGroup()
+                                .addComponent(brushRadio)
+                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                                .addComponent(dragImageRadio)))
+                        .addGap(0, 0, Short.MAX_VALUE))))
         );
         toolsPanelLayout.setVerticalGroup(
             toolsPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
@@ -2338,7 +2593,7 @@ public class Gui extends javax.swing.JFrame implements ActionListener, TheListen
         );
 
         overridePanel.setBackground(new java.awt.Color(240, 233, 221));
-        overridePanel.setBorder(javax.swing.BorderFactory.createTitledBorder(null, "Override Art", javax.swing.border.TitledBorder.DEFAULT_JUSTIFICATION, javax.swing.border.TitledBorder.DEFAULT_POSITION, new java.awt.Font("Tahoma", 0, 14), new java.awt.Color(0, 0, 0))); // NOI18N
+        overridePanel.setBorder(javax.swing.BorderFactory.createTitledBorder(null, "Override Art", javax.swing.border.TitledBorder.DEFAULT_JUSTIFICATION, javax.swing.border.TitledBorder.DEFAULT_POSITION, new java.awt.Font("Tahoma", 0, 14))); // NOI18N
 
         softReplaceButton.setText("Replace from Image");
         softReplaceButton.setFocusable(false);
@@ -2374,7 +2629,7 @@ public class Gui extends javax.swing.JFrame implements ActionListener, TheListen
         );
 
         generatePanel.setBackground(new java.awt.Color(240, 221, 221));
-        generatePanel.setBorder(javax.swing.BorderFactory.createTitledBorder(null, "Generate Sprite", javax.swing.border.TitledBorder.DEFAULT_JUSTIFICATION, javax.swing.border.TitledBorder.DEFAULT_POSITION, new java.awt.Font("Tahoma", 0, 14), new java.awt.Color(0, 0, 0))); // NOI18N
+        generatePanel.setBorder(javax.swing.BorderFactory.createTitledBorder(null, "Generate Sprite", javax.swing.border.TitledBorder.DEFAULT_JUSTIFICATION, javax.swing.border.TitledBorder.DEFAULT_POSITION, new java.awt.Font("Tahoma", 0, 14))); // NOI18N
 
         hardReplaceButton.setText("Generate From Image");
         hardReplaceButton.setFocusable(false);
@@ -2384,14 +2639,6 @@ public class Gui extends javax.swing.JFrame implements ActionListener, TheListen
             }
         });
 
-        jLabel13.setFont(new java.awt.Font("Tahoma", 0, 14)); // NOI18N
-        jLabel13.setHorizontalAlignment(javax.swing.SwingConstants.RIGHT);
-        jLabel13.setText("Address:");
-
-        genAddressField.setFont(new java.awt.Font("Courier New", 0, 14)); // NOI18N
-        genAddressField.setHorizontalAlignment(javax.swing.JTextField.RIGHT);
-        genAddressField.setText("200");
-
         jLabel14.setFont(new java.awt.Font("Tahoma", 0, 14)); // NOI18N
         jLabel14.setHorizontalAlignment(javax.swing.SwingConstants.RIGHT);
         jLabel14.setText("Palette Line:");
@@ -2400,6 +2647,8 @@ public class Gui extends javax.swing.JFrame implements ActionListener, TheListen
         genPaletteField.setHorizontalAlignment(javax.swing.JTextField.RIGHT);
         genPaletteField.setText("0");
 
+        jLabel4.setText("Produce new tiles");
+
         javax.swing.GroupLayout generatePanelLayout = new javax.swing.GroupLayout(generatePanel);
         generatePanel.setLayout(generatePanelLayout);
         generatePanelLayout.setHorizontalGroup(
@@ -2407,31 +2656,27 @@ public class Gui extends javax.swing.JFrame implements ActionListener, TheListen
             .addGroup(generatePanelLayout.createSequentialGroup()
                 .addGroup(generatePanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                     .addGroup(generatePanelLayout.createSequentialGroup()
+                        .addContainerGap()
+                        .addComponent(hardReplaceButton))
+                    .addGroup(generatePanelLayout.createSequentialGroup()
                         .addGap(18, 18, 18)
-                        .addGroup(generatePanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
-                            .addGroup(generatePanelLayout.createSequentialGroup()
-                                .addComponent(jLabel13, javax.swing.GroupLayout.PREFERRED_SIZE, 61, javax.swing.GroupLayout.PREFERRED_SIZE)
-                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                                .addComponent(genAddressField))
+                        .addGroup(generatePanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                            .addComponent(jLabel4)
                             .addGroup(generatePanelLayout.createSequentialGroup()
                                 .addComponent(jLabel14, javax.swing.GroupLayout.PREFERRED_SIZE, 79, javax.swing.GroupLayout.PREFERRED_SIZE)
                                 .addGap(18, 18, 18)
-                                .addComponent(genPaletteField, javax.swing.GroupLayout.PREFERRED_SIZE, 24, javax.swing.GroupLayout.PREFERRED_SIZE))))
-                    .addGroup(generatePanelLayout.createSequentialGroup()
-                        .addContainerGap()
-                        .addComponent(hardReplaceButton)))
-                .addGap(0, 25, Short.MAX_VALUE))
+                                .addComponent(genPaletteField, javax.swing.GroupLayout.PREFERRED_SIZE, 24, javax.swing.GroupLayout.PREFERRED_SIZE)))))
+                .addGap(0, 2, Short.MAX_VALUE))
         );
         generatePanelLayout.setVerticalGroup(
             generatePanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, generatePanelLayout.createSequentialGroup()
-                .addGroup(generatePanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                    .addComponent(jLabel13)
-                    .addComponent(genAddressField, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                .addGroup(generatePanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addComponent(jLabel14, javax.swing.GroupLayout.Alignment.TRAILING)
-                    .addComponent(genPaletteField, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                .addContainerGap(11, Short.MAX_VALUE)
+                .addComponent(jLabel4)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addGroup(generatePanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
+                    .addComponent(genPaletteField)
+                    .addComponent(jLabel14, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addComponent(hardReplaceButton))
         );
@@ -2443,14 +2688,14 @@ public class Gui extends javax.swing.JFrame implements ActionListener, TheListen
             .addGroup(mainPanelLayout.createSequentialGroup()
                 .addGroup(mainPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
                     .addGroup(mainPanelLayout.createSequentialGroup()
-                        .addGroup(mainPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                            .addComponent(characterPanel1, javax.swing.GroupLayout.DEFAULT_SIZE, 0, Short.MAX_VALUE)
+                        .addGroup(mainPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
+                            .addComponent(characterPanel1, javax.swing.GroupLayout.PREFERRED_SIZE, 204, javax.swing.GroupLayout.PREFERRED_SIZE)
                             .addComponent(overridePanel, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                        .addGroup(mainPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                            .addComponent(toolsPanel, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                            .addComponent(generatePanel, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)))
-                    .addComponent(characterPanel, javax.swing.GroupLayout.PREFERRED_SIZE, 376, javax.swing.GroupLayout.PREFERRED_SIZE))
+                        .addGroup(mainPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
+                            .addComponent(toolsPanel, javax.swing.GroupLayout.PREFERRED_SIZE, 197, javax.swing.GroupLayout.PREFERRED_SIZE)
+                            .addComponent(generatePanel, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)))
+                    .addComponent(characterPanel, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addComponent(previewPanel, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
         );
@@ -2514,6 +2759,15 @@ public class Gui extends javax.swing.JFrame implements ActionListener, TheListen
             }
         });
         inportMenu.add(jMenuItem2);
+        inportMenu.add(jSeparator5);
+
+        jMenuItem3.setText("Import from other ROM");
+        jMenuItem3.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                jMenuItem3ActionPerformed(evt);
+            }
+        });
+        inportMenu.add(jMenuItem3);
 
         jMenu1.add(inportMenu);
 
@@ -2681,6 +2935,15 @@ public class Gui extends javax.swing.JFrame implements ActionListener, TheListen
         jMenu4.add(jMenuItem10);
 
         jMenu2.add(jMenu4);
+
+        hexIdsMenu.setText("See IDs as Hex");
+        hexIdsMenu.setEnabled(false);
+        hexIdsMenu.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                hexIdsMenuActionPerformed(evt);
+            }
+        });
+        jMenu2.add(hexIdsMenu);
         jMenu2.add(jSeparator3);
 
         resizeAnimsMenu.setText("Resize Animations");
@@ -2692,7 +2955,7 @@ public class Gui extends javax.swing.JFrame implements ActionListener, TheListen
         });
         jMenu2.add(resizeAnimsMenu);
 
-        nameMenu.setText("Name");
+        nameMenu.setText("Properties");
         nameMenu.setEnabled(false);
         nameMenu.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
@@ -2700,24 +2963,6 @@ public class Gui extends javax.swing.JFrame implements ActionListener, TheListen
             }
         });
         jMenu2.add(nameMenu);
-
-        speedMenu.setText("Speed");
-        speedMenu.setEnabled(false);
-        speedMenu.addActionListener(new java.awt.event.ActionListener() {
-            public void actionPerformed(java.awt.event.ActionEvent evt) {
-                speedMenuActionPerformed(evt);
-            }
-        });
-        jMenu2.add(speedMenu);
-
-        portraitMenu.setText("Mini-Portrait");
-        portraitMenu.setEnabled(false);
-        portraitMenu.addActionListener(new java.awt.event.ActionListener() {
-            public void actionPerformed(java.awt.event.ActionEvent evt) {
-                portraitMenuActionPerformed(evt);
-            }
-        });
-        jMenu2.add(portraitMenu);
         jMenu2.add(jSeparator4);
 
         copyMenu.setAccelerator(javax.swing.KeyStroke.getKeyStroke(java.awt.event.KeyEvent.VK_F5, 0));
@@ -2739,6 +2984,27 @@ public class Gui extends javax.swing.JFrame implements ActionListener, TheListen
             }
         });
         jMenu2.add(pasteMenu);
+        jMenu2.add(jSeparator6);
+
+        pasteMenu1.setText("Decompress Art");
+        pasteMenu1.setEnabled(false);
+        pasteMenu1.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                pasteMenu1ActionPerformed(evt);
+            }
+        });
+        jMenu2.add(pasteMenu1);
+        jMenu2.add(jSeparator7);
+
+        pasteMenu2.setText("Delete Character !!");
+        pasteMenu2.setActionCommand("Delete Character");
+        pasteMenu2.setEnabled(false);
+        pasteMenu2.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                pasteMenu2ActionPerformed(evt);
+            }
+        });
+        jMenu2.add(pasteMenu2);
 
         jMenuBar1.add(jMenu2);
 
@@ -2770,389 +3036,729 @@ public class Gui extends javax.swing.JFrame implements ActionListener, TheListen
         pack();
     }// </editor-fold>//GEN-END:initComponents
 
-    private void colorPanel2MousePressed(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_colorPanel2MousePressed
-        colorPanelPressed(1);
+    private void colorPanel2MousePressed(MouseEvent evt) {//GEN-FIRST:event_colorPanel2MousePressed
+        this.colorPanelPressed(1);
     }//GEN-LAST:event_colorPanel2MousePressed
 
-    private void colorPanel3MousePressed(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_colorPanel3MousePressed
-        colorPanelPressed(2);
+    private void colorPanel3MousePressed(MouseEvent evt) {//GEN-FIRST:event_colorPanel3MousePressed
+        this.colorPanelPressed(2);
     }//GEN-LAST:event_colorPanel3MousePressed
 
-    private void colorPanel4MousePressed(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_colorPanel4MousePressed
-        colorPanelPressed(3);
+    private void colorPanel4MousePressed(MouseEvent evt) {//GEN-FIRST:event_colorPanel4MousePressed
+        this.colorPanelPressed(3);
     }//GEN-LAST:event_colorPanel4MousePressed
 
-    private void colorPanel5MousePressed(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_colorPanel5MousePressed
-        colorPanelPressed(4);
+    private void colorPanel5MousePressed(MouseEvent evt) {//GEN-FIRST:event_colorPanel5MousePressed
+        this.colorPanelPressed(4);
     }//GEN-LAST:event_colorPanel5MousePressed
 
-    private void colorPanel6MousePressed(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_colorPanel6MousePressed
-        colorPanelPressed(5);
+    private void colorPanel6MousePressed(MouseEvent evt) {//GEN-FIRST:event_colorPanel6MousePressed
+        this.colorPanelPressed(5);
     }//GEN-LAST:event_colorPanel6MousePressed
 
-    private void colorPanel7MousePressed(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_colorPanel7MousePressed
-        colorPanelPressed(6);
+    private void colorPanel7MousePressed(MouseEvent evt) {//GEN-FIRST:event_colorPanel7MousePressed
+        this.colorPanelPressed(6);
     }//GEN-LAST:event_colorPanel7MousePressed
 
-    private void colorPanel8MousePressed(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_colorPanel8MousePressed
-        colorPanelPressed(7);
+    private void colorPanel8MousePressed(MouseEvent evt) {//GEN-FIRST:event_colorPanel8MousePressed
+        this.colorPanelPressed(7);
     }//GEN-LAST:event_colorPanel8MousePressed
 
-    private void colorPanel9MousePressed(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_colorPanel9MousePressed
-        colorPanelPressed(8);
+    private void colorPanel9MousePressed(MouseEvent evt) {//GEN-FIRST:event_colorPanel9MousePressed
+        this.colorPanelPressed(8);
     }//GEN-LAST:event_colorPanel9MousePressed
 
-    private void colorPanel10MousePressed(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_colorPanel10MousePressed
-        colorPanelPressed(9);
+    private void colorPanel10MousePressed(MouseEvent evt) {//GEN-FIRST:event_colorPanel10MousePressed
+        this.colorPanelPressed(9);
     }//GEN-LAST:event_colorPanel10MousePressed
 
-    private void colorPanel11MousePressed(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_colorPanel11MousePressed
-        colorPanelPressed(10);
+    private void colorPanel11MousePressed(MouseEvent evt) {//GEN-FIRST:event_colorPanel11MousePressed
+        this.colorPanelPressed(10);
     }//GEN-LAST:event_colorPanel11MousePressed
 
-    private void colorPanel12MousePressed(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_colorPanel12MousePressed
-        colorPanelPressed(11);
+    private void colorPanel12MousePressed(MouseEvent evt) {//GEN-FIRST:event_colorPanel12MousePressed
+        this.colorPanelPressed(11);
     }//GEN-LAST:event_colorPanel12MousePressed
 
-    private void colorPanel13MousePressed(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_colorPanel13MousePressed
-        colorPanelPressed(12);
+    private void colorPanel13MousePressed(MouseEvent evt) {//GEN-FIRST:event_colorPanel13MousePressed
+        this.colorPanelPressed(12);
     }//GEN-LAST:event_colorPanel13MousePressed
 
-    private void colorPanel14MousePressed(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_colorPanel14MousePressed
-        colorPanelPressed(13);
+    private void colorPanel14MousePressed(MouseEvent evt) {//GEN-FIRST:event_colorPanel14MousePressed
+        this.colorPanelPressed(13);
     }//GEN-LAST:event_colorPanel14MousePressed
 
-    private void colorPanel15MousePressed(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_colorPanel15MousePressed
-        colorPanelPressed(14);
+    private void colorPanel15MousePressed(MouseEvent evt) {//GEN-FIRST:event_colorPanel15MousePressed
+        this.colorPanelPressed(14);
     }//GEN-LAST:event_colorPanel15MousePressed
 
-    private void colorPanel16MousePressed(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_colorPanel16MousePressed
-        colorPanelPressed(15);
+    private void colorPanel16MousePressed(MouseEvent evt) {//GEN-FIRST:event_colorPanel16MousePressed
+        this.colorPanelPressed(15);
     }//GEN-LAST:event_colorPanel16MousePressed
 
-    private void colorPanel1MousePressed(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_colorPanel1MousePressed
-        colorPanelPressed(0);
+    private void colorPanel1MousePressed(MouseEvent evt) {//GEN-FIRST:event_colorPanel1MousePressed
+        this.colorPanelPressed(0);
     }//GEN-LAST:event_colorPanel1MousePressed
 
-    private void formMouseWheelMoved(java.awt.event.MouseWheelEvent evt) {//GEN-FIRST:event_formMouseWheelMoved
-        scaleImagePanel(-0.2f*evt.getWheelRotation());
+    private void formMouseWheelMoved(MouseWheelEvent evt) {//GEN-FIRST:event_formMouseWheelMoved
+        this.scaleImagePanel(-0.2f * (float)evt.getWheelRotation());
     }//GEN-LAST:event_formMouseWheelMoved
 
-    private void jMenuItem11ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jMenuItem11ActionPerformed
-        setImagePanelScale(1.f);
+    private void jMenuItem11ActionPerformed(ActionEvent evt) {//GEN-FIRST:event_jMenuItem11ActionPerformed
+        this.setImagePanelScale(1.0f);
     }//GEN-LAST:event_jMenuItem11ActionPerformed
 
-    private void jMenuItem7ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jMenuItem7ActionPerformed
-        setImagePanelScale(2.f);
+    private void jMenuItem7ActionPerformed(ActionEvent evt) {//GEN-FIRST:event_jMenuItem7ActionPerformed
+        this.setImagePanelScale(2.0f);
     }//GEN-LAST:event_jMenuItem7ActionPerformed
 
-    private void jMenuItem9ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jMenuItem9ActionPerformed
-        setImagePanelScale(6.f);
+    private void jMenuItem9ActionPerformed(ActionEvent evt) {//GEN-FIRST:event_jMenuItem9ActionPerformed
+        this.setImagePanelScale(6.0f);
     }//GEN-LAST:event_jMenuItem9ActionPerformed
 
-    private void jMenuItem10ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jMenuItem10ActionPerformed
-        setImagePanelScale(12.f);
+    private void jMenuItem10ActionPerformed(ActionEvent evt) {//GEN-FIRST:event_jMenuItem10ActionPerformed
+        this.setImagePanelScale(12.0f);
     }//GEN-LAST:event_jMenuItem10ActionPerformed
 
-    private void openRomMenuActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_openRomMenuActionPerformed
-        openRom();
+    private void openRomMenuActionPerformed(ActionEvent evt) {//GEN-FIRST:event_openRomMenuActionPerformed
+        Guide oldGuide = this.guide;
+        if (this.openDefaultGuide() || this.openCustomGuide()) {
+            if (!this.openRom()) {
+                this.guide = oldGuide;
+            }
+        } else {
+            this.guide = oldGuide;
+        }
     }//GEN-LAST:event_openRomMenuActionPerformed
 
-    private void closeMenuActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_closeMenuActionPerformed
-        closeRom();
+    private void closeMenuActionPerformed(ActionEvent evt) {//GEN-FIRST:event_closeMenuActionPerformed
+        this.closeRom();
     }//GEN-LAST:event_closeMenuActionPerformed
 
-    private void jMenuItem4ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jMenuItem4ActionPerformed
-        if (openCustomGuide()){
-            openRom();
+    private void jMenuItem4ActionPerformed(ActionEvent evt) {//GEN-FIRST:event_jMenuItem4ActionPerformed
+        Guide oldGuide = this.guide;
+        if (this.openCustomGuide()) {
+            if (!this.openRom()) {
+                this.guide = oldGuide;
+            }
+        } else {
+            this.guide = oldGuide;
         }
     }//GEN-LAST:event_jMenuItem4ActionPerformed
 
-    private void jMenuItem5ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jMenuItem5ActionPerformed
-        if (askSaveRom()){
-            closeRom();
+    private void jMenuItem5ActionPerformed(ActionEvent evt) {//GEN-FIRST:event_jMenuItem5ActionPerformed
+        if (this.askSaveRom()) {
+            this.closeRom();
             System.exit(0);
         }
     }//GEN-LAST:event_jMenuItem5ActionPerformed
 
-    private void jButton3ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton3ActionPerformed
-        setNextFrame();        
+    private void jButton3ActionPerformed(ActionEvent evt) {//GEN-FIRST:event_jButton3ActionPerformed
+        this.setNextFrame();
     }//GEN-LAST:event_jButton3ActionPerformed
 
-    private void jButton2ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton2ActionPerformed
-        setPreviousFrame();
+    private void jButton2ActionPerformed(ActionEvent evt) {//GEN-FIRST:event_jButton2ActionPerformed
+        this.setPreviousFrame();
     }//GEN-LAST:event_jButton2ActionPerformed
 
-    private void nextButActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_nextButActionPerformed
-        setNextFrame();
+    private void nextButActionPerformed(ActionEvent evt) {//GEN-FIRST:event_nextButActionPerformed
+        this.setNextFrame();
     }//GEN-LAST:event_nextButActionPerformed
 
-    private void previousButActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_previousButActionPerformed
-        setPreviousFrame();
+    private void previousButActionPerformed(ActionEvent evt) {//GEN-FIRST:event_previousButActionPerformed
+        this.setPreviousFrame();
     }//GEN-LAST:event_previousButActionPerformed
 
-    private void animationComboActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_animationComboActionPerformed
-        int newAnim = animationCombo.getSelectedIndex();
-        if (newAnim != currAnimation && newAnim >= 0){
-            changeAnimation(newAnim);
+    private void animationComboActionPerformed(ActionEvent evt) {//GEN-FIRST:event_animationComboActionPerformed
+        int newAnim = this.animationCombo.getSelectedIndex();
+        if (newAnim != this.currAnimation && newAnim >= 0) {
+            this.changeAnimation(newAnim);
         }
     }//GEN-LAST:event_animationComboActionPerformed
 
-    private void frontButActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_frontButActionPerformed
-        setNextAnimation();
+    private void frontButActionPerformed(ActionEvent evt) {//GEN-FIRST:event_frontButActionPerformed
+        this.setNextAnimation();
     }//GEN-LAST:event_frontButActionPerformed
 
-    private void backButActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_backButActionPerformed
-        setPreviousAnimation();
+    private void backButActionPerformed(ActionEvent evt) {//GEN-FIRST:event_backButActionPerformed
+        this.setPreviousAnimation();
     }//GEN-LAST:event_backButActionPerformed
 
-    private void animationComboKeyPressed(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_animationComboKeyPressed
-        switch(evt.getKeyCode()){
-            case java.awt.event.KeyEvent.VK_RIGHT:
-                setNextFrame();
+    private void animationComboKeyPressed(KeyEvent evt) {//GEN-FIRST:event_animationComboKeyPressed
+        switch (evt.getKeyCode()) {
+            case 39: {
+                this.setNextFrame();
                 break;
-            case java.awt.event.KeyEvent.VK_LEFT:
-                setPreviousFrame();
-                break;
+            }
+            case 37: {
+                this.setPreviousFrame();
+            }
         }
     }//GEN-LAST:event_animationComboKeyPressed
 
-    private void characterComboActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_characterComboActionPerformed
-        if (manager == null || guide == null) return;
-        int newChar = guide.getRealCharId(characterCombo.getSelectedIndex());
-        if (newChar != manager.getCurrentCharacterId() && newChar >= 0){
+    private void characterComboActionPerformed(ActionEvent evt) {//GEN-FIRST:event_characterComboActionPerformed
+        if (this.manager == null || this.guide == null) {
+            return;
+        }
+        int newChar = this.guide.getRealCharId(this.characterCombo.getSelectedIndex());
+        if (newChar != this.manager.getCurrentCharacterId() && newChar >= 0) {
             try {
-                changeCharacter(newChar);
-            } catch (IOException ex) {
-                showError("Unable to read '" + characterCombo.getSelectedItem() + "' character");
+                this.changeCharacter(newChar);
+            }
+            catch (IOException ex) {
+                ex.printStackTrace();
+                this.showError("Unable to read '" + this.characterCombo.getSelectedItem() + "' character");
             }
         }
     }//GEN-LAST:event_characterComboActionPerformed
 
-    private void playToggleActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_playToggleActionPerformed
-        if (playToggle.isSelected()){
-            timer.start();
-            playToggle.setText("[]");
-        }else{
-            timer.stop();
-            playToggle.setText(">");            
+    private void playToggleActionPerformed(ActionEvent evt) {//GEN-FIRST:event_playToggleActionPerformed
+        if (this.playToggle.isSelected()) {
+            this.timer.start();
+            this.playToggle.setText("[]");
+        } else {
+            this.timer.stop();
+            this.playToggle.setText(">");
         }
-//        lastUsed.requestFocus();
     }//GEN-LAST:event_playToggleActionPerformed
 
-    private void showHitsCheckActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_showHitsCheckActionPerformed
-        imagePanel.showHit(showHitsCheck.isSelected());
+    private void showHitsCheckActionPerformed(ActionEvent evt) {//GEN-FIRST:event_showHitsCheckActionPerformed
+        this.imagePanel.showHit(this.showHitsCheck.isSelected());
     }//GEN-LAST:event_showHitsCheckActionPerformed
 
-    private void showCenterCheckActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_showCenterCheckActionPerformed
-        imagePanel.showGhost(showCenterCheck.isSelected());
+    private void showCenterCheckActionPerformed(ActionEvent evt) {//GEN-FIRST:event_showCenterCheckActionPerformed
+        this.imagePanel.showGhost(this.showCenterCheck.isSelected());
     }//GEN-LAST:event_showCenterCheckActionPerformed
 
-    private void showTileCheckActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_showTileCheckActionPerformed
-        imagePanel.showShadow(showTileCheck.isSelected());
+    private void showTileCheckActionPerformed(ActionEvent evt) {//GEN-FIRST:event_showTileCheckActionPerformed
+        this.imagePanel.showShadow(this.showTileCheck.isSelected());
     }//GEN-LAST:event_showTileCheckActionPerformed
 
-    private void hitCheckActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_hitCheckActionPerformed
-        lib.anim.Character ch = manager.getCharacter();
-        HitFrame hitFrame = ch.getHitFrame(currAnimation, currFrame);
-        boolean selected = hitCheck.isSelected();
-        if (hitFrame.isEnabled() != selected){
+    private void hitCheckActionPerformed(ActionEvent evt) {//GEN-FIRST:event_hitCheckActionPerformed
+        Character ch = this.manager.getCharacter();
+        HitFrame hitFrame = ch.getHitFrame(this.currAnimation, this.currFrame);
+        boolean selected = this.hitCheck.isSelected();
+        if (hitFrame.isEnabled() != selected) {
             hitFrame.setEnabled(selected);
             ch.setModified(true);
-            refresh();
+            this.refresh();
         }
     }//GEN-LAST:event_hitCheckActionPerformed
 
-    private void koCheckActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_koCheckActionPerformed
-        lib.anim.Character ch = manager.getCharacter();
-        HitFrame hitFrame = ch.getHitFrame(currAnimation, currFrame);
-        boolean selected = koCheck.isSelected();
-        if (hitFrame.knockDown  != selected){
+    private void koCheckActionPerformed(ActionEvent evt) {//GEN-FIRST:event_koCheckActionPerformed
+        Character ch = this.manager.getCharacter();
+        HitFrame hitFrame = ch.getHitFrame(this.currAnimation, this.currFrame);
+        boolean selected = this.koCheck.isSelected();
+        if (hitFrame.knockDown != selected) {
             hitFrame.knockDown = selected;
             ch.setModified(true);
-            refresh();
+            this.refresh();
         }
     }//GEN-LAST:event_koCheckActionPerformed
 
-    private void formWindowClosing(java.awt.event.WindowEvent evt) {//GEN-FIRST:event_formWindowClosing
-        if (askSaveRom()){
-            closeRom();
+    private void formWindowClosing(WindowEvent evt) {//GEN-FIRST:event_formWindowClosing
+        if (this.askSaveRom()) {
+            this.closeRom();
             System.exit(0);
         }
     }//GEN-LAST:event_formWindowClosing
 
-    private void softReplaceButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_softReplaceButtonActionPerformed
-        int returnVal = imageChooser.showOpenDialog(this);        
-        if (returnVal == JFileChooser.APPROVE_OPTION) {
-            File file = imageChooser.getSelectedFile();
-            BufferedImage replaceImg;
+    private void softReplaceButtonActionPerformed(ActionEvent evt) {//GEN-FIRST:event_softReplaceButtonActionPerformed
+        int returnVal = this.imageChooser.showOpenDialog(this);
+        if (returnVal == 0) {
+            File file = this.imageChooser.getSelectedFile();
             try {
-                replaceImg = ImageIO.read(file);                
-                replaceImg = processReplaceImg(replaceImg);
-                dragImageRadio.setEnabled(true);
-                imagePanel.setReplaceImage(replaceImg);
-            } catch (IOException ex) {
-                showError("Unable to read image file: " + file.getName());
-                imagePanel.setReplaceImage(null);
-                dragImageRadio.setEnabled(false);
+                BufferedImage replaceImg = ImageIO.read(file);
+                replaceImg = this.processReplaceImg(replaceImg);
+                this.dragImageRadio.setEnabled(true);
+                this.imagePanel.setReplaceImage(replaceImg);
             }
-            manager.getCharacter().getAnimation(currAnimation).setSpritesModified(currFrame, true);
-            manager.getCharacter().setSpritesModified(true);
-            manager.getCharacter().setModified(true);
+            catch (IOException ex) {
+                ex.printStackTrace();
+                this.showError("Unable to read image file: " + file.getName());
+                this.imagePanel.setReplaceImage(null);
+                this.dragImageRadio.setEnabled(false);
+            }
+            this.manager.getCharacter().getAnimation(this.currAnimation).setSpritesModified(this.currFrame, true);
+            this.manager.getCharacter().setSpritesModified(true);
+            this.manager.getCharacter().setModified(true);
         }
     }//GEN-LAST:event_softReplaceButtonActionPerformed
 
-    private void hardReplaceButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_hardReplaceButtonActionPerformed
-        int returnVal = imageChooser.showOpenDialog(this);        
-        if (returnVal == JFileChooser.APPROVE_OPTION) {
-            File file = imageChooser.getSelectedFile();
-            BufferedImage replaceImg;
+    private void hardReplaceButtonActionPerformed(ActionEvent evt) {//GEN-FIRST:event_hardReplaceButtonActionPerformed
+        int returnVal = this.imageChooser.showOpenDialog(this);
+        if (returnVal == 0) {
+            File file = this.imageChooser.getSelectedFile();
             try {
-                manager.getCharacter().setModified(true);
-                manager.getCharacter().setSpritesModified(true);
-                manager.getCharacter().getAnimation(currAnimation).setSpritesModified(currFrame, true);
-                replaceImg = ImageIO.read(file);
-                if (imagePanel.isFacedRight()) replaceImg = ImagePanel.flipImage(replaceImg);
-                replaceImg = processReplaceImg(replaceImg);
-                
-                if (lastcX == -1){
-                    lastcX = (int)(replaceImg.getWidth()*0.5);
-                    lastcY = (int)(replaceImg.getHeight()*0.95);
+                this.manager.getCharacter().setModified(true);
+                this.manager.getCharacter().setSpritesModified(true);
+                this.manager.getCharacter().getAnimation(this.currAnimation).setSpritesModified(this.currFrame, true);
+                BufferedImage replaceImg = ImageIO.read(file);
+                if (this.imagePanel.isFacedRight()) {
+                    replaceImg = ImagePanel.flipImage(replaceImg);
                 }
-                int cx = lastcX;
-                int cy = lastcY;
-//                int left = trunkLeft(replaceImg);
-//                int right = trunkRight(replaceImg);
-//                int top = trunkTop(replaceImg);
-//                int bottom = trunkBottom(replaceImg);       
-//                replaceImg = replaceImg.getSubimage(left, top, right - left, bottom - top);
-//                cx-=left; cy-=top;
-                replaceSprite(replaceImg, currAnimation, currFrame,cx,cy);
-                wasFrameReplaced = true;
-                
+                replaceImg = this.processReplaceImg(replaceImg);
+                if (this.lastcX == -1) {
+                    this.lastcX = (int)((double)replaceImg.getWidth() * 0.5);
+                    this.lastcY = (int)((double)replaceImg.getHeight() * 0.95);
+                }
+                int cx = this.lastcX;
+                int cy = this.lastcY;
+                this.regenerateSprite(replaceImg, this.currAnimation, this.currFrame, cx, cy, true);
+                this.wasFrameReplaced = true;
                 try {
-                    manager.bufferAnimFrame(currAnimation, currFrame);
-                } catch (IOException ex) {
-                    showError("Unable to save the generated sprite");
+                    this.manager.bufferAnimFrame(this.currAnimation, this.currFrame);
                 }
-                dragImageRadio.setEnabled(false);
-        
-                hardRefresh();
-            } catch (IOException ex) {
-                showError("Unable to read image file: " + file.getName());
+                catch (IOException ex) {
+                    ex.printStackTrace();
+                    this.showError("Unable to save the generated sprite");
+                }
+                this.dragImageRadio.setEnabled(false);
+                this.hardRefresh();
+            }
+            catch (IOException ex) {
+                ex.printStackTrace();
+                this.showError("Unable to read image file: " + file.getName());
             }
         }
     }//GEN-LAST:event_hardReplaceButtonActionPerformed
 
-    private void pencilRadioActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_pencilRadioActionPerformed
-        setRadiosOff();
-        pencilRadio.setSelected(true);
-        imagePanel.setMode(Mode.pencil);
+    private void pencilRadioActionPerformed(ActionEvent evt) {//GEN-FIRST:event_pencilRadioActionPerformed
+        this.setRadiosOff();
+        this.pencilRadio.setSelected(true);
+        this.imagePanel.setMode(Mode.pencil);
     }//GEN-LAST:event_pencilRadioActionPerformed
 
-    private void brushRadioActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_brushRadioActionPerformed
-        setRadiosOff();
-        brushRadio.setSelected(true);
-        imagePanel.setMode(Mode.brush);
+    private void brushRadioActionPerformed(ActionEvent evt) {//GEN-FIRST:event_brushRadioActionPerformed
+        this.setRadiosOff();
+        this.brushRadio.setSelected(true);
+        this.imagePanel.setMode(Mode.brush);
     }//GEN-LAST:event_brushRadioActionPerformed
 
-    private void bucketRadioActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_bucketRadioActionPerformed
-        setRadiosOff();
-        bucketRadio.setSelected(true);
-        imagePanel.setMode(Mode.bucket);
+    private void bucketRadioActionPerformed(ActionEvent evt) {//GEN-FIRST:event_bucketRadioActionPerformed
+        this.setRadiosOff();
+        this.bucketRadio.setSelected(true);
+        this.imagePanel.setMode(Mode.bucket);
     }//GEN-LAST:event_bucketRadioActionPerformed
 
-    private void dragSpriteRadioActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_dragSpriteRadioActionPerformed
-        setRadiosOff();
-        dragSpriteRadio.setSelected(true);
-        imagePanel.setMode(Mode.dragSprite);
+    private void dragSpriteRadioActionPerformed(ActionEvent evt) {//GEN-FIRST:event_dragSpriteRadioActionPerformed
+        this.setRadiosOff();
+        this.dragSpriteRadio.setSelected(true);
+        this.imagePanel.setMode(Mode.dragSprite);
     }//GEN-LAST:event_dragSpriteRadioActionPerformed
 
-    private void dragImageRadioActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_dragImageRadioActionPerformed
-        setRadiosOff();
-        dragImageRadio.setSelected(true);
-        imagePanel.setMode(Mode.dragImage);
+    private void dragImageRadioActionPerformed(ActionEvent evt) {//GEN-FIRST:event_dragImageRadioActionPerformed
+        this.setRadiosOff();
+        this.dragImageRadio.setSelected(true);
+        this.imagePanel.setMode(Mode.dragImage);
     }//GEN-LAST:event_dragImageRadioActionPerformed
 
-    private void noneRadioActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_noneRadioActionPerformed
-        setRadiosOff();
-        noneRadio.setSelected(true);
-        imagePanel.setMode(Mode.none);
+    private void noneRadioActionPerformed(ActionEvent evt) {//GEN-FIRST:event_noneRadioActionPerformed
+        this.setRadiosOff();
+        this.noneRadio.setSelected(true);
+        this.imagePanel.setMode(Mode.none);
     }//GEN-LAST:event_noneRadioActionPerformed
 
-    private void sizeRadioMenu1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_sizeRadioMenu1ActionPerformed
-        setSizeRadioMenusOff();
-        sizeRadioMenu1.setSelected(true);
-        imagePanel.setBrushSize(3);
+    private void sizeRadioMenu1ActionPerformed(ActionEvent evt) {//GEN-FIRST:event_sizeRadioMenu1ActionPerformed
+        this.setSizeRadioMenusOff();
+        this.sizeRadioMenu1.setSelected(true);
+        this.imagePanel.setBrushSize(3);
     }//GEN-LAST:event_sizeRadioMenu1ActionPerformed
 
-    private void sizeRadioMenu2ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_sizeRadioMenu2ActionPerformed
-        setSizeRadioMenusOff();
-        sizeRadioMenu2.setSelected(true);
-        imagePanel.setBrushSize(5);
+    private void sizeRadioMenu2ActionPerformed(ActionEvent evt) {//GEN-FIRST:event_sizeRadioMenu2ActionPerformed
+        this.setSizeRadioMenusOff();
+        this.sizeRadioMenu2.setSelected(true);
+        this.imagePanel.setBrushSize(5);
     }//GEN-LAST:event_sizeRadioMenu2ActionPerformed
 
-    private void sizeRadioMenu3ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_sizeRadioMenu3ActionPerformed
-        setSizeRadioMenusOff();
-        sizeRadioMenu3.setSelected(true);
-        imagePanel.setBrushSize(10);
+    private void sizeRadioMenu3ActionPerformed(ActionEvent evt) {//GEN-FIRST:event_sizeRadioMenu3ActionPerformed
+        this.setSizeRadioMenusOff();
+        this.sizeRadioMenu3.setSelected(true);
+        this.imagePanel.setBrushSize(10);
     }//GEN-LAST:event_sizeRadioMenu3ActionPerformed
 
-    private void bucketMenuActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_bucketMenuActionPerformed
-        bucketRadioActionPerformed(null);
+    private void bucketMenuActionPerformed(ActionEvent evt) {//GEN-FIRST:event_bucketMenuActionPerformed
+        this.bucketRadioActionPerformed(null);
     }//GEN-LAST:event_bucketMenuActionPerformed
 
-    private void pencilMenuActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_pencilMenuActionPerformed
-        pencilRadioActionPerformed(null);
+    private void pencilMenuActionPerformed(ActionEvent evt) {//GEN-FIRST:event_pencilMenuActionPerformed
+        this.pencilRadioActionPerformed(null);
     }//GEN-LAST:event_pencilMenuActionPerformed
 
-    private void brushMenuActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_brushMenuActionPerformed
-        brushRadioActionPerformed(null);
+    private void brushMenuActionPerformed(ActionEvent evt) {//GEN-FIRST:event_brushMenuActionPerformed
+        this.brushRadioActionPerformed(null);
     }//GEN-LAST:event_brushMenuActionPerformed
 
-    private void dragSpriteMenuActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_dragSpriteMenuActionPerformed
-        dragSpriteRadioActionPerformed(null);
+    private void dragSpriteMenuActionPerformed(ActionEvent evt) {//GEN-FIRST:event_dragSpriteMenuActionPerformed
+        this.dragSpriteRadioActionPerformed(null);
     }//GEN-LAST:event_dragSpriteMenuActionPerformed
 
-    private void dragImageMenuActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_dragImageMenuActionPerformed
-        dragImageRadioActionPerformed(null);
+    private void dragImageMenuActionPerformed(ActionEvent evt) {//GEN-FIRST:event_dragImageMenuActionPerformed
+        this.dragImageRadioActionPerformed(null);
     }//GEN-LAST:event_dragImageMenuActionPerformed
 
-    private void noneMenuActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_noneMenuActionPerformed
-        noneRadioActionPerformed(null);
+    private void noneMenuActionPerformed(ActionEvent evt) {//GEN-FIRST:event_noneMenuActionPerformed
+        this.noneRadioActionPerformed(null);
     }//GEN-LAST:event_noneMenuActionPerformed
 
-    private void showWeaponCheckActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_showWeaponCheckActionPerformed
-        weaponCombo.setEnabled(showWeaponCheck.isSelected());
-        imagePanel.showWeapon(showWeaponCheck.isSelected());
+    private void showWeaponCheckActionPerformed(ActionEvent evt) {//GEN-FIRST:event_showWeaponCheckActionPerformed
+        this.weaponCombo.setEnabled(this.showWeaponCheck.isSelected());
+        this.imagePanel.showWeapon(this.showWeaponCheck.isSelected());
     }//GEN-LAST:event_showWeaponCheckActionPerformed
 
-    private void weaponCheckActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_weaponCheckActionPerformed
-        lib.anim.Character ch = manager.getCharacter();
-        WeaponFrame frame = ch.getWeaponFrame(currAnimation, currFrame);
-        boolean selected = weaponCheck.isSelected();
-        if (frame.isEnabled() != selected){
+    private void weaponCheckActionPerformed(ActionEvent evt) {//GEN-FIRST:event_weaponCheckActionPerformed
+        Character ch = this.manager.getCharacter();
+        WeaponFrame frame = ch.getWeaponFrame(this.currAnimation, this.currFrame);
+        boolean selected = this.weaponCheck.isSelected();
+        if (frame.isEnabled() != selected) {
             frame.setEnabled(selected);
             ch.setModified(true);
-            refresh();
+            this.refresh();
         }
     }//GEN-LAST:event_weaponCheckActionPerformed
 
-    private void weaponComboActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_weaponComboActionPerformed
-        imagePanel.setWeaponPreview(weaponCombo.getSelectedIndex());
+    private void weaponComboActionPerformed(ActionEvent evt) {//GEN-FIRST:event_weaponComboActionPerformed
+        this.imagePanel.setWeaponPreview(this.weaponCombo.getSelectedIndex());
     }//GEN-LAST:event_weaponComboActionPerformed
 
-    private void behindCheckActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_behindCheckActionPerformed
-        lib.anim.Character ch = manager.getCharacter();
-        WeaponFrame frame = ch.getWeaponFrame(currAnimation, currFrame);
-        boolean selected = behindCheck.isSelected();
-        if (frame.showBehind != selected){
+    private void behindCheckActionPerformed(ActionEvent evt) {//GEN-FIRST:event_behindCheckActionPerformed
+        Character ch = this.manager.getCharacter();
+        WeaponFrame frame = ch.getWeaponFrame(this.currAnimation, this.currFrame);
+        boolean selected = this.behindCheck.isSelected();
+        if (frame.showBehind != selected) {
             frame.showBehind = selected;
             ch.setModified(true);
-            refresh();
+            this.refresh();
         }
     }//GEN-LAST:event_behindCheckActionPerformed
 
+    private void jMenuItem6ActionPerformed(ActionEvent evt) {//GEN-FIRST:event_jMenuItem6ActionPerformed
+        JOptionPane.showMessageDialog(this, "Pancake 2 v1.7\n\u00a9 gsaurus 2012-2018\n\nAcknowledgment on derived work\nwould be appreciated but is not required\n\nPk2 is free software. The author can not be held responsible\nfor any illicit use of this program.\n", "About", 1);
+    }//GEN-LAST:event_jMenuItem6ActionPerformed
+
+    private void spriteSheetMenuActionPerformed(ActionEvent evt) {//GEN-FIRST:event_spriteSheetMenuActionPerformed
+        this.exportSpriteSheet();
+    }//GEN-LAST:event_spriteSheetMenuActionPerformed
+
+    private void showFacedRightCheckActionPerformed(ActionEvent evt) {//GEN-FIRST:event_showFacedRightCheckActionPerformed
+        this.imagePanel.setFacedRight(this.showFacedRightCheck.isSelected());
+    }//GEN-LAST:event_showFacedRightCheckActionPerformed
+
+    private void jMenuItem1ActionPerformed(ActionEvent evt) {//GEN-FIRST:event_jMenuItem1ActionPerformed
+        BufferedImage replaceImg;
+        int charId = this.manager.getCurrentCharacterId();
+        String charName = this.guide.getCharName(this.guide.getFakeCharId(charId));
+        int returnVal = this.imageChooser.showOpenDialog(this);
+        if (returnVal == 0) {
+            File file = this.imageChooser.getSelectedFile();
+            try {
+                replaceImg = ImageIO.read(file);
+                replaceImg = this.processReplaceImg(replaceImg);
+            }
+            catch (IOException e) {
+                e.printStackTrace();
+                this.showError("Unable to read image " + file.getName());
+                return;
+            }
+        } else {
+            return;
+        }
+        JTextField columnsField = new JTextField();
+        JTextField rowsField = new JTextField();
+        JTextField cxField = new JTextField();
+        JTextField cyField = new JTextField();
+        JComponent[] inputs = new JComponent[]{new JLabel("Number of columns:"), columnsField, new JLabel("Number of rows:"), rowsField, new JLabel("Sprite center X:"), cxField, new JLabel("Sprite center Y:"), cyField};
+        int res = JOptionPane.showConfirmDialog(null, inputs, charName + "art replacer", 2);
+        if (res != 0) {
+            return;
+        }
+        int columns = this.getIntFromField(columnsField, 1, 9999);
+        int rows = this.getIntFromField(rowsField, 1, 9999);
+        int cx = this.getIntFromField(cxField, 0, 256);
+        int cy = this.getIntFromField(cyField, 0, 256);
+        if (columns == Integer.MIN_VALUE || rows == Integer.MIN_VALUE || cx == Integer.MIN_VALUE || cy == Integer.MIN_VALUE) {
+            this.showError("Invalid columns/rows/center");
+            return;
+        }
+        if (this.timer.isRunning()) {
+            this.playToggleActionPerformed(null);
+        }
+        this.importSpriteReplacer(replaceImg, columns, rows, cx, cy);
+    }//GEN-LAST:event_jMenuItem1ActionPerformed
+
+    private void jMenuItem2ActionPerformed(ActionEvent evt) {//GEN-FIRST:event_jMenuItem2ActionPerformed
+        BufferedImage replaceImg;
+        int charId = this.manager.getCurrentCharacterId();
+        String charName = this.guide.getCharName(this.guide.getFakeCharId(charId));
+        int returnVal = this.imageChooser.showOpenDialog(this);
+        if (returnVal == 0) {
+            File file = this.imageChooser.getSelectedFile();
+            try {
+                replaceImg = ImageIO.read(file);
+                replaceImg = this.processReplaceImg(replaceImg);
+            }
+            catch (IOException e) {
+                e.printStackTrace();
+                this.showError("Unable to read image " + file.getName());
+                return;
+            }
+        } else {
+            return;
+        }
+        JTextField columnsField = new JTextField();
+        JTextField rowsField = new JTextField();
+        JTextField cxField = new JTextField();
+        JTextField cyField = new JTextField();
+        JComponent[] inputs = new JComponent[]{new JLabel("Number of columns:"), columnsField, new JLabel("Number of rows:"), rowsField, new JLabel("Sprite center X:"), cxField, new JLabel("Sprite center Y:"), cyField};
+        int res = JOptionPane.showConfirmDialog(null, inputs, charName + "art replacer", 2);
+        if (res != 0) {
+            return;
+        }
+        int columns = this.getIntFromField(columnsField, 1, 9999);
+        int rows = this.getIntFromField(rowsField, 1, 9999);
+        int cx = this.getIntFromField(cxField, 0, 256);
+        int cy = this.getIntFromField(cyField, 0, 256);
+        if (columns == Integer.MIN_VALUE || rows == Integer.MIN_VALUE || cx == Integer.MIN_VALUE || cy == Integer.MIN_VALUE) {
+            this.showError("Invalid columns/rows/center");
+            return;
+        }
+        if (this.timer.isRunning()) {
+            this.playToggleActionPerformed(null);
+        }
+        this.importSpriteGenerator(replaceImg, columns, rows, cx, cy);
+    }//GEN-LAST:event_jMenuItem2ActionPerformed
+
+    private void nameMenuActionPerformed(ActionEvent evt) {//GEN-FIRST:event_nameMenuActionPerformed
+        new PropertiesDialog(this, this.manager).setVisible(true);
+    }//GEN-LAST:event_nameMenuActionPerformed
+
+    public BufferedImage openImageForPortrait() {
+        int returnVal = this.imageChooser.showOpenDialog(this);
+        if (returnVal == 0) {
+            BufferedImage img;
+            File file = this.imageChooser.getSelectedFile();
+            try {
+                img = ImageIO.read(file);
+                img = this.processReplaceImg(img, false);
+            }
+            catch (IOException ex) {
+                ex.printStackTrace();
+                this.showError("Unable to read image file: " + file.getName());
+                return null;
+            }
+            if (img.getWidth() < 16 || img.getHeight() < 16) {
+                this.showError("Image too small");
+                return null;
+            }
+            return img;
+        }
+        return null;
+    }
+
+    private void copyMenuActionPerformed(ActionEvent evt) {//GEN-FIRST:event_copyMenuActionPerformed
+        this.copiedMap = this.getHexFromField(this.mapField);
+        this.copiedArt = this.getHexFromField(this.artField);
+        this.copiedHasHit = this.hitCheck.isSelected();
+        this.copiedKnockDown = this.koCheck.isSelected();
+        this.copiedHasWeapon = this.weaponCheck.isSelected();
+        this.copiedWpShowBehind = this.behindCheck.isSelected();
+        this.copiedHitX = this.getIntFromField(this.xField);
+        this.copiedHitY = this.getIntFromField(this.yField);
+        this.copiedHitSound = this.getIntFromField(this.soundField);
+        this.copiedHitDamage = this.getIntFromField(this.damageField);
+        this.copiedWpX = this.getIntFromField(this.wXField);
+        this.copiedWpY = this.getIntFromField(this.wYField);
+        this.copiedWpRotation = this.getIntFromField(this.angleField);
+        this.pasteMenu.setEnabled(true);
+    }//GEN-LAST:event_copyMenuActionPerformed
+
+    private void pasteMenuActionPerformed(ActionEvent evt) {//GEN-FIRST:event_pasteMenuActionPerformed
+        this.setFieldAsHex(this.mapField, this.copiedMap);
+        this.mapAddressChanged();
+        this.setFieldAsHex(this.artField, this.copiedArt);
+        this.artAddressChanged();
+        if (this.hitCheck.isEnabled()) {
+            this.hitCheck.setSelected(this.copiedHasHit);
+            this.hitCheckActionPerformed(null);
+            this.koCheck.setSelected(this.copiedKnockDown);
+            this.koCheckActionPerformed(null);
+            this.setField(this.xField, this.copiedHitX);
+            this.hitXChanged();
+            this.setField(this.yField, this.copiedHitY);
+            this.hitYChanged();
+            this.setField(this.soundField, this.copiedHitSound);
+            this.hitSoundChanged();
+            this.setField(this.damageField, this.copiedHitDamage);
+            this.hitDamageChanged();
+        }
+        if (this.weaponCheck.isEnabled()) {
+            this.weaponCheck.setSelected(this.copiedHasWeapon);
+            this.weaponCheckActionPerformed(null);
+            this.behindCheck.setSelected(this.copiedWpShowBehind);
+            this.behindCheckActionPerformed(null);
+            this.setField(this.wXField, this.copiedWpX);
+            this.weaponXChanged();
+            this.setField(this.wYField, this.copiedWpY);
+            this.weaponYChanged();
+            this.setField(this.angleField, this.copiedWpRotation);
+            this.weaponAngleChanged();
+        }
+    }//GEN-LAST:event_pasteMenuActionPerformed
+
+    private void spriteSheetMenu1ActionPerformed(ActionEvent evt) {//GEN-FIRST:event_spriteSheetMenu1ActionPerformed
+        this.exportIndividualFrames();
+    }//GEN-LAST:event_spriteSheetMenu1ActionPerformed
+
+    private void resizeAnimsMenuActionPerformed(ActionEvent evt) {//GEN-FIRST:event_resizeAnimsMenuActionPerformed
+        Scanner sc;
+        int charId = this.manager.getCurrentCharacterId();
+        Character c = this.manager.getCharacter();
+        HashSet<Animation> processed = new HashSet<Animation>();
+        int totalFrames = 0;
+        for (int i = 0; i < c.getNumAnimations(); ++i) {
+            Animation anim = c.getAnimation(i);
+            if (processed.contains(anim)) continue;
+            totalFrames += anim.getMaxNumFrames();
+            processed.add(anim);
+        }
+        int returnVal = this.resizerChooser.showOpenDialog(this);
+        if (returnVal != 0) {
+            return;
+        }
+        File file = this.resizerChooser.getSelectedFile();
+        try {
+            sc = new Scanner(file);
+        }
+        catch (Exception e) {
+            e.printStackTrace();
+            this.showError("Unable to open file " + file.getName());
+            return;
+        }
+        ArrayList<Integer> sizes = new ArrayList<Integer>(c.getNumAnimations());
+        ArrayList<Integer> wps = new ArrayList<Integer>(c.getNumAnimations());
+        ArrayList<Boolean> hit = new ArrayList<Boolean>(c.getNumAnimations() - 24);
+        int totalProvided = 0;
+        int totalHits = 0;
+        int totalWps = 0;
+        while (sc.hasNext()) {
+            try {
+                int s = sc.nextInt();
+                sizes.add(s);
+                int hasWp = sc.nextInt();
+                wps.add(hasWp);
+                boolean hasHit = false;
+                if (sizes.size() - 1 >= 24) {
+                    if (hasWp < 2) {
+                        hasHit = sc.nextInt() != 0;
+                    }
+                    hit.add(hasHit);
+                }
+                if (s > 0) {
+                    totalProvided += s;
+                    if (hasWp == 1) {
+                        totalWps += s;
+                    }
+                    if (!hasHit) continue;
+                    totalHits += s;
+                    continue;
+                }
+                if (s >= 0) continue;
+            }
+            catch (Exception e) {
+                this.showError("Invalid size values");
+                e.printStackTrace();
+                return;
+            }
+        }
+        int numAnims = c.getNumAnimations();
+        int numHits = c.getHitsSize();
+        int numWeapons = c.getWeaponsSize();
+        System.out.println("" + totalProvided + "-" + totalFrames + ", " + totalHits + "-" + numHits + ", " + totalWps + "-" + numWeapons);
+        boolean hasGlobalColl = this.manager.hasGlobalCollision();
+        boolean hasGlobalWeap = this.manager.hasGlobalWeapons();
+        if (sizes.isEmpty()) {
+            this.showError("Empty input");
+            return;
+        }
+        if (sizes.size() != numAnims) {
+            this.showError("Number of animations mismatch, \nGot " + sizes.size() + ", expected " + numAnims);
+            return;
+        }
+        if (totalProvided > totalFrames && !hasGlobalColl && !hasGlobalWeap) {
+            this.showError("Total number of frames exceeds the available space\nGot " + totalProvided + ", max allowed " + totalFrames);
+            return;
+        }
+        if (totalHits > numHits && !hasGlobalColl) {
+            this.showError("Total number of frames with collision exceeds the available space\nGot " + totalHits + ", max allowed " + numHits);
+            return;
+        }
+        if (totalWps > numWeapons && !hasGlobalWeap) {
+            this.showError("Total number of frames with weapons exceeds the available space\nGot " + totalWps + ", max allowed " + numWeapons);
+            return;
+        }
+        if (this.timer.isRunning()) {
+            this.playToggleActionPerformed(null);
+        }
+        this.resizeAnimations(sizes, wps, hit, totalProvided > totalFrames, totalHits > numHits, totalWps > numWeapons);
+    }//GEN-LAST:event_resizeAnimsMenuActionPerformed
+
+    private void characterComboKeyPressed(KeyEvent evt) {//GEN-FIRST:event_characterComboKeyPressed
+        switch (evt.getKeyCode()) {
+            case 81: {
+                this.setPreviousAnimation();
+                break;
+            }
+            case 65: {
+                this.setNextAnimation();
+            }
+        }
+    }//GEN-LAST:event_characterComboKeyPressed
+
+    private void pasteMenu1ActionPerformed(ActionEvent evt) {//GEN-FIRST:event_pasteMenu1ActionPerformed
+        JTextField field = new JTextField();
+        field.setText("0");
+        JTextField nameField = new JTextField();
+        nameField.setText("decompressed.bin");
+        JComponent[] inputs = new JComponent[]{new JLabel("Compressed art address:"), field, new JLabel("Output filename:"), nameField};
+        int res = JOptionPane.showConfirmDialog(null, inputs, "Decompress SOR2 art", 2);
+        if (res == 0) {
+            long address = this.getHexFromField(field);
+            if (address == Long.MIN_VALUE) {
+                this.showError("Invalid address");
+                return;
+            }
+            String fileName = nameField.getText();
+            try {
+                FileOutputStream fos = new FileOutputStream(fileName);
+            }
+            catch (Exception e) {
+                this.showError("Unable to save to file \"" + fileName + "\"");
+                return;
+            }
+            try {
+                this.manager.decompressArt(fileName, address);
+            }
+            catch (IOException e) {
+                e.printStackTrace();
+                this.showError("Invalid data");
+                return;
+            }
+            Toolkit.getDefaultToolkit().beep();
+        }
+    }//GEN-LAST:event_pasteMenu1ActionPerformed
+
+    private void jMenuItem3ActionPerformed(ActionEvent evt) {//GEN-FIRST:event_jMenuItem3ActionPerformed
+        this.portRom();
+        this.hardRefresh();
+        JOptionPane.showMessageDialog(this, "Character sucessfully imported", "Done!", 1);
+    }//GEN-LAST:event_jMenuItem3ActionPerformed
+
+    private void hexIdsMenuActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_hexIdsMenuActionPerformed
+        this.setupCharacterCombo();
+        this.setupAnimationCombo();
+    }//GEN-LAST:event_hexIdsMenuActionPerformed
+
+    
     private void speedMenuActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_speedMenuActionPerformed
         int charId = manager.getCurrentCharacterId();
         int currSpeed = 0;
@@ -3180,166 +3786,8 @@ public class Gui extends javax.swing.JFrame implements ActionListener, TheListen
             }
         }
     }//GEN-LAST:event_speedMenuActionPerformed
-
-    private void jMenuItem6ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jMenuItem6ActionPerformed
-        JOptionPane.showMessageDialog(this,
-            TITLE + "\n" +
-            "© Gil Costa 2012\n\n" +
-            "Acknowledgment on derived work\n"+
-            "would be appreciated but is not required\n\n"+
-            "Pk2 is free software. The author can not be held responsible\nfor any illicit use of this program.\n",
-            "About",
-            JOptionPane.INFORMATION_MESSAGE);
-    }//GEN-LAST:event_jMenuItem6ActionPerformed
-
-    private void spriteSheetMenuActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_spriteSheetMenuActionPerformed
-        exportSpriteSheet();
-    }//GEN-LAST:event_spriteSheetMenuActionPerformed
-
-    private void showFacedRightCheckActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_showFacedRightCheckActionPerformed
-        imagePanel.setFacedRight(showFacedRightCheck.isSelected());
-    }//GEN-LAST:event_showFacedRightCheckActionPerformed
-
-    private void jMenuItem1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jMenuItem1ActionPerformed
-        int charId = manager.getCurrentCharacterId();        
-        String charName = guide.getCharName(guide.getFakeCharId(charId));
-        int returnVal = imageChooser.showOpenDialog(this); 
-        BufferedImage replaceImg;
-        if (returnVal == JFileChooser.APPROVE_OPTION) {
-            File file = imageChooser.getSelectedFile();            
-            try {
-                replaceImg = ImageIO.read(file);                
-                replaceImg = processReplaceImg(replaceImg);
-            }catch(IOException e){
-                showError("Unable to read image " + file.getName());
-                return;
-            }
-        }else return;
-            
-        JTextField columnsField = new JTextField();
-        JTextField rowsField = new JTextField();
-        JTextField cxField = new JTextField();
-        JTextField cyField = new JTextField();
-        final JComponent[] inputs = new JComponent[]{
-            new JLabel("Number of columns:"),
-            columnsField,
-            new JLabel("Number of rows:"),
-            rowsField,
-            new JLabel("Sprite center X:"),
-            cxField,
-            new JLabel("Sprite center Y:"),
-            cyField
-        };
-        int res = JOptionPane.showConfirmDialog(null, inputs, charName + "art replacer", JOptionPane.OK_CANCEL_OPTION);
-        if (res != JOptionPane.OK_OPTION) return;
-        int columns = getIntFromField(columnsField, 1, 9999);
-        int rows = getIntFromField(rowsField, 1, 9999);
-        int cx = getIntFromField(cxField, 0, 256);
-        int cy = getIntFromField(cyField, 0, 256);
-        if (columns == INVALID_INT || rows == INVALID_INT || cx == INVALID_INT || cy == INVALID_INT){
-            showError("Invalid columns/rows/center");
-            return;
-        }
-        importSpriteReplacer(replaceImg, columns, rows, cx, cy);
-    }//GEN-LAST:event_jMenuItem1ActionPerformed
-
-    private void jMenuItem2ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jMenuItem2ActionPerformed
-        int charId = manager.getCurrentCharacterId();        
-        String charName = guide.getCharName(guide.getFakeCharId(charId));
-        int returnVal = imageChooser.showOpenDialog(this); 
-        BufferedImage replaceImg;
-        if (returnVal == JFileChooser.APPROVE_OPTION) {
-            File file = imageChooser.getSelectedFile();            
-            try {
-                replaceImg = ImageIO.read(file);                
-                replaceImg = processReplaceImg(replaceImg);
-            }catch(IOException e){
-                showError("Unable to read image " + file.getName());
-                return;
-            }
-        }else return;
-            
-        JTextField columnsField = new JTextField();
-        JTextField rowsField = new JTextField();
-        JTextField cxField = new JTextField();
-        JTextField cyField = new JTextField();
-        final JComponent[] inputs = new JComponent[]{
-            new JLabel("Number of columns:"),
-            columnsField,
-            new JLabel("Number of rows:"),
-            rowsField,
-            new JLabel("Sprite center X:"),
-            cxField,
-            new JLabel("Sprite center Y:"),
-            cyField
-        };
-        int res = JOptionPane.showConfirmDialog(null, inputs, charName + "art replacer", JOptionPane.OK_CANCEL_OPTION);
-        if (res != JOptionPane.OK_OPTION) return;
-        int columns = getIntFromField(columnsField, 1, 9999);
-        int rows = getIntFromField(rowsField, 1, 9999);
-        int cx = getIntFromField(cxField, 0, 256);
-        int cy = getIntFromField(cyField, 0, 256);
-        if (columns == INVALID_INT || rows == INVALID_INT || cx == INVALID_INT || cy == INVALID_INT){
-            showError("Invalid columns/rows/center");
-            return;
-        }
-        importSpriteGenerator(replaceImg, columns, rows, cx, cy);
-    }//GEN-LAST:event_jMenuItem2ActionPerformed
-
-    private void nameMenuActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_nameMenuActionPerformed
-        String currName = "";
-        try{
-            currName = manager.readName();
-        }catch(IOException e){
-            showError("Unable to read character name");
-            return;
-        }
-        while (!currName.isEmpty() && currName.endsWith(" ")) currName = currName.substring(0,currName.length()-1);
-        JTextField speedField = new JTextField();
-        speedField.setText(currName);
-        final JComponent[] inputs = new JComponent[]{
-            new JLabel("Type a new name for " + currName + " (max 5 characters)"),
-            new JLabel("Allowed chars: A-Z space ! \" ' ( ) , . / * ? ©"),
-            speedField
-        };
-        int res = JOptionPane.showConfirmDialog(null, inputs, "Speed modifier", JOptionPane.OK_CANCEL_OPTION);
-        if (res == JOptionPane.OK_OPTION){
-            String newName = speedField.getText();
-            newName = newName.toUpperCase();
-            if (newName.length() > 5){
-                showError("Name is too big");
-                return;
-            }
-            for (char c:newName.toCharArray()){
-                switch (c){
-                    case ' ': continue;
-                    case '!': continue;
-                    case '"': continue;
-                    case '\'': continue;
-                    case '(': continue;
-                    case ')': continue;
-                    case ',': continue;
-                    case '.': continue;
-                    case '/': continue;
-                    case '*': continue;
-                    case '?': continue;
-                    case '©': continue;
-                    default:
-                        if (c >= '0' && c <= '9') continue;
-                        else if (c >= 'A' && c <= 'Z') continue;
-                        showError("Name contains invalid characters");
-                        return;
-                }
-            }
-            try{
-                manager.writeName(newName);
-            }catch(IOException e){
-                showError("Unable to write character name");
-                return;
-            }
-        }
-    }//GEN-LAST:event_nameMenuActionPerformed
-
+    
+    
     private void portraitMenuActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_portraitMenuActionPerformed
         int returnVal = imageChooser.showOpenDialog(this);        
         if (returnVal == JFileChooser.APPROVE_OPTION) {
@@ -3364,404 +3812,170 @@ public class Gui extends javax.swing.JFrame implements ActionListener, TheListen
         }
     }//GEN-LAST:event_portraitMenuActionPerformed
 
-    private void copyMenuActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_copyMenuActionPerformed
-        copiedMap = getHexFromField(mapField);
-        copiedArt = getHexFromField(artField);
-        copiedHasHit = hitCheck.isSelected();
-        copiedKnockDown = koCheck.isSelected();
-        copiedHasWeapon = weaponCheck.isSelected();
-        copiedWpShowBehind = behindCheck.isSelected();
-        copiedHitX = getIntFromField(xField);
-        copiedHitY = getIntFromField(yField);
-        copiedHitSound = getIntFromField(soundField);
-        copiedHitDamage = getIntFromField(damageField);     
-        copiedWpX = getIntFromField(wXField);
-        copiedWpY = getIntFromField(wYField);
-        copiedWpRotation = getIntFromField(angleField);
-//        copiedDelay = getIntFromField(delayField);
-        pasteMenu.setEnabled(true);
-    }//GEN-LAST:event_copyMenuActionPerformed
-
-    private void pasteMenuActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_pasteMenuActionPerformed
-        setFieldAsHex(mapField, copiedMap);  
-        mapAddressChanged();
-        setFieldAsHex(artField, copiedArt);
-        artAddressChanged();
-                
-        if (hitCheck.isEnabled()){
-            hitCheck.setSelected(copiedHasHit);
-            hitCheckActionPerformed(null);
-            koCheck.setSelected(copiedKnockDown);
-            koCheckActionPerformed(null);
-            setField(xField, copiedHitX);
-            hitXChanged();
-            setField(yField, copiedHitY);
-            hitYChanged();
-            setField(soundField, copiedHitSound);
-            hitSoundChanged();
-            setField(damageField, copiedHitDamage);
-            hitDamageChanged();
+    private void pasteMenu2ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_pasteMenu2ActionPerformed
+        String characterName = this.guide.getCharName(this.guide.getFakeCharId(this.manager.getCurrentCharacterId()));
+        int option = JOptionPane.showConfirmDialog(this, "Are you sure you want to DELETE the character " + characterName, "Delete " + characterName, 1);
+        if (option == 0) {
+            deleteCharacterArtAndMaps();
         }
-        if (weaponCheck.isEnabled()){
-            weaponCheck.setSelected(copiedHasWeapon);
-            weaponCheckActionPerformed(null);
-            behindCheck.setSelected(copiedWpShowBehind);
-            behindCheckActionPerformed(null);
-            setField(wXField, copiedWpX);
-            weaponXChanged();
-            setField(wYField, copiedWpY);
-            weaponYChanged();
-            setField(angleField, copiedWpRotation);
-            weaponAngleChanged();
-        }
-//        setField(delayField,copiedDelay); 
-//        delayChanged();
-    }//GEN-LAST:event_pasteMenuActionPerformed
-
-    private void spriteSheetMenu1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_spriteSheetMenu1ActionPerformed
-        exportIndividualFrames();
-    }//GEN-LAST:event_spriteSheetMenu1ActionPerformed
-
-    private void resizeAnimsMenuActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_resizeAnimsMenuActionPerformed
-        int charId = manager.getCurrentCharacterId();        
-        lib.anim.Character c = manager.getCharacter();
-        HashSet<Animation> processed = new HashSet<Animation>();
-        int totalFrames = 0;
-        for (int i = 0 ; i < c.getNumAnimations() ; ++i){
-            Animation anim = c.getAnimation(i);
-            if (!processed.contains(anim)){
-                totalFrames+=anim.getMaxNumFrames();
-                processed.add(anim);
-            }
-        }
-        
-        int returnVal = resizerChooser.showOpenDialog(this);        
-        if (returnVal != JFileChooser.APPROVE_OPTION) return;
-        File file = resizerChooser.getSelectedFile();
-        Scanner sc;
-        try{sc = new Scanner(file);
-        }catch(Exception e){
-            showError("Unable to open file " + file.getName());
-            return;
-        }
-        ArrayList<Integer> sizes = new ArrayList<Integer>(c.getNumAnimations());
-        ArrayList<Integer> wps = new ArrayList<Integer>(c.getNumAnimations());
-        ArrayList<Boolean> hit = new ArrayList<Boolean>(c.getNumAnimations()-lib.anim.Character.FIRST_HIT_ANIM);
-        int totalProvided = 0;
-        int totalHits = 0;
-        int totalWps = 0;
-        while (sc.hasNext()){
-            int s;
-            try{
-                s = sc.nextInt();       // read size
-                sizes.add(s);
-                int hasWp;
-                hasWp = sc.nextInt();   // read has weapon
-                wps.add(hasWp);  
-                boolean hasHit = false;
-                if (sizes.size()-1 >= lib.anim.Character.FIRST_HIT_ANIM){                   
-                    if (hasWp < 2){
-                        hasHit = sc.nextInt() != 0; // read has hit
-                    }
-                    hit.add(hasHit);                    
-                } 
-                if (s >0){              // size > 0, count
-                    totalProvided += s; 
-                    if (hasWp == 1) totalWps += s;
-                    if (hasHit) totalHits += s;
-                }else if (s < 0){       // size < 0, maybe count weapons & hits but... whatever
-//                    if (hasWp == 0 && c.getWeaponFrame(sizes.size()-1, 0) != null) totalWps += -s;
-//                    if (!hasHit && c.getHitFrame(sizes.size()-1, 0) != null) totalHits += -s;
-                }
-            }catch(Exception e){
-                showError("Invalid size values");
-                e.printStackTrace();
-                return;
-            }
-        }
-        int numAnims = c.getNumAnimations();
-        int numHits = c.getHitsSize();
-        int numWeapons = c.getWeaponsSize();
-        System.out.println(totalProvided + "-" + totalFrames + ", " + totalHits + "-" + numHits + ", " + totalWps + "-" + numWeapons);
-        if (sizes.isEmpty()){ showError("Empty input"); return; }
-        if (sizes.size() != numAnims){ showError("Number of animations mismatch, \nGot " + sizes.size() + ", expected " + numAnims); return; }
-        if (totalProvided > totalFrames){ showError("Total number of frames exceeds the available space\nGot " + totalProvided + ", max allowed " + totalFrames); return; }
-        if (totalHits > numHits){ showError("Total number of frames with collision exceeds the available space\nGot " + totalHits + ", max allowed " + numHits); return; }
-        if (totalWps > numWeapons){ showError("Total number of frames with weapons exceeds the available space\nGot " + totalWps + ", max allowed " + numWeapons); return; }
-        resizeAnimations(sizes, wps, hit);
-    }//GEN-LAST:event_resizeAnimsMenuActionPerformed
-
-    private void setSizeRadioMenusOff(){
-        sizeRadioMenu1.setSelected(false);
-        sizeRadioMenu2.setSelected(false);
-        sizeRadioMenu3.setSelected(false);
-    }
+    }//GEN-LAST:event_pasteMenu2ActionPerformed
     
-    /**
-     * @param args the command line arguments
-     */
-    public static void main(String args[]) {
-         try {
-            UIManager.setLookAndFeel(UIManager.getSystemLookAndFeelClassName());
-        } catch(Exception e){ /* Ignore */ }
+    
+    private void setSizeRadioMenusOff() {
+        this.sizeRadioMenu1.setSelected(false);
+        this.sizeRadioMenu2.setSelected(false);
+        this.sizeRadioMenu3.setSelected(false);
+    }
 
-        /*
-         * Create and display the form
-         */
-        java.awt.EventQueue.invokeLater(new Runnable() {
+    public static void main(String[] args) {
+        try {
+            UIManager.setLookAndFeel(UIManager.getSystemLookAndFeelClassName());
+        }
+        catch (Exception e) {
+            // empty catch block
+        }
+        EventQueue.invokeLater(new Runnable(){
+
             @Override
             public void run() {
                 new Gui();
             }
-//                try{
-//                    new Gui();
-//                }catch(Throwable e){
-//                    try {
-//                        FileOutputStream dos = new FileOutputStream("log.txt");
-//                        e.printStackTrace(new PrintStream(dos)); 
-//                        dos.close();
-//                    } catch (IOException ex) {
-//                        ex.printStackTrace();
-//                    }
-//                }
-//            }
         });
     }
-    // Variables declaration - do not modify//GEN-BEGIN:variables
-    private javax.swing.JTextField angleField;
-    private javax.swing.JComboBox animationCombo;
-    private javax.swing.JPanel animationPanel;
-    private javax.swing.JTextField artField;
-    private javax.swing.JButton backBut;
-    private javax.swing.JCheckBox behindCheck;
-    private javax.swing.JRadioButtonMenuItem brushMenu;
-    private javax.swing.JRadioButton brushRadio;
-    private javax.swing.JRadioButtonMenuItem bucketMenu;
-    private javax.swing.JRadioButton bucketRadio;
-    private javax.swing.JComboBox characterCombo;
-    private javax.swing.JPanel characterPanel;
-    private javax.swing.JPanel characterPanel1;
-    private javax.swing.JMenuItem closeMenu;
-    private javax.swing.JPanel colorPanel1;
-    private javax.swing.JPanel colorPanel10;
-    private javax.swing.JPanel colorPanel11;
-    private javax.swing.JPanel colorPanel12;
-    private javax.swing.JPanel colorPanel13;
-    private javax.swing.JPanel colorPanel14;
-    private javax.swing.JPanel colorPanel15;
-    private javax.swing.JPanel colorPanel16;
-    private javax.swing.JPanel colorPanel2;
-    private javax.swing.JPanel colorPanel3;
-    private javax.swing.JPanel colorPanel4;
-    private javax.swing.JPanel colorPanel5;
-    private javax.swing.JPanel colorPanel6;
-    private javax.swing.JPanel colorPanel7;
-    private javax.swing.JPanel colorPanel8;
-    private javax.swing.JPanel colorPanel9;
-    private javax.swing.JPanel colorsPanel1;
-    private javax.swing.JLabel compressedLabel;
-    private javax.swing.JMenuItem copyMenu;
-    private javax.swing.JTextField damageField;
-    private javax.swing.JTextField delayField;
-    private javax.swing.JRadioButtonMenuItem dragImageMenu;
-    private javax.swing.JRadioButton dragImageRadio;
-    private javax.swing.JRadioButtonMenuItem dragSpriteMenu;
-    private javax.swing.JRadioButton dragSpriteRadio;
-    private javax.swing.JMenu exportMenu;
-    private javax.swing.JPanel framePanel;
-    private javax.swing.JButton frontBut;
-    private javax.swing.JTextField genAddressField;
-    private javax.swing.JTextField genPaletteField;
-    private javax.swing.JPanel generatePanel;
-    private javax.swing.JButton hardReplaceButton;
-    private javax.swing.JCheckBox hitCheck;
-    private javax.swing.JPanel hitPanel;
-    private javax.swing.JMenu inportMenu;
-    private javax.swing.JButton jButton2;
-    private javax.swing.JButton jButton3;
-    private javax.swing.JLabel jLabel1;
-    private javax.swing.JLabel jLabel10;
-    private javax.swing.JLabel jLabel11;
-    private javax.swing.JLabel jLabel12;
-    private javax.swing.JLabel jLabel13;
-    private javax.swing.JLabel jLabel14;
-    private javax.swing.JLabel jLabel15;
-    private javax.swing.JLabel jLabel16;
-    private javax.swing.JLabel jLabel17;
-    private javax.swing.JLabel jLabel2;
-    private javax.swing.JLabel jLabel3;
-    private javax.swing.JLabel jLabel5;
-    private javax.swing.JLabel jLabel6;
-    private javax.swing.JLabel jLabel7;
-    private javax.swing.JLabel jLabel8;
-    private javax.swing.JLabel jLabel9;
-    private javax.swing.JMenu jMenu1;
-    private javax.swing.JMenu jMenu2;
-    private javax.swing.JMenu jMenu3;
-    private javax.swing.JMenu jMenu4;
-    private javax.swing.JMenu jMenu5;
-    private javax.swing.JMenu jMenu6;
-    private javax.swing.JMenuBar jMenuBar1;
-    private javax.swing.JMenuItem jMenuItem1;
-    private javax.swing.JMenuItem jMenuItem10;
-    private javax.swing.JMenuItem jMenuItem11;
-    private javax.swing.JMenuItem jMenuItem2;
-    private javax.swing.JMenuItem jMenuItem4;
-    private javax.swing.JMenuItem jMenuItem5;
-    private javax.swing.JMenuItem jMenuItem6;
-    private javax.swing.JMenuItem jMenuItem7;
-    private javax.swing.JMenuItem jMenuItem9;
-    private javax.swing.JPopupMenu.Separator jSeparator1;
-    private javax.swing.JPopupMenu.Separator jSeparator2;
-    private javax.swing.JPopupMenu.Separator jSeparator3;
-    private javax.swing.JPopupMenu.Separator jSeparator4;
-    private javax.swing.JCheckBox koCheck;
-    private javax.swing.JPanel mainPanel;
-    private javax.swing.JTextField mapField;
-    private javax.swing.JMenuItem nameMenu;
-    private javax.swing.JButton nextBut;
-    private javax.swing.JRadioButtonMenuItem noneMenu;
-    private javax.swing.JRadioButton noneRadio;
-    private javax.swing.JMenuItem openRomMenu;
-    private javax.swing.JPanel overridePanel;
-    private javax.swing.JMenuItem pasteMenu;
-    private javax.swing.JRadioButtonMenuItem pencilMenu;
-    private javax.swing.JRadioButton pencilRadio;
-    private javax.swing.JToggleButton playToggle;
-    private javax.swing.JPanel playerPanel;
-    private javax.swing.JMenuItem portraitMenu;
-    private javax.swing.JPanel previewPanel;
-    private javax.swing.JButton previousBut;
-    private javax.swing.JMenuItem resizeAnimsMenu;
-    private javax.swing.JScrollPane scrollPanel;
-    private javax.swing.JCheckBox showCenterCheck;
-    private javax.swing.JCheckBox showFacedRightCheck;
-    private javax.swing.JCheckBox showHitsCheck;
-    private javax.swing.JCheckBox showTileCheck;
-    private javax.swing.JCheckBox showWeaponCheck;
-    private javax.swing.JTextField sizeField;
-    private javax.swing.JRadioButtonMenuItem sizeRadioMenu1;
-    private javax.swing.JRadioButtonMenuItem sizeRadioMenu2;
-    private javax.swing.JRadioButtonMenuItem sizeRadioMenu3;
-    private javax.swing.JButton softReplaceButton;
-    private javax.swing.JTextField soundField;
-    private javax.swing.JMenuItem speedMenu;
-    private javax.swing.JMenuItem spriteSheetMenu;
-    private javax.swing.JMenuItem spriteSheetMenu1;
-    private javax.swing.JPanel toolsPanel;
-    private javax.swing.JTextField wXField;
-    private javax.swing.JTextField wYField;
-    private javax.swing.JCheckBox weaponCheck;
-    private javax.swing.JComboBox weaponCombo;
-    private javax.swing.JPanel weaponPanel;
-    private javax.swing.JTextField xField;
-    private javax.swing.JTextField yField;
-    // End of variables declaration//GEN-END:variables
 
     @Override
-    public void actionPerformed(ActionEvent e) {        
-        if (guide == null || manager == null || currAnimation < 0) return;
-        
-        lib.anim.Character ch = manager.getCharacter();
-        AnimFrame animFrame = ch.getAnimFrame(currAnimation, currFrame);
-        
-        if (frameDelayCount++ >= animFrame.delay){
-            frameDelayCount = 0;
-            setNextFrame();
+    public void actionPerformed(ActionEvent e) {
+        if (this.guide == null || this.manager == null || this.currAnimation < 0) {
+            return;
+        }
+        Character ch = this.manager.getCharacter();
+        AnimFrame animFrame = ch.getAnimFrame(this.currAnimation, this.currFrame);
+        if (this.frameDelayCount++ >= animFrame.delay) {
+            this.frameDelayCount = 0;
+            this.setNextFrame();
         }
     }
 
     @Override
     public void hitPositionChanged(int newX, int newY) {
-        if (imagePanel.isFacedRight()) newX*=-1;
-        if (newX < -127) newX = -127;
-        if (newX >  127) newX =  127;
-        if (newY < -127) newY = -127;
-        if (newY >  127) newY =  127;
-        setField(xField, newX);
-        hitXChanged();        
-        setField(yField, newY);
-        hitYChanged();
+        if (this.imagePanel.isFacedRight()) {
+            newX *= -1;
+        }
+        if (newX < -127) {
+            newX = -127;
+        }
+        if (newX > 127) {
+            newX = 127;
+        }
+        if (newY < -127) {
+            newY = -127;
+        }
+        if (newY > 127) {
+            newY = 127;
+        }
+        this.setField(this.xField, newX);
+        this.hitXChanged();
+        this.setField(this.yField, newY);
+        this.hitYChanged();
     }
-    
-    private void colorPanelPressed(int id){
-        JPanel panel = colorPanels[id];
-        if (id == 0)
-            imagePanel.setColor(null);
-        else imagePanel.setColor(panel.getBackground());
-        colorPanels[selectedColor].setBorder(null);
-        selectedColor = id;
-        colorPanels[selectedColor].setBorder(selectionBorder);
-        
+
+    private void colorPanelPressed(int id) {
+        JPanel panel = this.colorPanels[id];
+        if (id == 0) {
+            this.imagePanel.setColor(null);
+        } else {
+            this.imagePanel.setColor(panel.getBackground());
+        }
+        this.colorPanels[this.selectedColor].setBorder(null);
+        this.selectedColor = id;
+        this.colorPanels[this.selectedColor].setBorder(this.selectionBorder);
     }
 
     @Override
     public void artChanged() {
-        manager.getCharacter().setModified(true);
-        updateTitle();
+        this.manager.getCharacter().setModified(true);
+        this.updateTitle();
     }
-    
-    
-    private int findTransparency(BufferedImage img){
+
+    private int findTransparency(BufferedImage img) {
+        Integer count;
+        int y;
+        int val;
+        int x;
         TreeMap<Integer, Integer> map = new TreeMap<Integer, Integer>();
-        for (int x = 0 ; x < img.getWidth() ; ++x){
-            int val = img.getRGB(x, 0);
-            if (((val>>24) & 0xff) == 0) return val;
-            Integer count = map.get(val);
-            if (count == null) count = 0;
-            map.put(val, count+1);
+        for (x = 0; x < img.getWidth(); ++x) {
+            val = img.getRGB(x, 0);
+            if ((val >> 24 & 255) == 0) {
+                return val;
+            }
+            count = (Integer)map.get(val);
+            if (count == null) {
+                count = 0;
+            }
+            map.put(val, count + 1);
         }
-        for (int x = 0 ; x < img.getWidth() ; ++x){
-            int val = img.getRGB(x, img.getHeight()-1);
-            if (((val>>24) & 0xff) == 0) return val;
-            Integer count = map.get(val);
-            if (count == null) count = 0;
-            map.put(val, count+1);
+        for (x = 0; x < img.getWidth(); ++x) {
+            val = img.getRGB(x, img.getHeight() - 1);
+            if ((val >> 24 & 255) == 0) {
+                return val;
+            }
+            count = (Integer)map.get(val);
+            if (count == null) {
+                count = 0;
+            }
+            map.put(val, count + 1);
         }
-        for (int y = 0 ; y < img.getHeight() ; ++y){
-            int val = img.getRGB(0, y);
-            if (((val>>24) & 0xff) == 0) return val;
-            Integer count = map.get(val);
-            if (count == null) count = 0;
-            map.put(val, count+1);
+        for (y = 0; y < img.getHeight(); ++y) {
+            val = img.getRGB(0, y);
+            if ((val >> 24 & 255) == 0) {
+                return val;
+            }
+            count = (Integer)map.get(val);
+            if (count == null) {
+                count = 0;
+            }
+            map.put(val, count + 1);
         }
-        for (int y = 0 ; y < img.getHeight() ; ++y){
-            int val = img.getRGB(img.getWidth()-1, y);
-            if (((val>>24) & 0xff) == 0) return val;
-            Integer count = map.get(val);
-            if (count == null) count = 0;
-            map.put(val, count+1);
+        for (y = 0; y < img.getHeight(); ++y) {
+            val = img.getRGB(img.getWidth() - 1, y);
+            if ((val >> 24 & 255) == 0) {
+                return val;
+            }
+            count = (Integer)map.get(val);
+            if (count == null) {
+                count = 0;
+            }
+            map.put(val, count + 1);
         }
         int maxCount = 0;
         int moda = 0;
-        for (Entry<Integer,Integer> entry:map.entrySet()){
-            if (entry.getValue() > maxCount){
-                moda = entry.getKey();
-                maxCount = entry.getValue();
-            }
+        for (Map.Entry entry : map.entrySet()) {
+            if ((Integer)entry.getValue() <= maxCount) continue;
+            moda = (Integer)entry.getKey();
+            maxCount = (Integer)entry.getValue();
         }
         return moda;
     }
-    
-    private BufferedImage processReplaceImg(BufferedImage replaceImg){
-        return processReplaceImg(replaceImg, true);
+
+    private BufferedImage processReplaceImg(BufferedImage replaceImg) {
+        return this.processReplaceImg(replaceImg, true);
     }
 
     private BufferedImage processReplaceImg(BufferedImage replaceImg, boolean transp) {
-        Palette palette = manager.getPalette();
-        BufferedImage res = new BufferedImage(replaceImg.getWidth(), replaceImg.getHeight(),BufferedImage.TYPE_INT_ARGB);
+        Palette palette = this.manager.getPalette();
+        BufferedImage res = new BufferedImage(replaceImg.getWidth(), replaceImg.getHeight(), 2);
         int transparency = 0;
-        if (transp) transparency = findTransparency(replaceImg);
-        // TODO: check palette at start
-        for (int x = 0 ; x < replaceImg.getWidth() ; ++x){
-            for (int y = 0 ; y < replaceImg.getHeight() ; ++y){
+        if (transp) {
+            transparency = this.findTransparency(replaceImg);
+        }
+        for (int x = 0; x < replaceImg.getWidth(); ++x) {
+            for (int y = 0; y < replaceImg.getHeight(); ++y) {
                 int val = replaceImg.getRGB(x, y);
                 Color c = new Color(val);
-                if (val != transparency && ((val>>24) & 0xff) != 0){
-                    float[] hsb = Color.RGBtoHSB(c.getRed(), c.getGreen(), c.getBlue(), null);
-                    c = nearestColor(hsb,palette);
-                    res.setRGB(x, y, c.getRGB());
-                }
+                if (val == transparency || (val >> 24 & 255) == 0) continue;
+                float[] hsb = Color.RGBtoHSB(c.getRed(), c.getGreen(), c.getBlue(), null);
+                c = this.nearestColor(hsb, palette);
+                res.setRGB(x, y, c.getRGB());
             }
         }
         return res;
@@ -3773,1018 +3987,1135 @@ public class Gui extends javax.swing.JFrame implements ActionListener, TheListen
         float bx = 0.3f;
         float bestDist = Float.MAX_VALUE;
         int index = 0;
-        for (int i = 15 ; i > 0 ; --i){
+        for (int i = 15; i > 0; --i) {
             Color p = new Color(palette.getColor(i));
             float[] phsb = Color.RGBtoHSB(p.getRed(), p.getGreen(), p.getBlue(), null);
-            float dist = (float)Math.sqrt(
-                    Math.pow(hsb[0]-phsb[0],2)+
-                    Math.pow(hsb[1]-phsb[1],2)+
-                    Math.pow(hsb[2]-phsb[2],2)
-            );
-            if (dist < bestDist){                
-                index = i;
-                bestDist = dist;
-            }
+            float dist = (float)Math.sqrt(Math.pow(hsb[0] - phsb[0], 2.0) + Math.pow(hsb[1] - phsb[1], 2.0) + Math.pow(hsb[2] - phsb[2], 2.0));
+            if (dist >= bestDist) continue;
+            index = i;
+            bestDist = dist;
         }
         return new Color(palette.getColor(index));
     }
-    
-    
-    private boolean isTile(BufferedImage img, int xi, int yi){
-        xi*=8;
-        yi*=8;
-        for (int i = 0 ; i < 8 ; ++i){
-            int x = xi+i;
+
+    private boolean isTile(BufferedImage img, int xi, int yi) {
+        xi *= 8;
+        yi *= 8;
+        for (int i = 0; i < 8; ++i) {
+            int y;
+            int x = xi + i;
             if (x >= img.getWidth()) continue;
-            for (int j = 0 ; j < 8 ; ++j){
-                int y = yi+j;
-                if (y >= img.getHeight()) break;
+            for (int j = 0; j < 8 && (y = yi + j) < img.getHeight(); ++j) {
                 int val = img.getRGB(x, y);
-                if (((val>>24) & 0xff) != 0)
-                    return true;
+                if ((val >> 24 & 255) == 0) continue;
+                return true;
             }
         }
         return false;
     }
-    
-    private void updateGenAddress(){
-        try {
-            long mapAddress = manager.romSize();
-            setFieldAsHex(genAddressField, mapAddress);
-        } catch (IOException ex) {
-            ex.printStackTrace();
+
+    private Piece optimizedPiece1(boolean[][] mx, boolean[][] done, int xi, int yi) {
+        int j;
+        int x;
+        if (done[xi][yi]) {
+            return null;
         }
-    }
-    
-    
-    private Piece optimizedPiece1(boolean[][] mx, boolean[][] done, int xi, int yi){
-        if (done[xi][yi]) return null;
         int sum = 0;
         int lx = 0;
         int ly = 0;
-        int maxX = Math.min(4, 32-xi);
-        int maxY = Math.min(4, 32-yi);
-        for (int i = 0 ; i < maxX ; ++i){
-            int x = xi+i;
-            if (!mx[x][0] || done[x][0]) break;
-            for (int j = 0 ; j < maxY ; ++j){
-                int y = yi+j;
-                if (!mx[x][y] || done[x][y]){
+        int maxX = Math.min(4, 32 - xi);
+        int maxY = Math.min(4, 32 - yi);
+        block0 : for (int i = 0; i < maxX && mx[x = xi + i][0] && !done[x][0]; ++i) {
+            for (j = 0; j < maxY; ++j) {
+                int y = yi + j;
+                if (!mx[x][y] || done[x][y]) {
                     maxY = j;
-                    break;
+                    continue block0;
                 }
-                int locSum = i*j;
-                if (locSum > sum){
-                    sum = locSum;
-                    lx = i;
-                    ly = j;
-                }
+                int locSum = i * j;
+                if (locSum <= sum) continue;
+                sum = locSum;
+                lx = i;
+                ly = j;
             }
         }
-        Piece piece = new Piece(lx+1, ly+1);
-        for (int i = 0 ; i < lx+1 ; ++i){
-            for (int j = 0 ; j < lx+1 ; ++j){
-                done[xi+i][yi+j] = true;
+        Piece piece = new Piece(lx + 1, ly + 1);
+        for (int i = 0; i < lx + 1; ++i) {
+            for (j = 0; j < lx + 1; ++j) {
+                done[xi + i][yi + j] = true;
                 piece.setTile(i, j, new Tile());
             }
         }
         return piece;
     }
-    
-    private boolean check(boolean[][] mx, int x, int y, int width, int height){
-        if (x + width > 32) return false;
-        if (y + height > 32) return false;
-        for (int i = 0; i < width ; ++i){
-            for (int j = 0; j < height ; ++j){
-                if (!mx[x+i][y+j]) return false;
+
+    private boolean check(boolean[][] mx, int x, int y, int width, int height) {
+        if (x + width > 32) {
+            return false;
+        }
+        if (y + height > 32) {
+            return false;
+        }
+        for (int i = 0; i < width; ++i) {
+            for (int j = 0; j < height; ++j) {
+                if (mx[x + i][y + j]) continue;
+                return false;
             }
         }
         return true;
     }
-    
-    // worst code ever (shedule issues)
-    private boolean optimizePieces(boolean[][] mx, Piece[][] res){
-        int bestX = 0, bestY = 0, bestWidth = 0, bestHeight = 0;
+
+    private boolean optimizePieces(boolean[][] mx, Piece[][] res) {
+        int bestX = 0;
+        int bestY = 0;
+        int bestWidth = 0;
+        int bestHeight = 0;
         int size = 0;
-        for (int x = 0 ; x < 32 ; ++x){
-            for (int y = 0 ; y < 32 ; ++y){
-                if (check(mx,x,y,1,1)){
-                    if (check(mx,x,y,4,4)){
-                        bestX = x; bestY = y; bestWidth = 4; bestHeight = 4;
-                        size = bestWidth*bestHeight; 
-                        break;
-                    }
-                    if (size >= 12) break;
-                    if (check(mx,x,y,4,3)){
-                        bestX = x; bestY = y; bestWidth = 4; bestHeight = 3;
-                        size = bestWidth*bestHeight;
-                        continue;
-                    }
-                    if (check(mx,x,y,3,4)){
-                        bestX = x; bestY = y; bestWidth = 3; bestHeight = 4;
-                        size = bestWidth*bestHeight;
-                        continue;
-                    }
-                    if (size >= 9) break;
-                    if (check(mx,x,y,3,3)){
-                        bestX = x; bestY = y; bestWidth = 3; bestHeight = 3;
-                        size = bestWidth*bestHeight;
-                        continue;
-                    }
-                    if (size >= 8) break;
-                    if (check(mx,x,y,4,2)){
-                        bestX = x; bestY = y; bestWidth = 4; bestHeight = 2;
-                        size = bestWidth*bestHeight;
-                        continue;
-                    }
-                    if (check(mx,x,y,2,4)){
-                        bestX = x; bestY = y; bestWidth = 2; bestHeight = 4;
-                        size = bestWidth*bestHeight;
-                        continue;
-                    }
-                    if (size >= 6) break;
-                    if (check(mx,x,y,3,2)){
-                        bestX = x; bestY = y; bestWidth = 3; bestHeight = 2;
-                        size = bestWidth*bestHeight;
-                        continue;
-                    }
-                    if (check(mx,x,y,2,3)){
-                        bestX = x; bestY = y; bestWidth = 2; bestHeight = 3;
-                        size = bestWidth*bestHeight;
-                        continue;
-                    }
-                    if (size >= 4) break;
-                    if (check(mx,x,y,4,1)){
-                        bestX = x; bestY = y; bestWidth = 4; bestHeight = 1;
-                        size = bestWidth*bestHeight;
-                        continue;
-                    }
-                    if (check(mx,x,y,1,4)){
-                        bestX = x; bestY = y; bestWidth = 1; bestHeight = 4;
-                        size = bestWidth*bestHeight;
-                        continue;
-                    }
-                    if (check(mx,x,y,2,2)){
-                        bestX = x; bestY = y; bestWidth = 2; bestHeight = 2;
-                        size = bestWidth*bestHeight;
-                        continue;
-                    }
-                    if (size >= 3) break;
-                    if (check(mx,x,y,3,1)){
-                        bestX = x; bestY = y; bestWidth = 3; bestHeight = 1;
-                        size = bestWidth*bestHeight;
-                        continue;
-                    }
-                    if (check(mx,x,y,1,3)){
-                        bestX = x; bestY = y; bestWidth = 1; bestHeight = 3;
-                        size = bestWidth*bestHeight;
-                        continue;
-                    }
-                    if (size >= 2) break;
-                    if (check(mx,x,y,2,1)){
-                        bestX = x; bestY = y; bestWidth = 2; bestHeight = 1;
-                        size = bestWidth*bestHeight;
-                        continue;
-                    }
-                    if (check(mx,x,y,1,2)){
-                        bestX = x; bestY = y; bestWidth = 1; bestHeight = 2;
-                        size = bestWidth*bestHeight;
-                        continue;
-                    }
-                    if (size >= 1) break;
-                    else{
-                        bestX = x; bestY = y; bestWidth = 1; bestHeight = 1;
-                        size = bestWidth*bestHeight;
-                        continue;
-                    }
+        for (int x = 0; x < 32; ++x) {
+            for (int y = 0; y < 32; ++y) {
+                if (!this.check(mx, x, y, 1, 1)) continue;
+                if (this.check(mx, x, y, 4, 4)) {
+                    bestX = x;
+                    bestY = y;
+                    bestWidth = 4;
+                    bestHeight = 4;
+                    size = bestWidth * bestHeight;
+                    break;
                 }
+                if (size >= 12) break;
+                if (this.check(mx, x, y, 4, 3)) {
+                    bestX = x;
+                    bestY = y;
+                    bestWidth = 4;
+                    bestHeight = 3;
+                    size = bestWidth * bestHeight;
+                    continue;
+                }
+                if (this.check(mx, x, y, 3, 4)) {
+                    bestX = x;
+                    bestY = y;
+                    bestWidth = 3;
+                    bestHeight = 4;
+                    size = bestWidth * bestHeight;
+                    continue;
+                }
+                if (size >= 9) break;
+                if (this.check(mx, x, y, 3, 3)) {
+                    bestX = x;
+                    bestY = y;
+                    bestWidth = 3;
+                    bestHeight = 3;
+                    size = bestWidth * bestHeight;
+                    continue;
+                }
+                if (size >= 8) break;
+                if (this.check(mx, x, y, 4, 2)) {
+                    bestX = x;
+                    bestY = y;
+                    bestWidth = 4;
+                    bestHeight = 2;
+                    size = bestWidth * bestHeight;
+                    continue;
+                }
+                if (this.check(mx, x, y, 2, 4)) {
+                    bestX = x;
+                    bestY = y;
+                    bestWidth = 2;
+                    bestHeight = 4;
+                    size = bestWidth * bestHeight;
+                    continue;
+                }
+                if (size >= 6) break;
+                if (this.check(mx, x, y, 3, 2)) {
+                    bestX = x;
+                    bestY = y;
+                    bestWidth = 3;
+                    bestHeight = 2;
+                    size = bestWidth * bestHeight;
+                    continue;
+                }
+                if (this.check(mx, x, y, 2, 3)) {
+                    bestX = x;
+                    bestY = y;
+                    bestWidth = 2;
+                    bestHeight = 3;
+                    size = bestWidth * bestHeight;
+                    continue;
+                }
+                if (size >= 4) break;
+                if (this.check(mx, x, y, 4, 1)) {
+                    bestX = x;
+                    bestY = y;
+                    bestWidth = 4;
+                    bestHeight = 1;
+                    size = bestWidth * bestHeight;
+                    continue;
+                }
+                if (this.check(mx, x, y, 1, 4)) {
+                    bestX = x;
+                    bestY = y;
+                    bestWidth = 1;
+                    bestHeight = 4;
+                    size = bestWidth * bestHeight;
+                    continue;
+                }
+                if (this.check(mx, x, y, 2, 2)) {
+                    bestX = x;
+                    bestY = y;
+                    bestWidth = 2;
+                    bestHeight = 2;
+                    size = bestWidth * bestHeight;
+                    continue;
+                }
+                if (size >= 3) break;
+                if (this.check(mx, x, y, 3, 1)) {
+                    bestX = x;
+                    bestY = y;
+                    bestWidth = 3;
+                    bestHeight = 1;
+                    size = bestWidth * bestHeight;
+                    continue;
+                }
+                if (this.check(mx, x, y, 1, 3)) {
+                    bestX = x;
+                    bestY = y;
+                    bestWidth = 1;
+                    bestHeight = 3;
+                    size = bestWidth * bestHeight;
+                    continue;
+                }
+                if (size >= 2) break;
+                if (this.check(mx, x, y, 2, 1)) {
+                    bestX = x;
+                    bestY = y;
+                    bestWidth = 2;
+                    bestHeight = 1;
+                    size = bestWidth * bestHeight;
+                    continue;
+                }
+                if (this.check(mx, x, y, 1, 2)) {
+                    bestX = x;
+                    bestY = y;
+                    bestWidth = 1;
+                    bestHeight = 2;
+                    size = bestWidth * bestHeight;
+                    continue;
+                }
+                if (size >= 1) break;
+                bestX = x;
+                bestY = y;
+                bestWidth = 1;
+                bestHeight = 1;
+                size = bestWidth * bestHeight;
             }
             if (size == 16) break;
         }
-//        System.out.println("( " + bestX + ", " + bestY + "), " + bestWidth + "x" + bestHeight);
-        if (size == 0) return false;
+        if (size == 0) {
+            return false;
+        }
         Piece piece = new Piece(bestWidth, bestHeight);
-        for (int i = 0 ; i < bestWidth ; ++i){
-            for (int j = 0 ; j < bestHeight ; ++j){
-                piece.setTile(i, j, new Tile());     
-                mx[bestX+i][bestY+j] = false;
+        for (int i = 0; i < bestWidth; ++i) {
+            for (int j = 0; j < bestHeight; ++j) {
+                piece.setTile(i, j, new Tile());
+                mx[bestX + i][bestY + j] = false;
             }
         }
         res[bestX][bestY] = piece;
         return true;
     }
-    
-//    private Piece[][] genPieces(boolean[][] mx){
-//        Piece[][] res = new Piece[32][32];
-//        boolean[][] done = new boolean[32][32];
-//        for (int x = 0 ; x < 32 ; ++x){
-//            for (int y = 0 ; y < 32 ; ++y){
-//                if (mx[x][y]){
-//                    //Piece piece = optimizedPiece(mx, done, x, y);
-//                    Piece piece = new Piece(1,1);
-//                    piece.setTile(0, 0, new Tile());
-//                    res[x][y] = piece;
-//                }
-//            }
-//        }
-//        return res;
-//    }
-    
-    private Piece[][] genPieces(boolean[][] mx){
+
+    private Piece[][] genPieces(boolean[][] mx) {
         Piece[][] res = new Piece[32][32];
-        while(optimizePieces(mx, res));
+        while (this.optimizePieces(mx, res)) {
+        }
         return res;
     }
-    
-    private int trunkLeft(BufferedImage img){
-        for (int x = 0 ; x < img.getWidth() ; ++x){
-            for (int y = 0 ; y < img.getHeight() ; ++y){
-                int rgbVal = img.getRGB(x, y);
-                if (((rgbVal>>24) & 0xff) != 0){
-                    return x;
-                }
-            }
-        }
-        return img.getWidth()-1;
-    }
-    private int trunkRight(BufferedImage img){
-        for (int x = img.getWidth()-1 ; x >= 0 ; --x){
-            for (int y = 0 ; y < img.getHeight() ; ++y){
-                int rgbVal = img.getRGB(x, y);
-                if (((rgbVal>>24) & 0xff) != 0){
-                    return x+1;
-                }
-            }
-        }
-        return 0;
-    }
-    private int trunkTop(BufferedImage img){
-        for (int y = 0 ; y < img.getHeight() ; ++y){
-            for (int x = 0 ; x < img.getWidth() ; ++x){
-                int rgbVal = img.getRGB(x, y);
-                if (((rgbVal>>24) & 0xff) != 0){
-                    return y;
-                }
-            }
-        }
-        return 0;
-    }
-    private int trunkBottom(BufferedImage img){
-        for (int y = img.getHeight()-1 ; y >= 0 ; --y){
-            for (int x = 0 ; x < img.getWidth() ; ++x){
-                int rgbVal = img.getRGB(x, y);
-                if (((rgbVal>>24) & 0xff) != 0){
-                    return y+1;
-                }
-            }
-        }
-        return 0;
-    }
-    
 
-    private long replaceSprite(BufferedImage img, int animId, int frameId, int cx, int cy) {
-        
-        int width  = img.getWidth();
-        int height = img.getHeight();        
-        
-        AnimFrame frame = manager.getCharacter().getAnimFrame(animId, frameId);
-        long mapAddress = getHexFromField(genAddressField);
-        int  paletteLine = getIntFromField(genPaletteField);
-        if (paletteLine == INVALID_INT || paletteLine < 0 || paletteLine > 3){
-            showError("Invalid palette line");
-            return INVALID_LONG;
+    private int trunkLeft(BufferedImage img) {
+        for (int x = 0; x < img.getWidth(); ++x) {
+            for (int y = 0; y < img.getHeight(); ++y) {
+                int rgbVal = img.getRGB(x, y);
+                if ((rgbVal >> 24 & 255) == 0) continue;
+                return x;
+            }
         }
-        if (mapAddress == INVALID_LONG || mapAddress < 0){
-            showError("Invalid address");
-            updateGenAddress();
-            return INVALID_LONG;
+        return img.getWidth() - 1;
+    }
+
+    private int trunkRight(BufferedImage img) {
+        for (int x = img.getWidth() - 1; x >= 0; --x) {
+            for (int y = 0; y < img.getHeight(); ++y) {
+                int rgbVal = img.getRGB(x, y);
+                if ((rgbVal >> 24 & 255) == 0) continue;
+                return x + 1;
+            }
+        }
+        return 0;
+    }
+
+    private int trunkTop(BufferedImage img) {
+        for (int y = 0; y < img.getHeight(); ++y) {
+            for (int x = 0; x < img.getWidth(); ++x) {
+                int rgbVal = img.getRGB(x, y);
+                if ((rgbVal >> 24 & 255) == 0) continue;
+                return y;
+            }
+        }
+        return 0;
+    }
+
+    private int trunkBottom(BufferedImage img) {
+        for (int y = img.getHeight() - 1; y >= 0; --y) {
+            for (int x = 0; x < img.getWidth(); ++x) {
+                int rgbVal = img.getRGB(x, y);
+                if ((rgbVal >> 24 & 255) == 0) continue;
+                return y + 1;
+            }
+        }
+        return 0;
+    }
+    
+    private long getRomSize(){
+        try {
+            return manager.romSize();
+        } catch (IOException ex) {
+            ex.printStackTrace();
+            this.showError("Failed to identify rom size");
+            return Long.MIN_VALUE;
+        }
+    }
+
+    private boolean regenerateSprite(BufferedImage img, int animId, int frameId, int cx, int cy, boolean eraseOld) {
+        int width = img.getWidth();
+        int height = img.getHeight();
+        AnimFrame frame = this.manager.getCharacter().getAnimFrame(animId, frameId);
+        if (frame.type == 3) {
+            return true;
+        }        
+        int paletteLine = this.getIntFromField(this.genPaletteField);
+        if (paletteLine == Integer.MIN_VALUE || paletteLine < 0 || paletteLine > 3) {
+            this.showError("Invalid palette line");
+            return false;
+        }
+        
+        // Free space from original sprite
+        if (eraseOld){
+            try {
+                Sprite originalSprite = manager.readSprite(animId, frameId);
+                FreeAddressesManager.freeChunk(frame.mapAddress, originalSprite.getMappingsSizeInBytes());            
+                FreeAddressesManager.freeChunk(frame.artAddress, originalSprite.getArtSizeInBytes());
+            } catch (IOException ex) {
+                // No freed space? It's ok I guess?
+                System.out.println("Failed to free some space in rom");
+            }
         }
         Sprite sprite = new Sprite();
-        
-        // find tiles
         int numTiles = 0;
-        if (width%8 == 0) width/=8;
-        else width = width/8 + 1;
-        if (height%8 == 0) height/=8;
-        else height = height/8 + 1;
+        width = width % 8 == 0 ? (width /= 8) : width / 8 + 1;
+        height = height % 8 == 0 ? (height /= 8) : height / 8 + 1;
         boolean[][] mx = new boolean[32][32];
-        for (int x = 0 ; x < width ; x++){
-            for (int y = 0 ; y < height ; y++){
-                if (isTile(img,x,y)){
-                    mx[x][y] = true;
-                    numTiles++;
-                }                 
+        for (int x = 0; x < width; ++x) {
+            for (int y = 0; y < height; ++y) {
+                if (!this.isTile(img, x, y)) continue;
+                mx[x][y] = true;
+                ++numTiles;
             }
         }
-        
-        // create sprite tiles
         sprite.setNumTiles(numTiles);
-        Piece[][] pieces = genPieces(mx);
+        Piece[][] pieces = this.genPieces(mx);
         int nextIndex = 0;
-        for (int x = 0 ; x < 32 ; ++x){
-            for (int y = 0 ; y < 32 ; ++y){
+        for (int x = 0; x < 32; ++x) {
+            for (int y = 0; y < 32; ++y) {
                 Piece p = pieces[x][y];
-                if (pieces[x][y] != null){
-                    SpritePiece sp = new SpritePiece();
-                    sp.width = p.getWidth()-1;
-                    sp.height = p.getHeight()-1;
-                    sp.paletteLine = paletteLine;
-                    sp.priorityFlag = false;
-                    sp.xFliped = sp.yFliped = false;
-                    sp.spriteIndex = nextIndex;
-                    sp.y = y*8-cy;
-                    sp.xL = x*8-cx;
-                    sp.xR = -sp.xL - p.getWidth()*8;
-//                    System.err.println(sp.xL + " <-> " + sp.xR + ", width: " + p.getWidth()*8);
-                    nextIndex += p.getWidth() * p.getHeight();
-                    sprite.addPiece(sp, p);
-                }
+                if (pieces[x][y] == null) continue;
+                SpritePiece sp = new SpritePiece();
+                sp.width = p.getWidth() - 1;
+                sp.height = p.getHeight() - 1;
+                sp.paletteLine = paletteLine;
+                sp.priorityFlag = false;
+                sp.yFliped = false;
+                sp.xFliped = false;
+                sp.spriteIndex = nextIndex;
+                sp.y = y * 8 - cy;
+                sp.xL = x * 8 - cx;
+                sp.xR = - sp.xL - p.getWidth() * 8;
+                nextIndex += p.getWidth() * p.getHeight();
+                sprite.addPiece(sp, p);
             }
         }
-//        System.out.println("pieces: " + sprite.getNumPieces() + ", num tiles: " + numTiles);
-        
-        // save sprite
-        long artAddress = mapAddress + 6 + sprite.getNumPieces()*6;
-        frame.mapAddress = mapAddress;
-        frame.artAddress = artAddress;
+        // Find available space for new sprite
+        long mapAddress = FreeAddressesManager.useBestSuitedAddress(sprite.getMappingsSizeInBytes(), getRomSize());
         try {
-            manager.writeSprite(sprite, mapAddress, artAddress);
-        } catch (IOException ex) {
-            showError("Unable to create the new sprite");
-            return INVALID_LONG;
+            manager.writeSpriteOnly(sprite, mapAddress);
         }
-        updateGenAddress();
-        
-        
-        BufferedImage extended = expandImage(img, cx, cy);
-//        if (img.getWidth() != 256 && img.getHeight() != 256 && cx != 128 && cy != 128)
-//            extended = expandImage(img, cx, cy);
-//        else extended = img;
-        Animation anim = manager.getCharacter().getAnimation(animId);
+        catch (IOException ex) {
+            ex.printStackTrace();
+            this.showError("Unable to write sprite map");
+            return false;
+        }
+        frame.mapAddress = mapAddress;  
+        long artAddress = FreeAddressesManager.useBestSuitedAddress(sprite.getArtSizeInBytes(), getRomSize());
+        try {
+            manager.writeSpriteArtOnly(sprite, artAddress);
+        }        
+        catch (IOException ex) {
+            ex.printStackTrace();
+            this.showError("Unable to write sprite map");
+            return false;
+        }
+        frame.artAddress = artAddress;
+        BufferedImage extended = this.expandImage(img, cx, cy);
+        Animation anim = this.manager.getCharacter().getAnimation(animId);
         anim.setImage(frameId, extended);
         try {
-            manager.save();
-        }catch(IOException e){
-            showError("Unable to render the new sprite");
-            return INVALID_LONG;
+            this.manager.save();
         }
-                
-        return mapAddress;
+        catch (IOException e) {
+            e.printStackTrace();
+            this.showError("Unable to render the new sprite");
+            return false;
+        }
+        
+        return true;
     }
 
-    
-    
     @Override
     public void modeChanged(Mode mode) {
-        setRadiosOff();
-        switch(mode){
-            case pencil:
-                pencilRadio.setSelected(true);
+        this.setRadiosOff();
+        switch (mode) {
+            case pencil: {
+                this.pencilRadio.setSelected(true);
                 break;
-            case brush:
-                brushRadio.setSelected(true);
+            }
+            case brush: {
+                this.brushRadio.setSelected(true);
                 break;
-            case bucket:
-                bucketRadio.setSelected(true);
+            }
+            case bucket: {
+                this.bucketRadio.setSelected(true);
                 break;
-            case dragSprite:
-                dragSpriteRadio.setSelected(true);
+            }
+            case dragSprite: {
+                this.dragSpriteRadio.setSelected(true);
                 break;
-            case dragImage:
-                dragImageRadio.setSelected(true);
+            }
+            case dragImage: {
+                this.dragImageRadio.setSelected(true);
                 break;
-            case none:
-                noneRadio.setSelected(true);
-                break;
+            }
+            case none: {
+                this.noneRadio.setSelected(true);
+            }
         }
     }
 
     @Override
     public void spriteDragged(int deltaX, int deltaY) {
-        if (imagePanel.isFacedRight()) deltaX*=-1;
-        if (wasFrameReplaced){
-           lastcX -= deltaX;
-           lastcY -= deltaY;
+        if (this.imagePanel.isFacedRight()) {
+            deltaX *= -1;
+        }
+        if (this.wasFrameReplaced) {
+            this.lastcX -= deltaX;
+            this.lastcY -= deltaY;
         }
         try {
-            Sprite sprite = manager.readSprite(currAnimation, currFrame);
-            AnimFrame frame = manager.getCharacter().getAnimFrame(currAnimation, currFrame);
+            Sprite sprite = this.manager.readSprite(this.currAnimation, this.currFrame);
+            AnimFrame frame = this.manager.getCharacter().getAnimFrame(this.currAnimation, this.currFrame);
             sprite.applyOffset(deltaX, deltaY);
-            HitFrame hitFrame = manager.getCharacter().getHitFrame(currAnimation, currFrame);
-            WeaponFrame weaponFrame = manager.getCharacter().getWeaponFrame(currAnimation, currFrame);
-            if (hitFrame != null){
-                hitFrame.x-=deltaX/2;
-                hitFrame.y-=deltaY; 
+            HitFrame hitFrame = this.manager.getCharacter().getHitFrame(this.currAnimation, this.currFrame);
+            WeaponFrame weaponFrame = this.manager.getCharacter().getWeaponFrame(this.currAnimation, this.currFrame);
+            if (hitFrame != null) {
+                hitFrame.x -= deltaX / 2;
+                hitFrame.y -= deltaY;
             }
-            if (weaponFrame != null){
-                weaponFrame.x+=deltaX;
-                weaponFrame.y+=deltaY; 
+            if (weaponFrame != null) {
+                weaponFrame.x += deltaX;
+                weaponFrame.y += deltaY;
             }
-            // save sprite
-            manager.writeSpriteOnly(sprite, frame.mapAddress);
-            // save hitframe & weaponframe
-            manager.save();
-            manager.bufferAnimFrame(currAnimation, currFrame);
-        } catch (IOException ex) {
-            showError("Unable to apply offset");
+            this.manager.writeSpriteOnly(sprite, frame.mapAddress);
+            this.manager.save();
+            this.manager.bufferAnimFrame(this.currAnimation, this.currFrame);
         }
-        setFrame(currFrame);
+        catch (IOException ex) {
+            ex.printStackTrace();
+            this.showError("Unable to apply offset");
+        }
+        this.setFrame(this.currFrame);
     }
 
-    private void refresh(){
-        verifyModifications();
-        setFrame(currFrame);       
+    private void refresh() {
+        this.verifyModifications();
+        this.setFrame(this.currFrame);
     }
-    
-    private void hardRefresh(){
-        int frame = currFrame;
+
+    private void hardRefresh() {
+        int frame = this.currFrame;
         try {
-            setCharacter(manager.getCurrentCharacterId());
-        } catch (IOException ex) {
-            showError("Error loading character");
+            this.setCharacter(this.manager.getCurrentCharacterId());
         }
-        setFrame(frame);        
+        catch (IOException ex) {
+            ex.printStackTrace();
+            this.showError("Error loading character");
+        }
+        this.setFrame(frame);
     }
 
     @Override
     public void weaponPositionChanged(int newX, int newY) {
-        if (imagePanel.isFacedRight()) newX*=-1;
-        if (newX < -127) newX = -127;
-        if (newX >  127) newX =  127;
-        if (newY < -127) newY = -127;
-        if (newY >  127) newY =  127;
-        setField(wXField, newX);
-        weaponXChanged();        
-        setField(wYField, newY);
-        weaponYChanged();
+        if (this.imagePanel.isFacedRight()) {
+            newX *= -1;
+        }
+        if (newX < -127) {
+            newX = -127;
+        }
+        if (newX > 127) {
+            newX = 127;
+        }
+        if (newY < -127) {
+            newY = -127;
+        }
+        if (newY > 127) {
+            newY = 127;
+        }
+        this.setField(this.wXField, newX);
+        this.weaponXChanged();
+        this.setField(this.wYField, newY);
+        this.weaponYChanged();
     }
-   
-    
-    private BufferedImage expandImage(BufferedImage img, int cx, int cy){
-        BufferedImage extended = new BufferedImage(256,256,BufferedImage.TYPE_INT_ARGB);
-        for (int i = 0 ; i < img.getWidth() ; ++i){
-            for (int j = 0 ; j < img.getHeight() ; ++j){
-                int x = i+128-cx;
-                int y = j+128-cy;
+
+    private BufferedImage expandImage(BufferedImage img, int cx, int cy) {
+        BufferedImage extended = new BufferedImage(256, 256, 2);
+        for (int i = 0; i < img.getWidth(); ++i) {
+            for (int j = 0; j < img.getHeight(); ++j) {
+                int x = i + 128 - cx;
+                int y = j + 128 - cy;
                 int rgbVal = img.getRGB(i, j);
-                if (((rgbVal>>24) & 0xff) != 0){
-                    if (x > 0 && x < 256 && y > 0 && y < 256)
-                        extended.setRGB(x, y, rgbVal);
-                }
+                if ((rgbVal >> 24 & 255) == 0 || x <= 0 || x >= 256 || y <= 0 || y >= 256) continue;
+                extended.setRGB(x, y, rgbVal);
             }
         }
         return extended;
-    }    
-    
-    private void importSpriteReplacer(final BufferedImage sheet, final int columns, final int rows, final int cx, final int cy){
-        final lib.anim.Character ch = manager.getCharacter();
+    }
+
+    private void importSpriteReplacer(final BufferedImage sheet, final int columns, int rows, final int cx, final int cy) {
+        final Character ch = this.manager.getCharacter();
         final int numAnims = ch.getNumAnimations();
-        final ProgressMonitor progressMonitor = new ProgressMonitor(
-            this,
-            "Importing spritesheet",
-            "", 0, numAnims
-        );
+        final ProgressMonitor progressMonitor = new ProgressMonitor(this, "Importing spritesheet", "", 0, numAnims);
         progressMonitor.setMillisToDecideToPopup(50);
         progressMonitor.setMillisToPopup(100);
-
-        final int frameWidth= sheet.getWidth()/columns;
-        final int frameHeight= sheet.getHeight()/rows;
-        final int maxId = columns*rows;
+        final int frameWidth = sheet.getWidth() / columns;
+        final int frameHeight = sheet.getHeight() / rows;
+        final int maxId = columns * rows;
         new Thread(new Runnable(){
-            
-            private void finish(){
+
+            private void finish() {
                 ch.setModified(true);
                 ch.setSpritesModified(true);
                 try {
-                    manager.save();
-                    setCharacter(manager.getCurrentCharacterId());
-                } catch (IOException ex) {
-                    showError("Unable to save the sprites");                    
-                }   
+                    Gui.this.manager.save();
+                    Gui.this.setCharacter(Gui.this.manager.getCurrentCharacterId());
+                }
+                catch (IOException ex) {
+                    ex.printStackTrace();
+                    Gui.this.showError("Unable to save the sprites");
+                }
                 progressMonitor.setProgress(999999);
-                setEnabled(true);
-                requestFocus();
+                Gui.this.setEnabled(true);
+                Gui.this.requestFocus();
             }
 
             @Override
             public void run() {
-                setEnabled(false);
+                Gui.this.setEnabled(false);
                 int index = 0;
                 TreeSet<Long> maps = new TreeSet<Long>();
                 HashSet<Animation> processed = new HashSet<Animation>();
-                for (int i = 0 ; i < numAnims ; ++i){
+                for (int i = 0; i < numAnims; ++i) {
                     Animation anim = ch.getAnimation(i);
-                    if (!processed.contains(anim)){
+                    if (!processed.contains(anim)) {
                         processed.add(anim);
                         int animSize = anim.getNumFrames();
-                        for (int j = 0 ; j < animSize ; ++j){
-                            long mapAddress = ch.getAnimFrame(i, j).mapAddress;
-                            if (maps.contains(mapAddress)) continue;                        
+                        for (int j = 0; j < animSize; ++j) {
+                            long mapAddress = ch.getAnimFrame((int)i, (int)j).mapAddress;
+                            if (maps.contains(mapAddress)) continue;
                             maps.add(mapAddress);
-                            int x = (index%columns)*frameWidth;
-                            int y = (index/columns)*frameHeight;
+                            int x = index % columns * frameWidth;
+                            int y = index / columns * frameHeight;
                             BufferedImage img = sheet.getSubimage(x, y, frameWidth, frameHeight);
-                            if (imagePanel.isFacedRight()) img = ImagePanel.flipImage(img);
-                            img = expandImage(img, cx, cy);
+                            if (Gui.this.imagePanel.isFacedRight()) {
+                                img = ImagePanel.flipImage(img);
+                            }
+                            img = Gui.this.expandImage(img, cx, cy);
                             anim.setImage(j, img);
                             anim.setSpritesModified(j, true);
-                            index++;
-                            if (index == maxId){
-                                finish();
-                                Toolkit.getDefaultToolkit().beep();
-                                return;
-                            }
+                            if (++index != maxId) continue;
+                            this.finish();
+                            Toolkit.getDefaultToolkit().beep();
+                            return;
                         }
                     }
-                    progressMonitor.setNote("processing animations: " + (int)((i*1.0/numAnims)*100) + "%");
+                    progressMonitor.setNote("processing animations: " + (int)((double)i * 1.0 / (double)numAnims * 100.0) + "%");
                     progressMonitor.setProgress(i);
-                    if (progressMonitor.isCanceled()){
-                        finish();
-                        return;
-                    }
+                    if (!progressMonitor.isCanceled()) continue;
+                    this.finish();
+                    return;
                 }
-                finish();
+                this.finish();
                 Toolkit.getDefaultToolkit().beep();
             }
         }).start();
     }
-    
-    
-    
-    class AddressesPair{
-        public AddressesPair(long a, long b, BufferedImage img){
-            this.a = a; this.b = b; this.img = img;
+
+    private void portRom() {
+        int returnVal = this.guideChooser.showOpenDialog(this);
+        Guide guide = null;
+        if (returnVal == 0) {
+            File file = this.guideChooser.getSelectedFile();
+            try {
+                guide = new Guide(file.getAbsolutePath());
+            }
+            catch (FileNotFoundException ex) {
+                ex.printStackTrace();
+                this.showError("Guide file '" + file.getName() + "' not found");
+            }
+            catch (Exception ex) {
+                ex.printStackTrace();
+                this.showError("Unable to open guide '" + file.getName() + "'");
+            }
         }
-        public BufferedImage img;
-        public long a;
-        public long b;
+        if (guide == null) {
+            return;
+        }
+        String otherRomName = null;
+        Manager otherManager = null;
+        returnVal = this.romChooser.showOpenDialog(this);
+        if (returnVal == 0) {
+            File file = this.romChooser.getSelectedFile();
+            otherRomName = file.getAbsolutePath();
+            try {
+                otherManager = new Manager(otherRomName, guide);
+            }
+            catch (FileNotFoundException ex) {
+                ex.printStackTrace();
+                this.showError("File '" + otherRomName + "' not found");
+            }
+            catch (IOException ex) {
+                ex.printStackTrace();
+                this.showError("File '" + otherRomName + "' is not a valid Streets of Rage 2 ROM");
+            }
+        }
+        if (otherManager == null) {
+            return;
+        }
+        int charId = this.manager.getCurrentCharacterId();
+        int fakeId = guide.getFakeCharId(charId);
+        try {
+            otherManager.setCharacter(charId, guide.getAnimsCount(fakeId), guide.getType(fakeId));
+        }
+        catch (IOException ex) {
+            ex.printStackTrace();
+            this.showError("Unable to read character #" + charId);
+        }
+        this.deleteCharacterArtAndMaps();
+        try {
+            this.manager.replaceCharacterFromManager(otherManager);
+        }
+        catch (IOException ex) {
+            ex.printStackTrace();
+            this.showError("Unable to port character #" + charId);
+        }
     }
-    
-    
-    private void importSpriteGenerator(final BufferedImage sheet, final int columns, final int rows, final int cx, final int cy){
-        final lib.anim.Character ch = manager.getCharacter();
+
+    private void importSpriteGenerator(final BufferedImage sheet, final int columns, int rows, final int cx, final int cy) {
+        final Character ch = this.manager.getCharacter();
         final int numAnims = ch.getNumAnimations();
-        final ProgressMonitor progressMonitor = new ProgressMonitor(
-            this,
-            "Importing spritesheet",
-            "", 0, numAnims
-        );
+        final ProgressMonitor progressMonitor = new ProgressMonitor(this, "Importing spritesheet", "", 0, numAnims);
         progressMonitor.setMillisToDecideToPopup(50);
         progressMonitor.setMillisToPopup(100);
-
-        final int frameWidth= sheet.getWidth()/columns;
-        final int frameHeight= sheet.getHeight()/rows;
-        final int maxId = columns*rows;
+        final int frameWidth = sheet.getWidth() / columns;
+        final int frameHeight = sheet.getHeight() / rows;
+        final int maxId = columns * rows;
         new Thread(new Runnable(){
-            
-            private void finish(){
+
+            private void finish() {
                 ch.setModified(true);
                 ch.setSpritesModified(true);
-                hardRefresh();
+                Gui.this.hardRefresh();
                 progressMonitor.setProgress(999999);
-                setEnabled(true);
-                requestFocus();
+                Gui.this.setEnabled(true);
+                Gui.this.requestFocus();
             }
 
             @Override
             public void run() {
-                setEnabled(false);
+                Gui.this.setEnabled(false);
                 int index = 0;
-                TreeMap<Long,AddressesPair> maps = new TreeMap<Long, AddressesPair>();
+                TreeMap<Long, AddressesPair> maps = new TreeMap<Long, AddressesPair>();
+                TreeMap<Long, AddressesPair> arts = new TreeMap<Long, AddressesPair>();
                 HashSet<Animation> processed = new HashSet<Animation>();
-                for (int i = 0 ; i < numAnims ; ++i){
+                for (int i = 0; i < numAnims; ++i) {
                     Animation anim = ch.getAnimation(i);
-                    if (!processed.contains(anim)){
+                    if (!processed.contains(anim)) {
                         processed.add(anim);
                         int animSize = anim.getNumFrames();
-                        for (int j = 0 ; j < animSize ; ++j){
+                        for (int j = 0; j < animSize; ++j) {
+                            boolean eraseOld = true;
                             anim.setSpritesModified(j, true);
-                            long mapAddress = anim.getFrame(j).mapAddress;
-                            if (maps.containsKey(mapAddress)){
-                                AddressesPair p = maps.get(mapAddress);
-                                anim.getFrame(j).mapAddress = p.a;
-                                anim.getFrame(j).artAddress = p.b;
-                                anim.setImage(j, p.img);                            
+                            long mapAddress = anim.getFrame((int)j).mapAddress;
+                            if (maps.containsKey(mapAddress)) {
+                                AddressesPair p = (AddressesPair)maps.get(mapAddress);
+                                anim.getFrame((int)j).mapAddress = p.a;
+                                anim.getFrame((int)j).artAddress = p.b;
+                                anim.setImage(j, p.img);
                                 continue;
                             }
-
-                            int x = (index%columns)*frameWidth;
-                            int y = (index/columns)*frameHeight;
+                            long artAddress = anim.getFrame((int)j).artAddress;
+                            if (arts.containsKey(artAddress)){
+                                AddressesPair p = (AddressesPair)arts.get(artAddress);
+                                anim.getFrame((int)j).mapAddress = p.a;
+                                anim.getFrame((int)j).artAddress = p.b;
+                                anim.setImage(j, p.img);
+                                // Same art with different sprite mappings, sounds really dangerous!
+                                // Keep original art, and regenerate frame somewhere else
+                                eraseOld = false;
+                            }
+                            
+                            int x = index % columns * frameWidth;
+                            int y = index / columns * frameHeight;
                             BufferedImage img = sheet.getSubimage(x, y, frameWidth, frameHeight);
-                            if (imagePanel.isFacedRight()) img = ImagePanel.flipImage(img);
-
-                            long newAddress = replaceSprite(img, i, j,cx,cy);
-                            if (newAddress == INVALID_LONG){
-                                finish();
-                                showError("Unable to replace sprites");                            
+                            if (Gui.this.imagePanel.isFacedRight()) {
+                                img = ImagePanel.flipImage(img);
+                            }
+                            if (!regenerateSprite(img, i, j, cx, cy, eraseOld)) {
+                                this.finish();
+                                Gui.this.showError("Unable to replace sprites");
                                 return;
                             }
-
-                            maps.put(mapAddress, new AddressesPair(anim.getFrame(j).mapAddress,anim.getFrame(j).artAddress, anim.getImage(j)));
-                            index++;
-                            if (index == maxId){
-                                finish();                            
-                                Toolkit.getDefaultToolkit().beep();
-                                return;
-                            }
+                            maps.put(mapAddress, new AddressesPair(anim.getFrame((int)j).mapAddress, anim.getFrame((int)j).artAddress, anim.getImage(j)));
+                            arts.put(artAddress, new AddressesPair(anim.getFrame((int)j).mapAddress, anim.getFrame((int)j).artAddress, anim.getImage(j)));
+                            if (++index != maxId) continue;
+                            this.finish();
+                            Toolkit.getDefaultToolkit().beep();
+                            return;
                         }
                     }
-                    progressMonitor.setNote("processing animations: " + (int)((i*1.0/numAnims)*100) + "%");
+                    progressMonitor.setNote("processing animations: " + (int)((double)i * 1.0 / (double)numAnims * 100.0) + "%");
                     progressMonitor.setProgress(i);
-                    if (progressMonitor.isCanceled()){
-                        finish();
-                        return;
-                    }
+                    if (!progressMonitor.isCanceled()) continue;
+                    this.finish();
+                    return;
                 }
-                finish();                
+                this.finish();
                 Toolkit.getDefaultToolkit().beep();
             }
         }).start();
     }
-    
-    
+
     private void exportSpriteSheet() {
-        exportSpriteSheet(false);
+        this.exportSpriteSheet(false);
     }
-    
-     private void exportSpriteSheet(final boolean single) {
-        final String charName = guide.getCharName(guide.getFakeCharId(manager.getCurrentCharacterId()));
+
+    private void exportSpriteSheet(final boolean single) {
+        final String charName = this.guide.getCharName(this.guide.getFakeCharId(this.manager.getCurrentCharacterId()));
         File tmpFile = null;
-        if (!single){
-            imageSaver.setSelectedFile(new File(charName+".png"));
-            int returnOption = imageSaver.showSaveDialog(this);
-            if (returnOption != JFileChooser.APPROVE_OPTION) return;
-            tmpFile = imageSaver.getSelectedFile();
-            if (tmpFile == null) return;
+        if (!single) {
+            this.imageSaver.setSelectedFile(new File(charName + ".png"));
+            int returnOption = this.imageSaver.showSaveDialog(this);
+            if (returnOption != 0) {
+                return;
+            }
+            tmpFile = this.imageSaver.getSelectedFile();
+            if (tmpFile == null) {
+                return;
+            }
         }
         final File outputFile = tmpFile;
-        
-        final lib.anim.Character ch = manager.getCharacter();
+        final Character ch = this.manager.getCharacter();
         final int numAnims = ch.getNumAnimations();
-        final ProgressMonitor progressMonitor = new ProgressMonitor(
-            this,
-            single?"Exporting sprites":"Exporting spritesheet",
-            "", 0, numAnims*2
-        );
+        final ProgressMonitor progressMonitor = new ProgressMonitor(this, single ? "Exporting sprites" : "Exporting spritesheet", "", 0, numAnims * 2);
         progressMonitor.setMillisToDecideToPopup(50);
         progressMonitor.setMillisToPopup(100);
-
         new Thread(new Runnable(){
 
             @Override
             public void run() {
-                setEnabled(false);
+                Gui.this.setEnabled(false);
                 int left = Integer.MAX_VALUE;
                 int right = Integer.MIN_VALUE;
                 int top = Integer.MAX_VALUE;
-                int bottom = Integer.MIN_VALUE;        
+                int bottom = Integer.MIN_VALUE;
                 TreeSet<Long> maps = new TreeSet<Long>();
                 HashSet<Animation> processed = new HashSet<Animation>();
-                for (int i = 0 ; i < ch.getNumAnimations() ; ++i){
+                for (int i = 0; i < ch.getNumAnimations(); ++i) {
                     Animation anim = ch.getAnimation(i);
-                    if (!processed.contains(anim)){
+                    if (!processed.contains(anim)) {
                         processed.add(anim);
                         int animSize = anim.getNumFrames();
-                        for (int j = 0 ; j < animSize ; ++j){
-                            maps.add(manager.getCharacter().getAnimFrame(i, j).mapAddress);
+                        for (int j = 0; j < animSize; ++j) {
                             Sprite sp;
-                            try { sp = manager.readSprite(i, j);
-                            } catch (IOException ex) {
-                                showError("Unable to access sprites");
+                            maps.add(manager.getCharacter().getAnimFrame((int)i, (int)j).mapAddress);
+                            try {
+                                sp = Gui.this.manager.readSprite(i, j);
+                            }
+                            catch (IOException ex) {
+                                ex.printStackTrace();
+                                Gui.this.showError("Unable to access sprites");
                                 progressMonitor.setProgress(999999);
-                                setEnabled(true);
-                                requestFocus();
+                                Gui.this.setEnabled(true);
+                                Gui.this.requestFocus();
                                 return;
                             }
                             Rectangle rect = sp.getBounds();
-                            if (rect.x < left) left = rect.x;
-                            if (rect.y < top) top = rect.y;
-                            int r = rect.x+rect.width;
-                            int b = rect.y+rect.height;
-                            if (r > right) right = r;
-                            if (b > bottom) bottom = b;
+                            if (rect.x < left) {
+                                left = rect.x;
+                            }
+                            if (rect.y < top) {
+                                top = rect.y;
+                            }
+                            int r = rect.x + rect.width;
+                            int b = rect.y + rect.height;
+                            if (r > right) {
+                                right = r;
+                            }
+                            if (b <= bottom) continue;
+                            bottom = b;
                         }
                     }
-                    if (progressMonitor.isCanceled()){
-                        setEnabled(true);
-                        requestFocus();
+                    if (progressMonitor.isCanceled()) {
+                        Gui.this.setEnabled(true);
+                        Gui.this.requestFocus();
                         return;
                     }
-                    progressMonitor.setNote("Computing space: " + (int)((i*1.f/numAnims)*100) + "%");
+                    progressMonitor.setNote("Computing space: " + (int)((float)i * 1.0f / (float)numAnims * 100.0f) + "%");
                     progressMonitor.setProgress(i);
                 }
-                // add spacing
-//                left--; right++; top--; bottom++;
-
-                // create final image
-                int numMaps = maps.size()+1;
-                int width = right-left;
-                int height = bottom-top;
-                int columns = (int)(Math.sqrt(numMaps));
-                int rows = numMaps/columns;
-                if (numMaps%columns != 0) rows++;
+                int numMaps = maps.size() + 1;
+                int width = right - left;
+                int height = bottom - top;
+                int columns = (int)Math.sqrt(numMaps);
+                int rows = numMaps / columns;
+                if (numMaps % columns != 0) {
+                    ++rows;
+                }
                 BufferedImage res = null;
                 Graphics2D g2d = null;
-                if (!single){
-                    res = new BufferedImage(columns*width, rows*height,BufferedImage.TYPE_INT_ARGB);
+                if (!single) {
+                    res = new BufferedImage(columns * width, rows * height, 2);
                     g2d = res.createGraphics();
                 }
-
-                // draw frames
                 maps.clear();
                 processed.clear();
                 int index = 0;
-                for (int i = 0 ; i < ch.getNumAnimations() ; ++i){
+                for (int i = 0; i < ch.getNumAnimations(); ++i) {
                     Animation anim = ch.getAnimation(i);
-                    if (!processed.contains(anim)){
+                    if (!processed.contains(anim)) {
                         processed.add(anim);
                         int animSize = anim.getNumFrames();
-                        for (int j = 0 ; j < animSize ; ++j){
-                            long address = manager.getCharacter().getAnimFrame(i, j).mapAddress;
+                        for (int j = 0; j < animSize; ++j) {
+                            long address = manager.getCharacter().getAnimFrame((int)i, (int)j).mapAddress;
                             try {
-                                manager.bufferAnimation(i);
-                            } catch (IOException ex) {                            
-                                showError("Unable to access sprites");
+                                Gui.this.manager.bufferAnimation(i);
+                            }
+                            catch (IOException ex) {
+                                ex.printStackTrace();
+                                Gui.this.showError("Unable to access sprites");
                                 progressMonitor.setProgress(999999);
-                                setEnabled(true);
-                                requestFocus();
+                                Gui.this.setEnabled(true);
+                                Gui.this.requestFocus();
                                 return;
                             }
-                            if (!maps.contains(address)){
-                                maps.add(address);
-                                BufferedImage img = manager.getImage(i, j).getSubimage(left, top, width, height);
-
-                                if (single){
-                                    try {
-                                        File outputFile = new File(currentDirectory + "/" + charName + " " + i + "." + j + ".png");
-                                        if (imagePanel.isFacedRight()){
-                                            img = ImagePanel.flipImage(img);
-                                        }
-                                        ImageIO.write(img, "png", outputFile);
-                                    } catch (IOException ex) {
-                                        showError("Unable to save image");
-                                        progressMonitor.setProgress(999999);
-                                        setEnabled(true);
-                                        requestFocus();
-                                        return;
-                                    }                                
-                                }else{
-                                    int x = (index%columns)*width;
-                                    int y = (index/columns)*height;
-                                    if (imagePanel.isFacedRight()){
-                                        int w = img.getWidth();
-                                        int h = img.getHeight();
-                                        g2d.drawImage(img, x, y, x+w,y+h, w,0,0,h, null);
-                                    }else g2d.drawImage(img, x, y, null);
+                            if (maps.contains(address)) continue;
+                            maps.add(address);
+                            BufferedImage img = Gui.this.manager.getImage(i, j).getSubimage(left, top, width, height);
+                            if (single) {
+                                try {
+                                    File outputFile2 = new File(Gui.this.currentDirectory + "/" + charName + " " + i + "." + j + ".png");
+                                    if (Gui.this.imagePanel.isFacedRight()) {
+                                        img = ImagePanel.flipImage(img);
+                                    }
+                                    ImageIO.write((RenderedImage)img, "png", outputFile2);
                                 }
-                                index++;
+                                catch (IOException ex) {
+                                    ex.printStackTrace();
+                                    Gui.this.showError("Unable to save image");
+                                    progressMonitor.setProgress(999999);
+                                    Gui.this.setEnabled(true);
+                                    Gui.this.requestFocus();
+                                    return;
+                                }
+                            } else {
+                                int x = index % columns * width;
+                                int y = index / columns * height;
+                                if (Gui.this.imagePanel.isFacedRight()) {
+                                    int w = img.getWidth();
+                                    int h = img.getHeight();
+                                    g2d.drawImage(img, x, y, x + w, y + h, w, 0, 0, h, null);
+                                } else {
+                                    g2d.drawImage(img, x, y, null);
+                                }
                             }
+                            ++index;
                         }
                     }
-                    progressMonitor.setNote("Rendering sprites: " + (int)((i*1.f/numAnims)*100) + "%");
+                    progressMonitor.setNote("Rendering sprites: " + (int)((float)i * 1.0f / (float)numAnims * 100.0f) + "%");
                     progressMonitor.setProgress(numAnims + i);
-                    if (progressMonitor.isCanceled()){
-                        setEnabled(true);
-                        requestFocus();
-                        return;
-                    }
+                    if (!progressMonitor.isCanceled()) continue;
+                    Gui.this.setEnabled(true);
+                    Gui.this.requestFocus();
+                    return;
                 }
-                if (!single){
-                    int x = (index%columns)*width;
-                    int y = (index/columns)*height;
-                    String cs = ((columns/10==0)?" ":"") + ((columns/100==0)?" ":"");                
+                if (!single) {
+                    int x = index % columns * width;
+                    int y = index / columns * height;
+                    String cs = (columns / 10 == 0 ? " " : "") + (columns / 100 == 0 ? " " : "");
                     String watermark0a = "Columns:  " + cs + columns;
-                    cs = ((rows/10==0)?" ":"") + ((rows/100==0)?" ":"");
+                    cs = (rows / 10 == 0 ? " " : "") + (rows / 100 == 0 ? " " : "");
                     String watermark0b = "Rows:     " + cs + rows;
-                    cs = (((128-left)/10==0)?" ":"") + (((128-left)/100==0)?" ":"");
-                    String watermark0c = "Center X: " + cs + (128-left);
-                    cs = (((128-top)/10==0)?" ":"") + (((128-top)/100==0)?" ":"");
-                    String watermark0d = "Center Y: " + cs + (128-top);
+                    cs = ((128 - left) / 10 == 0 ? " " : "") + ((128 - left) / 100 == 0 ? " " : "");
+                    String watermark0c = "Center X: " + cs + (128 - left);
+                    cs = ((128 - top) / 10 == 0 ? " " : "") + ((128 - top) / 100 == 0 ? " " : "");
+                    String watermark0d = "Center Y: " + cs + (128 - top);
                     String watermark1 = "Generated by";
-                    String watermark2 = TITLE;
-    //                String watermark3 = "© gsaurus 2012";
+                    String watermark2 = Gui.TITLE;
                     g2d.setColor(Color.red);
-                    g2d.setFont(new Font("Courier New", Font.PLAIN, 12));
-                    g2d.drawChars(watermark0a.toCharArray(), 0, watermark0a.length(), x+4, y+00);
-                    g2d.drawChars(watermark0b.toCharArray(), 0, watermark0b.length(), x+4, y+10);
-                    g2d.drawChars(watermark0c.toCharArray(), 0, watermark0c.length(), x+4, y+20);
-                    g2d.drawChars(watermark0d.toCharArray(), 0, watermark0d.length(), x+4, y+30);
-                    g2d.drawChars(watermark1.toCharArray(), 0, watermark1.length(), x+4, y+45);
-                    g2d.drawChars(watermark2.toCharArray(), 0, watermark2.length(), x+4, y+55);
-    //                g2d.drawChars(watermark3.toCharArray(), 0, watermark3.length(), x+12, y+60);
-                    Palette pal = manager.getPalette();
+                    g2d.setFont(new Font("Courier New", 0, 12));
+                    g2d.drawChars(watermark0a.toCharArray(), 0, watermark0a.length(), x + 4, y + 0);
+                    g2d.drawChars(watermark0b.toCharArray(), 0, watermark0b.length(), x + 4, y + 10);
+                    g2d.drawChars(watermark0c.toCharArray(), 0, watermark0c.length(), x + 4, y + 20);
+                    g2d.drawChars(watermark0d.toCharArray(), 0, watermark0d.length(), x + 4, y + 30);
+                    g2d.drawChars(watermark1.toCharArray(), 0, watermark1.length(), x + 4, y + 45);
+                    g2d.drawChars(watermark2.toCharArray(), 0, watermark2.length(), x + 4, y + 55);
+                    Palette pal = Gui.this.manager.getPalette();
                     int rc = 12;
-                    for (int i = 0 ; i < 16 ; ++i){
+                    for (int i = 0; i < 16; ++i) {
                         int c = pal.getColor(i);
                         g2d.setColor(new Color(c));
-                        g2d.fillRect(x+4+(i%8)*rc, y+60+(i/8)*rc, rc, rc);
+                        g2d.fillRect(x + 4 + i % 8 * rc, y + 60 + i / 8 * rc, rc, rc);
                     }
                     g2d.dispose();
-
                     try {
-                        ImageIO.write(res, "png", outputFile);
-                    } catch (IOException ex) {                       
-                        showError("Unable to save spritesheet");
+                        ImageIO.write((RenderedImage)res, "png", outputFile);
+                    }
+                    catch (IOException ex) {
+                        ex.printStackTrace();
+                        Gui.this.showError("Unable to save spritesheet");
                         progressMonitor.setProgress(999999);
-                        setEnabled(true);
-                        requestFocus();
+                        Gui.this.setEnabled(true);
+                        Gui.this.requestFocus();
                         return;
                     }
                 }
                 progressMonitor.setProgress(999999);
-                setEnabled(true);
-                requestFocus();
-                Toolkit.getDefaultToolkit().beep();
-            }            
-        }).start();                        
-    }
-     
-     
-    private void exportIndividualFrames() {
-        exportSpriteSheet(true);
-    }
-     
-     
-     
-     //private void resizeAnimations(final ArrayList<Integer> sizes, final ArrayList<Boolean> wps, final TreeMap<Integer, Boolean> ownCol, final TreeMap<Integer, Boolean> ownWeap) {
-     private void resizeAnimations(final ArrayList<Integer> sizes, final ArrayList<Integer> wps, final ArrayList<Boolean> hits) {
-        final lib.anim.Character ch = manager.getCharacter();
-        final int numAnims = sizes.size();
-        final ProgressMonitor progressMonitor = new ProgressMonitor(
-            this,
-            "Generating resized animations",
-            "", 0, numAnims+1
-        );
-        progressMonitor.setMillisToDecideToPopup(50);
-        progressMonitor.setMillisToPopup(100);
-        
-        new Thread(new Runnable(){
-            
-            private void finish(){
-                ch.setModified(true);
-                hardRefresh();
-                progressMonitor.setProgress(999999);
-                setEnabled(true);
-                requestFocus();
-            }
-
-            @Override
-            public void run() {
-                setEnabled(false);                
-                HashSet<Animation> processedAnims = new HashSet<Animation>();                
-                // Resize animations                
-                for (int i = 0 ; i < numAnims ; ++i){
-                    int size = sizes.get(i);
-                    int wp = wps.get(i);
-                    boolean hit = false;
-                    if (i >= lib.anim.Character.FIRST_HIT_ANIM){
-                        hit = hits.get(i-lib.anim.Character.FIRST_HIT_ANIM);
-                    }
-                    if (wp != 2){
-                        if (size < 0){
-                            //ch.setAnim(i,-size-1, ownCol.get(i), ownWeap.get(i));                        
-//                            System.out.println("set anim " + i + ", before: " + ch.getHitsSize());
-                            ch.setAnim(i,-size-1, wp==1, hit);                        
-//                            System.out.println("after: " + ch.getHitsSize());
-                            processedAnims.add(ch.getAnimation(i));
-                        }else if (size > 0){
-                            Animation anim = ch.getAnimation(i);
-                            if (processedAnims.contains(anim)){
-                                ch.doubleAnim(i);
-                            }
-                            ch.resizeAnim(i,size, wp==1, hit); 
-                        } else processedAnims.add(ch.getAnimation(i));
-                    }else processedAnims.add(ch.getAnimation(i));
-                    processedAnims.add(ch.getAnimation(i));
-                    progressMonitor.setNote("Resizing animations: " + (int)((i*1.0/numAnims)*100) + "%");
-                    progressMonitor.setProgress(i);
-                    if (progressMonitor.isCanceled()){
-                        finish();
-                        return;
-                    }
-                }
-                
-                progressMonitor.setNote("Generating new scripts");
-                progressMonitor.setProgress(numAnims);
-                
-                // Write the new animations script
-                try{
-                    manager.writeNewScripts();
-                } catch(IOException e){
-                    finish();
-                    showError("Failed to convert the animations script");
-                    return;
-                }                             
-                hardRefresh();                
-                finish();                
+                Gui.this.setEnabled(true);
+                Gui.this.requestFocus();
                 Toolkit.getDefaultToolkit().beep();
             }
         }).start();
     }
 
-    
-    
-     
-     
-     private void uncompressChar(final int type) {                     
-        final lib.anim.Character ch = manager.getCharacter();
-        final int numAnims = ch.getNumAnimations();
-        final ProgressMonitor progressMonitor = new ProgressMonitor(
-            this,
-            "Uncompressing Character",
-            "", 0, numAnims+1
-        );
+    private void exportIndividualFrames() {
+        this.exportSpriteSheet(true);
+    }
+
+    private void resizeAnimations(final ArrayList<Integer> sizes, final ArrayList<Integer> wps, final ArrayList<Boolean> hits, final boolean newArea, final boolean newHits, final boolean newWeapons) {
+        final Character ch = this.manager.getCharacter();
+        final int numAnims = sizes.size();
+        final ProgressMonitor progressMonitor = new ProgressMonitor(this, "Generating resized animations", "", 0, numAnims + 1);
         progressMonitor.setMillisToDecideToPopup(50);
         progressMonitor.setMillisToPopup(100);
-        
         new Thread(new Runnable(){
-            
-            private void finish(){
+
+            private void finish() {
                 ch.setModified(true);
-                ch.setSpritesModified(true);
-                hardRefresh();
+                Gui.this.hardRefresh();
                 progressMonitor.setProgress(999999);
-                setEnabled(true);
-                requestFocus();
+                Gui.this.setEnabled(true);
+                Gui.this.requestFocus();
             }
 
             @Override
             public void run() {
-                setEnabled(false);
+                Gui.this.setEnabled(false);
+                HashSet<Animation> processedAnims = new HashSet<Animation>();
+                for (int i = 0; i < numAnims; ++i) {
+                    int size = (Integer)sizes.get(i);
+                    int wp = (Integer)wps.get(i);
+                    boolean hit = false;
+                    if (i >= 24) {
+                        hit = (Boolean)hits.get(i - 24);
+                    }
+                    if (wp != 2) {
+                        if (size < 0) {
+                            ch.setAnim(i, - size - 1, wp == 1, hit);
+                            processedAnims.add(ch.getAnimation(i));
+                        } else if (size > 0) {
+                            Animation anim = ch.getAnimation(i);
+                            if (processedAnims.contains(anim)) {
+                                ch.doubleAnim(i);
+                            }
+                            ch.resizeAnim(i, size, wp == 1, hit);
+                        } else {
+                            processedAnims.add(ch.getAnimation(i));
+                        }
+                    } else {
+                        processedAnims.add(ch.getAnimation(i));
+                    }
+                    processedAnims.add(ch.getAnimation(i));
+                    progressMonitor.setNote("Resizing animations: " + (int)((double)i * 1.0 / (double)numAnims * 100.0) + "%");
+                    progressMonitor.setProgress(i);
+                    if (!progressMonitor.isCanceled()) continue;
+                    this.finish();
+                    return;
+                }
+                progressMonitor.setNote("Generating new scripts");
+                progressMonitor.setProgress(numAnims);
+                long newAnimsAddress = 0L;
+                if (newArea) {
+                    // TODO: also re-use space here
+                    newAnimsAddress = getRomSize();
+                }
+                try {
+                    Gui.this.manager.writeNewScripts(newAnimsAddress, newHits, newWeapons);
+                }
+                catch (IOException e) {
+                    this.finish();
+                    e.printStackTrace();
+                    Gui.this.showError("Failed to convert the animations script");
+                    return;
+                }
+                Gui.this.hardRefresh();
+                this.finish();
+                Toolkit.getDefaultToolkit().beep();
+            }
+        }).start();
+    }
+    
+    
+    // Delete character!
+    private void deleteCharacterArtAndMaps(){
+        final Character ch = this.manager.getCharacter();
+        final int numAnims = ch.getNumAnimations();            
+        HashSet<Animation> processed = new HashSet<Animation>();
+        for (int i = 0; i < numAnims; ++i) {
+            Animation anim = ch.getAnimation(i);
+            if (!processed.contains(anim)) {
+                processed.add(anim);
+                int animSize = anim.getNumFrames();
+                for (int j = 0; j < animSize; ++j) {
+                    AnimFrame frame = anim.getFrame(j);
+                    Sprite sprite;
+                    try {
+                        sprite = manager.readSprite(i, j);
+                    } catch (IOException ex) {
+                        showError("Failled to free space for anim " + i + ", frame " + j);
+                        return;
+                    }
+                    FreeAddressesManager.freeChunk(frame.mapAddress, sprite.getMappingsSizeInBytes());
+                    FreeAddressesManager.freeChunk(frame.artAddress, sprite.getArtSizeInBytes());
+                }
+            }
+        }
+    }
+
+    
+    // Unused
+    /*
+    private void uncompressChar(final int type) {
+        final Character ch = this.manager.getCharacter();
+        final int numAnims = ch.getNumAnimations();
+        final ProgressMonitor progressMonitor = new ProgressMonitor(this, "Uncompressing Character", "", 0, numAnims + 1);
+        progressMonitor.setMillisToDecideToPopup(50);
+        progressMonitor.setMillisToPopup(100);
+        new Thread(new Runnable(){
+
+            private void finish() {
+                ch.setModified(true);
+                ch.setSpritesModified(true);
+                Gui.this.hardRefresh();
+                progressMonitor.setProgress(999999);
+                Gui.this.setEnabled(true);
+                Gui.this.requestFocus();
+            }
+
+            @Override
+            public void run() {
+                Gui.this.setEnabled(false);
                 int index = 0;
-                long newAnimsAddress = getHexFromField(genAddressField);                
+                long newAnimsAddress = getRomSize();
                 int animsSyzeInBytes = ch.getAnimsSize(type);
-                setFieldAsHex(genAddressField,newAnimsAddress+animsSyzeInBytes);
-                
-                // Replace art with the uncompressed version
-                TreeMap<Long,AddressesPair> maps = new TreeMap<Long, AddressesPair>();
-                for (int i = 0 ; i < numAnims ; ++i){
+                TreeMap<Long, AddressesPair> maps = new TreeMap<Long, AddressesPair>();
+                for (int i = 0; i < numAnims; ++i) {
                     Animation anim = ch.getAnimation(i);
-                    try{
-                        manager.bufferAnimation(i);
-                    } catch(IOException e){
-                        finish();
-                        showError("Failed to buffer animations");                            
+                    try {
+                        Gui.this.manager.bufferAnimation(i);
+                    }
+                    catch (IOException e) {
+                        this.finish();
+                        e.printStackTrace();
+                        Gui.this.showError("Failed to buffer animations");
                         return;
                     }
                     int animSize = anim.getNumFrames();
-                    for (int j = 0 ; j < animSize ; ++j){
+                    for (int j = 0; j < animSize; ++j) {
                         anim.setSpritesModified(j, true);
                         ch.setModified(true);
                         ch.setSpritesModified(true);
-                        long mapAddress = anim.getFrame(j).mapAddress;
-                        if (maps.containsKey(mapAddress)){
-                            AddressesPair p = maps.get(mapAddress);
-                            anim.getFrame(j).mapAddress = p.a;
-                            anim.getFrame(j).artAddress = p.b;
+                        long mapAddress = anim.getFrame((int)j).mapAddress;
+                        if (maps.containsKey(mapAddress)) {
+                            AddressesPair p = (AddressesPair)maps.get(mapAddress);
+                            anim.getFrame((int)j).mapAddress = p.a;
+                            anim.getFrame((int)j).artAddress = p.b;
                             anim.setImage(j, p.img);
                             anim.setAnimType(type);
                             continue;
                         }
-                        
                         BufferedImage img = anim.getImage(j);
                         anim.setAnimType(type);
-                        long newAddress = replaceSprite(img, i, j,128,128);
-                        if (newAddress == INVALID_LONG){
-                            finish();
-                            showError("Unable to replace the compressed sprites");
+                        long newAddress = Gui.this.regenerateSprite(img, i, j, 128, 128);
+                        if (newAddress == Long.MIN_VALUE) {
+                            this.finish();
+                            Gui.this.showError("Unable to replace the compressed sprites");
                             return;
                         }
-                        
-                        maps.put(mapAddress, new AddressesPair(anim.getFrame(j).mapAddress,anim.getFrame(j).artAddress, anim.getImage(j)));
-                        index++;                        
+                        maps.put(mapAddress, new AddressesPair(anim.getFrame((int)j).mapAddress, anim.getFrame((int)j).artAddress, anim.getImage(j)));
+                        ++index;
                     }
-                    progressMonitor.setNote("Converting sprites: " + (int)((i*1.0/numAnims)*100) + "%");
+                    progressMonitor.setNote("Converting sprites: " + (int)((double)i * 1.0 / (double)numAnims * 100.0) + "%");
                     progressMonitor.setProgress(i);
-                    if (progressMonitor.isCanceled()){
-                        finish();
-                        return;
-                    }
-                }
-                
-                progressMonitor.setNote("Converting animations script");
-                progressMonitor.setProgress(numAnims);
-                
-                // Write the new animations script
-                try{
-                    manager.writeNewAnimations(newAnimsAddress);
-                } catch(IOException e){
-                    finish();
-                    showError("Failed to convert the animations script");
+                    if (!progressMonitor.isCanceled()) continue;
+                    this.finish();
                     return;
                 }
-                updateGenAddress();
-                guide.setAnimType(guide.getFakeCharId(manager.getCurrentCharacterId()), type);
-                
-                hardRefresh();
-                
-                finish();                
+                progressMonitor.setNote("Converting animations script");
+                progressMonitor.setProgress(numAnims);
+                try {
+                    Gui.this.manager.writeNewAnimations(newAnimsAddress);
+                }
+                catch (IOException e) {
+                    this.finish();
+                    e.printStackTrace();
+                    Gui.this.showError("Failed to convert the animations script");
+                    return;
+                }
+                Gui.this.guide.setAnimType(Gui.this.guide.getFakeCharId(Gui.this.manager.getCurrentCharacterId()), type);
+                Gui.this.hardRefresh();
+                this.finish();
                 Toolkit.getDefaultToolkit().beep();
             }
         }).start();
     }
+*/
 
-    
-    
-    
+    class AddressesPair {
+        public BufferedImage img;
+        public long a;
+        public long b;
+
+        public AddressesPair(long a, long b, BufferedImage img) {
+            this.a = a;
+            this.b = b;
+            this.img = img;
+        }
+    }
+
 }

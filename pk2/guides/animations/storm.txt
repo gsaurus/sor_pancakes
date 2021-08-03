@@ -1,0 +1,35 @@
+00 - Standing
+02 - Walk
+04 - fall
+06 - throw grenade
+08 - grab front
+0A - grab back
+0C - Being front grabbed
+0E - Being back grabbed
+10 - Being grab hit
+12 - Being hit
+14 - Knocked down
+16 - Lying down
+18 - Stand up
+1A - truck spectator 1
+1C - truck spectator 2
+1E - truck spectator 3
+20 - crouched down
+22 - sit
+24 - Front slammed Max
+26 - Back slammed Axel
+28 - Back slammed Max
+2A - Front slammed Blaze
+2C - Thrown by Max
+2E - ????
+30 - bike moving 1
+32 - bike moving 2
+34 - unused
+36 - bike moving 3
+38 - punch
+3A - hard punch
+3C - use pipe
+3E - bike move alone
+40 - bike slide alone
+42 - bike stop alone
+44 - bike moving 4

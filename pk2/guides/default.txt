@@ -1,8 +1,18 @@
-20EAC
-4940
-11024
-6D22
-80
+0		// 1 = labeled addresses 0 = global addresses
+20EAC	// Characters index address
+0		// 1 = global collision pointers 0 = word offsets
+4940	// Collisions index address
+0		// 1 = global weapon pointers 0 = word offsets
+11024	// Weapons index address
+6D22	// Icons index address
+
+5		// number of letters per name
+-1		// Names index, -1 to use default, < -1 to use default with offset (ex: -14 -> offset = 14)
+7598	// Statistics index
+C0EA	// Speed index
+
+4		// Playable characters
+79		// Total objects
 
 Max
 A5E0

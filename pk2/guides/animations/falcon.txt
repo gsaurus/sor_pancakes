@@ -1,0 +1,29 @@
+00 - Standing
+02 - Walk
+04 - walk backwards
+06 - block
+08 - grab front
+0A - grab back
+0C - Being front grabbed
+0E - Being back grabbed
+10 - Being grab hit
+12 - Being hit
+14 - Knocked down
+16 - Lying down
+18 - Stand up
+1A - unused
+1C - unused
+1E - fall
+20 - unused
+22 - unused
+24 - Front slammed Max
+26 - Back slammed Axel
+28 - Back slammed Max
+2A - Front slammed Blaze
+2C - Thrown by Max
+2E - ????
+30 - knee attack
+32 - low kick
+34 - medium kick
+36 - high kick
+38 - jump knee attack
