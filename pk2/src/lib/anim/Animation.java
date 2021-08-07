@@ -17,6 +17,7 @@ import lib.map.Sprite;
 public class Animation {
     private ArrayList<AnimFrame> frames;
     private int numFrames;
+    
     private int type;
     private TreeMap<Long, BufferedImage> bufferedFrames;
     private ArrayList<BufferedImage> bufferedShadows;

@@ -5,6 +5,7 @@ package lib.anim;
 
 import java.io.IOException;
 import java.io.RandomAccessFile;
+import org.json.JSONObject;
 
 public class AnimFrame {
     public static long providedArtAddress;
@@ -173,6 +174,13 @@ public class AnimFrame {
         } else if (type == 2) {
             rom.writeInt((int)this.artAddress);
         }
+    }
+    
+    public JSONObject toJson(int framePointer){
+        JSONObject res = new JSONObject();
+        res.put("art", framePointer);
+        res.put("duration", delay);
+        return res;
     }
 }
 

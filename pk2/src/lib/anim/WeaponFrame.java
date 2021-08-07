@@ -5,6 +5,7 @@ package lib.anim;
 
 import java.io.IOException;
 import java.io.RandomAccessFile;
+import org.json.JSONObject;
 
 public class WeaponFrame {
     public int x;
@@ -55,6 +56,16 @@ public class WeaponFrame {
             rom.writeByte(frame.angle);
         }
         rom.writeByte(frame.unusedByte);
+    }
+    
+    public JSONObject toJson(){
+        if (!isEnabled) return null;
+        JSONObject res = new JSONObject();
+        res.put("x", x);
+        res.put("y", y);
+        res.put("direction", angle);
+        res.put("showBehind", showBehind);
+        return res;
     }
 }
 

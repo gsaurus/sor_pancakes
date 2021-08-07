@@ -22,13 +22,19 @@ import java.awt.image.RenderedImage;
 import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
+import java.io.FileWriter;
 import java.io.IOException;
+import java.util.AbstractMap.SimpleEntry;
 import java.util.ArrayList;
 import java.util.HashSet;
+import java.util.List;
 import java.util.Map;
+import java.util.Map.Entry;
 import java.util.Scanner;
 import java.util.TreeMap;
 import java.util.TreeSet;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 import javax.imageio.ImageIO;
 import javax.swing.BorderFactory;
 import javax.swing.JCheckBox;
@@ -62,13 +68,16 @@ import lib.map.Piece;
 import lib.map.Sprite;
 import lib.map.SpritePiece;
 import lib.map.Tile;
+import org.json.JSONArray;
+import org.json.JSONObject;
 
 public class Gui
 extends JFrame
 implements ActionListener,
 TheListener {
-    private static final String VERSION = " v1.6b";
-    private static final String TITLE = "Pancake 2 v1.6b";
+    private static final String VERSION = "1.7.0";
+    private static final String TITLE = "Pancake 2 v" + VERSION;
+    private  static String NEW_ERA_DIR = "SOR2 New Era exports";
     private static final int INVALID_INT = Integer.MIN_VALUE;
     private static final long INVALID_LONG = Long.MIN_VALUE;
     private String romName;
@@ -147,6 +156,7 @@ TheListener {
     private javax.swing.JRadioButtonMenuItem dragSpriteMenu;
     private javax.swing.JRadioButton dragSpriteRadio;
     private javax.swing.JMenu exportMenu;
+    private javax.swing.JMenuItem exportNewEraMenuItem;
     private javax.swing.JPanel framePanel;
     private javax.swing.JButton frontBut;
     private javax.swing.JTextField genPaletteField;
@@ -198,6 +208,7 @@ TheListener {
     private javax.swing.JPopupMenu.Separator jSeparator5;
     private javax.swing.JPopupMenu.Separator jSeparator6;
     private javax.swing.JPopupMenu.Separator jSeparator7;
+    private javax.swing.JPopupMenu.Separator jSeparator8;
     private javax.swing.JCheckBox koCheck;
     private javax.swing.JPanel mainPanel;
     private javax.swing.JTextField mapField;
@@ -1493,6 +1504,8 @@ TheListener {
         exportMenu = new javax.swing.JMenu();
         spriteSheetMenu1 = new javax.swing.JMenuItem();
         spriteSheetMenu = new javax.swing.JMenuItem();
+        jSeparator8 = new javax.swing.JPopupMenu.Separator();
+        exportNewEraMenuItem = new javax.swing.JMenuItem();
         jSeparator1 = new javax.swing.JPopupMenu.Separator();
         jMenuItem5 = new javax.swing.JMenuItem();
         jMenu2 = new javax.swing.JMenu();
@@ -2325,36 +2338,36 @@ TheListener {
             .addGroup(colorsPanel1Layout.createSequentialGroup()
                 .addGap(0, 0, 0)
                 .addGroup(colorsPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addComponent(colorPanel1, javax.swing.GroupLayout.DEFAULT_SIZE, 52, Short.MAX_VALUE)
-                    .addComponent(colorPanel9, javax.swing.GroupLayout.DEFAULT_SIZE, 52, Short.MAX_VALUE))
+                    .addComponent(colorPanel1, javax.swing.GroupLayout.DEFAULT_SIZE, 50, Short.MAX_VALUE)
+                    .addComponent(colorPanel9, javax.swing.GroupLayout.DEFAULT_SIZE, 50, Short.MAX_VALUE))
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addGroup(colorsPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addComponent(colorPanel2, javax.swing.GroupLayout.DEFAULT_SIZE, 52, Short.MAX_VALUE)
-                    .addComponent(colorPanel10, javax.swing.GroupLayout.DEFAULT_SIZE, 52, Short.MAX_VALUE))
+                    .addComponent(colorPanel2, javax.swing.GroupLayout.DEFAULT_SIZE, 50, Short.MAX_VALUE)
+                    .addComponent(colorPanel10, javax.swing.GroupLayout.DEFAULT_SIZE, 50, Short.MAX_VALUE))
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addGroup(colorsPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addComponent(colorPanel3, javax.swing.GroupLayout.DEFAULT_SIZE, 54, Short.MAX_VALUE)
-                    .addComponent(colorPanel11, javax.swing.GroupLayout.DEFAULT_SIZE, 54, Short.MAX_VALUE))
+                    .addComponent(colorPanel3, javax.swing.GroupLayout.DEFAULT_SIZE, 52, Short.MAX_VALUE)
+                    .addComponent(colorPanel11, javax.swing.GroupLayout.DEFAULT_SIZE, 52, Short.MAX_VALUE))
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addGroup(colorsPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addComponent(colorPanel4, javax.swing.GroupLayout.DEFAULT_SIZE, 52, Short.MAX_VALUE)
-                    .addComponent(colorPanel12, javax.swing.GroupLayout.DEFAULT_SIZE, 52, Short.MAX_VALUE))
+                    .addComponent(colorPanel4, javax.swing.GroupLayout.DEFAULT_SIZE, 50, Short.MAX_VALUE)
+                    .addComponent(colorPanel12, javax.swing.GroupLayout.DEFAULT_SIZE, 50, Short.MAX_VALUE))
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addGroup(colorsPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addComponent(colorPanel5, javax.swing.GroupLayout.DEFAULT_SIZE, 54, Short.MAX_VALUE)
-                    .addComponent(colorPanel13, javax.swing.GroupLayout.DEFAULT_SIZE, 54, Short.MAX_VALUE))
+                    .addComponent(colorPanel5, javax.swing.GroupLayout.DEFAULT_SIZE, 52, Short.MAX_VALUE)
+                    .addComponent(colorPanel13, javax.swing.GroupLayout.DEFAULT_SIZE, 52, Short.MAX_VALUE))
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addGroup(colorsPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addComponent(colorPanel6, javax.swing.GroupLayout.DEFAULT_SIZE, 52, Short.MAX_VALUE)
-                    .addComponent(colorPanel14, javax.swing.GroupLayout.DEFAULT_SIZE, 52, Short.MAX_VALUE))
+                    .addComponent(colorPanel6, javax.swing.GroupLayout.DEFAULT_SIZE, 50, Short.MAX_VALUE)
+                    .addComponent(colorPanel14, javax.swing.GroupLayout.DEFAULT_SIZE, 50, Short.MAX_VALUE))
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addGroup(colorsPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addComponent(colorPanel7, javax.swing.GroupLayout.DEFAULT_SIZE, 52, Short.MAX_VALUE)
-                    .addComponent(colorPanel15, javax.swing.GroupLayout.DEFAULT_SIZE, 52, Short.MAX_VALUE))
+                    .addComponent(colorPanel7, javax.swing.GroupLayout.DEFAULT_SIZE, 50, Short.MAX_VALUE)
+                    .addComponent(colorPanel15, javax.swing.GroupLayout.DEFAULT_SIZE, 50, Short.MAX_VALUE))
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addGroup(colorsPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addComponent(colorPanel8, javax.swing.GroupLayout.DEFAULT_SIZE, 56, Short.MAX_VALUE)
-                    .addComponent(colorPanel16, javax.swing.GroupLayout.DEFAULT_SIZE, 56, Short.MAX_VALUE)))
+                    .addComponent(colorPanel8, javax.swing.GroupLayout.DEFAULT_SIZE, 54, Short.MAX_VALUE)
+                    .addComponent(colorPanel16, javax.swing.GroupLayout.DEFAULT_SIZE, 54, Short.MAX_VALUE)))
         );
         colorsPanel1Layout.setVerticalGroup(
             colorsPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
@@ -2368,7 +2381,7 @@ TheListener {
                     .addComponent(colorPanel7, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                     .addComponent(colorPanel8, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                     .addComponent(colorPanel1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 12, Short.MAX_VALUE)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                 .addGroup(colorsPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                     .addComponent(colorPanel10, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                     .addComponent(colorPanel11, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
@@ -2689,7 +2702,7 @@ TheListener {
                 .addGroup(mainPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
                     .addGroup(mainPanelLayout.createSequentialGroup()
                         .addGroup(mainPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
-                            .addComponent(characterPanel1, javax.swing.GroupLayout.PREFERRED_SIZE, 204, javax.swing.GroupLayout.PREFERRED_SIZE)
+                            .addComponent(characterPanel1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                             .addComponent(overridePanel, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                         .addGroup(mainPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
@@ -2788,6 +2801,15 @@ TheListener {
             }
         });
         exportMenu.add(spriteSheetMenu);
+        exportMenu.add(jSeparator8);
+
+        exportNewEraMenuItem.setText("SOR2 New Era");
+        exportNewEraMenuItem.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                exportNewEraMenuItemActionPerformed(evt);
+            }
+        });
+        exportMenu.add(exportNewEraMenuItem);
 
         jMenu1.add(exportMenu);
         jMenu1.add(jSeparator1);
@@ -3819,6 +3841,39 @@ TheListener {
             deleteCharacterArtAndMaps();
         }
     }//GEN-LAST:event_pasteMenu2ActionPerformed
+
+    private void exportNewEraMenuItemActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_exportNewEraMenuItemActionPerformed
+        int characterId = manager.getCurrentCharacterId();
+        String currentCharName = this.guide.getCharName(this.guide.getFakeCharId(characterId));
+        if (currentCharName == null) return;
+        
+        Character character = this.manager.getCharacter();
+        JSONArray jsonAnimations = character.toJson();
+        JSONObject jsonObj = new JSONObject();
+        jsonObj.put("codeId", characterId);
+        jsonObj.put("animations", jsonAnimations);
+        
+        File newEraDir = new File(NEW_ERA_DIR);
+        if (!newEraDir.exists()) {
+            newEraDir.mkdir();
+        }        
+        File characterDir = new File(NEW_ERA_DIR, currentCharName);
+        if (!characterDir.exists()) {
+            characterDir.mkdir();
+        } else {        
+            // Delete everything first
+            String[]entries = characterDir.list();
+            for(String s: entries){
+                File currentFile = new File(characterDir.getPath(),s);
+                currentFile.delete();
+            }
+        }
+        String charPath = NEW_ERA_DIR + File.separator + currentCharName;
+        File outputFile = new File(charPath, "animations.json");
+        writeJson(jsonObj, outputFile);
+        
+        exportSpriteSheet(true, true, charPath);        
+    }//GEN-LAST:event_exportNewEraMenuItemActionPerformed
     
     
     private void setSizeRadioMenusOff() {
@@ -4716,6 +4771,9 @@ TheListener {
     }
 
     private void exportSpriteSheet(final boolean single) {
+        exportSpriteSheet(single, false, Gui.this.currentDirectory);
+    }
+    private void exportSpriteSheet(final boolean single, final boolean trim, final String path) {        
         final String charName = this.guide.getCharName(this.guide.getFakeCharId(this.manager.getCurrentCharacterId()));
         File tmpFile = null;
         if (!single) {
@@ -4735,6 +4793,9 @@ TheListener {
         final ProgressMonitor progressMonitor = new ProgressMonitor(this, single ? "Exporting sprites" : "Exporting spritesheet", "", 0, numAnims * 2);
         progressMonitor.setMillisToDecideToPopup(50);
         progressMonitor.setMillisToPopup(100);
+        
+        //final List<Rectangle> allBounds = trim? new ArrayList<Rectangle>(numAnims * 2) : null;
+        final JSONArray pivots = trim? new JSONArray() : null;
         new Thread(new Runnable(){
 
             @Override
@@ -4746,48 +4807,54 @@ TheListener {
                 int bottom = Integer.MIN_VALUE;
                 TreeSet<Long> maps = new TreeSet<Long>();
                 HashSet<Animation> processed = new HashSet<Animation>();
-                for (int i = 0; i < ch.getNumAnimations(); ++i) {
-                    Animation anim = ch.getAnimation(i);
-                    if (!processed.contains(anim)) {
-                        processed.add(anim);
-                        int animSize = anim.getNumFrames();
-                        for (int j = 0; j < animSize; ++j) {
-                            Sprite sp;
-                            maps.add(manager.getCharacter().getAnimFrame((int)i, (int)j).mapAddress);
-                            try {
-                                sp = Gui.this.manager.readSprite(i, j);
+                if (!trim) {
+                    for (int i = 0; i < ch.getNumAnimations(); ++i) {
+                        Animation anim = ch.getAnimation(i);
+                        if (!processed.contains(anim)) {
+                            processed.add(anim);
+                            int animSize = anim.getNumFrames();
+                            for (int j = 0; j < animSize; ++j) {
+                                Sprite sp;
+                                maps.add(manager.getCharacter().getAnimFrame((int)i, (int)j).mapAddress);
+                                try {
+                                    sp = Gui.this.manager.readSprite(i, j);
+                                }
+                                catch (IOException ex) {
+                                    ex.printStackTrace();
+                                    Gui.this.showError("Unable to access sprites");
+                                    progressMonitor.setProgress(999999);
+                                    Gui.this.setEnabled(true);
+                                    Gui.this.requestFocus();
+                                    return;
+                                }
+                                Rectangle rect = sp.getBounds();
+
+//                                if (trim) {
+//                                    allBounds.add(rect);
+//                                }
+                                if (rect.x < left) {
+                                    left = rect.x;
+                                }
+                                if (rect.y < top) {
+                                    top = rect.y;
+                                }
+                                int r = rect.x + rect.width;
+                                int b = rect.y + rect.height;
+                                if (r > right) {
+                                    right = r;
+                                }
+                                if (b <= bottom) continue;
+                                bottom = b;
                             }
-                            catch (IOException ex) {
-                                ex.printStackTrace();
-                                Gui.this.showError("Unable to access sprites");
-                                progressMonitor.setProgress(999999);
-                                Gui.this.setEnabled(true);
-                                Gui.this.requestFocus();
-                                return;
-                            }
-                            Rectangle rect = sp.getBounds();
-                            if (rect.x < left) {
-                                left = rect.x;
-                            }
-                            if (rect.y < top) {
-                                top = rect.y;
-                            }
-                            int r = rect.x + rect.width;
-                            int b = rect.y + rect.height;
-                            if (r > right) {
-                                right = r;
-                            }
-                            if (b <= bottom) continue;
-                            bottom = b;
                         }
+                        if (progressMonitor.isCanceled()) {
+                            Gui.this.setEnabled(true);
+                            Gui.this.requestFocus();
+                            return;
+                        }
+                        progressMonitor.setNote("Computing space: " + (int)((float)i * 1.0f / (float)numAnims * 100.0f) + "%");
+                        progressMonitor.setProgress(i);
                     }
-                    if (progressMonitor.isCanceled()) {
-                        Gui.this.setEnabled(true);
-                        Gui.this.requestFocus();
-                        return;
-                    }
-                    progressMonitor.setNote("Computing space: " + (int)((float)i * 1.0f / (float)numAnims * 100.0f) + "%");
-                    progressMonitor.setProgress(i);
                 }
                 int numMaps = maps.size() + 1;
                 int width = right - left;
@@ -4826,10 +4893,46 @@ TheListener {
                             }
                             if (maps.contains(address)) continue;
                             maps.add(address);
-                            BufferedImage img = Gui.this.manager.getImage(i, j).getSubimage(left, top, width, height);
+                            BufferedImage img;
+                            if (trim) {
+                                Sprite sp;
+                                try {
+                                    sp = Gui.this.manager.readSprite(i, j);
+                                }
+                                catch (IOException ex) {
+                                    ex.printStackTrace();
+                                    Gui.this.showError("Unable to access sprites");
+                                    progressMonitor.setProgress(999999);
+                                    Gui.this.setEnabled(true);
+                                    Gui.this.requestFocus();
+                                    return;
+                                }
+                                Rectangle bounds = sp.getBounds();
+                                left = bounds.x;
+                                top = bounds.y;
+                                width = bounds.width;
+                                height = bounds.height;
+                                JSONObject pivot = new JSONObject();
+                                int pivotX = Gui.this.imagePanel.isFacedRight() ? (left + width) - 128 : 128 - left;
+                                pivot.put("x", pivotX);
+                                pivot.put("y", (top + height) - 128);
+                                pivots.put(pivot);
+                                img = sp.asImage(manager.getPalette());
+                            }
+                            else {
+                                img = Gui.this.manager.getImage(i, j);
+                            }
+                            img = img.getSubimage(left, top, width, height);
                             if (single) {
                                 try {
-                                    File outputFile2 = new File(Gui.this.currentDirectory + "/" + charName + " " + i + "." + j + ".png");
+                                    String fileName;
+                                    if (trim) {
+                                        fileName = path + "/" + index + ".png";
+                                    } else
+                                    {
+                                        fileName = path + "/" + charName + " " + i + "." + j + ".png";
+                                    }
+                                    File outputFile2 = new File(fileName);
                                     if (Gui.this.imagePanel.isFacedRight()) {
                                         img = ImagePanel.flipImage(img);
                                     }
@@ -4858,13 +4961,19 @@ TheListener {
                         }
                     }
                     progressMonitor.setNote("Rendering sprites: " + (int)((float)i * 1.0f / (float)numAnims * 100.0f) + "%");
-                    progressMonitor.setProgress(numAnims + i);
+                    progressMonitor.setProgress(trim ? i*2 : numAnims + i);
                     if (!progressMonitor.isCanceled()) continue;
                     Gui.this.setEnabled(true);
                     Gui.this.requestFocus();
                     return;
                 }
-                if (!single) {
+                if (single) {
+                    if (trim) {
+                        File pivotsFile = new File(path, "pivots.json");
+                        writeJson(pivots, pivotsFile, 2);
+                    }
+                }
+                else {
                     int x = index % columns * width;
                     int y = index / columns * height;
                     String cs = (columns / 10 == 0 ? " " : "") + (columns / 100 == 0 ? " " : "");
@@ -5014,7 +5123,51 @@ TheListener {
                     FreeAddressesManager.freeChunk(frame.artAddress, sprite.getArtSizeInBytes());
                 }
             }
+        }        
+    }
+    
+    private void writeJson(JSONObject json, File file) {
+        writeJson(json, file, 0);
+    }
+    
+    private void writeJson(JSONObject json, File file, int spaces) {
+        FileWriter writer;
+        try {
+            writer = new FileWriter(file);
+        } catch (IOException ex) {
+            showError("Unable to open file for writing: " + file.getPath() + "\n" + ex.getMessage());
+            return;
         }
+
+        try {
+            writer.write(json.toString(spaces));
+            writer.close();
+        } catch (IOException ex) {
+            showError("Failed writing to: " + file.getPath() + "\n" + ex.getMessage());
+            return;
+        }
+    }
+    
+    private void writeJson(JSONArray json, File file) {
+        writeJson(json, file, 0);
+    }
+    
+    private void writeJson(JSONArray json, File file, int spaces) {
+        FileWriter writer;
+        try {
+            writer = new FileWriter(file);
+        } catch (IOException ex) {
+            showError("Unable to open file for writing: " + file.getPath() + "\n" + ex.getMessage());
+            return;
+        }
+
+        try {
+            writer.write(json.toString(spaces));
+            writer.close();
+        } catch (IOException ex) {
+            showError("Failed writing to: " + file.getPath() + "\n" + ex.getMessage());
+            return;
+        }        
     }
 
     

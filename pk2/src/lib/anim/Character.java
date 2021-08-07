@@ -15,19 +15,21 @@ import java.util.HashSet;
 import java.util.Iterator;
 import java.util.Scanner;
 import java.util.TreeMap;
+import java.util.TreeSet;
 import lib.anim.AnimFrame;
 import lib.anim.Animation;
 import lib.anim.HitFrame;
 import lib.anim.HitFramesSet;
 import lib.anim.WeaponFrame;
 import lib.anim.WeaponFramesSet;
+import org.json.JSONArray;
+import org.json.JSONObject;
 
 public class Character {
     public static final int FIRST_HIT_ANIM = 24;
     private ArrayList<Animation> animations;
     private ArrayList<HitFramesSet> animHits;
     private ArrayList<WeaponFramesSet> animWeapons;
-    private HitFramesSet hits;
     private boolean modified;
     private boolean spritesModified;
     static boolean DEBUG_RESIZERS = false;
@@ -47,7 +49,7 @@ public class Character {
 
     public Character(int numAnimations) {
         this.animations = new ArrayList(numAnimations);
-        this.animHits = numAnimations > 24 ? new ArrayList(numAnimations - 24) : new ArrayList(0);
+        this.animHits = numAnimations > FIRST_HIT_ANIM ? new ArrayList(numAnimations - FIRST_HIT_ANIM) : new ArrayList(0);
         this.animWeapons = new ArrayList(numAnimations);
     }
 
@@ -60,14 +62,14 @@ public class Character {
     }
 
     public HitFrame getHitFrame(int animId, int frameId) {
-        if (animId < 24 || animId - 24 >= this.animHits.size()) {
+        if (animId < FIRST_HIT_ANIM || animId - FIRST_HIT_ANIM >= this.animHits.size()) {
             return null;
         }
-        this.hits = this.animHits.get(animId - 24);
-        if (this.hits == null) {
+        HitFramesSet hits = this.animHits.get(animId - FIRST_HIT_ANIM);
+        if (hits == null) {
             return null;
         }
-        ArrayList<HitFrame> frames = this.hits.frames;
+        ArrayList<HitFrame> frames = hits.frames;
         if (frames == null || frames.size() <= frameId) {
             return null;
         }
@@ -128,8 +130,8 @@ public class Character {
                     second = second < 0 ? 1 : 0;
                 }
                 dos.print("" + first + "\t" + second);
-                if (j >= 24) {
-                    int third = (Integer)hits.get(j - 24);
+                if (j >= FIRST_HIT_ANIM) {
+                    int third = (Integer)hits.get(j - FIRST_HIT_ANIM);
                     if (first < 0) {
                         third = third < 0 ? 1 : 0;
                     }
@@ -201,7 +203,7 @@ public class Character {
         }
         TreeMap<Long, HitFramesSet> hitsAddresses = new TreeMap<Long, HitFramesSet>();
         TreeMap<Long, HitFrame> processedHits = new TreeMap<Long, HitFrame>();
-        for (int i = 0; i < count - 24; ++i) {
+        for (int i = 0; i < count - FIRST_HIT_ANIM; ++i) {
             HitFramesSet set;
             long localAddress = address + (long)(i * 2);
             rom.seek(localAddress);
@@ -209,7 +211,7 @@ public class Character {
             if (offset != 0) {
                 set = (HitFramesSet)hitsAddresses.get(localAddress += (long)offset);
                 if (set == null) {
-                    int framesCount = c.animations.get(i + 24).getNumFrames();
+                    int framesCount = c.animations.get(i + FIRST_HIT_ANIM).getNumFrames();
                     int before = processedHits.size();
                     set = HitFramesSet.read(rom, localAddress, framesCount, processedHits);
                     hitsAddresses.put(localAddress, set);
@@ -332,7 +334,7 @@ public class Character {
             rom.seek(localAddress);
             offset = rom.readShort();
             if (offset == 0) continue;
-            anim = this.animations.get(i + 24);
+            anim = this.animations.get(i + FIRST_HIT_ANIM);
             this.animHits.get(i).write(rom, localAddress + (long)offset, anim.getNumFrames());
         }
         if (id == 24 && numPlayableChars < 24 || id == numPlayableChars - 1) {
@@ -439,9 +441,9 @@ public class Character {
             pointerAddress = hitsListAddress + (long)(id * 2) + (long)offset;
         }
         if (newHits) {
-            writeAddress = pointerAddress + (long)((count - 24) * 2);
-            for (i = 0; i < count - 24; ++i) {
-                anim = this.animations.get(24 + i);
+            writeAddress = pointerAddress + (long)((count - FIRST_HIT_ANIM) * 2);
+            for (i = 0; i < count - FIRST_HIT_ANIM; ++i) {
+                anim = this.animations.get(FIRST_HIT_ANIM + i);
                 hits = this.animHits.get(i);
                 if (!processedHits.containsKey(hits) && hits.process(processedSingleHits)) {
                     rom.seek(pointerAddress);
@@ -468,8 +470,8 @@ public class Character {
             }
         } else {
             writeAddress = pointerAddress;
-            for (i = 0; i < count - 24; ++i) {
-                anim = this.animations.get(24 + i);
+            for (i = 0; i < count - FIRST_HIT_ANIM; ++i) {
+                anim = this.animations.get(FIRST_HIT_ANIM + i);
                 hits = this.animHits.get(i);
                 if (!processedHits.containsKey(hits) && hits.process(processedSingleHits)) {
                     rom.seek(pointerAddress);
@@ -550,10 +552,10 @@ public class Character {
         anim.addFrame(oldAnim.getFrame(0));
         this.animations.set(i, anim);
         this.animWeapons.set(i, new WeaponFramesSet(0));
-        if (i >= 24 && this.animHits.get((int)(i - 24)).frames.size() > 0) {
+        if (i >= FIRST_HIT_ANIM && this.animHits.get((int)(i - FIRST_HIT_ANIM)).frames.size() > 0) {
             HitFramesSet set = new HitFramesSet(1);
-            set.frames.add(this.animHits.get((int)(i - 24)).frames.get(0));
-            this.animHits.set(i - 24, set);
+            set.frames.add(this.animHits.get((int)(i - FIRST_HIT_ANIM)).frames.get(0));
+            this.animHits.set(i - FIRST_HIT_ANIM, set);
         }
         return anim;
     }
@@ -589,9 +591,9 @@ public class Character {
         } else {
             this.setWp(id1, !this.animWeapons.get((int)id1).frames.isEmpty(), this.animations.get(id1).getNumFrames());
         }
-        if (id1 >= 24 && id2 >= 24) {
-            int d1 = id1 - 24;
-            int d2 = id2 - 24;
+        if (id1 >= FIRST_HIT_ANIM && id2 >= FIRST_HIT_ANIM) {
+            int d1 = id1 - FIRST_HIT_ANIM;
+            int d2 = id2 - FIRST_HIT_ANIM;
             if (setHit) {
                 this.animHits.set(d1, this.animHits.get(d2));
             } else {
@@ -625,9 +627,57 @@ public class Character {
     public void resizeAnim(int i, int size, boolean hasWp, boolean hasHit) {
         this.setWp(i, hasWp, size);
         this.animations.get(i).resize(size);
-        if (i >= 24) {
-            this.setHit(i - 24, hasHit, size);
+        if (i >= FIRST_HIT_ANIM) {
+            this.setHit(i - FIRST_HIT_ANIM, hasHit, size);
         }
+    }
+    
+    
+    private static String ANIM_FRAME_KEY = "frame";
+    private static String HIT_FRAME_KEY = "hit";
+    private static String WEAPON_FRAME_KEY = "weapon";
+    public JSONArray toJson(){
+        JSONArray jsonAnims = new JSONArray();
+        TreeMap<Long, Integer> maps = new TreeMap<Long, Integer>();
+        HashMap<Animation, Integer> processed = new HashMap<Animation, Integer>();
+        int artFrame = 0;
+        for (int animId = 0; animId < animations.size(); ++animId){
+            JSONArray jsonFrames = new JSONArray();
+            Animation animation = animations.get(animId);
+            Integer framePointer = processed.get(animation);
+            if (framePointer != null) {
+                // Animation pointer
+                jsonAnims.put(framePointer);
+                continue;
+            }
+            processed.put(animation, animId);
+            int numFrames = animation.getNumFrames();
+            for (int frameId = 0; frameId < numFrames; ++frameId) {
+                AnimFrame animFrame = animation.getFrame(frameId);
+                HitFrame hitFrame = getHitFrame(animId, frameId);
+                WeaponFrame weapFrame = getWeaponFrame(animId, frameId);
+                JSONObject jsonFrame = new JSONObject();
+                framePointer = maps.get(animFrame.mapAddress);
+                if (framePointer == null) {
+                    // Frame pointer
+                    framePointer = artFrame++;
+                    maps.put(animFrame.mapAddress, framePointer);
+                }
+                
+                jsonFrame.put(ANIM_FRAME_KEY, animFrame.toJson(framePointer));                
+                if (hitFrame != null) {
+                    JSONObject obj = hitFrame.toJson();
+                    if (obj != null) jsonFrame.put(HIT_FRAME_KEY, obj);
+                }
+                if (weapFrame != null) {
+                    JSONObject obj = weapFrame.toJson();
+                    if (obj != null) jsonFrame.put(WEAPON_FRAME_KEY, obj);
+                }
+                jsonFrames.put(jsonFrame);
+            }
+            jsonAnims.put(jsonFrames);
+        }
+        return jsonAnims;
     }
 }
 

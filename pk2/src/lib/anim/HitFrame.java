@@ -5,6 +5,7 @@ package lib.anim;
 
 import java.io.IOException;
 import java.io.RandomAccessFile;
+import org.json.JSONObject;
 
 public class HitFrame {
     public int x;
@@ -46,6 +47,17 @@ public class HitFrame {
         }
         rom.writeByte(damageByte);
         rom.writeByte(frame.sound);
+    }
+    
+    public JSONObject toJson(){
+        if (!enabled) return null;
+        JSONObject res = new JSONObject();
+        res.put("width", x);
+        res.put("height", y);
+        res.put("damage", damage);
+        res.put("knockDown", knockDown);
+        res.put("sound", sound);
+        return res;
     }
 }
 

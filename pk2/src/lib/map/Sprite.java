@@ -267,7 +267,7 @@ implements Renderable {
             int x = piece.xL + 128;
             int y = piece.y + 128;
             int r = x + (piece.width + 1) * 8;
-            int b = y + (piece.width + 1) * 8;
+            int b = y + (piece.height + 1) * 8;
             if (x < res.x) {
                 res.x = x;
             }
