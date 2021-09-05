@@ -634,24 +634,28 @@ public class Character {
     
     
     private static String ANIM_FRAME_KEY = "frame";
-    private static String HIT_FRAME_KEY = "hit";
     private static String WEAPON_FRAME_KEY = "weapon";
-    public JSONArray toJson(){
+    public JSONObject toJson(){
+        JSONObject jsonObj = new JSONObject();
         JSONArray jsonAnims = new JSONArray();
+        JSONArray jsonHitAnims = new JSONArray();
         TreeMap<Long, Integer> maps = new TreeMap<Long, Integer>();
         HashMap<Animation, Integer> processed = new HashMap<Animation, Integer>();
         int artFrame = 0;
         for (int animId = 0; animId < animations.size(); ++animId){
             JSONArray jsonFrames = new JSONArray();
+            JSONObject jsonHits = new JSONObject();
             Animation animation = animations.get(animId);
             Integer framePointer = processed.get(animation);
             if (framePointer != null) {
                 // Animation pointer
                 jsonAnims.put(framePointer);
+                jsonHitAnims.put(framePointer);
                 continue;
             }
             processed.put(animation, animId);
             int numFrames = animation.getNumFrames();
+            int screenFramesCount = 0;
             for (int frameId = 0; frameId < numFrames; ++frameId) {
                 AnimFrame animFrame = animation.getFrame(frameId);
                 HitFrame hitFrame = getHitFrame(animId, frameId);
@@ -666,18 +670,27 @@ public class Character {
                 
                 jsonFrame.put(ANIM_FRAME_KEY, animFrame.toJson(framePointer));                
                 if (hitFrame != null) {
-                    JSONObject obj = hitFrame.toJson();
-                    if (obj != null) jsonFrame.put(HIT_FRAME_KEY, obj);
+                    JSONObject obj = hitFrame.toJson();                    
+                    if (obj != null) {
+                        obj.put("duration", animFrame.delay);
+                        jsonHits.put("" + screenFramesCount, obj);
+                    }                    
                 }
                 if (weapFrame != null) {
                     JSONObject obj = weapFrame.toJson();
                     if (obj != null) jsonFrame.put(WEAPON_FRAME_KEY, obj);
                 }
                 jsonFrames.put(jsonFrame);
+                screenFramesCount += animFrame.delay;
+                
             }
             jsonAnims.put(jsonFrames);
+            jsonHitAnims.put(jsonHits);
         }
-        return jsonAnims;
+        jsonObj.put("animations", jsonAnims);
+        jsonObj.put("hitboxes", jsonHitAnims);
+        return jsonObj;
     }
+    
 }
 

@@ -3848,10 +3848,11 @@ TheListener {
         if (currentCharName == null) return;
         
         Character character = this.manager.getCharacter();
-        JSONArray jsonAnimations = character.toJson();
+        JSONObject jsonCharacter = character.toJson();
         JSONObject jsonObj = new JSONObject();
-        jsonObj.put("codeId", characterId);
-        jsonObj.put("animations", jsonAnimations);
+        jsonObj.put("codeId", characterId); // TODO: LUA? AI script?
+        jsonObj.put("hitboxes", jsonCharacter.get("hitboxes"));
+        JSONArray jsonAnimations = (JSONArray) jsonCharacter.get("animations");
         
         File newEraDir = new File(NEW_ERA_DIR);
         if (!newEraDir.exists()) {
@@ -3869,8 +3870,8 @@ TheListener {
             }
         }
         String charPath = NEW_ERA_DIR + File.separator + currentCharName;
-        File outputFile = new File(charPath, "animations.json");
-        writeJson(jsonObj, outputFile);
+        writeJson(jsonObj, new File(charPath, "physics.json"));
+        writeJson(jsonAnimations, new File(charPath, "visuals.json"));
         
         exportSpriteSheet(true, true, charPath);        
     }//GEN-LAST:event_exportNewEraMenuItemActionPerformed
@@ -4969,8 +4970,11 @@ TheListener {
                 }
                 if (single) {
                     if (trim) {
-                        File pivotsFile = new File(path, "pivots.json");
-                        writeJson(pivots, pivotsFile, 2);
+                        File artSettingsFile = new File(path, "artSettings.json");
+                        JSONObject artSettings  =new JSONObject();
+                        artSettings.put("scale", 1);
+                        artSettings.put("pivots", pivots);
+                        writeJson(artSettings, artSettingsFile, 2);
                     }
                 }
                 else {
