@@ -3788,14 +3788,22 @@ TheListener {
 
     
     private int readSpeed() {
-        int currSpeed = 0;
         try{
-            currSpeed = manager.readSpeed();
+            return manager.readSpeed();
         }catch(IOException e){
             showError("Unable to read character speed");
             return -1;
         }
-        return currSpeed;
+    }
+    
+    
+    private String readName() {
+        try {
+            return this.manager.readName();
+        } catch(IOException e){
+            showError("Unable to read character name");
+            return null;
+        }
     }
     
     private void speedMenuActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_speedMenuActionPerformed
@@ -3861,11 +3869,12 @@ TheListener {
         
         Character character = this.manager.getCharacter();
         JSONObject jsonCharacter = character.toJson();
-        JSONObject physicsJson = new JSONObject();
-        physicsJson.put("codeId", characterId); // TODO: LUA? AI script? as a new entry in json, never use same for multiple things
-        physicsJson.put("walkSpeed", readSpeed());
-        physicsJson.put("hitboxes", jsonCharacter.get("hitboxes"));
-        JSONArray visualsJson = (JSONArray) jsonCharacter.get("animations");
+        JSONObject logicsJson = new JSONObject();
+        logicsJson.put("codeId", characterId); // TODO: LUA? AI script? as a new entry in json, never use same for multiple things
+        logicsJson.put("name", readName());
+        logicsJson.put("walkSpeed", readSpeed());
+        logicsJson.put("hitboxes", jsonCharacter.get("hitboxes"));
+        JSONArray animationsJson = (JSONArray) jsonCharacter.get("animations");
         
         File newEraDir = new File(NEW_ERA_DIR);
         if (!newEraDir.exists()) {
@@ -3883,8 +3892,8 @@ TheListener {
             }
         }
         String charPath = NEW_ERA_DIR + File.separator + currentCharName;
-        writeJson(physicsJson, new File(charPath, "physics.json"));
-        writeJson(visualsJson, new File(charPath, "visuals.json"));
+        writeJson(logicsJson, new File(charPath, "logics.json"));
+        writeJson(animationsJson, new File(charPath, "animations.json"));
         
         exportPortraitIcon(charPath);
         exportSpriteSheet(true, true, charPath);
@@ -4981,7 +4990,7 @@ TheListener {
                 }
                 if (single) {
                     if (trim) {
-                        File artSettingsFile = new File(path, "artSettings.json");
+                        File artSettingsFile = new File(path, "spriteSettings.json");
                         JSONObject artSettings  =new JSONObject();
                         artSettings.put("scale", 1);
                         artSettings.put("pivots", pivots);
