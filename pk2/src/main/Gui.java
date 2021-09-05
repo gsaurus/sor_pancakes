@@ -441,8 +441,12 @@ TheListener {
             this.setAnimation(numAnimations - 1);
         } else {
             this.setAnimation(backupCurrAnim);
-        }
-        this.nameMenu.setEnabled(charId < this.guide.getPlayableChars());
+        }        
+        this.nameMenu.setEnabled(true);
+    }
+    
+    public boolean isPlayableChar() {
+        return this.manager.getCurrentCharacterId() < this.guide.getPlayableChars();
     }
 
     private void guideChanged() {
@@ -3561,7 +3565,7 @@ TheListener {
             File file = this.imageChooser.getSelectedFile();
             try {
                 img = ImageIO.read(file);
-                img = this.processReplaceImg(img, false);
+                img = this.processReplaceImg(img, false, manager.readDefaultPalette());
             }
             catch (IOException ex) {
                 ex.printStackTrace();
