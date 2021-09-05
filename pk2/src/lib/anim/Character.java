@@ -233,7 +233,8 @@ public class Character {
                     dos.println(0);
                 }
             }
-            if (id == 24 && numPlayableChars < 24 || id == numPlayableChars - 1) break;
+            // Have no idea what the following line meant to be, just know that it's broken
+            //if (charId == 24 && numPlayableChars < 24 || charId == numPlayableChars - 1) break;
         }
         if (DEBUG_RESIZERS) {
             dos.println();
