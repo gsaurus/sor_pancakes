@@ -75,11 +75,13 @@ public class Gui
 extends JFrame
 implements ActionListener,
 TheListener {
-    private static final String VERSION = "1.7.0";
+    private static final String VERSION = "1.8.0";
+    private static final String YEAR = "2021";
     private static final String TITLE = "Pancake 2 v" + VERSION;
     private  static String NEW_ERA_DIR = "SOR2 New Era exports";
     private static final int INVALID_INT = Integer.MIN_VALUE;
     private static final long INVALID_LONG = Long.MIN_VALUE;
+    private static final int JSON_EXPORT_SPACES = 2;
     private String romName;
     private String currentDirectory;
     private JFileChooser romChooser;
@@ -288,9 +290,9 @@ TheListener {
     private void updateTitle() {
         Character ch = this.manager.getCharacter();
         if (ch.wasModified()) {
-            this.setTitle("Pancake 2 v1.6b - " + new File(this.romName).getName() + "*");
+            this.setTitle(TITLE + " - " + new File(this.romName).getName() + "*");
         } else {
-            this.setTitle("Pancake 2 v1.6b - " + new File(this.romName).getName());
+            this.setTitle(TITLE + " - " + new File(this.romName).getName());
         }
     }
 
@@ -519,7 +521,7 @@ TheListener {
             File file = this.romChooser.getSelectedFile();
             this.romName = file.getAbsolutePath();
             if (this.setupManager(this.romName)) {
-                this.setTitle("Pancake 2 v1.6b - " + file.getName());
+                this.setTitle(TITLE + " - " + file.getName());
                 this.updateEnablings();
             }
         }
@@ -639,7 +641,7 @@ TheListener {
         this.resizeAnimsMenu.setEnabled(this.manager != null);
         this.copyMenu.setEnabled(this.manager != null);
         this.pasteMenu.setEnabled(this.manager != null && this.copiedMap != 0L);
-        //this.pasteMenu1.setEnabled(this.manager != null); // disabled for now
+        this.pasteMenu1.setEnabled(this.manager != null);
         this.pasteMenu2.setEnabled(this.manager != null);
         this.hexIdsMenu.setEnabled(this.manager != null);
         if (this.manager != null) {
@@ -1506,10 +1508,10 @@ TheListener {
         jSeparator5 = new javax.swing.JPopupMenu.Separator();
         jMenuItem3 = new javax.swing.JMenuItem();
         exportMenu = new javax.swing.JMenu();
+        exportNewEraMenuItem = new javax.swing.JMenuItem();
+        jSeparator8 = new javax.swing.JPopupMenu.Separator();
         spriteSheetMenu1 = new javax.swing.JMenuItem();
         spriteSheetMenu = new javax.swing.JMenuItem();
-        jSeparator8 = new javax.swing.JPopupMenu.Separator();
-        exportNewEraMenuItem = new javax.swing.JMenuItem();
         jSeparator1 = new javax.swing.JPopupMenu.Separator();
         jMenuItem5 = new javax.swing.JMenuItem();
         jMenu2 = new javax.swing.JMenu();
@@ -2790,6 +2792,15 @@ TheListener {
 
         exportMenu.setText("Export Character...");
 
+        exportNewEraMenuItem.setText("SOR2 New Era");
+        exportNewEraMenuItem.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                exportNewEraMenuItemActionPerformed(evt);
+            }
+        });
+        exportMenu.add(exportNewEraMenuItem);
+        exportMenu.add(jSeparator8);
+
         spriteSheetMenu1.setText("Individual Frames");
         spriteSheetMenu1.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
@@ -2805,15 +2816,6 @@ TheListener {
             }
         });
         exportMenu.add(spriteSheetMenu);
-        exportMenu.add(jSeparator8);
-
-        exportNewEraMenuItem.setText("SOR2 New Era");
-        exportNewEraMenuItem.addActionListener(new java.awt.event.ActionListener() {
-            public void actionPerformed(java.awt.event.ActionEvent evt) {
-                exportNewEraMenuItemActionPerformed(evt);
-            }
-        });
-        exportMenu.add(exportNewEraMenuItem);
 
         jMenu1.add(exportMenu);
         jMenu1.add(jSeparator1);
@@ -3459,7 +3461,7 @@ TheListener {
     }//GEN-LAST:event_behindCheckActionPerformed
 
     private void jMenuItem6ActionPerformed(ActionEvent evt) {//GEN-FIRST:event_jMenuItem6ActionPerformed
-        JOptionPane.showMessageDialog(this, "Pancake 2 v1.7\n\u00a9 gsaurus 2012-2018\n\nAcknowledgment on derived work\nwould be appreciated but is not required\n\nPk2 is free software. The author can not be held responsible\nfor any illicit use of this program.\n", "About", 1);
+        JOptionPane.showMessageDialog(this, TITLE + "\n\u00a9 gsaurus 2012-" + YEAR + "\n\nAcknowledgment on derived work\nwould be appreciated but is not required\n\nPk2 is free software. The author can not be held responsible\nfor any illicit use of this program.\n", "About", 1);
     }//GEN-LAST:event_jMenuItem6ActionPerformed
 
     private void spriteSheetMenuActionPerformed(ActionEvent evt) {//GEN-FIRST:event_spriteSheetMenuActionPerformed
@@ -3785,15 +3787,21 @@ TheListener {
     }//GEN-LAST:event_hexIdsMenuActionPerformed
 
     
-    private void speedMenuActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_speedMenuActionPerformed
-        int charId = manager.getCurrentCharacterId();
+    private int readSpeed() {
         int currSpeed = 0;
         try{
             currSpeed = manager.readSpeed();
         }catch(IOException e){
             showError("Unable to read character speed");
-            return;
+            return -1;
         }
+        return currSpeed;
+    }
+    
+    private void speedMenuActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_speedMenuActionPerformed
+        int charId = manager.getCurrentCharacterId();
+        int currSpeed = readSpeed();
+        if (currSpeed < 0) return;
         String charName = guide.getCharName(guide.getFakeCharId(charId));
         JTextField speedField = new JTextField();
         speedField.setText(currSpeed + "");
@@ -3853,10 +3861,11 @@ TheListener {
         
         Character character = this.manager.getCharacter();
         JSONObject jsonCharacter = character.toJson();
-        JSONObject jsonObj = new JSONObject();
-        jsonObj.put("codeId", characterId); // TODO: LUA? AI script?
-        jsonObj.put("hitboxes", jsonCharacter.get("hitboxes"));
-        JSONArray jsonAnimations = (JSONArray) jsonCharacter.get("animations");
+        JSONObject physicsJson = new JSONObject();
+        physicsJson.put("codeId", characterId); // TODO: LUA? AI script? as a new entry in json, never use same for multiple things
+        physicsJson.put("walkSpeed", readSpeed());
+        physicsJson.put("hitboxes", jsonCharacter.get("hitboxes"));
+        JSONArray visualsJson = (JSONArray) jsonCharacter.get("animations");
         
         File newEraDir = new File(NEW_ERA_DIR);
         if (!newEraDir.exists()) {
@@ -3874,10 +3883,11 @@ TheListener {
             }
         }
         String charPath = NEW_ERA_DIR + File.separator + currentCharName;
-        writeJson(jsonObj, new File(charPath, "physics.json"));
-        writeJson(jsonAnimations, new File(charPath, "visuals.json"));
+        writeJson(physicsJson, new File(charPath, "physics.json"));
+        writeJson(visualsJson, new File(charPath, "visuals.json"));
         
-        exportSpriteSheet(true, true, charPath);        
+        exportPortraitIcon(charPath);
+        exportSpriteSheet(true, true, charPath);
     }//GEN-LAST:event_exportNewEraMenuItemActionPerformed
     
     
@@ -4020,9 +4030,12 @@ TheListener {
     private BufferedImage processReplaceImg(BufferedImage replaceImg) {
         return this.processReplaceImg(replaceImg, true);
     }
-
+    
     private BufferedImage processReplaceImg(BufferedImage replaceImg, boolean transp) {
-        Palette palette = this.manager.getPalette();
+        return processReplaceImg(replaceImg, transp, manager.getPalette());
+    }
+
+    private BufferedImage processReplaceImg(BufferedImage replaceImg, boolean transp, Palette palette) {        
         BufferedImage res = new BufferedImage(replaceImg.getWidth(), replaceImg.getHeight(), 2);
         int transparency = 0;
         if (transp) {
@@ -4799,7 +4812,6 @@ TheListener {
         progressMonitor.setMillisToDecideToPopup(50);
         progressMonitor.setMillisToPopup(100);
         
-        //final List<Rectangle> allBounds = trim? new ArrayList<Rectangle>(numAnims * 2) : null;
         final JSONArray pivots = trim? new JSONArray() : null;
         new Thread(new Runnable(){
 
@@ -4833,10 +4845,7 @@ TheListener {
                                     return;
                                 }
                                 Rectangle rect = sp.getBounds();
-
-//                                if (trim) {
-//                                    allBounds.add(rect);
-//                                }
+                                
                                 if (rect.x < left) {
                                     left = rect.x;
                                 }
@@ -4922,11 +4931,9 @@ TheListener {
                                 pivot.put("x", pivotX);
                                 pivot.put("y", (top + height) - 128);
                                 pivots.put(pivot);
-                                img = sp.asImage(manager.getPalette());
+                                //img = sp.asImage(manager.getPalette()); // Don't use this, as it doesn't uncompress compressed art
                             }
-                            else {
-                                img = Gui.this.manager.getImage(i, j);
-                            }
+                            img = Gui.this.manager.getImage(i, j);
                             img = img.getSubimage(left, top, width, height);
                             if (single) {
                                 try {
@@ -4978,7 +4985,7 @@ TheListener {
                         JSONObject artSettings  =new JSONObject();
                         artSettings.put("scale", 1);
                         artSettings.put("pivots", pivots);
-                        writeJson(artSettings, artSettingsFile, 2);
+                        writeJson(artSettings, artSettingsFile);
                     }
                 }
                 else {
@@ -5135,7 +5142,7 @@ TheListener {
     }
     
     private void writeJson(JSONObject json, File file) {
-        writeJson(json, file, 0);
+        writeJson(json, file, JSON_EXPORT_SPACES);
     }
     
     private void writeJson(JSONObject json, File file, int spaces) {
@@ -5157,7 +5164,7 @@ TheListener {
     }
     
     private void writeJson(JSONArray json, File file) {
-        writeJson(json, file, 0);
+        writeJson(json, file, JSON_EXPORT_SPACES);
     }
     
     private void writeJson(JSONArray json, File file, int spaces) {
@@ -5176,6 +5183,28 @@ TheListener {
             showError("Failed writing to: " + file.getPath() + "\n" + ex.getMessage());
             return;
         }        
+    }
+
+    private void exportPortraitIcon(String charPath) {
+        BufferedImage portrait = readPortrait();
+        if (portrait == null) return;
+        String fileName = charPath + "/icon.png";
+        File outputFile = new File(fileName);
+        try {
+            ImageIO.write((RenderedImage)portrait, "png", outputFile);
+        } catch (IOException ex) {
+            showError("Failed writing portrait icon to: " + outputFile.getPath() + "\n" + ex.getMessage());
+        }
+    }
+    
+    
+    private BufferedImage readPortrait() {
+        try {
+            return manager.readPortrait();
+        } catch (IOException ex) {
+            showError("Unable to read portrait");
+        }
+        return null;
     }
 
     

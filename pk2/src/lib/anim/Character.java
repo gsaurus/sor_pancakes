@@ -5,23 +5,13 @@ package lib.anim;
 
 import java.io.File;
 import java.io.IOException;
-import java.io.PrintStream;
 import java.io.PrintWriter;
 import java.io.RandomAccessFile;
 import java.util.ArrayList;
-import java.util.Collection;
 import java.util.HashMap;
 import java.util.HashSet;
-import java.util.Iterator;
 import java.util.Scanner;
 import java.util.TreeMap;
-import java.util.TreeSet;
-import lib.anim.AnimFrame;
-import lib.anim.Animation;
-import lib.anim.HitFrame;
-import lib.anim.HitFramesSet;
-import lib.anim.WeaponFrame;
-import lib.anim.WeaponFramesSet;
 import org.json.JSONArray;
 import org.json.JSONObject;
 
@@ -144,7 +134,7 @@ public class Character {
         }
     }
 
-    public static Character read(RandomAccessFile rom, long animListAddress, long hitsListAddress, long weaponsListAddress, int id, int count, int animsType, boolean globalCol, boolean globalWeap, int numPlayableChars) throws IOException {
+    public static Character read(RandomAccessFile rom, long animListAddress, long hitsListAddress, long weaponsListAddress, int charId, int count, int animsType, boolean globalCol, boolean globalWeap, int numPlayableChars) throws IOException {
         short offset;
         Character c = new Character(count);
         if (DEBUG_RESIZERS_FIX) {
@@ -153,12 +143,12 @@ public class Character {
         PrintWriter dos = null;
         TreeMap<Long, Integer> animIds = null;
         if (DEBUG_RESIZERS) {
-            dos = new PrintWriter("" + (id + 1) + ".txt");
+            dos = new PrintWriter("" + (charId + 1) + ".txt");
         }
         if (DEBUG_RESIZERS) {
             animIds = new TreeMap<Long, Integer>();
         }
-        rom.seek(animListAddress + (long)(id * 4));
+        rom.seek(animListAddress + (long)(charId * 4));
         long address = rom.readInt();
         TreeMap<Long, Animation> animAddresses = new TreeMap<Long, Animation>();
         for (int i = 0; i < count; ++i) {
@@ -187,19 +177,19 @@ public class Character {
         if (DEBUG_RESIZERS) {
             animIds = new TreeMap();
         }
-        if (id > 25 && id > numPlayableChars) {
+        if (charId > 25 && charId > numPlayableChars) {
             if (DEBUG_RESIZERS) {
                 dos.close();
             }
             return c;
         }
         if (globalCol) {
-            rom.seek(hitsListAddress + (long)(id * 4));
+            rom.seek(hitsListAddress + (long)(charId * 4));
             address = rom.readInt();
         } else {
-            rom.seek(hitsListAddress + (long)(id * 2));
+            rom.seek(hitsListAddress + (long)(charId * 2));
             offset = rom.readShort();
-            address = hitsListAddress + (long)(id * 2) + (long)offset;
+            address = hitsListAddress + (long)(charId * 2) + (long)offset;
         }
         TreeMap<Long, HitFramesSet> hitsAddresses = new TreeMap<Long, HitFramesSet>();
         TreeMap<Long, HitFrame> processedHits = new TreeMap<Long, HitFrame>();
@@ -245,12 +235,12 @@ public class Character {
             animIds = new TreeMap();
         }
         if (globalWeap) {
-            rom.seek(weaponsListAddress + (long)(id * 4));
+            rom.seek(weaponsListAddress + (long)(charId * 4));
             address = rom.readInt();
         } else {
-            rom.seek(weaponsListAddress + (long)(id * 2));
+            rom.seek(weaponsListAddress + (long)(charId * 2));
             offset = rom.readShort();
-            address = weaponsListAddress + (long)(id * 2) + (long)offset;
+            address = weaponsListAddress + (long)(charId * 2) + (long)offset;
         }
         TreeMap<Long, WeaponFramesSet> wpAddresses = new TreeMap<Long, WeaponFramesSet>();
         TreeMap<Long, WeaponFrame> processedWeapons = new TreeMap<Long, WeaponFrame>();
@@ -634,8 +624,8 @@ public class Character {
     }
     
     
-    private static String ANIM_FRAME_KEY = "frame";
     private static String WEAPON_FRAME_KEY = "weapon";
+    
     public JSONObject toJson(){
         JSONObject jsonObj = new JSONObject();
         JSONArray jsonAnims = new JSONArray();
@@ -645,7 +635,7 @@ public class Character {
         int artFrame = 0;
         for (int animId = 0; animId < animations.size(); ++animId){
             JSONArray jsonFrames = new JSONArray();
-            JSONObject jsonHits = new JSONObject();
+            JSONArray jsonHits = new JSONArray();
             Animation animation = animations.get(animId);
             Integer framePointer = processed.get(animation);
             if (framePointer != null) {
@@ -660,21 +650,20 @@ public class Character {
             for (int frameId = 0; frameId < numFrames; ++frameId) {
                 AnimFrame animFrame = animation.getFrame(frameId);
                 HitFrame hitFrame = getHitFrame(animId, frameId);
-                WeaponFrame weapFrame = getWeaponFrame(animId, frameId);
-                JSONObject jsonFrame = new JSONObject();
+                WeaponFrame weapFrame = getWeaponFrame(animId, frameId);                
                 framePointer = maps.get(animFrame.mapAddress);
                 if (framePointer == null) {
                     // Frame pointer
                     framePointer = artFrame++;
                     maps.put(animFrame.mapAddress, framePointer);
                 }
-                
-                jsonFrame.put(ANIM_FRAME_KEY, animFrame.toJson(framePointer));                
+                JSONObject jsonFrame = animFrame.toJson(framePointer);
                 if (hitFrame != null) {
                     JSONObject obj = hitFrame.toJson();                    
                     if (obj != null) {
+                        obj.put("frame", screenFramesCount);
                         obj.put("duration", animFrame.delay);
-                        jsonHits.put("" + screenFramesCount, obj);
+                        jsonHits.put(obj);
                     }                    
                 }
                 if (weapFrame != null) {

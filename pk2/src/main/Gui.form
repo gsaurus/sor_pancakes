@@ -76,6 +76,16 @@
                 <Property name="text" type="java.lang.String" value="Export Character..."/>
               </Properties>
               <SubComponents>
+                <MenuItem class="javax.swing.JMenuItem" name="exportNewEraMenuItem">
+                  <Properties>
+                    <Property name="text" type="java.lang.String" value="SOR2 New Era"/>
+                  </Properties>
+                  <Events>
+                    <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="exportNewEraMenuItemActionPerformed"/>
+                  </Events>
+                </MenuItem>
+                <MenuItem class="javax.swing.JPopupMenu$Separator" name="jSeparator8">
+                </MenuItem>
                 <MenuItem class="javax.swing.JMenuItem" name="spriteSheetMenu1">
                   <Properties>
                     <Property name="text" type="java.lang.String" value="Individual Frames"/>
@@ -90,16 +100,6 @@
                   </Properties>
                   <Events>
                     <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="spriteSheetMenuActionPerformed"/>
-                  </Events>
-                </MenuItem>
-                <MenuItem class="javax.swing.JPopupMenu$Separator" name="jSeparator8">
-                </MenuItem>
-                <MenuItem class="javax.swing.JMenuItem" name="exportNewEraMenuItem">
-                  <Properties>
-                    <Property name="text" type="java.lang.String" value="SOR2 New Era"/>
-                  </Properties>
-                  <Events>
-                    <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="exportNewEraMenuItemActionPerformed"/>
                   </Events>
                 </MenuItem>
               </SubComponents>
