@@ -6,6 +6,7 @@ package lib;
 import java.awt.Color;
 import java.awt.image.BufferedImage;
 import java.io.File;
+import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
 import java.io.IOException;
 import java.util.ArrayList;
@@ -185,6 +186,25 @@ public class Manager {
 
     public int getCurrentCharacterId() {
         return this.currCharacterId;
+    }
+    
+    public Palette readDefaultPalette() throws FileNotFoundException, IOException {
+        return readPalette(0);
+    }
+    
+    public Palette readPalette(int charId) throws FileNotFoundException, IOException {
+        Rom rom = new Rom(new File(this.romFileName));
+        long paletteAddress = this.paletteAddresses.get(0);
+        Palette palette = null;
+        try {            
+            palette = rom.readPalette(paletteAddress);
+        }
+        catch (IOException e) {
+            rom.close();
+            throw e;
+        }
+        rom.close();
+        return palette;
     }
 
     public Palette getPalette() {
@@ -497,8 +517,10 @@ public class Manager {
 
     public void writePortrait(BufferedImage img) throws IOException {
         Rom rom = new Rom(new File(this.romFileName));
-        try {
-            rom.writePortrait(this.iconsListAddress, this.currCharacterId, img, this.palette);
+        long paletteAddress = this.paletteAddresses.get(0);
+        try {            
+            Palette palette = rom.readPalette(paletteAddress);
+            rom.writePortrait(this.iconsListAddress, this.currCharacterId, img, palette);
         }
         catch (IOException e) {
             rom.close();
@@ -510,8 +532,10 @@ public class Manager {
     public BufferedImage readPortrait() throws IOException {
         Rom rom = new Rom(new File(this.romFileName));
         BufferedImage ret = null;
-        try {
-            ret = rom.readPortrait(this.iconsListAddress, this.currCharacterId, this.palette);
+        long paletteAddress = this.paletteAddresses.get(0);
+        try {            
+            Palette palette = rom.readPalette(paletteAddress);
+            ret = rom.readPortrait(this.iconsListAddress, this.currCharacterId, palette);
         }
         catch (IOException e) {
             rom.close();

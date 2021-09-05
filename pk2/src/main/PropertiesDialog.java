@@ -260,8 +260,18 @@ extends JDialog {
         GroupLayout layout = new GroupLayout(this.getContentPane());
         this.getContentPane().setLayout(layout);
         layout.setHorizontalGroup(layout.createParallelGroup(GroupLayout.Alignment.LEADING).addComponent(this.jPanel1, -1, -1, 32767));
-        layout.setVerticalGroup(layout.createParallelGroup(GroupLayout.Alignment.LEADING).addComponent(this.jPanel1, -2, -1, -2));
+        layout.setVerticalGroup(layout.createParallelGroup(GroupLayout.Alignment.LEADING).addComponent(this.jPanel1, -2, -1, -2));                
         this.pack();
+    }
+    
+    private void enableComponents(Container container, boolean enable) {
+        Component[] components = container.getComponents();
+        for (Component component : components) {
+            component.setEnabled(enable);
+            if (component instanceof Container) {
+                enableComponents((Container)component, enable);
+            }
+        }
     }
 
     private void imageLabelMouseClicked(MouseEvent evt) {
@@ -391,15 +401,19 @@ extends JDialog {
     }
 
     private void jButton1ActionPerformed(ActionEvent evt) {
+        if (!this.writePortrait()) {
+            return;
+        }
+        if (!gui.isPlayableChar()) {
+            this.dispose();
+            return;
+        }
         if (!this.writeName()) {
             return;
         }
         if (!this.writeSpeed()) {
             return;
-        }
-        if (!this.writePortrait()) {
-            return;
-        }
+        }        
         if (!this.writeStats()) {
             return;
         }
@@ -536,6 +550,16 @@ extends JDialog {
     }
 
     private void loadStuff() {
+        if (!this.readIcon()) {
+            this.close();
+            return;
+        }
+        if (!gui.isPlayableChar()) {
+            enableComponents(this, false);
+            imageLabel.setEnabled(true);
+            jButton1.setEnabled(true);
+            return;
+        }
         if (!this.readNamer()) {
             this.close();
             return;
@@ -543,11 +567,7 @@ extends JDialog {
         if (!this.readSpeed()) {
             this.close();
             return;
-        }
-        if (!this.readIcon()) {
-            this.close();
-            return;
-        }
+        }        
         if (!this.readStats()) {
             this.close();
             return;
