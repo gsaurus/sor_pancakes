@@ -60,8 +60,7 @@ animations/jack.txt
 
 Barbon
 14FF4
-1
-1612D8
+0
 32
 animations/barbon.txt
 
