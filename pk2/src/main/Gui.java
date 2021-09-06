@@ -3864,14 +3864,20 @@ TheListener {
 
     private void exportNewEraMenuItemActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_exportNewEraMenuItemActionPerformed
         int characterId = manager.getCurrentCharacterId();
-        String currentCharName = this.guide.getCharName(this.guide.getFakeCharId(characterId));
+        String currentCharName;
+        if (isPlayableChar()) {
+            currentCharName = readName();
+        } else {
+            currentCharName = this.guide.getCharName(this.guide.getFakeCharId(characterId));
+        }
+            currentCharName = capitalizeString(currentCharName);
         if (currentCharName == null) return;
         
         Character character = this.manager.getCharacter();
         JSONObject jsonCharacter = character.toJson();
         JSONObject logicsJson = new JSONObject();
         logicsJson.put("codeId", characterId); // TODO: LUA? AI script? as a new entry in json, never use same for multiple things
-        logicsJson.put("name", readName());
+        logicsJson.put("name", currentCharName);
         logicsJson.put("walkSpeed", readSpeed());
         logicsJson.put("hitboxes", jsonCharacter.get("hitboxes"));
         JSONArray animationsJson = (JSONArray) jsonCharacter.get("animations");
@@ -3899,6 +3905,23 @@ TheListener {
         exportSpriteSheet(true, true, charPath);
     }//GEN-LAST:event_exportNewEraMenuItemActionPerformed
     
+    
+    private static String capitalizeString(String string) {
+        char[] chars = string.toLowerCase().toCharArray();
+        boolean previousCharIsLetter = false;
+        for (int i = 0; i < chars.length; i++) {
+            if (java.lang.Character.isLetter(chars[i])) {
+                if (!previousCharIsLetter) {
+                    chars[i] = java.lang.Character.toUpperCase(chars[i]);
+                }
+                previousCharIsLetter = true;
+            } else {
+                previousCharIsLetter = false;
+            }
+        }
+        return String.valueOf(chars);
+    }
+
     
     private void setSizeRadioMenusOff() {
         this.sizeRadioMenu1.setSelected(false);
