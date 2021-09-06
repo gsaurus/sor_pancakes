@@ -629,7 +629,7 @@ public class Character {
     public JSONObject toJson(){
         JSONObject jsonObj = new JSONObject();
         JSONArray jsonAnims = new JSONArray();
-        JSONArray jsonHitAnims = new JSONArray();
+        JSONArray jsonAnimationsLogic = new JSONArray();
         TreeMap<Long, Integer> maps = new TreeMap<Long, Integer>();
         HashMap<Animation, Integer> processed = new HashMap<Animation, Integer>();
         int artFrame = 0;
@@ -641,7 +641,7 @@ public class Character {
             if (framePointer != null) {
                 // Animation pointer
                 jsonAnims.put(framePointer);
-                jsonHitAnims.put(framePointer);
+                jsonAnimationsLogic.put(framePointer);
                 continue;
             }
             processed.put(animation, animId);
@@ -677,12 +677,17 @@ public class Character {
             JSONObject framesObject = new JSONObject();
             framesObject.put("frames", jsonFrames);
             jsonAnims.put(framesObject);
-            jsonHitAnims.put(jsonHits);
+            JSONObject animationLogicJson = new JSONObject();
+            animationLogicJson.put("duration", screenFramesCount);
+            if (jsonHits.length() > 0) {
+                animationLogicJson.put("hitboxes", jsonHits);
+            }
+            jsonAnimationsLogic.put(animationLogicJson);
         }
         clonePointers(jsonAnims);
-        clonePointers(jsonHitAnims);
+        clonePointers(jsonAnimationsLogic);
         jsonObj.put("animations", jsonAnims);
-        jsonObj.put("hitboxes", jsonHitAnims);
+        jsonObj.put("animationsLogic", jsonAnimationsLogic);
         return jsonObj;
     }
     

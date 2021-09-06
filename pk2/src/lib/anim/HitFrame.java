@@ -58,7 +58,7 @@ public class HitFrame {
         res.put("hitBox", hitBox);
         res.put("damage", damage);
         res.put("knockDown", knockDown);
-        res.put("sound", sound);
+        res.put("soundId", sound);
         return res;
     }
 }

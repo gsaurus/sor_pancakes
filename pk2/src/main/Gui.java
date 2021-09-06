@@ -3875,12 +3875,12 @@ TheListener {
         
         Character character = this.manager.getCharacter();
         JSONObject jsonCharacter = character.toJson();
-        JSONObject logicsJson = new JSONObject();
-        logicsJson.put("codeId", characterId); // TODO: LUA? AI script? as a new entry in json, never use same for multiple things
+        JSONObject logicJson = new JSONObject();
+        logicJson.put("codeId", characterId); // TODO: LUA? AI script? as a new entry in json, never use same for multiple things
         if (isPlayableChar()) {
-            logicsJson.put("walkSpeed", readSpeed());
+            logicJson.put("walkSpeed", readSpeed());
         }
-        logicsJson.put("hitboxes", jsonCharacter.get("hitboxes"));
+        logicJson.put("animationsLogic", jsonCharacter.get("animationsLogic"));
         JSONArray animationsArray = (JSONArray) jsonCharacter.get("animations");        
         JSONObject animationsJson = new JSONObject();
         animationsJson.put("animations", animationsArray);
@@ -3901,7 +3901,7 @@ TheListener {
             }
         }
         String charPath = NEW_ERA_DIR + File.separator + currentCharName;
-        writeJson(logicsJson, new File(charPath, "logics.json"));
+        writeJson(logicJson, new File(charPath, "logic.json"));
         writeJson(animationsJson, new File(charPath, "animations.json"));
         
         exportPortraitIcon(charPath);
