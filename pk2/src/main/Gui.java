@@ -3877,7 +3877,9 @@ TheListener {
         JSONObject jsonCharacter = character.toJson();
         JSONObject logicsJson = new JSONObject();
         logicsJson.put("codeId", characterId); // TODO: LUA? AI script? as a new entry in json, never use same for multiple things
-        logicsJson.put("walkSpeed", readSpeed());
+        if (isPlayableChar()) {
+            logicsJson.put("walkSpeed", readSpeed());
+        }
         logicsJson.put("hitboxes", jsonCharacter.get("hitboxes"));
         JSONArray animationsArray = (JSONArray) jsonCharacter.get("animations");        
         JSONObject animationsJson = new JSONObject();
