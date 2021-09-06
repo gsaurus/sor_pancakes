@@ -178,7 +178,7 @@ public class AnimFrame {
     
     public JSONObject toJson(int framePointer){
         JSONObject res = new JSONObject();
-        res.put("art", framePointer);
+        res.put("imageId", framePointer);
         res.put("duration", delay);
         return res;
     }
