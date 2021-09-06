@@ -674,12 +674,29 @@ public class Character {
                 screenFramesCount += animFrame.delay;
                 
             }
-            jsonAnims.put(jsonFrames);
+            JSONObject framesObject = new JSONObject();
+            framesObject.put("frames", jsonFrames);
+            jsonAnims.put(framesObject);
             jsonHitAnims.put(jsonHits);
         }
+        clonePointers(jsonAnims);
+        clonePointers(jsonHitAnims);
         jsonObj.put("animations", jsonAnims);
         jsonObj.put("hitboxes", jsonHitAnims);
         return jsonObj;
+    }
+    
+    private void clonePointers(JSONArray jsonArray) {
+        for (int i = 0; i < jsonArray.length() ; ++i)
+        {
+            Object obj = jsonArray.get(i);
+            if (obj instanceof Integer) {
+                do {
+                    obj = jsonArray.get((Integer)obj);
+                } while (obj instanceof Integer);
+                jsonArray.put(i, obj);
+            }
+        }
     }
     
 }

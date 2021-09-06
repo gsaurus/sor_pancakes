@@ -52,8 +52,10 @@ public class HitFrame {
     public JSONObject toJson(){
         if (!enabled) return null;
         JSONObject res = new JSONObject();
-        res.put("width", x);
-        res.put("height", y);
+        JSONObject hitBox = new JSONObject();
+        hitBox.put("width", x);
+        hitBox.put("height", y);
+        res.put("hitBox", hitBox);
         res.put("damage", damage);
         res.put("knockDown", knockDown);
         res.put("sound", sound);

@@ -3879,7 +3879,9 @@ TheListener {
         logicsJson.put("codeId", characterId); // TODO: LUA? AI script? as a new entry in json, never use same for multiple things
         logicsJson.put("walkSpeed", readSpeed());
         logicsJson.put("hitboxes", jsonCharacter.get("hitboxes"));
-        JSONArray animationsJson = (JSONArray) jsonCharacter.get("animations");
+        JSONArray animationsArray = (JSONArray) jsonCharacter.get("animations");        
+        JSONObject animationsJson = new JSONObject();
+        animationsJson.put("animations", animationsArray);
         
         File newEraDir = new File(NEW_ERA_DIR);
         if (!newEraDir.exists()) {
@@ -5192,28 +5194,6 @@ TheListener {
             showError("Failed writing to: " + file.getPath() + "\n" + ex.getMessage());
             return;
         }
-    }
-    
-    private void writeJson(JSONArray json, File file) {
-        writeJson(json, file, JSON_EXPORT_SPACES);
-    }
-    
-    private void writeJson(JSONArray json, File file, int spaces) {
-        FileWriter writer;
-        try {
-            writer = new FileWriter(file);
-        } catch (IOException ex) {
-            showError("Unable to open file for writing: " + file.getPath() + "\n" + ex.getMessage());
-            return;
-        }
-
-        try {
-            writer.write(json.toString(spaces));
-            writer.close();
-        } catch (IOException ex) {
-            showError("Failed writing to: " + file.getPath() + "\n" + ex.getMessage());
-            return;
-        }        
     }
 
     private void exportPortraitIcon(String charPath) {

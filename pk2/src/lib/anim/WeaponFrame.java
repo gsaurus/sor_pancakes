@@ -61,8 +61,10 @@ public class WeaponFrame {
     public JSONObject toJson(){
         if (!isEnabled) return null;
         JSONObject res = new JSONObject();
-        res.put("x", x);
-        res.put("y", y);
+        JSONObject pos = new JSONObject();
+        pos.put("x", x);
+        pos.put("y", y);
+        res.put("position", pos);
         res.put("direction", angle);
         res.put("showBehind", showBehind);
         return res;
