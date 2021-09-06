@@ -79,6 +79,7 @@ TheListener {
     private static final String YEAR = "2021";
     private static final String TITLE = "Pancake 2 v" + VERSION;
     private  static String NEW_ERA_DIR = "SOR2 New Era exports";
+    private  static String NEW_ERA_CHARS_DIR = NEW_ERA_DIR + File.separator + "Characters";
     private static final int INVALID_INT = Integer.MIN_VALUE;
     private static final long INVALID_LONG = Long.MIN_VALUE;
     private static final int JSON_EXPORT_SPACES = 2;
@@ -3885,11 +3886,11 @@ TheListener {
         JSONObject animationsJson = new JSONObject();
         animationsJson.put("animations", animationsArray);
         
-        File newEraDir = new File(NEW_ERA_DIR);
+        File newEraDir = new File(NEW_ERA_CHARS_DIR);
         if (!newEraDir.exists()) {
-            newEraDir.mkdir();
+            newEraDir.mkdirs();
         }        
-        File characterDir = new File(NEW_ERA_DIR, currentCharName);
+        File characterDir = new File(NEW_ERA_CHARS_DIR, currentCharName);
         if (!characterDir.exists()) {
             characterDir.mkdir();
         } else {        
@@ -3900,7 +3901,7 @@ TheListener {
                 currentFile.delete();
             }
         }
-        String charPath = NEW_ERA_DIR + File.separator + currentCharName;
+        String charPath = NEW_ERA_CHARS_DIR + File.separator + currentCharName;
         writeJson(logicJson, new File(charPath, "logic.json"));
         writeJson(animationsJson, new File(charPath, "animations.json"));
         
