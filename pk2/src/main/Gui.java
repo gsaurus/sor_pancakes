@@ -4958,10 +4958,11 @@ TheListener {
                                     return;
                                 }
                                 Rectangle bounds = sp.getBounds();
-                                left = bounds.x;
-                                top = bounds.y;
-                                width = bounds.width;
-                                height = bounds.height;
+                                // 1 pixel margin to avoid texture artifact glitches on edges
+                                left = bounds.x - 1;
+                                top = bounds.y - 1;
+                                width = bounds.width + 2;
+                                height = bounds.height + 2;
                                 JSONObject pivot = new JSONObject();
                                 int pivotX = Gui.this.imagePanel.isFacedRight() ? (left + width) - 128 : 128 - left;
                                 pivot.put("x", pivotX);
