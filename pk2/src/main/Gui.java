@@ -3874,6 +3874,8 @@ TheListener {
             currentCharName = capitalizeString(currentCharName);
         if (currentCharName == null) return;
         
+        currentCharName = currentCharName.trim();
+        
         Character character = this.manager.getCharacter();
         JSONObject jsonCharacter = character.toJson();
         JSONObject logicJson = new JSONObject();
