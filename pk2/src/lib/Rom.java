@@ -162,12 +162,12 @@ public class Rom {
 
     int readSpeed(long speedAddress) throws IOException {
         this.rom.seek(speedAddress);
-        return this.rom.readUnsignedShort() >> 4 & 4095;
+        return this.rom.readUnsignedShort();
     }
 
     void writeSpeed(long speedAddress, int newSpeed) throws IOException {
         this.rom.seek(speedAddress);
-        this.rom.writeShort(newSpeed << 4 & 65520);
+        this.rom.writeShort(newSpeed);
     }
 
     String readNameWithTable(long speedAddress, int len) throws IOException {
