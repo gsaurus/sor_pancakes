@@ -428,7 +428,7 @@
                   <Group type="103" groupAlignment="0" max="-2" attributes="0">
                       <Group type="102" attributes="0">
                           <Group type="103" groupAlignment="0" max="-2" attributes="0">
-                              <Component id="characterPanel1" min="-2" pref="204" max="-2" attributes="0"/>
+                              <Component id="characterPanel1" min="-2" max="-2" attributes="0"/>
                               <Component id="overridePanel" max="32767" attributes="0"/>
                           </Group>
                           <EmptySpace max="-2" attributes="0"/>
@@ -1296,7 +1296,7 @@
                               <Component id="colorPanel8" alignment="0" min="-2" max="-2" attributes="0"/>
                               <Component id="colorPanel1" min="-2" max="-2" attributes="0"/>
                           </Group>
-                          <EmptySpace pref="12" max="32767" attributes="0"/>
+                          <EmptySpace pref="14" max="32767" attributes="0"/>
                           <Group type="103" groupAlignment="0" attributes="0">
                               <Component id="colorPanel10" alignment="1" min="-2" max="-2" attributes="0"/>
                               <Component id="colorPanel11" alignment="1" min="-2" max="-2" attributes="0"/>
@@ -2163,7 +2163,7 @@
             <DimensionLayout dim="1">
               <Group type="103" groupAlignment="0" attributes="0">
                   <Group type="102" alignment="1" attributes="0">
-                      <EmptySpace pref="11" max="32767" attributes="0"/>
+                      <EmptySpace max="32767" attributes="0"/>
                       <Component id="jLabel4" min="-2" max="-2" attributes="0"/>
                       <EmptySpace max="-2" attributes="0"/>
                       <Group type="103" groupAlignment="0" max="-2" attributes="0">

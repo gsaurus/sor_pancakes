@@ -67,8 +67,9 @@ public class Gui
 extends JFrame
 implements ActionListener,
 TheListener {
-    private static final String VERSION = " v1.6b";
-    private static final String TITLE = "Pancake 2 v1.6b";
+    private static final String VERSION = "v1.8";
+    private static final String YEAR = "2021";
+    private static final String TITLE = "Pancake 2 " + VERSION;
     private static final int INVALID_INT = Integer.MIN_VALUE;
     private static final long INVALID_LONG = Long.MIN_VALUE;
     private String romName;
@@ -277,9 +278,9 @@ TheListener {
     private void updateTitle() {
         Character ch = this.manager.getCharacter();
         if (ch.wasModified()) {
-            this.setTitle("Pancake 2 v1.6b - " + new File(this.romName).getName() + "*");
+            this.setTitle("Pancake 2 " + VERSION + " - " + new File(this.romName).getName() + "*");
         } else {
-            this.setTitle("Pancake 2 v1.6b - " + new File(this.romName).getName());
+            this.setTitle("Pancake 2 " + VERSION + " - " + new File(this.romName).getName());
         }
     }
 
@@ -3437,7 +3438,7 @@ TheListener {
     }//GEN-LAST:event_behindCheckActionPerformed
 
     private void jMenuItem6ActionPerformed(ActionEvent evt) {//GEN-FIRST:event_jMenuItem6ActionPerformed
-        JOptionPane.showMessageDialog(this, "Pancake 2 v1.7\n\u00a9 gsaurus 2012-2018\n\nAcknowledgment on derived work\nwould be appreciated but is not required\n\nPk2 is free software. The author can not be held responsible\nfor any illicit use of this program.\n", "About", 1);
+        JOptionPane.showMessageDialog(this, "Pancake 2 " + VERSION + "\n\u00a9 gsaurus 2012-" + YEAR + "\n\nAcknowledgment on derived work\nwould be appreciated but is not required\n\nPk2 is free software. The author can not be held responsible\nfor any illicit use of this program.\n", "About", 1);
     }//GEN-LAST:event_jMenuItem6ActionPerformed
 
     private void spriteSheetMenuActionPerformed(ActionEvent evt) {//GEN-FIRST:event_spriteSheetMenuActionPerformed
@@ -3967,6 +3968,10 @@ TheListener {
 
     private BufferedImage processReplaceImg(BufferedImage replaceImg, boolean transp) {
         Palette palette = this.manager.getPalette();
+        return processReplaceImg(replaceImg, transp, palette);
+    }
+        
+    private BufferedImage processReplaceImg(BufferedImage replaceImg, boolean transp, Palette palette) {    
         BufferedImage res = new BufferedImage(replaceImg.getWidth(), replaceImg.getHeight(), 2);
         int transparency = 0;
         if (transp) {
