@@ -67,7 +67,7 @@ public class Gui
 extends JFrame
 implements ActionListener,
 TheListener {
-    private static final String VERSION = "v1.8";
+    private static final String VERSION = "v1.8.0";
     private static final String YEAR = "2021";
     private static final String TITLE = "Pancake 2 " + VERSION;
     private static final int INVALID_INT = Integer.MIN_VALUE;
