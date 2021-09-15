@@ -84,7 +84,7 @@ Electra
 PK_DEFAULT##
 3
 PK1SUB_ART0F20
-30
+29
 animations/electra.txt
 
 Signal
@@ -168,7 +168,7 @@ Mr X
 PK_DEFAULT##
 3
 PK1SUB_ART0F20
-45
+44
 animations/mrx.txt
 
 Shiva
