@@ -326,9 +326,10 @@ public class Character {
             address = hitsListAddress + (long)(id * 2) + (long)offset;
         }
         for (i = count - 24 - 1; i >= 0; --i) {
-            if (id == 24 && numPlayableChars < 24 || id == numPlayableChars - 1) {
-                i = 0;
-            }
+            // Have no idea what the following line meant to be, just know that it's broken
+//            if (id == 24 && numPlayableChars < 24 || id == numPlayableChars - 1) {
+//                i = 0;
+//            }
             long localAddress = address + (long)(i * 2);
             rom.seek(localAddress);
             offset = rom.readShort();
@@ -336,9 +337,10 @@ public class Character {
             anim = this.animations.get(i + 24);
             this.animHits.get(i).write(rom, localAddress + (long)offset, anim.getNumFrames());
         }
-        if (id == 24 && numPlayableChars < 24 || id == numPlayableChars - 1) {
-            return;
-        }
+        // Have no idea what the following line meant to be, just know that it's broken
+//        if (id == 24 && numPlayableChars < 24 || id == numPlayableChars - 1) {
+//            return;
+//        }
         if (globalWeap) {
             rom.seek(weaponsListAddress + (long)(id * 4));
             address = rom.readInt();
