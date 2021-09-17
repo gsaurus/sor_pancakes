@@ -37,6 +37,7 @@ public class FreeAddressesManager {
     private static List<FreeChunk> freeChunks = new ArrayList<FreeChunk>(10);
     
     public static void freeChunk(long address, long length){
+        System.out.println("Freeing space at " + String.format("0x%08X",address) + ", length: " + String.format("0x%08X",length));
         long addedChunkFinalAddress = address + length;
         // Merge with existing chunks if possible
         for (FreeChunk chunk : freeChunks){
@@ -59,6 +60,7 @@ public class FreeAddressesManager {
     }
     
     public static long useChunk(long address, long length){
+        System.out.println("Using address " + String.format("0x%08X",address) + ", length: " + String.format("0x%08X",length));
         long consummedChunkFinalAddress = address + length;
         // Consume existing chunks crossing the given chunk
         List<FreeChunk> addedChunks = new ArrayList<FreeChunk>();

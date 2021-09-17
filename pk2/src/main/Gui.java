@@ -29,6 +29,8 @@ import java.util.Map;
 import java.util.Scanner;
 import java.util.TreeMap;
 import java.util.TreeSet;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 import javax.imageio.ImageIO;
 import javax.swing.BorderFactory;
 import javax.swing.JCheckBox;
@@ -67,7 +69,7 @@ public class Gui
 extends JFrame
 implements ActionListener,
 TheListener {
-    private static final String VERSION = "1.7.2";
+    private static final String VERSION = "v1.7.3";
     private static final String YEAR = "2021";
     private static final String TITLE = "Pancake 2 " + VERSION;
     private static final int INVALID_INT = Integer.MIN_VALUE;
@@ -169,7 +171,6 @@ TheListener {
     private javax.swing.JLabel jLabel17;
     private javax.swing.JLabel jLabel2;
     private javax.swing.JLabel jLabel3;
-    private javax.swing.JLabel jLabel4;
     private javax.swing.JLabel jLabel5;
     private javax.swing.JLabel jLabel6;
     private javax.swing.JLabel jLabel7;
@@ -218,6 +219,7 @@ TheListener {
     private javax.swing.JPanel previewPanel;
     private javax.swing.JButton previousBut;
     private javax.swing.JMenuItem resizeAnimsMenu;
+    private javax.swing.JCheckBox saveSpaceCheck;
     private javax.swing.JScrollPane scrollPanel;
     private javax.swing.JCheckBox showCenterCheck;
     private javax.swing.JCheckBox showFacedRightCheck;
@@ -1483,7 +1485,7 @@ TheListener {
         hardReplaceButton = new javax.swing.JButton();
         jLabel14 = new javax.swing.JLabel();
         genPaletteField = new javax.swing.JTextField();
-        jLabel4 = new javax.swing.JLabel();
+        saveSpaceCheck = new javax.swing.JCheckBox();
         jMenuBar1 = new javax.swing.JMenuBar();
         jMenu1 = new javax.swing.JMenu();
         openRomMenu = new javax.swing.JMenuItem();
@@ -2373,7 +2375,7 @@ TheListener {
                     .addComponent(colorPanel7, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                     .addComponent(colorPanel8, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                     .addComponent(colorPanel1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 12, Short.MAX_VALUE)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 14, Short.MAX_VALUE)
                 .addGroup(colorsPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                     .addComponent(colorPanel10, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                     .addComponent(colorPanel11, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
@@ -2652,7 +2654,16 @@ TheListener {
         genPaletteField.setHorizontalAlignment(javax.swing.JTextField.RIGHT);
         genPaletteField.setText("0");
 
-        jLabel4.setText("Produce new tiles");
+        saveSpaceCheck.setFont(new java.awt.Font("Tahoma", 0, 14)); // NOI18N
+        saveSpaceCheck.setSelected(true);
+        saveSpaceCheck.setText("Save space");
+        saveSpaceCheck.setToolTipText("Reuse data whenever possible. Don't use this if sprites are shared between different characters (e.g. Galsia & Donovan)");
+        saveSpaceCheck.setContentAreaFilled(false);
+        saveSpaceCheck.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                saveSpaceCheckActionPerformed(evt);
+            }
+        });
 
         javax.swing.GroupLayout generatePanelLayout = new javax.swing.GroupLayout(generatePanel);
         generatePanel.setLayout(generatePanelLayout);
@@ -2666,7 +2677,7 @@ TheListener {
                     .addGroup(generatePanelLayout.createSequentialGroup()
                         .addGap(18, 18, 18)
                         .addGroup(generatePanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                            .addComponent(jLabel4)
+                            .addComponent(saveSpaceCheck)
                             .addGroup(generatePanelLayout.createSequentialGroup()
                                 .addComponent(jLabel14, javax.swing.GroupLayout.PREFERRED_SIZE, 79, javax.swing.GroupLayout.PREFERRED_SIZE)
                                 .addGap(18, 18, 18)
@@ -2676,8 +2687,8 @@ TheListener {
         generatePanelLayout.setVerticalGroup(
             generatePanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, generatePanelLayout.createSequentialGroup()
-                .addContainerGap(11, Short.MAX_VALUE)
-                .addComponent(jLabel4)
+                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                .addComponent(saveSpaceCheck)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addGroup(generatePanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
                     .addComponent(genPaletteField)
@@ -2694,7 +2705,7 @@ TheListener {
                 .addGroup(mainPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
                     .addGroup(mainPanelLayout.createSequentialGroup()
                         .addGroup(mainPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
-                            .addComponent(characterPanel1, javax.swing.GroupLayout.PREFERRED_SIZE, 204, javax.swing.GroupLayout.PREFERRED_SIZE)
+                            .addComponent(characterPanel1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                             .addComponent(overridePanel, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                         .addGroup(mainPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
@@ -2721,7 +2732,7 @@ TheListener {
 
         jMenu1.setText("File");
 
-        openRomMenu.setAccelerator(javax.swing.KeyStroke.getKeyStroke(java.awt.event.KeyEvent.VK_R, java.awt.event.InputEvent.CTRL_MASK));
+        openRomMenu.setAccelerator(javax.swing.KeyStroke.getKeyStroke(java.awt.event.KeyEvent.VK_R, java.awt.event.InputEvent.CTRL_DOWN_MASK));
         openRomMenu.setText("Open Rom");
         openRomMenu.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
@@ -2797,7 +2808,7 @@ TheListener {
         jMenu1.add(exportMenu);
         jMenu1.add(jSeparator1);
 
-        jMenuItem5.setAccelerator(javax.swing.KeyStroke.getKeyStroke(java.awt.event.KeyEvent.VK_F4, java.awt.event.InputEvent.ALT_MASK));
+        jMenuItem5.setAccelerator(javax.swing.KeyStroke.getKeyStroke(java.awt.event.KeyEvent.VK_F4, java.awt.event.InputEvent.ALT_DOWN_MASK));
         jMenuItem5.setText("Exit");
         jMenuItem5.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
@@ -2812,7 +2823,7 @@ TheListener {
 
         jMenu6.setText("Tool");
 
-        pencilMenu.setAccelerator(javax.swing.KeyStroke.getKeyStroke(java.awt.event.KeyEvent.VK_1, java.awt.event.InputEvent.ALT_MASK));
+        pencilMenu.setAccelerator(javax.swing.KeyStroke.getKeyStroke(java.awt.event.KeyEvent.VK_1, java.awt.event.InputEvent.ALT_DOWN_MASK));
         pencilMenu.setText("Pencil");
         pencilMenu.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
@@ -2821,7 +2832,7 @@ TheListener {
         });
         jMenu6.add(pencilMenu);
 
-        brushMenu.setAccelerator(javax.swing.KeyStroke.getKeyStroke(java.awt.event.KeyEvent.VK_2, java.awt.event.InputEvent.ALT_MASK));
+        brushMenu.setAccelerator(javax.swing.KeyStroke.getKeyStroke(java.awt.event.KeyEvent.VK_2, java.awt.event.InputEvent.ALT_DOWN_MASK));
         brushMenu.setText("Brush");
         brushMenu.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
@@ -2830,7 +2841,7 @@ TheListener {
         });
         jMenu6.add(brushMenu);
 
-        bucketMenu.setAccelerator(javax.swing.KeyStroke.getKeyStroke(java.awt.event.KeyEvent.VK_3, java.awt.event.InputEvent.ALT_MASK));
+        bucketMenu.setAccelerator(javax.swing.KeyStroke.getKeyStroke(java.awt.event.KeyEvent.VK_3, java.awt.event.InputEvent.ALT_DOWN_MASK));
         bucketMenu.setText("Paint Bucket");
         bucketMenu.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
@@ -2839,7 +2850,7 @@ TheListener {
         });
         jMenu6.add(bucketMenu);
 
-        dragSpriteMenu.setAccelerator(javax.swing.KeyStroke.getKeyStroke(java.awt.event.KeyEvent.VK_4, java.awt.event.InputEvent.ALT_MASK));
+        dragSpriteMenu.setAccelerator(javax.swing.KeyStroke.getKeyStroke(java.awt.event.KeyEvent.VK_4, java.awt.event.InputEvent.ALT_DOWN_MASK));
         dragSpriteMenu.setText("Drag Sprite");
         dragSpriteMenu.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
@@ -2848,7 +2859,7 @@ TheListener {
         });
         jMenu6.add(dragSpriteMenu);
 
-        dragImageMenu.setAccelerator(javax.swing.KeyStroke.getKeyStroke(java.awt.event.KeyEvent.VK_5, java.awt.event.InputEvent.ALT_MASK));
+        dragImageMenu.setAccelerator(javax.swing.KeyStroke.getKeyStroke(java.awt.event.KeyEvent.VK_5, java.awt.event.InputEvent.ALT_DOWN_MASK));
         dragImageMenu.setText("Drag Image");
         dragImageMenu.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
@@ -2857,7 +2868,7 @@ TheListener {
         });
         jMenu6.add(dragImageMenu);
 
-        noneMenu.setAccelerator(javax.swing.KeyStroke.getKeyStroke(java.awt.event.KeyEvent.VK_6, java.awt.event.InputEvent.ALT_MASK));
+        noneMenu.setAccelerator(javax.swing.KeyStroke.getKeyStroke(java.awt.event.KeyEvent.VK_6, java.awt.event.InputEvent.ALT_DOWN_MASK));
         noneMenu.setSelected(true);
         noneMenu.setText("None");
         noneMenu.addActionListener(new java.awt.event.ActionListener() {
@@ -2871,7 +2882,7 @@ TheListener {
 
         jMenu5.setText("Brush Size");
 
-        sizeRadioMenu1.setAccelerator(javax.swing.KeyStroke.getKeyStroke(java.awt.event.KeyEvent.VK_1, java.awt.event.InputEvent.SHIFT_MASK));
+        sizeRadioMenu1.setAccelerator(javax.swing.KeyStroke.getKeyStroke(java.awt.event.KeyEvent.VK_1, java.awt.event.InputEvent.SHIFT_DOWN_MASK));
         sizeRadioMenu1.setSelected(true);
         sizeRadioMenu1.setText("3 pixels");
         sizeRadioMenu1.addActionListener(new java.awt.event.ActionListener() {
@@ -2881,7 +2892,7 @@ TheListener {
         });
         jMenu5.add(sizeRadioMenu1);
 
-        sizeRadioMenu2.setAccelerator(javax.swing.KeyStroke.getKeyStroke(java.awt.event.KeyEvent.VK_2, java.awt.event.InputEvent.SHIFT_MASK));
+        sizeRadioMenu2.setAccelerator(javax.swing.KeyStroke.getKeyStroke(java.awt.event.KeyEvent.VK_2, java.awt.event.InputEvent.SHIFT_DOWN_MASK));
         sizeRadioMenu2.setText("5 pixels");
         sizeRadioMenu2.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
@@ -2890,7 +2901,7 @@ TheListener {
         });
         jMenu5.add(sizeRadioMenu2);
 
-        sizeRadioMenu3.setAccelerator(javax.swing.KeyStroke.getKeyStroke(java.awt.event.KeyEvent.VK_3, java.awt.event.InputEvent.SHIFT_MASK));
+        sizeRadioMenu3.setAccelerator(javax.swing.KeyStroke.getKeyStroke(java.awt.event.KeyEvent.VK_3, java.awt.event.InputEvent.SHIFT_DOWN_MASK));
         sizeRadioMenu3.setText("10 pixels");
         sizeRadioMenu3.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
@@ -2903,7 +2914,7 @@ TheListener {
 
         jMenu4.setText("Scale");
 
-        jMenuItem11.setAccelerator(javax.swing.KeyStroke.getKeyStroke(java.awt.event.KeyEvent.VK_1, java.awt.event.InputEvent.CTRL_MASK));
+        jMenuItem11.setAccelerator(javax.swing.KeyStroke.getKeyStroke(java.awt.event.KeyEvent.VK_1, java.awt.event.InputEvent.CTRL_DOWN_MASK));
         jMenuItem11.setText("Reset Scale");
         jMenuItem11.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
@@ -2912,7 +2923,7 @@ TheListener {
         });
         jMenu4.add(jMenuItem11);
 
-        jMenuItem7.setAccelerator(javax.swing.KeyStroke.getKeyStroke(java.awt.event.KeyEvent.VK_2, java.awt.event.InputEvent.CTRL_MASK));
+        jMenuItem7.setAccelerator(javax.swing.KeyStroke.getKeyStroke(java.awt.event.KeyEvent.VK_2, java.awt.event.InputEvent.CTRL_DOWN_MASK));
         jMenuItem7.setText("2x Scale");
         jMenuItem7.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
@@ -2921,7 +2932,7 @@ TheListener {
         });
         jMenu4.add(jMenuItem7);
 
-        jMenuItem9.setAccelerator(javax.swing.KeyStroke.getKeyStroke(java.awt.event.KeyEvent.VK_3, java.awt.event.InputEvent.CTRL_MASK));
+        jMenuItem9.setAccelerator(javax.swing.KeyStroke.getKeyStroke(java.awt.event.KeyEvent.VK_3, java.awt.event.InputEvent.CTRL_DOWN_MASK));
         jMenuItem9.setText("6x Scale");
         jMenuItem9.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
@@ -2930,7 +2941,7 @@ TheListener {
         });
         jMenu4.add(jMenuItem9);
 
-        jMenuItem10.setAccelerator(javax.swing.KeyStroke.getKeyStroke(java.awt.event.KeyEvent.VK_4, java.awt.event.InputEvent.CTRL_MASK));
+        jMenuItem10.setAccelerator(javax.swing.KeyStroke.getKeyStroke(java.awt.event.KeyEvent.VK_4, java.awt.event.InputEvent.CTRL_DOWN_MASK));
         jMenuItem10.setText("12x Scale");
         jMenuItem10.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
@@ -3309,7 +3320,8 @@ TheListener {
                 }
                 int cx = this.lastcX;
                 int cy = this.lastcY;
-                this.regenerateSprite(replaceImg, this.currAnimation, this.currFrame, cx, cy, true);
+                boolean reuseDataChunks = saveSpaceCheck.isSelected();
+                this.regenerateSprite(replaceImg, this.currAnimation, this.currFrame, cx, cy, reuseDataChunks);
                 this.wasFrameReplaced = true;
                 try {
                     this.manager.bufferAnimFrame(this.currAnimation, this.currFrame);
@@ -3824,6 +3836,10 @@ TheListener {
             deleteCharacterArtAndMaps();
         }
     }//GEN-LAST:event_pasteMenu2ActionPerformed
+
+    private void saveSpaceCheckActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_saveSpaceCheckActionPerformed
+        // TODO add your handling code here:
+    }//GEN-LAST:event_saveSpaceCheckActionPerformed
     
     
     private void setSizeRadioMenusOff() {
@@ -4293,6 +4309,32 @@ TheListener {
             return Long.MIN_VALUE;
         }
     }
+    
+    
+    private boolean isSpriteReferencedSomewhereElse(int animId, int frameId, long mapAddress, long artAddress)
+    {
+        Character ch = manager.getCharacter();
+        HashSet<Animation> processed = new HashSet<Animation>();
+        for (int i = 0; i < ch.getNumAnimations(); ++i) {
+            Animation anim = ch.getAnimation(i);
+            if (!processed.contains(anim)) {
+                processed.add(anim);
+                int animSize = anim.getNumFrames();
+                for (int j = 0; j < animSize; ++j) {
+                    if (i == animId && j == frameId)
+                    {
+                        continue;
+                    }
+                    AnimFrame frame = ch.getAnimFrame((int)i, (int)j);
+                    if (frame.mapAddress == mapAddress || frame.artAddress == artAddress)
+                    {
+                        return true;
+                    }
+                }
+            }
+        }
+        return false;   
+    }
 
     private boolean regenerateSprite(BufferedImage img, int animId, int frameId, int cx, int cy, boolean eraseOld) {
         int width = img.getWidth();
@@ -4308,7 +4350,7 @@ TheListener {
         }
         
         // Free space from original sprite
-        if (eraseOld){
+        if (eraseOld && !isSpriteReferencedSomewhereElse(animId, frameId, frame.mapAddress, frame.artAddress)){
             try {
                 Sprite originalSprite = manager.readSprite(animId, frameId);
                 FreeAddressesManager.freeChunk(frame.mapAddress, originalSprite.getMappingsSizeInBytes());            
@@ -4668,7 +4710,7 @@ TheListener {
                         processed.add(anim);
                         int animSize = anim.getNumFrames();
                         for (int j = 0; j < animSize; ++j) {
-                            boolean eraseOld = true;
+                            boolean eraseOld = saveSpaceCheck.isSelected();
                             anim.setSpritesModified(j, true);
                             long mapAddress = anim.getFrame((int)j).mapAddress;
                             if (maps.containsKey(mapAddress)) {
