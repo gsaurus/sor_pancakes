@@ -24,7 +24,7 @@ import lib.map.Tile;
 
 public class Rom {
     public static final int ROM_START_ADDRESS = 512;
-    private RandomAccessFile rom;
+    public RandomAccessFile rom;
     private HashMap<String, Long> knownLabels;
 
     private void fixChecksum() throws IOException {

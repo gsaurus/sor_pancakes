@@ -58,6 +58,8 @@ import javax.swing.event.DocumentListener;
 import javax.swing.filechooser.FileFilter;
 import lib.FreeAddressesManager;
 import lib.Manager;
+import static lib.Manager.NAME_ADDRESS1;
+import lib.Rom;
 import lib.anim.AnimFrame;
 import lib.anim.Animation;
 import lib.anim.Character;
@@ -3883,6 +3885,7 @@ TheListener {
         if (isPlayableChar()) {
             logicJson.put("walkSpeed", readSpeed());
         }
+        addGrabOffsetsToLogicsJson(logicJson, characterId);
         logicJson.put("animationsLogic", jsonCharacter.get("animationsLogic"));
         JSONArray animationsArray = (JSONArray) jsonCharacter.get("animations");        
         JSONObject animationsJson = new JSONObject();
@@ -5222,6 +5225,36 @@ TheListener {
             showError("Unable to read portrait");
         }
         return null;
+    }
+
+    private void addGrabOffsetsToLogicsJson(JSONObject logicJson, int characterId) {
+        int frontGrabOffset = 0, backGrabOffset = 0;
+        Rom rom = null;
+        try {
+            rom = new Rom(new File(this.romName));
+            rom.rom.seek(0x561A + characterId * 4);
+            frontGrabOffset = rom.rom.readShort();
+            rom.rom.seek(0x5692 + characterId * 4);
+            backGrabOffset = rom.rom.readShort();
+        }
+        catch (IOException ex) {
+            showError("Failed to read grab offsets.\n" + ex.getMessage());
+        } finally
+        {
+            if (rom != null)
+            {
+                try {
+                    rom.close();
+                } catch (IOException ex) {
+                    showError("Failed to close rom.\n" + ex.getMessage());
+                }
+            }
+        }
+        if (frontGrabOffset != 0 || backGrabOffset != 0)
+        {
+            logicJson.put("frontGrabOffset", frontGrabOffset);
+            logicJson.put("backGrabOffset", backGrabOffset);
+        }
     }
 
     
