@@ -3879,7 +3879,7 @@ TheListener {
         currentCharName = currentCharName.trim();
         
         Character character = this.manager.getCharacter();
-        JSONObject jsonCharacter = character.toJson();
+        JSONObject jsonCharacter = character.toJson(characterId, this.romName);
         JSONObject logicJson = new JSONObject();
         logicJson.put("codeId", characterId); // TODO: LUA? AI script? as a new entry in json, never use same for multiple things
         if (isPlayableChar()) {

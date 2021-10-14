@@ -12,6 +12,7 @@ import java.util.HashMap;
 import java.util.HashSet;
 import java.util.Scanner;
 import java.util.TreeMap;
+import lib.Rom;
 import org.json.JSONArray;
 import org.json.JSONObject;
 
@@ -628,7 +629,7 @@ public class Character {
     
     private static String WEAPON_FRAME_KEY = "weapon";
     
-    public JSONObject toJson(){
+    public JSONObject toJson(int characterId, String romName){
         JSONObject jsonObj = new JSONObject();
         JSONArray jsonAnims = new JSONArray();
         JSONArray jsonAnimationsLogic = new JSONArray();
@@ -684,6 +685,7 @@ public class Character {
             if (jsonHits.length() > 0) {
                 animationLogicJson.put("hitboxes", jsonHits);
             }
+            addThrowLogic(animationLogicJson, characterId, animId, romName);
             jsonAnimationsLogic.put(animationLogicJson);
         }
         clonePointers(jsonAnims);
@@ -692,6 +694,91 @@ public class Character {
         jsonObj.put("animationsLogic", jsonAnimationsLogic);
         return jsonObj;
     }
+    
+    private boolean isFrontThrow(int characterId, int animId)
+    {
+        // #D460
+        // Max, Axel, Blaze, Skate, Barbon, Signal, Ninja, Abadede (there are others? D4F8 onwards)
+        return characterId <= 2 && animId == 24
+            || characterId == 3 && animId == 41 // Skate vault throw
+            || characterId == 7 && animId == 28 // Barbon
+            || characterId == 9 && animId == 25 // Signal
+            || characterId == 11 && animId == 24 // Ninja
+            || characterId == 18 && animId == 24 // Abadede
+        ;
+    }
+    
+    private boolean isBackThrow(int characterId, int animId)
+    {
+        // #D558
+        // Max, Axel, Blaze, Zamza, Abadede, Shiva
+        return characterId <= 2 && animId == 25
+            || characterId == 16 && animId == 24 // Zamza
+            || characterId == 18 && animId == 34 // Abadede
+            || characterId == 21 && animId == 32 // Shiva
+        ;
+    }
+    
+    private void addThrowLogic(JSONObject animationLogicJson, int characterId, int animId, String romName)
+    {
+        int throwPositionsAddress = -1;
+        int throwReleaseAddress = -1;
+        // Blaze front slam:
+        if (characterId == 2 && animId == 39) {
+            throwPositionsAddress = 0xD1D6;
+            throwReleaseAddress = 0xD558 + characterId * 8;
+        }
+        // Max air throw
+        else if (characterId == 0 && animId == 40) {
+            throwPositionsAddress = 0xD1DA;
+            throwReleaseAddress = 0xD550;
+        }
+        // front throws
+        else if (isFrontThrow(characterId, animId)){
+            throwPositionsAddress = 0xD1DE + characterId * 4;
+            throwReleaseAddress = 0xD460 + characterId * 8;
+        }
+        // back throws
+        else if (isBackThrow(characterId, animId)){
+            throwPositionsAddress = 0xD3E8 + characterId * 4;
+            throwReleaseAddress = 0xD558 + characterId * 8;
+        }
+        if (throwPositionsAddress > 0) {
+            Rom rom = null;
+            try {
+                rom = new Rom(new File(romName));
+                // Position frames data
+                rom.rom.seek(throwPositionsAddress);
+                int framesDataAddress = throwPositionsAddress + rom.rom.readShort();
+                int releaseFrame = rom.rom.readShort();
+                TODO: read frame offsets, figure tick from frame and invert order 
+                // Release data
+                rom.rom.seek(throwReleaseAddress);
+                int velY = rom.rom.readInt();
+                int velX = rom.rom.readShort();
+                int damage = rom.rom.readShort();
+                
+                TODO: create json array with frames, create json with data, add to animationLogicJson
+                JSONObject
+            }
+            catch (IOException ex) {
+                ex.printStackTrace();
+            } finally
+            {
+                if (rom != null)
+                {
+                    try {
+                        rom.close();
+                    } catch (IOException ex) {
+                        ex.printStackTrace();
+                    }
+                }
+            }
+        }
+    }
+    
+    
+    
     
     private void clonePointers(JSONArray jsonArray) {
         for (int i = 0; i < jsonArray.length() ; ++i)
