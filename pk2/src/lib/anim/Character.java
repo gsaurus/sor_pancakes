@@ -723,25 +723,30 @@ public class Character {
     {
         int throwPositionsAddress = -1;
         int throwReleaseAddress = -1;
+        int opponentAnimationId = 0;
         // Blaze front slam:
         if (characterId == 2 && animId == 39) {
             throwPositionsAddress = 0xD1D6;
             throwReleaseAddress = 0xD558 + characterId * 8;
+            opponentAnimationId = 21;
         }
         // Max air throw
         else if (characterId == 0 && animId == 40) {
             throwPositionsAddress = 0xD1DA;
             throwReleaseAddress = 0xD550;
+            opponentAnimationId = 22;
         }
         // front throws
         else if (isFrontThrow(characterId, animId)){
             throwPositionsAddress = 0xD1DE + characterId * 4;
             throwReleaseAddress = 0xD460 + characterId * 8;
+            opponentAnimationId = 18;
         }
-        // back throws
+        // back slams
         else if (isBackThrow(characterId, animId)){
             throwPositionsAddress = 0xD3E8 + characterId * 4;
             throwReleaseAddress = 0xD558 + characterId * 8;
+            opponentAnimationId = characterId == 1 ? 19 : 20;
         }
         if (throwPositionsAddress > 0) {
             Rom rom = null;
@@ -750,16 +755,39 @@ public class Character {
                 // Position frames data
                 rom.rom.seek(throwPositionsAddress);
                 int framesDataAddress = throwPositionsAddress + rom.rom.readShort();
-                int releaseFrame = rom.rom.readShort();
-                TODO: read frame offsets, figure tick from frame and invert order 
+                int releaseFrame = rom.rom.readShort() >> 3;
+                Animation thrownAnimation = animations.get(opponentAnimationId);
+                int totalFrames = thrownAnimation.getNumFrames();
+                int startingFrame = 0;
+                JSONArray offsetsJson = new JSONArray();
+                for (int i = totalFrames; i >= releaseFrame; --i)
+                {
+                    rom.rom.seek(framesDataAddress + i*8);
+                    int dx = rom.rom.readShort();
+                    rom.rom.skipBytes(2);
+                    int dy = rom.rom.readShort();
+                    JSONObject offsetJson = new JSONObject();
+                    offsetJson.put("frame", startingFrame);
+                    JSONObject frameOffsetJson = new JSONObject();
+                    frameOffsetJson.put("x", dx);
+                    frameOffsetJson.put("y", dy);
+                    offsetJson.put("offset", frameOffsetJson);
+                    offsetsJson.put(offsetJson);
+                    startingFrame += thrownAnimation.getFrame(totalFrames - i).delay;
+                }
                 // Release data
                 rom.rom.seek(throwReleaseAddress);
                 int velY = rom.rom.readInt();
                 int velX = rom.rom.readShort();
                 int damage = rom.rom.readShort();
-                
-                TODO: create json array with frames, create json with data, add to animationLogicJson
-                JSONObject
+                JSONObject throwDataJson = new JSONObject();
+                JSONObject releaseVelocityJson = new JSONObject();
+                releaseVelocityJson.put("x", velX);
+                releaseVelocityJson.put("y", velY);
+                throwDataJson.put("offsets", offsetsJson);
+                throwDataJson.put("releaseVelocity", releaseVelocityJson);
+                throwDataJson.put("releaseDamage", damage);
+                animationLogicJson.put("throwLogic", throwDataJson);
             }
             catch (IOException ex) {
                 ex.printStackTrace();
