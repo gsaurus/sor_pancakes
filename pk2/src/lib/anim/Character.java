@@ -690,6 +690,14 @@ public class Character {
         }
         clonePointers(jsonAnims);
         clonePointers(jsonAnimationsLogic);
+        // Max back slam is a clone of front slam, but throw data is different. This should be done differently, but let's just get it done quick
+        if (characterId == 0) {
+            JSONObject animationLogicJson = (JSONObject) jsonAnimationsLogic.get(25);
+            animationLogicJson = new JSONObject(animationLogicJson.toString());
+            addThrowLogic(animationLogicJson, characterId, 25, romName);
+            jsonAnimationsLogic.put(25, animationLogicJson);
+        }
+        
         jsonObj.put("animations", jsonAnims);
         jsonObj.put("animationsLogic", jsonAnimationsLogic);
         return jsonObj;
