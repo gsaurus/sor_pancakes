@@ -3886,6 +3886,7 @@ TheListener {
             logicJson.put("walkSpeed", readSpeed());
         }
         addGrabOffsetsToLogicsJson(logicJson, characterId);
+        addQuakeForcesToLogicsJson(logicJson, characterId);
         logicJson.put("animationsLogic", jsonCharacter.get("animationsLogic"));
         JSONArray animationsArray = (JSONArray) jsonCharacter.get("animations");        
         JSONObject animationsJson = new JSONObject();
@@ -5254,6 +5255,37 @@ TheListener {
         {
             logicJson.put("frontGrabOffset", frontGrabOffset);
             logicJson.put("backGrabOffset", backGrabOffset);
+        }
+    }
+    
+    
+    private void addQuakeForcesToLogicsJson(JSONObject logicJson, int characterId) {
+        int knockedQuake = 0, thrownQuake = 0;
+        Rom rom = null;
+        try {
+            rom = new Rom(new File(this.romName));
+            rom.rom.seek(0xEB0E + characterId * 2);
+            knockedQuake = rom.rom.readByte();
+            thrownQuake = rom.rom.readByte();
+        }
+        catch (IOException ex) {
+            showError("Failed to read quake forces.\n" + ex.getMessage());
+        } finally
+        {
+            if (rom != null)
+            {
+                try {
+                    rom.close();
+                } catch (IOException ex) {
+                    showError("Failed to close rom.\n" + ex.getMessage());
+                }
+            }
+        }
+        if (knockedQuake != 0){
+            logicJson.put("knockedDownQuakeEffect", (float)(knockedQuake) / 0x3F);
+        }
+        if (thrownQuake != 0){
+            logicJson.put("thrownQuakeEffect", (float)(thrownQuake) / 0x3F);
         }
     }
 
