@@ -631,7 +631,7 @@ TheListener {
         this.resizeAnimsMenu.setEnabled(this.manager != null);
         this.copyMenu.setEnabled(this.manager != null);
         this.pasteMenu.setEnabled(this.manager != null && this.copiedMap != 0L);
-        //this.pasteMenu1.setEnabled(this.manager != null); // disabled for now
+        this.pasteMenu1.setEnabled(this.manager != null);
         this.pasteMenu2.setEnabled(this.manager != null);
         this.hexIdsMenu.setEnabled(this.manager != null);
         if (this.manager != null) {
