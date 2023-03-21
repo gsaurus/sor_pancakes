@@ -380,13 +380,15 @@
     <Component class="javax.swing.JComboBox" name="difficultyComboBox">
       <Properties>
         <Property name="model" type="javax.swing.ComboBoxModel" editor="org.netbeans.modules.form.editors2.ComboBoxModelEditor">
-          <StringArray count="6">
+          <StringArray count="8">
             <StringItem index="0" value="Very Easy"/>
             <StringItem index="1" value="Easy"/>
             <StringItem index="2" value="Normal"/>
             <StringItem index="3" value="Hard"/>
             <StringItem index="4" value="Very Hard"/>
             <StringItem index="5" value="Mania"/>
+            <StringItem index="6" value="Super Mania"/>
+            <StringItem index="7" value="Mega Mania"/>
           </StringArray>
         </Property>
         <Property name="toolTipText" type="java.lang.String" value="Minimum difficulty in which this enemy can spawn"/>

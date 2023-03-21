@@ -338,7 +338,7 @@ public final class CharacterPanel extends javax.swing.JPanel {
             }
         });
 
-        difficultyComboBox.setModel(new javax.swing.DefaultComboBoxModel<>(new String[] { "Very Easy", "Easy", "Normal", "Hard", "Very Hard", "Mania" }));
+        difficultyComboBox.setModel(new javax.swing.DefaultComboBoxModel<>(new String[] { "Very Easy", "Easy", "Normal", "Hard", "Very Hard", "Mania", "Super Mania", "Mega Mania" }));
         difficultyComboBox.setToolTipText("Minimum difficulty in which this enemy can spawn");
         difficultyComboBox.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {

@@ -48,6 +48,8 @@ public class Palette{
     private int type;
     
     public static int correct(int value){
+        return value;
+        /*
         value = Math.round(value/17.f)*17;
         switch (value){
             case 0: return 0;
@@ -67,7 +69,8 @@ public class Palette{
             case 238: return 255;
             case 255: return 255;
         }
-        return 0;        
+        return 0;    
+*/
     }
     
     private static int hexToVal(int val) {

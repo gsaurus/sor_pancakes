@@ -41,7 +41,7 @@ public class AllLevelsLoadcues {
             // Load first scene ELC only
             rom.seek(levelElcAddress);
             long firstSceneElcAddress = levelElcAddress + rom.readUnsignedShort();
-            levels.add(new LevelLoadcues(rom, firstSceneElcAddress));
+            levels.add(new LevelLoadcues(rom, firstSceneElcAddress, i == 7));
             address += 2L;
         }
     }

@@ -34,14 +34,14 @@ public final class LevelLoadcues {
     // DEBUG!!!!
     private final int extraOffset = 0;//0x4100;
     
-    public LevelLoadcues(RandomAccessFile rom, long address) throws IOException{
+    public LevelLoadcues(RandomAccessFile rom, long address, boolean isLastLevel) throws IOException{
         this.address = address;
         rom.seek(address + 2); // discard first word
         long enemiesAddress1 = rom.readInt();
         long enemiesAddress2 = rom.readInt();
         long goodiesAddress = rom.readInt();
-        readCharactersList(rom, enemiesPart1, enemiesAddress1);
-        readCharactersList(rom, enemiesPart2, enemiesAddress2);
+        readCharactersList(rom, enemiesPart1, enemiesAddress1, isLastLevel);
+        readCharactersList(rom, enemiesPart2, enemiesAddress2, isLastLevel);
         readItemsList(rom, goodies, goodiesAddress);
     }
     
@@ -56,13 +56,25 @@ public final class LevelLoadcues {
         return (maxScene / 2) + 1;
     }
     
-    void readCharactersList(RandomAccessFile rom, List<CharacterObject> list, long address) throws IOException{
+    void readCharactersList(RandomAccessFile rom, List<CharacterObject> list, long address, boolean isLastLevel) throws IOException{
         address += extraOffset;
         rom.seek(address);
-        while (rom.readUnsignedShort() != 0xFFFF){
-            list.add(new CharacterObject(rom, address));
-            address += CharacterObject.SIZE;
-            rom.seek(address);
+        while(true)
+        {
+            while (rom.readUnsignedShort() != 0xFFFF){
+                list.add(new CharacterObject(rom, address));
+                address += CharacterObject.SIZE;
+                rom.seek(address);
+            }
+            if (isLastLevel)
+            {
+                address += 2;
+                isLastLevel = false;
+            }
+            else
+            {
+                break;
+            }
         }
     }
     
@@ -120,7 +132,7 @@ public final class LevelLoadcues {
     public static void main(String[] args){
         try {
             Rom rom = new Rom(new File("sor2.bin"));
-            LevelLoadcues obj = new LevelLoadcues(rom.getRomFile(), 0x1EF53C);
+            LevelLoadcues obj = new LevelLoadcues(rom.getRomFile(), 0x1EF53C, false);
             obj.write(rom.getRomFile());
             rom.close();
         } catch (IOException ex) {
