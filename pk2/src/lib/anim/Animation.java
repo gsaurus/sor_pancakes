@@ -21,11 +21,10 @@ public class Animation {
     private int numFrames;
     
     private int type;
-    private TreeMap<Long, BufferedImage> bufferedFrames;
-    private TreeMap<Long, Point> bufferedPivots;
-    private ArrayList<BufferedImage> bufferedShadows;
+    private ArrayList<BufferedImage> bufferedFrames;
+    private ArrayList<Point> bufferedPivots;
     private boolean wasArtModified;
-    private boolean[] spritesModified;
+    private ArrayList<Boolean> spritesModified;
 
     public boolean isCompressed() {
         return this.type == 1;
@@ -34,7 +33,7 @@ public class Animation {
     public Animation(int numFrames, int type) {
         this.type = type;
         this.frames = new ArrayList(numFrames);
-        this.spritesModified = new boolean[numFrames];
+        this.spritesModified = new ArrayList<Boolean>(numFrames);
         this.numFrames = numFrames;
     }
 
@@ -51,10 +50,7 @@ public class Animation {
     }
 
     public void setNumFrames(int num) {
-        if (this.numFrames < 0 || num > this.frames.size()) {
-            throw new ArrayIndexOutOfBoundsException();
-        }
-        this.numFrames = num;
+        resize(num);
     }
 
     public boolean wasArtModified() {
@@ -62,18 +58,16 @@ public class Animation {
     }
 
     public BufferedImage getImage(int index) {
-        if (this.bufferedFrames != null && index < this.frames.size()) {
-            long address = this.frames.get((int)index).mapAddress;
-            return this.bufferedFrames.get(address);
+        if (this.bufferedFrames != null && index < this.bufferedFrames.size()) {
+            return this.bufferedFrames.get(index);
         }
         return null;
     }
     
     public Point getPivot(int index)
     {
-        if (this.bufferedPivots != null && index < this.frames.size()) {
-            long address = this.frames.get((int)index).mapAddress;
-            return this.bufferedPivots.get(address);
+        if (this.bufferedPivots != null && index < this.bufferedPivots.size()) {
+            return this.bufferedPivots.get(index);
         }
         return null;
     }
@@ -82,10 +76,11 @@ public class Animation {
         if (index < this.frames.size()) {
             long address = this.frames.get((int)index).mapAddress;
             if (this.bufferedFrames == null) {
-                this.bufferedFrames = new TreeMap();
-                this.bufferedShadows = new ArrayList(this.numFrames);
+                this.bufferedFrames = new ArrayList<BufferedImage>();
             }
-            this.bufferedFrames.put(address, img);
+            while (bufferedFrames.size() <= index)
+                bufferedFrames.add(null);
+            this.bufferedFrames.set(index, img);
             this.wasArtModified = true;
         }
     }
@@ -93,34 +88,29 @@ public class Animation {
     public void resetPivot(int index)
     {
         if (index < this.frames.size()) {
-            long address = this.frames.get((int)index).mapAddress;
             if (this.bufferedPivots == null) {
-                this.bufferedPivots = new TreeMap();
+                this.bufferedPivots = new ArrayList<Point>();
             }
-            Point original = this.bufferedPivots.getOrDefault(address, new Point());
-            original.x = 0;
-            original.y = 0;
-            this.bufferedPivots.put(address, original);
+            while (bufferedPivots.size() <= index)
+                bufferedPivots.add(new Point());
         }
     }
     
-    public void addPivot(int index, Point pivot) {
+    public void addPivot(int index, Point deltaPos) {
         if (index < this.frames.size()) {
-            long address = this.frames.get((int)index).mapAddress;
             if (this.bufferedPivots == null) {
-                this.bufferedPivots = new TreeMap();
+                this.bufferedPivots = new ArrayList<Point>();
             }
-            Point original = this.bufferedPivots.getOrDefault(address, new Point());
-            pivot.x += original.x;
-            pivot.y += original.y;
-            this.bufferedPivots.put(address, pivot);
+            while (bufferedPivots.size() <= index)
+                bufferedPivots.add(new Point());
+            Point pivot = bufferedPivots.get(index);
+            pivot.x += deltaPos.x;
+            pivot.y += deltaPos.y;
+            bufferedPivots.set(index, pivot);
         }
     }
 
     public BufferedImage getShadow(int index) {
-        if (this.bufferedShadows != null && index < this.bufferedShadows.size()) {
-            return this.bufferedShadows.get(index);
-        }
         return null;
     }
 
@@ -130,7 +120,6 @@ public class Animation {
 
     public void clearBufferedData() {
         this.bufferedFrames = null;
-        this.bufferedShadows = null;
     }
 
     public void bufferImage(int frameId, Rom rom, Palette palette, Color shadowColor) throws IOException {
@@ -202,19 +191,23 @@ public class Animation {
     }
 
     public void setSpritesModified(int frame, boolean b) {
-        this.spritesModified[frame] = b;
+        while (spritesModified.size() <= frame)
+            spritesModified.add(true);
+        this.spritesModified.set(frame, b);
         if (b) {
             this.wasArtModified = true;
         }
     }
 
     public boolean wasSpriteModified(int frame) {
-        return this.spritesModified[frame];
+        while (spritesModified.size() <= frame)
+            spritesModified.add(false);
+        return this.spritesModified.get(frame);
     }
 
     public void spritesNotModified() {
         this.wasArtModified = false;
-        this.spritesModified = new boolean[this.frames.size()];
+        this.spritesModified = new ArrayList<Boolean>(this.frames.size());
     }
 
     public void setAnimType(int newType) {
@@ -232,8 +225,8 @@ public class Animation {
         for (int i = 0; i < dif; ++i) {
             AnimFrame f1 = this.frames.get(i % ondSize);
             this.frames.add(f1);
+            spritesModified.add(true);
         }
-        //this.clearBufferedData();
     }
 
     public void addFrame(AnimFrame frame) {

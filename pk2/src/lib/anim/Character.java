@@ -151,24 +151,18 @@ public class Character {
         }
         rom.seek(animListAddress + (long)(charId * 4));
         long address = rom.readInt();
-        TreeMap<Long, Animation> animAddresses = new TreeMap<Long, Animation>();
         for (int i = 0; i < count; ++i) {
             long localAddress = address + (long)(i * 2);
             rom.seek(localAddress);
             offset = rom.readShort();
-            Animation anim = (Animation)animAddresses.get(localAddress += (long)offset);
-            if (anim == null) {
-                anim = Animation.read(rom, localAddress, animsType);
-                animAddresses.put(localAddress, anim);
-                if (DEBUG_RESIZERS) {
-                    animIds.put(localAddress, i);
-                }
-                if (DEBUG_RESIZERS) {
-                    dos.println(anim.getNumFrames());
-                }
-            } else if (DEBUG_RESIZERS) {
-                int cloneId = -1 - (Integer)animIds.get(localAddress);
-                dos.println(cloneId);
+            localAddress += (long)offset;
+            Animation anim;
+            anim = Animation.read(rom, localAddress, animsType);
+            if (DEBUG_RESIZERS) {
+                animIds.put(localAddress, i);
+            }
+            if (DEBUG_RESIZERS) {
+                dos.println(anim.getNumFrames());
             }
             c.animations.add(anim);
         }
@@ -192,32 +186,16 @@ public class Character {
             offset = rom.readShort();
             address = hitsListAddress + (long)(charId * 2) + (long)offset;
         }
-        TreeMap<Long, HitFramesSet> hitsAddresses = new TreeMap<Long, HitFramesSet>();
-        TreeMap<Long, HitFrame> processedHits = new TreeMap<Long, HitFrame>();
         for (int i = 0; i < count - FIRST_HIT_ANIM; ++i) {
             HitFramesSet set;
             long localAddress = address + (long)(i * 2);
             rom.seek(localAddress);
             offset = rom.readShort();
             if (offset != 0) {
-                set = (HitFramesSet)hitsAddresses.get(localAddress += (long)offset);
-                if (set == null) {
-                    int framesCount = c.animations.get(i + FIRST_HIT_ANIM).getNumFrames();
-                    int before = processedHits.size();
-                    set = HitFramesSet.read(rom, localAddress, framesCount, processedHits);
-                    hitsAddresses.put(localAddress, set);
-                    if (DEBUG_RESIZERS) {
-                        animIds.put(localAddress, i);
-                        if (processedHits.size() - before == framesCount) {
-                            dos.println(1);
-                        } else {
-                            dos.println("#");
-                        }
-                    }
-                } else if (DEBUG_RESIZERS) {
-                    int oldId = -1 - (Integer)animIds.get(localAddress);
-                    dos.println(oldId);
-                }
+                localAddress += (long)offset;
+                
+                int framesCount = c.animations.get(i + FIRST_HIT_ANIM).getNumFrames();
+                set = HitFramesSet.read(rom, localAddress, framesCount, new TreeMap<Long, HitFrame>());                
                 c.animHits.add(set);
             } else {
                 set = new HitFramesSet(0);
@@ -243,32 +221,15 @@ public class Character {
             offset = rom.readShort();
             address = weaponsListAddress + (long)(charId * 2) + (long)offset;
         }
-        TreeMap<Long, WeaponFramesSet> wpAddresses = new TreeMap<Long, WeaponFramesSet>();
-        TreeMap<Long, WeaponFrame> processedWeapons = new TreeMap<Long, WeaponFrame>();
         for (int i = 0; i < count; ++i) {
             WeaponFramesSet set;
             long localAddress = address + (long)(i * 2);
             rom.seek(localAddress);
             offset = rom.readShort();
             if (offset != 0) {
-                set = (WeaponFramesSet)wpAddresses.get(localAddress += (long)offset);
-                if (set == null) {
-                    int framesCount = c.animations.get(i).getNumFrames();
-                    int before = processedWeapons.size();
-                    set = WeaponFramesSet.read(rom, localAddress, framesCount, processedWeapons);
-                    wpAddresses.put(localAddress, set);
-                    if (DEBUG_RESIZERS) {
-                        animIds.put(localAddress, i);
-                        if (processedWeapons.size() - before == framesCount) {
-                            dos.println(1);
-                        } else {
-                            dos.println("#");
-                        }
-                    }
-                } else if (DEBUG_RESIZERS) {
-                    int oldId = - ((Integer)animIds.get(localAddress)).intValue();
-                    dos.println(oldId);
-                }
+                localAddress += (long)offset;
+                int framesCount = c.animations.get(i).getNumFrames();
+                set = WeaponFramesSet.read(rom, localAddress, framesCount, new TreeMap<Long, WeaponFrame>());
                 c.animWeapons.add(set);
                 continue;
             }

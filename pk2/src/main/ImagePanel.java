@@ -203,7 +203,7 @@ extends JLabel {
     public void setWeaponPreview(int id) {
         switch (id) {
             case 0: {
-                this.weapon = new Weapon("knife", 16, 16);
+                this.weapon = new Weapon("knife", 15, 17);
                 break;
             }
             case 1: {
@@ -224,12 +224,7 @@ extends JLabel {
         this.imgModified = false;
         this.dragSpriteX = 0;
         this.dragSpriteY = 0;
-        this.pivot = new Point(128, 128);
-        if (pivot != null)
-        {
-            this.pivot.x -= pivot.x;
-            this.pivot.y += pivot.y;
-        }
+        this.pivot = pivot != null ? pivot : new Point();
         if (image == null) {
             this.ghostImage = null;
             this.ghostShadow = null;
@@ -315,7 +310,7 @@ extends JLabel {
         }
         this.imgModified = true;
         this.replaceImage = img;
-        float scale = Gui.instance.GetScale();
+        float scale = Gui.instance.getScale();
         if (this.imgX == Integer.MIN_VALUE) {
             this.imgX = 128 - (int)((double)img.getWidth() * scale * 0.6);
             this.imgY = 128 - (int)((double)img.getHeight() * scale * 1.0);
@@ -333,9 +328,6 @@ extends JLabel {
         if (this.replaceImage != null) {
             if (this.previewImage == null) {
                 this.previewImage = this.genPreviewImage();
-            }
-            if (this.facedRight) {
-                this.previewImage = ImagePanel.flipImage(this.previewImage);
             }
             return this.previewImage;
         }
@@ -372,7 +364,7 @@ extends JLabel {
     }
 
     private int scale(float val, boolean useGuiScale) {
-        return (int)(val * this.scale * (useGuiScale ? Gui.instance.GetScale() : 1));
+        return (int)(val * this.scale * (useGuiScale ? Gui.instance.getScale() : 1));
     }
 
     private BufferedImage genPreviewImage() {
@@ -403,7 +395,7 @@ extends JLabel {
 
     @Override
     public void paint(Graphics g) {
-        float guiScale = Gui.instance.GetScale();
+        float guiScale = Gui.instance.getScale();
         int scaledY;
         int scaledX;
         Composite original;
@@ -416,28 +408,7 @@ extends JLabel {
             g2d.drawLine(scaledCenter, 0, scaledCenter, scaledBounds);
             g2d.drawLine(0, scaledCenter, scaledBounds, scaledCenter);
         }
-        if (this.showGhost && this.ghostImage != null && this.ghostShadow != null) {
-            int scaledW = this.scale(this.ghostShadow.getWidth(), true);
-            int scaledH2 = this.scale(this.ghostShadow.getHeight(), true);
-            Composite original2 = g2d.getComposite();
-            if (this.showShadow) {
-                g2d.setComposite(AlphaComposite.getInstance(3, 0.1f));
-                if (this.facedRight) {
-                    g2d.drawImage(this.ghostShadow, 0, 0, scaledW, scaledH2, this.ghostShadow.getWidth(), 0, 0, this.ghostShadow.getHeight(), null);
-                } else {
-                    g2d.drawImage(this.ghostShadow, 0, 0, scaledW, scaledH2, null);
-                }
-            }
-            g2d.setComposite(AlphaComposite.getInstance(3, 0.4f));
-            scaledW = this.scale(this.ghostImage.getWidth(), true);
-            scaledH2 = this.scale(this.ghostImage.getHeight(), true);
-            if (this.facedRight) {
-                g2d.drawImage(this.ghostImage, 0, 0, scaledW, scaledH2, this.ghostImage.getWidth(), 0, 0, this.ghostImage.getHeight(), null);
-            } else {
-                g2d.drawImage(this.ghostImage, 0, 0, scaledW, scaledH2, null);
-            }
-            g2d.setComposite(original2);
-        }
+        
         if (this.weaponShowBehind && this.showWeapon && this.hasWeapon && this.weapon != null) {
             if (this.mouseOverWeapon) {
                 this.weapon.drawOver(g2d, this.weaponX, this.weaponY, this.weaponAngle, this.scale);
@@ -446,15 +417,12 @@ extends JLabel {
             }
         }
         if (this.image != null && this.replaceImage == null && this.showImage) {
-            scaledX = this.scale(pivot.x + this.dragSpriteX, false);
-            scaledY = this.scale(pivot.y + this.dragSpriteY, false);
+            scaledX = this.scale(128, false) - this.scale(pivot.x + this.dragSpriteX, true);
+            scaledY = this.scale(128, false) + this.scale(pivot.y + this.dragSpriteY, true);
             int scaledW = this.scale(this.image.getWidth(), true);
             scaledH = this.scale(this.image.getHeight(), true);
-            if (this.facedRight) {
-                g2d.drawImage(this.image, scaledX, scaledY - scaledH, scaledX + scaledW, scaledY, this.image.getWidth(), 0, 0, this.image.getHeight(), null);
-            } else {
-                g2d.drawImage(this.image, scaledX, scaledY - scaledH, scaledW, scaledH, null);
-            }
+
+            g2d.drawImage(this.image, scaledX, scaledY - scaledH, scaledW, scaledH, null);
         }
         if (this.showWeapon && this.hasWeapon && this.weapon != null) {
             if (!this.weaponShowBehind) {
@@ -620,6 +588,8 @@ extends JLabel {
     }//GEN-LAST:event_formMousePressed
 
     private void formMouseDragged(MouseEvent evt) {//GEN-FIRST:event_formMouseDragged
+        float scale = Gui.instance.getScale();
+        scale *= this.scale;
         if (this.isLeftButtonPressed) {
             if (this.showHit && this.hasHit && this.listener != null && this.mouseOverHit) {
                 int center = this.scale(128);
@@ -628,12 +598,12 @@ extends JLabel {
                 int center = this.scale(128);
                 this.listener.weaponPositionChanged((int)((float)(evt.getX() - center) / this.scale), - (int)((float)(evt.getY() - center) / this.scale));
             } else {
-                int x = (int)((float)evt.getX() / this.scale);
-                int y = (int)((float)evt.getY() / this.scale);
-                int oldX = (int)((float)this.oldMouseX / this.scale);
-                int oldY = (int)((float)this.oldMouseY / this.scale);
-                int originalX = (int)((float)this.originalMouseX / this.scale);
-                int originalY = (int)((float)this.originalMouseY / this.scale);
+                int x = (int)((float)evt.getX() / scale);
+                int y = (int)((float)evt.getY() / scale);
+                int oldX = (int)((float)this.oldMouseX / scale);
+                int oldY = (int)((float)this.oldMouseY / scale);
+                int originalX = (int)((float)this.originalMouseX / scale);
+                int originalY = (int)((float)this.originalMouseY / scale);
                 if (this.replaceImage != null && this.mode == Mode.dragImage) {
                     this.imgX += x - oldX;
                     this.imgY += y - oldY;
@@ -647,13 +617,13 @@ extends JLabel {
                             this.dragShiftMode = Math.abs(dx) > Math.abs(dy) ? 1 : 2;
                         }
                         if (this.dragShiftMode == 1) {
-                            this.dragSpriteX = x - originalX;
+                            this.dragSpriteX = originalX - x;
                         } else {
                             this.dragSpriteY = y - originalY;
                         }
                     } else {
                         this.dragShiftMode = 0;
-                        this.dragSpriteX = x - originalX;
+                        this.dragSpriteX = originalX - x;
                         this.dragSpriteY = y - originalY;
                     }
                     this.repaint();
