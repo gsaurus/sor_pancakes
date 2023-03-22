@@ -4,6 +4,7 @@
 package lib;
 
 import java.awt.Color;
+import java.awt.Point;
 import java.awt.image.BufferedImage;
 import java.io.File;
 import java.io.FileNotFoundException;
@@ -213,6 +214,10 @@ public class Manager {
 
     public BufferedImage getImage(int animId, int frameId) {
         return this.currCharacter.getAnimation(animId).getImage(frameId);
+    }
+    
+    public Point getPivot(int animId, int frameId) {
+        return this.currCharacter.getAnimation(animId).getPivot(frameId);
     }
 
     public BufferedImage getShadow(int animId, int frameId) {

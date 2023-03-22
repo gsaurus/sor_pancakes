@@ -94,6 +94,7 @@ implements Renderable {
     }
 
     public void writeArt(RandomAccessFile rom, long address, BufferedImage image, Palette palette) throws IOException {
+        /*
         rom.seek(address);
         for (int i = 0; i < 64; i += 2) {
             int p1 = this.getPixelValue(i % 8, i / 8, image, palette);
@@ -101,6 +102,7 @@ implements Renderable {
             int p2 = this.getPixelValue(j % 8, j / 8, image, palette);
             rom.writeByte(p1 << 4 & 240 | p2 & 15);
         }
+        */
     }
     
     
@@ -110,6 +112,7 @@ implements Renderable {
     
 
     public void write(RandomAccessFile rom, long address) throws IOException {
+        /*
         rom.seek(address);
         for (int i = 0; i < 64; i += 2) {
             byte p1 = this.getPixel(i % 8, i / 8);
@@ -117,6 +120,7 @@ implements Renderable {
             byte p2 = this.getPixel(j % 8, i / 8);
             rom.writeByte(p1 << 4 & 240 | p2 & 15);
         }
+        */
     }
 }
 

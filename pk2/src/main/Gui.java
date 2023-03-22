@@ -93,7 +93,7 @@ TheListener {
     private JFileChooser imageSaver;
     private JFileChooser resizerChooser;
     private ImagePanel imagePanel;
-    private Manager manager;
+    public Manager manager;
     private Guide guide;
     private JPanel[] colorPanels;
     private Border selectionBorder;
@@ -119,6 +119,13 @@ TheListener {
     private int lastcX;
     private int lastcY;
     private boolean wasFrameReplaced;
+    
+    public static Gui instance;
+    
+    public float GetScale()
+    {
+        return Float.parseFloat(sizeField1.getText());
+    }
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JTextField angleField;
@@ -177,6 +184,7 @@ TheListener {
     private javax.swing.JLabel jLabel10;
     private javax.swing.JLabel jLabel11;
     private javax.swing.JLabel jLabel12;
+    private javax.swing.JLabel jLabel13;
     private javax.swing.JLabel jLabel14;
     private javax.swing.JLabel jLabel15;
     private javax.swing.JLabel jLabel16;
@@ -240,6 +248,7 @@ TheListener {
     private javax.swing.JCheckBox showTileCheck;
     private javax.swing.JCheckBox showWeaponCheck;
     private javax.swing.JTextField sizeField;
+    private javax.swing.JTextField sizeField1;
     private javax.swing.JRadioButtonMenuItem sizeRadioMenu1;
     private javax.swing.JRadioButtonMenuItem sizeRadioMenu2;
     private javax.swing.JRadioButtonMenuItem sizeRadioMenu3;
@@ -383,7 +392,7 @@ TheListener {
         }
         this.updateWeaponFrameEnabling();
         this.frameDelayCount = 0;
-        this.setImage(this.manager.getImage(this.currAnimation, this.currFrame), this.manager.getShadow(this.currAnimation, this.currFrame));
+        this.setImage(this.manager.getImage(this.currAnimation, this.currFrame), this.manager.getPivot(this.currAnimation, this.currFrame));
         this.updateTitle();
         this.copyMenu.setEnabled(true);
         this.pasteMenu.setEnabled(this.copiedMap != 0L);
@@ -558,6 +567,7 @@ TheListener {
     }
 
     private boolean saveRom() {
+        /*
         try {
             this.manager.save();
             this.updateTitle();
@@ -568,6 +578,8 @@ TheListener {
             this.showError("Unable to save rom");
             return false;
         }
+        */
+        return true;
     }
 
     private boolean askSaveRom() {
@@ -1240,6 +1252,7 @@ TheListener {
     }
 
     public Gui() {
+        instance = this;
         this.preInitComponents();
         this.initComponents();
         this.setVisible(true);
@@ -1348,12 +1361,12 @@ TheListener {
         }
     }
 
-    private void setImage(BufferedImage image, BufferedImage shadow) {
+    private void setImage(BufferedImage image, Point pivot) {
         JScrollBar horizontalScrollBar = this.scrollPanel.getHorizontalScrollBar();
         JScrollBar verticalScrollBar = this.scrollPanel.getVerticalScrollBar();
         int x = horizontalScrollBar.getValue();
         int y = verticalScrollBar.getValue();
-        this.imagePanel.setImage(image, shadow);
+        this.imagePanel.setImage(image, pivot);
         horizontalScrollBar.setValue(x + 1);
         horizontalScrollBar.setValue(x);
         verticalScrollBar.setValue(y + 1);
@@ -1494,6 +1507,8 @@ TheListener {
         overridePanel = new javax.swing.JPanel();
         softReplaceButton = new javax.swing.JButton();
         jLabel2 = new javax.swing.JLabel();
+        jLabel13 = new javax.swing.JLabel();
+        sizeField1 = new javax.swing.JTextField();
         generatePanel = new javax.swing.JPanel();
         hardReplaceButton = new javax.swing.JButton();
         jLabel14 = new javax.swing.JLabel();
@@ -2347,36 +2362,36 @@ TheListener {
             .addGroup(colorsPanel1Layout.createSequentialGroup()
                 .addGap(0, 0, 0)
                 .addGroup(colorsPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addComponent(colorPanel1, javax.swing.GroupLayout.DEFAULT_SIZE, 50, Short.MAX_VALUE)
-                    .addComponent(colorPanel9, javax.swing.GroupLayout.DEFAULT_SIZE, 50, Short.MAX_VALUE))
+                    .addComponent(colorPanel1, javax.swing.GroupLayout.DEFAULT_SIZE, 52, Short.MAX_VALUE)
+                    .addComponent(colorPanel9, javax.swing.GroupLayout.DEFAULT_SIZE, 52, Short.MAX_VALUE))
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addGroup(colorsPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addComponent(colorPanel2, javax.swing.GroupLayout.DEFAULT_SIZE, 50, Short.MAX_VALUE)
-                    .addComponent(colorPanel10, javax.swing.GroupLayout.DEFAULT_SIZE, 50, Short.MAX_VALUE))
+                    .addComponent(colorPanel2, javax.swing.GroupLayout.DEFAULT_SIZE, 52, Short.MAX_VALUE)
+                    .addComponent(colorPanel10, javax.swing.GroupLayout.DEFAULT_SIZE, 52, Short.MAX_VALUE))
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addGroup(colorsPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addComponent(colorPanel3, javax.swing.GroupLayout.DEFAULT_SIZE, 52, Short.MAX_VALUE)
-                    .addComponent(colorPanel11, javax.swing.GroupLayout.DEFAULT_SIZE, 52, Short.MAX_VALUE))
+                    .addComponent(colorPanel3, javax.swing.GroupLayout.DEFAULT_SIZE, 54, Short.MAX_VALUE)
+                    .addComponent(colorPanel11, javax.swing.GroupLayout.DEFAULT_SIZE, 54, Short.MAX_VALUE))
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addGroup(colorsPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addComponent(colorPanel4, javax.swing.GroupLayout.DEFAULT_SIZE, 50, Short.MAX_VALUE)
-                    .addComponent(colorPanel12, javax.swing.GroupLayout.DEFAULT_SIZE, 50, Short.MAX_VALUE))
+                    .addComponent(colorPanel4, javax.swing.GroupLayout.DEFAULT_SIZE, 52, Short.MAX_VALUE)
+                    .addComponent(colorPanel12, javax.swing.GroupLayout.DEFAULT_SIZE, 52, Short.MAX_VALUE))
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addGroup(colorsPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addComponent(colorPanel5, javax.swing.GroupLayout.DEFAULT_SIZE, 52, Short.MAX_VALUE)
-                    .addComponent(colorPanel13, javax.swing.GroupLayout.DEFAULT_SIZE, 52, Short.MAX_VALUE))
+                    .addComponent(colorPanel5, javax.swing.GroupLayout.DEFAULT_SIZE, 54, Short.MAX_VALUE)
+                    .addComponent(colorPanel13, javax.swing.GroupLayout.DEFAULT_SIZE, 54, Short.MAX_VALUE))
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addGroup(colorsPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addComponent(colorPanel6, javax.swing.GroupLayout.DEFAULT_SIZE, 50, Short.MAX_VALUE)
-                    .addComponent(colorPanel14, javax.swing.GroupLayout.DEFAULT_SIZE, 50, Short.MAX_VALUE))
+                    .addComponent(colorPanel6, javax.swing.GroupLayout.DEFAULT_SIZE, 52, Short.MAX_VALUE)
+                    .addComponent(colorPanel14, javax.swing.GroupLayout.DEFAULT_SIZE, 52, Short.MAX_VALUE))
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addGroup(colorsPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addComponent(colorPanel7, javax.swing.GroupLayout.DEFAULT_SIZE, 50, Short.MAX_VALUE)
-                    .addComponent(colorPanel15, javax.swing.GroupLayout.DEFAULT_SIZE, 50, Short.MAX_VALUE))
+                    .addComponent(colorPanel7, javax.swing.GroupLayout.DEFAULT_SIZE, 54, Short.MAX_VALUE)
+                    .addComponent(colorPanel15, javax.swing.GroupLayout.DEFAULT_SIZE, 54, Short.MAX_VALUE))
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addGroup(colorsPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addComponent(colorPanel8, javax.swing.GroupLayout.DEFAULT_SIZE, 54, Short.MAX_VALUE)
-                    .addComponent(colorPanel16, javax.swing.GroupLayout.DEFAULT_SIZE, 54, Short.MAX_VALUE)))
+                    .addComponent(colorPanel8, javax.swing.GroupLayout.DEFAULT_SIZE, 56, Short.MAX_VALUE)
+                    .addComponent(colorPanel16, javax.swing.GroupLayout.DEFAULT_SIZE, 56, Short.MAX_VALUE)))
         );
         colorsPanel1Layout.setVerticalGroup(
             colorsPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
@@ -2390,7 +2405,7 @@ TheListener {
                     .addComponent(colorPanel7, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                     .addComponent(colorPanel8, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                     .addComponent(colorPanel1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 13, Short.MAX_VALUE)
                 .addGroup(colorsPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                     .addComponent(colorPanel10, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                     .addComponent(colorPanel11, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
@@ -2627,26 +2642,45 @@ TheListener {
 
         jLabel2.setText("Replace art using same tiles");
 
+        jLabel13.setFont(new java.awt.Font("Tahoma", 0, 14)); // NOI18N
+        jLabel13.setHorizontalAlignment(javax.swing.SwingConstants.RIGHT);
+        jLabel13.setText("Scale:");
+
+        sizeField1.setFont(new java.awt.Font("Courier New", 0, 14)); // NOI18N
+        sizeField1.setHorizontalAlignment(javax.swing.JTextField.RIGHT);
+        sizeField1.setText("1");
+
         javax.swing.GroupLayout overridePanelLayout = new javax.swing.GroupLayout(overridePanel);
         overridePanel.setLayout(overridePanelLayout);
         overridePanelLayout.setHorizontalGroup(
             overridePanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(overridePanelLayout.createSequentialGroup()
-                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                .addContainerGap()
                 .addGroup(overridePanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, overridePanelLayout.createSequentialGroup()
-                        .addComponent(softReplaceButton)
-                        .addGap(18, 18, 18))
-                    .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, overridePanelLayout.createSequentialGroup()
-                        .addComponent(jLabel2)
-                        .addContainerGap())))
+                    .addGroup(overridePanelLayout.createSequentialGroup()
+                        .addGap(0, 0, Short.MAX_VALUE)
+                        .addGroup(overridePanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, overridePanelLayout.createSequentialGroup()
+                                .addComponent(softReplaceButton)
+                                .addGap(18, 18, 18))
+                            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, overridePanelLayout.createSequentialGroup()
+                                .addComponent(jLabel2)
+                                .addContainerGap())))
+                    .addGroup(overridePanelLayout.createSequentialGroup()
+                        .addComponent(jLabel13)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                        .addComponent(sizeField1, javax.swing.GroupLayout.PREFERRED_SIZE, 37, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addGap(0, 0, Short.MAX_VALUE))))
         );
         overridePanelLayout.setVerticalGroup(
             overridePanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, overridePanelLayout.createSequentialGroup()
-                .addGap(19, 19, 19)
                 .addComponent(jLabel2)
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 27, Short.MAX_VALUE)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+                .addGroup(overridePanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                    .addComponent(sizeField1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(jLabel13))
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 11, Short.MAX_VALUE)
                 .addComponent(softReplaceButton))
         );
 
@@ -2738,7 +2772,7 @@ TheListener {
 
         jMenu1.setText("File");
 
-        openRomMenu.setAccelerator(javax.swing.KeyStroke.getKeyStroke(java.awt.event.KeyEvent.VK_R, java.awt.event.InputEvent.CTRL_MASK));
+        openRomMenu.setAccelerator(javax.swing.KeyStroke.getKeyStroke(java.awt.event.KeyEvent.VK_R, java.awt.event.InputEvent.CTRL_DOWN_MASK));
         openRomMenu.setText("Open Rom");
         openRomMenu.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
@@ -2823,7 +2857,7 @@ TheListener {
         jMenu1.add(exportMenu);
         jMenu1.add(jSeparator1);
 
-        jMenuItem5.setAccelerator(javax.swing.KeyStroke.getKeyStroke(java.awt.event.KeyEvent.VK_F4, java.awt.event.InputEvent.ALT_MASK));
+        jMenuItem5.setAccelerator(javax.swing.KeyStroke.getKeyStroke(java.awt.event.KeyEvent.VK_F4, java.awt.event.InputEvent.ALT_DOWN_MASK));
         jMenuItem5.setText("Exit");
         jMenuItem5.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
@@ -2838,7 +2872,7 @@ TheListener {
 
         jMenu6.setText("Tool");
 
-        pencilMenu.setAccelerator(javax.swing.KeyStroke.getKeyStroke(java.awt.event.KeyEvent.VK_1, java.awt.event.InputEvent.ALT_MASK));
+        pencilMenu.setAccelerator(javax.swing.KeyStroke.getKeyStroke(java.awt.event.KeyEvent.VK_1, java.awt.event.InputEvent.ALT_DOWN_MASK));
         pencilMenu.setText("Pencil");
         pencilMenu.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
@@ -2847,7 +2881,7 @@ TheListener {
         });
         jMenu6.add(pencilMenu);
 
-        brushMenu.setAccelerator(javax.swing.KeyStroke.getKeyStroke(java.awt.event.KeyEvent.VK_2, java.awt.event.InputEvent.ALT_MASK));
+        brushMenu.setAccelerator(javax.swing.KeyStroke.getKeyStroke(java.awt.event.KeyEvent.VK_2, java.awt.event.InputEvent.ALT_DOWN_MASK));
         brushMenu.setText("Brush");
         brushMenu.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
@@ -2856,7 +2890,7 @@ TheListener {
         });
         jMenu6.add(brushMenu);
 
-        bucketMenu.setAccelerator(javax.swing.KeyStroke.getKeyStroke(java.awt.event.KeyEvent.VK_3, java.awt.event.InputEvent.ALT_MASK));
+        bucketMenu.setAccelerator(javax.swing.KeyStroke.getKeyStroke(java.awt.event.KeyEvent.VK_3, java.awt.event.InputEvent.ALT_DOWN_MASK));
         bucketMenu.setText("Paint Bucket");
         bucketMenu.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
@@ -2865,7 +2899,7 @@ TheListener {
         });
         jMenu6.add(bucketMenu);
 
-        dragSpriteMenu.setAccelerator(javax.swing.KeyStroke.getKeyStroke(java.awt.event.KeyEvent.VK_4, java.awt.event.InputEvent.ALT_MASK));
+        dragSpriteMenu.setAccelerator(javax.swing.KeyStroke.getKeyStroke(java.awt.event.KeyEvent.VK_4, java.awt.event.InputEvent.ALT_DOWN_MASK));
         dragSpriteMenu.setText("Drag Sprite");
         dragSpriteMenu.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
@@ -2874,7 +2908,7 @@ TheListener {
         });
         jMenu6.add(dragSpriteMenu);
 
-        dragImageMenu.setAccelerator(javax.swing.KeyStroke.getKeyStroke(java.awt.event.KeyEvent.VK_5, java.awt.event.InputEvent.ALT_MASK));
+        dragImageMenu.setAccelerator(javax.swing.KeyStroke.getKeyStroke(java.awt.event.KeyEvent.VK_5, java.awt.event.InputEvent.ALT_DOWN_MASK));
         dragImageMenu.setText("Drag Image");
         dragImageMenu.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
@@ -2883,7 +2917,7 @@ TheListener {
         });
         jMenu6.add(dragImageMenu);
 
-        noneMenu.setAccelerator(javax.swing.KeyStroke.getKeyStroke(java.awt.event.KeyEvent.VK_6, java.awt.event.InputEvent.ALT_MASK));
+        noneMenu.setAccelerator(javax.swing.KeyStroke.getKeyStroke(java.awt.event.KeyEvent.VK_6, java.awt.event.InputEvent.ALT_DOWN_MASK));
         noneMenu.setSelected(true);
         noneMenu.setText("None");
         noneMenu.addActionListener(new java.awt.event.ActionListener() {
@@ -2897,7 +2931,7 @@ TheListener {
 
         jMenu5.setText("Brush Size");
 
-        sizeRadioMenu1.setAccelerator(javax.swing.KeyStroke.getKeyStroke(java.awt.event.KeyEvent.VK_1, java.awt.event.InputEvent.SHIFT_MASK));
+        sizeRadioMenu1.setAccelerator(javax.swing.KeyStroke.getKeyStroke(java.awt.event.KeyEvent.VK_1, java.awt.event.InputEvent.SHIFT_DOWN_MASK));
         sizeRadioMenu1.setSelected(true);
         sizeRadioMenu1.setText("3 pixels");
         sizeRadioMenu1.addActionListener(new java.awt.event.ActionListener() {
@@ -2907,7 +2941,7 @@ TheListener {
         });
         jMenu5.add(sizeRadioMenu1);
 
-        sizeRadioMenu2.setAccelerator(javax.swing.KeyStroke.getKeyStroke(java.awt.event.KeyEvent.VK_2, java.awt.event.InputEvent.SHIFT_MASK));
+        sizeRadioMenu2.setAccelerator(javax.swing.KeyStroke.getKeyStroke(java.awt.event.KeyEvent.VK_2, java.awt.event.InputEvent.SHIFT_DOWN_MASK));
         sizeRadioMenu2.setText("5 pixels");
         sizeRadioMenu2.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
@@ -2916,7 +2950,7 @@ TheListener {
         });
         jMenu5.add(sizeRadioMenu2);
 
-        sizeRadioMenu3.setAccelerator(javax.swing.KeyStroke.getKeyStroke(java.awt.event.KeyEvent.VK_3, java.awt.event.InputEvent.SHIFT_MASK));
+        sizeRadioMenu3.setAccelerator(javax.swing.KeyStroke.getKeyStroke(java.awt.event.KeyEvent.VK_3, java.awt.event.InputEvent.SHIFT_DOWN_MASK));
         sizeRadioMenu3.setText("10 pixels");
         sizeRadioMenu3.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
@@ -2929,7 +2963,7 @@ TheListener {
 
         jMenu4.setText("Scale");
 
-        jMenuItem11.setAccelerator(javax.swing.KeyStroke.getKeyStroke(java.awt.event.KeyEvent.VK_1, java.awt.event.InputEvent.CTRL_MASK));
+        jMenuItem11.setAccelerator(javax.swing.KeyStroke.getKeyStroke(java.awt.event.KeyEvent.VK_1, java.awt.event.InputEvent.CTRL_DOWN_MASK));
         jMenuItem11.setText("Reset Scale");
         jMenuItem11.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
@@ -2938,7 +2972,7 @@ TheListener {
         });
         jMenu4.add(jMenuItem11);
 
-        jMenuItem7.setAccelerator(javax.swing.KeyStroke.getKeyStroke(java.awt.event.KeyEvent.VK_2, java.awt.event.InputEvent.CTRL_MASK));
+        jMenuItem7.setAccelerator(javax.swing.KeyStroke.getKeyStroke(java.awt.event.KeyEvent.VK_2, java.awt.event.InputEvent.CTRL_DOWN_MASK));
         jMenuItem7.setText("2x Scale");
         jMenuItem7.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
@@ -2947,7 +2981,7 @@ TheListener {
         });
         jMenu4.add(jMenuItem7);
 
-        jMenuItem9.setAccelerator(javax.swing.KeyStroke.getKeyStroke(java.awt.event.KeyEvent.VK_3, java.awt.event.InputEvent.CTRL_MASK));
+        jMenuItem9.setAccelerator(javax.swing.KeyStroke.getKeyStroke(java.awt.event.KeyEvent.VK_3, java.awt.event.InputEvent.CTRL_DOWN_MASK));
         jMenuItem9.setText("6x Scale");
         jMenuItem9.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
@@ -2956,7 +2990,7 @@ TheListener {
         });
         jMenu4.add(jMenuItem9);
 
-        jMenuItem10.setAccelerator(javax.swing.KeyStroke.getKeyStroke(java.awt.event.KeyEvent.VK_4, java.awt.event.InputEvent.CTRL_MASK));
+        jMenuItem10.setAccelerator(javax.swing.KeyStroke.getKeyStroke(java.awt.event.KeyEvent.VK_4, java.awt.event.InputEvent.CTRL_DOWN_MASK));
         jMenuItem10.setText("12x Scale");
         jMenuItem10.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
@@ -3301,7 +3335,14 @@ TheListener {
             try {
                 BufferedImage replaceImg = ImageIO.read(file);
                 replaceImg = this.processReplaceImg(replaceImg);
+                if (Gui.this.imagePanel.isFacedRight()) {
+                    replaceImg = ImagePanel.flipImage(replaceImg);
+                }
                 this.dragImageRadio.setEnabled(true);
+                
+                Animation anim = this.manager.getCharacter().getAnimation(currAnimation);
+                anim.setImage(currFrame, replaceImg);
+                anim.resetPivot(currFrame);
                 this.imagePanel.setReplaceImage(replaceImg);
             }
             catch (IOException ex) {
@@ -4089,8 +4130,8 @@ TheListener {
                 int val = replaceImg.getRGB(x, y);
                 Color c = new Color(val);
                 if (val == transparency || (val >> 24 & 255) == 0) continue;
-                float[] hsb = Color.RGBtoHSB(c.getRed(), c.getGreen(), c.getBlue(), null);
-                c = this.nearestColor(hsb, palette);
+                //float[] hsb = Color.RGBtoHSB(c.getRed(), c.getGreen(), c.getBlue(), null);
+                //c = this.nearestColor(hsb, palette);
                 res.setRGB(x, y, c.getRGB());
             }
         }
@@ -4534,10 +4575,12 @@ TheListener {
             this.lastcX -= deltaX;
             this.lastcY -= deltaY;
         }
-        try {
+        //try {
+            /*
             Sprite sprite = this.manager.readSprite(this.currAnimation, this.currFrame);
             AnimFrame frame = this.manager.getCharacter().getAnimFrame(this.currAnimation, this.currFrame);
             sprite.applyOffset(deltaX, deltaY);
+            
             HitFrame hitFrame = this.manager.getCharacter().getHitFrame(this.currAnimation, this.currFrame);
             WeaponFrame weaponFrame = this.manager.getCharacter().getWeaponFrame(this.currAnimation, this.currFrame);
             if (hitFrame != null) {
@@ -4548,14 +4591,20 @@ TheListener {
                 weaponFrame.x += deltaX;
                 weaponFrame.y += deltaY;
             }
+            */
+            manager.getCharacter().getAnimation(currAnimation).addPivot(currFrame, new Point(deltaX, deltaY));
+            
+            /*
             this.manager.writeSpriteOnly(sprite, frame.mapAddress);
             this.manager.save();
             this.manager.bufferAnimFrame(this.currAnimation, this.currFrame);
+            */
+            /*
         }
         catch (IOException ex) {
             ex.printStackTrace();
             this.showError("Unable to apply offset");
-        }
+        }*/
         this.setFrame(this.currFrame);
     }
 

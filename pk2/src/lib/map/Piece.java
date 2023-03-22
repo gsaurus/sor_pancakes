@@ -102,6 +102,7 @@ implements Renderable {
     }
 
     public void writeArt(RandomAccessFile rom, long address, BufferedImage image, Palette palette) throws IOException {
+        /*
         int height = this.getHeight();
         for (int x = 0; x < this.width; ++x) {
             for (int y = 0; y < height; ++y) {
@@ -111,6 +112,7 @@ implements Renderable {
                 tile.writeArt(rom, address + (long)(id * 32), tileImage, palette);
             }
         }
+        */
     }
     
     public long getSizeInBytes(){

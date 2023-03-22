@@ -4,6 +4,7 @@
 package lib.anim;
 
 import java.awt.Color;
+import java.awt.Point;
 import java.awt.image.BufferedImage;
 import java.io.IOException;
 import java.io.RandomAccessFile;
@@ -15,11 +16,13 @@ import lib.map.Palette;
 import lib.map.Sprite;
 
 public class Animation {
+    
     private ArrayList<AnimFrame> frames;
     private int numFrames;
     
     private int type;
     private TreeMap<Long, BufferedImage> bufferedFrames;
+    private TreeMap<Long, Point> bufferedPivots;
     private ArrayList<BufferedImage> bufferedShadows;
     private boolean wasArtModified;
     private boolean[] spritesModified;
@@ -65,6 +68,15 @@ public class Animation {
         }
         return null;
     }
+    
+    public Point getPivot(int index)
+    {
+        if (this.bufferedPivots != null && index < this.frames.size()) {
+            long address = this.frames.get((int)index).mapAddress;
+            return this.bufferedPivots.get(address);
+        }
+        return null;
+    }
 
     public void setImage(int index, BufferedImage img) {
         if (index < this.frames.size()) {
@@ -75,6 +87,33 @@ public class Animation {
             }
             this.bufferedFrames.put(address, img);
             this.wasArtModified = true;
+        }
+    }
+    
+    public void resetPivot(int index)
+    {
+        if (index < this.frames.size()) {
+            long address = this.frames.get((int)index).mapAddress;
+            if (this.bufferedPivots == null) {
+                this.bufferedPivots = new TreeMap();
+            }
+            Point original = this.bufferedPivots.getOrDefault(address, new Point());
+            original.x = 0;
+            original.y = 0;
+            this.bufferedPivots.put(address, original);
+        }
+    }
+    
+    public void addPivot(int index, Point pivot) {
+        if (index < this.frames.size()) {
+            long address = this.frames.get((int)index).mapAddress;
+            if (this.bufferedPivots == null) {
+                this.bufferedPivots = new TreeMap();
+            }
+            Point original = this.bufferedPivots.getOrDefault(address, new Point());
+            pivot.x += original.x;
+            pivot.y += original.y;
+            this.bufferedPivots.put(address, pivot);
         }
     }
 
@@ -95,6 +134,7 @@ public class Animation {
     }
 
     public void bufferImage(int frameId, Rom rom, Palette palette, Color shadowColor) throws IOException {
+        /*
         if (this.bufferedFrames == null) {
             this.bufferedFrames = new TreeMap();
             this.bufferedShadows = new ArrayList(this.numFrames);
@@ -106,9 +146,11 @@ public class Animation {
         }
         this.bufferedFrames.put(frame.mapAddress, sprite.asImage(palette));
         this.bufferedShadows.set(frameId, sprite.asShadow(shadowColor));
+        */
     }
 
     public void buffer(Rom rom, Palette palette, Color shadowColor) throws IOException {
+        /*
         this.bufferedFrames = new TreeMap();
         this.bufferedShadows = new ArrayList(this.numFrames);
         for (int i = 0; i < this.numFrames; ++i) {
@@ -117,6 +159,7 @@ public class Animation {
             this.bufferedFrames.put(frame.mapAddress, sprite.asImage(palette));
             this.bufferedShadows.add(sprite.asShadow(shadowColor));
         }
+        */
     }
 
     public static Animation read(RandomAccessFile rom, long address, int type) throws IOException {
@@ -190,7 +233,7 @@ public class Animation {
             AnimFrame f1 = this.frames.get(i % ondSize);
             this.frames.add(f1);
         }
-        this.clearBufferedData();
+        //this.clearBufferedData();
     }
 
     public void addFrame(AnimFrame frame) {

@@ -76,6 +76,7 @@ extends JLabel {
     private Cursor bucketCursor;
     private Cursor dragCursor;
     private int brushSize;
+    private Point pivot;
     private int dragSpriteX;
     private int dragSpriteY;
     private int dragShiftMode;
@@ -217,12 +218,18 @@ extends JLabel {
         this.ghostShadow = this.shadow;
     }
 
-    public void setImage(BufferedImage image, BufferedImage shadow) {
+    public void setImage(BufferedImage image, Point pivot) {
         this.replaceImage = null;
         this.previewImage = null;
         this.imgModified = false;
-        this.dragSpriteY = 0;
         this.dragSpriteX = 0;
+        this.dragSpriteY = 0;
+        this.pivot = new Point(128, 128);
+        if (pivot != null)
+        {
+            this.pivot.x -= pivot.x;
+            this.pivot.y += pivot.y;
+        }
         if (image == null) {
             this.ghostImage = null;
             this.ghostShadow = null;
@@ -308,11 +315,13 @@ extends JLabel {
         }
         this.imgModified = true;
         this.replaceImage = img;
+        float scale = Gui.instance.GetScale();
         if (this.imgX == Integer.MIN_VALUE) {
-            this.imgX = 128 - (int)((double)img.getWidth() * 0.6);
-            this.imgY = 128 - (int)((double)img.getHeight() * 1.0);
+            this.imgX = 128 - (int)((double)img.getWidth() * scale * 0.6);
+            this.imgY = 128 - (int)((double)img.getHeight() * scale * 1.0);
         }
-        this.changeMode(Mode.dragImage);
+        this.setImage(img, null);
+        this.changeMode(Mode.dragSprite);
         this.repaint();
     }
 
@@ -357,12 +366,18 @@ extends JLabel {
         this.initComponents();
         this.postInitComponents();
     }
+    
+    private int scale(float val) {
+        return scale(val, false);
+    }
 
-    private int scale(int val) {
-        return (int)((float)val * this.scale);
+    private int scale(float val, boolean useGuiScale) {
+        return (int)(val * this.scale * (useGuiScale ? Gui.instance.GetScale() : 1));
     }
 
     private BufferedImage genPreviewImage() {
+        return replaceImage;
+        /*
         int minX = Math.max(this.imgX, 0);
         int minY = Math.max(this.imgY, 0);
         int width = this.replaceImage.getWidth();
@@ -383,25 +398,27 @@ extends JLabel {
             }
         }
         return res;
+        */
     }
 
     @Override
     public void paint(Graphics g) {
+        float guiScale = Gui.instance.GetScale();
         int scaledY;
         int scaledX;
         Composite original;
         int scaledH;
         Graphics2D g2d = (Graphics2D)g;
-        int scaledCenter = this.scale(128);
-        int scaledBounds = this.scale(256);
+        int scaledCenter = this.scale(128, false);
+        int scaledBounds = this.scale(256, false);
         if (this.showCenter) {
             g2d.setColor(Color.black);
             g2d.drawLine(scaledCenter, 0, scaledCenter, scaledBounds);
             g2d.drawLine(0, scaledCenter, scaledBounds, scaledCenter);
         }
         if (this.showGhost && this.ghostImage != null && this.ghostShadow != null) {
-            int scaledW = this.scale(this.ghostShadow.getWidth());
-            int scaledH2 = this.scale(this.ghostShadow.getHeight());
+            int scaledW = this.scale(this.ghostShadow.getWidth(), true);
+            int scaledH2 = this.scale(this.ghostShadow.getHeight(), true);
             Composite original2 = g2d.getComposite();
             if (this.showShadow) {
                 g2d.setComposite(AlphaComposite.getInstance(3, 0.1f));
@@ -412,28 +429,14 @@ extends JLabel {
                 }
             }
             g2d.setComposite(AlphaComposite.getInstance(3, 0.4f));
-            scaledW = this.scale(this.ghostImage.getWidth());
-            scaledH2 = this.scale(this.ghostImage.getHeight());
+            scaledW = this.scale(this.ghostImage.getWidth(), true);
+            scaledH2 = this.scale(this.ghostImage.getHeight(), true);
             if (this.facedRight) {
                 g2d.drawImage(this.ghostImage, 0, 0, scaledW, scaledH2, this.ghostImage.getWidth(), 0, 0, this.ghostImage.getHeight(), null);
             } else {
                 g2d.drawImage(this.ghostImage, 0, 0, scaledW, scaledH2, null);
             }
             g2d.setComposite(original2);
-        }
-        if (this.shadow != null && this.showShadow) {
-            scaledX = this.scale(this.dragSpriteX);
-            scaledY = this.scale(this.dragSpriteY);
-            int scaledW = this.scale(this.shadow.getWidth());
-            scaledH = this.scale(this.shadow.getHeight());
-            original = g2d.getComposite();
-            g2d.setComposite(AlphaComposite.getInstance(3, 0.3f));
-            if (this.facedRight) {
-                g2d.drawImage(this.shadow, scaledX, scaledY, scaledX + scaledW, scaledY + scaledH, this.shadow.getWidth(), 0, 0, this.shadow.getHeight(), null);
-            } else {
-                g2d.drawImage(this.shadow, scaledX, scaledY, scaledW, scaledH, null);
-            }
-            g2d.setComposite(original);
         }
         if (this.weaponShowBehind && this.showWeapon && this.hasWeapon && this.weapon != null) {
             if (this.mouseOverWeapon) {
@@ -443,35 +446,15 @@ extends JLabel {
             }
         }
         if (this.image != null && this.replaceImage == null && this.showImage) {
-            scaledX = this.scale(this.dragSpriteX);
-            scaledY = this.scale(this.dragSpriteY);
-            int scaledW = this.scale(this.image.getWidth());
-            scaledH = this.scale(this.image.getHeight());
+            scaledX = this.scale(pivot.x + this.dragSpriteX, false);
+            scaledY = this.scale(pivot.y + this.dragSpriteY, false);
+            int scaledW = this.scale(this.image.getWidth(), true);
+            scaledH = this.scale(this.image.getHeight(), true);
             if (this.facedRight) {
-                g2d.drawImage(this.image, scaledX, scaledY, scaledX + scaledW, scaledY + scaledH, this.image.getWidth(), 0, 0, this.image.getHeight(), null);
+                g2d.drawImage(this.image, scaledX, scaledY - scaledH, scaledX + scaledW, scaledY, this.image.getWidth(), 0, 0, this.image.getHeight(), null);
             } else {
-                g2d.drawImage(this.image, scaledX, scaledY, scaledW, scaledH, null);
+                g2d.drawImage(this.image, scaledX, scaledY - scaledH, scaledW, scaledH, null);
             }
-        }
-        if (this.replaceImage != null) {
-            scaledX = this.scale(this.dragSpriteX);
-            scaledY = this.scale(this.dragSpriteY);
-            int scaledW = this.scale(this.image.getWidth());
-            scaledH = this.scale(this.image.getHeight());
-            if (this.previewImage == null) {
-                this.previewImage = this.genPreviewImage();
-            }
-            original = g2d.getComposite();
-            g2d.setComposite(AlphaComposite.getInstance(3, 0.2f));
-            if (this.facedRight) {
-                g2d.drawImage(this.image, scaledX, scaledY, scaledX + scaledW, scaledY + scaledH, this.image.getWidth(), 0, 0, this.image.getHeight(), null);
-            } else {
-                g2d.drawImage(this.image, scaledX, scaledY, scaledW, scaledH, null);
-            }
-            g2d.setComposite(AlphaComposite.getInstance(3, 0.3f));
-            g2d.drawImage(this.replaceImage, this.scale(this.imgX), this.scale(this.imgY), this.scale(this.replaceImage.getWidth()), this.scale(this.replaceImage.getHeight()), null);
-            g2d.setComposite(original);
-            g2d.drawImage(this.previewImage, 0, 0, scaledW, scaledH, null);
         }
         if (this.showWeapon && this.hasWeapon && this.weapon != null) {
             if (!this.weaponShowBehind) {
@@ -487,8 +470,8 @@ extends JLabel {
         }
         if (this.showHit && this.hasHit) {
             int centerX;
-            int scaledHitX = this.scale(this.hitX);
-            int scaledHitY = this.scale(this.hitY);
+            int scaledHitX = this.scale(this.hitX, false);
+            int scaledHitY = this.scale(this.hitY, false);
             int width = Math.abs(scaledHitX);
             int height = 5;
             int x = scaledHitX > 0 ? scaledCenter : scaledCenter + scaledHitX;

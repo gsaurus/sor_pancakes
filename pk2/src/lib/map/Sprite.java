@@ -213,14 +213,17 @@ implements Renderable {
     }
     
     public void writeArtOnly(RandomAccessFile rom, long artAddress) throws IOException {        
+        /*
         for (int i = 0; i < this.pieces.size(); ++i) {
             SpritePiece p = this.pieces.get(i);            
             Piece piece = this.tiledPieces.get(i);
             piece.write(rom, artAddress + (long)(p.spriteIndex * 32));
         }
+        */
     }
 
     public void writeArt(RandomAccessFile rom, long artAddress, BufferedImage image, Palette palette) throws IOException {
+        /*
         int numPieces = this.pieces.size();
         for (int i = 0; i < numPieces; ++i) {
             SpritePiece p = this.pieces.get(i);
@@ -235,6 +238,7 @@ implements Renderable {
             }
             tp.writeArt(rom, artAddress + (long)(p.spriteIndex * 32), tileImage, palette);
         }
+        */
     }
     
     public long getMappingsSizeInBytes(){
