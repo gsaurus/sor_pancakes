@@ -225,19 +225,7 @@ public class Manager {
     }
 
     public void bufferAnimation(int animId) throws IOException {
-        Animation anim = this.currCharacter.getAnimation(animId);
-        if (anim.isBuffered()) {
-            return;
-        }
-        Rom rom = new Rom(new File(this.romFileName));
-        try {
-            anim.buffer(rom, this.palette, shadowColor);
-        }
-        catch (IOException e) {
-            rom.close();
-            throw e;
-        }
-        rom.close();
+        // removed
     }
 
     public void bufferAnimFrame(int animId, int frameId) throws IOException {

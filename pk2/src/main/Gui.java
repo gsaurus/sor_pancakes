@@ -302,9 +302,6 @@ TheListener {
     private void changeFrame(int frameId) {
         this.verifyModifications();
         if (this.manager != null && this.manager.getCharacter() != null) {
-            if (this.manager.getCharacter().wasModified()) {
-                this.saveRom();
-            }
             this.setFrame(frameId);
         }
     }
@@ -4257,11 +4254,18 @@ TheListener {
                 int index = 0;
                 for (int i = 0; i < ch.getNumAnimations(); ++i) {
                     Animation anim = ch.getAnimation(i);
-                    if (!processed.contains(anim)) {
+                    if (!processed.contains(anim)) { 
                         processed.add(anim);
                         int animSize = anim.getNumFrames();
                         for (int j = 0; j < animSize; ++j) {
-                            long address = manager.getCharacter().getAnimFrame((int)i, (int)j).mapAddress;
+                            long address = -1;
+                            if (ch.isNewEra)
+                                if (j < anim.bufferedFrameIndexes.size())
+                                    address = anim.bufferedFrameIndexes.get(j);
+                                else
+                                    address = -1;
+                            else
+                                address = manager.getCharacter().getAnimFrame((int)i, (int)j).mapAddress;
                             try {
                                 Gui.this.manager.bufferAnimation(i);
                             }

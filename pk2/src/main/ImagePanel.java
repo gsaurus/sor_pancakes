@@ -394,11 +394,9 @@ extends JLabel {
     }
 
     @Override
-    public void paint(Graphics g) {
-        float guiScale = Gui.instance.getScale();
+    public void paintComponent(Graphics g) {
         int scaledY;
         int scaledX;
-        Composite original;
         int scaledH;
         Graphics2D g2d = (Graphics2D)g;
         int scaledCenter = this.scale(128, false);
