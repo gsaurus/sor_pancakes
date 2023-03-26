@@ -284,8 +284,6 @@ public class Character {
     }
     
     
-    private static String WEAPON_FRAME_KEY = "weapon";
-    
     public JSONObject toJson(int characterId, String romName){
         JSONObject jsonObj = new JSONObject();
         JSONArray jsonAnims = new JSONArray();
@@ -328,7 +326,7 @@ public class Character {
                 }
                 if (weapFrame != null) {
                     JSONObject obj = weapFrame.toJson();
-                    if (obj != null) jsonFrame.put(WEAPON_FRAME_KEY, obj);
+                    if (obj != null) jsonFrame.put("weapon", obj);
                 }
                 jsonFrames.put(jsonFrame);
                 screenFramesCount += animFrame.delay;
@@ -517,8 +515,6 @@ public class Character {
                 int duration = frameJson.getInt("duration");
                 animation.bufferedFrameIndexes.add(frameJson.getInt("imageId"));
                 
-                screenFramesCount += duration;
-                
                 AnimFrame animFrame = new AnimFrame();
                 animation.addFrame(animFrame);
                 animFrame.delay = duration;
@@ -532,20 +528,20 @@ public class Character {
                         ++currentHitIndex;
                     }
                 }
-                hitFrames.frames.add(hitFrame);
-                
                 WeaponFrame weapFrame = new WeaponFrame();
-                JSONObject weaponJson = frameJson.optJSONObject(WEAPON_FRAME_KEY);
+                JSONObject weaponJson = frameJson.optJSONObject("weapon");
                 if (weaponJson != null)
                 {
                     weapFrame = WeaponFrame.fromJson(weaponJson);
                 }
-                weaponFrames.frames.add(weapFrame);
                 
-                animations.add(animation);
-                animHits.add(hitFrames);
-                animWeapons.add(weaponFrames);
+                hitFrames.frames.add(hitFrame);
+                weaponFrames.frames.add(weapFrame);
+                screenFramesCount += duration;
             }
+            animations.add(animation);
+            animHits.add(hitFrames);
+            animWeapons.add(weaponFrames);
         }
         return character;
     }

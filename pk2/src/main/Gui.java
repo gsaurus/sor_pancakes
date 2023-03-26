@@ -141,7 +141,6 @@ TheListener {
     private javax.swing.JComboBox characterCombo;
     private javax.swing.JPanel characterPanel;
     private javax.swing.JPanel characterPanel1;
-    private javax.swing.JMenuItem closeMenu;
     private javax.swing.JPanel colorPanel1;
     private javax.swing.JPanel colorPanel10;
     private javax.swing.JPanel colorPanel11;
@@ -160,7 +159,6 @@ TheListener {
     private javax.swing.JPanel colorPanel9;
     private javax.swing.JPanel colorsPanel1;
     private javax.swing.JLabel compressedLabel;
-    private javax.swing.JMenuItem copyMenu;
     private javax.swing.JTextField damageField;
     private javax.swing.JTextField delayField;
     private javax.swing.JRadioButtonMenuItem dragImageMenu;
@@ -207,9 +205,6 @@ TheListener {
     private javax.swing.JPopupMenu.Separator jSeparator1;
     private javax.swing.JPopupMenu.Separator jSeparator2;
     private javax.swing.JPopupMenu.Separator jSeparator3;
-    private javax.swing.JPopupMenu.Separator jSeparator4;
-    private javax.swing.JPopupMenu.Separator jSeparator6;
-    private javax.swing.JPopupMenu.Separator jSeparator7;
     private javax.swing.JPopupMenu.Separator jSeparator9;
     private javax.swing.JCheckBox koCheck;
     private javax.swing.JPanel mainPanel;
@@ -219,16 +214,12 @@ TheListener {
     private javax.swing.JRadioButton noneRadio;
     private javax.swing.JMenuItem openRomMenu;
     private javax.swing.JPanel overridePanel;
-    private javax.swing.JMenuItem pasteMenu;
-    private javax.swing.JMenuItem pasteMenu1;
-    private javax.swing.JMenuItem pasteMenu2;
     private javax.swing.JRadioButtonMenuItem pencilMenu;
     private javax.swing.JRadioButton pencilRadio;
     private javax.swing.JToggleButton playToggle;
     private javax.swing.JPanel playerPanel;
     private javax.swing.JPanel previewPanel;
     private javax.swing.JButton previousBut;
-    private javax.swing.JMenuItem resizeAnimsMenu;
     private javax.swing.JScrollPane scrollPanel;
     private javax.swing.JCheckBox showCenterCheck;
     private javax.swing.JCheckBox showHitsCheck;
@@ -377,8 +368,6 @@ TheListener {
         this.frameDelayCount = 0;
         this.setImage(this.manager.getImage(this.currAnimation, this.currFrame), this.manager.getPivot(this.currAnimation, this.currFrame));
         this.updateTitle();
-        this.copyMenu.setEnabled(true);
-        this.pasteMenu.setEnabled(this.copiedMap != 0L);
     }
 
     private void setAnimation(int animId) {
@@ -402,7 +391,6 @@ TheListener {
         Gui.setEnable(this.toolsPanel, !isCompressed);
         Gui.setEnable(this.overridePanel, !isCompressed);
         Gui.setEnable(this.generatePanel, !isCompressed);
-        this.resizeAnimsMenu.setEnabled(!isCompressed);
         if (isCompressed) {
             this.imagePanel.setMode(Mode.none);
         }
@@ -506,9 +494,6 @@ TheListener {
     }
 
     private boolean openRom() {
-        if (!this.askSaveRom()) {
-            return false;
-        }
         int returnVal = this.romChooser.showOpenDialog(this);
         if (returnVal == 0) {
             File file = this.romChooser.getSelectedFile();
@@ -530,21 +515,14 @@ TheListener {
     }
 
     private void closeRom() {
-        if (this.askSaveRom()) {
-            this.manager = null;
-            this.copyMenu.setEnabled(false);
-            this.pasteMenu.setEnabled(false);
-            this.nameMenu.setEnabled(false);
-            this.pasteMenu1.setEnabled(false);
-            this.pasteMenu2.setEnabled(false);
-            this.resizeAnimsMenu.setEnabled(false);
-            this.hexIdsMenu.setEnabled(false);
-            this.imagePanel.setImage(null, null);
-            this.imagePanel.setReplaceImage(null);
-            this.imagePanel.removeHit();
-            this.imagePanel.removeWeapon();
-            this.updateEnablings();
-        }
+        this.manager = null;
+        this.nameMenu.setEnabled(false);
+        this.hexIdsMenu.setEnabled(false);
+        this.imagePanel.setImage(null, null);
+        this.imagePanel.setReplaceImage(null);
+        this.imagePanel.removeHit();
+        this.imagePanel.removeWeapon();
+        this.updateEnablings();
     }
 
     private boolean saveRom() {
@@ -563,22 +541,11 @@ TheListener {
         return true;
     }
 
-    private boolean askSaveRom() {
-        if (this.guide == null || this.manager == null) {
-            return true;
-        }
-        Character ch = this.manager.getCharacter();
-        if (!ch.wasModified()) {
-            return true;
-        }
-        int option = JOptionPane.showConfirmDialog(this, this.guide.getCharName(this.guide.getFakeCharId(this.manager.getCurrentCharacterId())) + " was modified.\n" + "Save changes?", "Character modified", 1);
+    private void quitConfirmation() {
+        int option = JOptionPane.showConfirmDialog(this, "Done for the day?", "Quit", JOptionPane.YES_NO_OPTION);
         if (option == 0) {
-            return this.saveRom();
+            System.exit(0);
         }
-        if (option != 1) {
-            return false;
-        }
-        return true;
     }
 
     private void setRadiosOff() {
@@ -631,14 +598,9 @@ TheListener {
 
     private void updateEnablings() {
         Gui.setEnable(this.mainPanel, this.manager != null && this.guide != null);
-        this.closeMenu.setEnabled(this.manager != null);
         this.inportNewEraMenuItem.setEnabled(this.manager != null);
         this.exportNewEraMenuItem.setEnabled(this.manager != null);
-        this.resizeAnimsMenu.setEnabled(this.manager != null);
-        this.copyMenu.setEnabled(this.manager != null);
-        this.pasteMenu.setEnabled(this.manager != null && this.copiedMap != 0L);
-        this.pasteMenu1.setEnabled(this.manager != null);
-        this.pasteMenu2.setEnabled(this.manager != null);
+        
         this.hexIdsMenu.setEnabled(this.manager != null);
         if (this.manager != null) {
             this.updateHitFrameEnabling();
@@ -1401,7 +1363,6 @@ TheListener {
         jMenu1 = new javax.swing.JMenu();
         openRomMenu = new javax.swing.JMenuItem();
         jMenuItem4 = new javax.swing.JMenuItem();
-        closeMenu = new javax.swing.JMenuItem();
         jSeparator2 = new javax.swing.JPopupMenu.Separator();
         inportNewEraMenuItem = new javax.swing.JMenuItem();
         jSeparator9 = new javax.swing.JPopupMenu.Separator();
@@ -1427,15 +1388,7 @@ TheListener {
         jMenuItem10 = new javax.swing.JMenuItem();
         hexIdsMenu = new javax.swing.JCheckBoxMenuItem();
         jSeparator3 = new javax.swing.JPopupMenu.Separator();
-        resizeAnimsMenu = new javax.swing.JMenuItem();
         nameMenu = new javax.swing.JMenuItem();
-        jSeparator4 = new javax.swing.JPopupMenu.Separator();
-        copyMenu = new javax.swing.JMenuItem();
-        pasteMenu = new javax.swing.JMenuItem();
-        jSeparator6 = new javax.swing.JPopupMenu.Separator();
-        pasteMenu1 = new javax.swing.JMenuItem();
-        jSeparator7 = new javax.swing.JPopupMenu.Separator();
-        pasteMenu2 = new javax.swing.JMenuItem();
         jMenu3 = new javax.swing.JMenu();
         jMenuItem6 = new javax.swing.JMenuItem();
 
@@ -2585,14 +2538,6 @@ TheListener {
             }
         });
         jMenu1.add(jMenuItem4);
-
-        closeMenu.setText("Close");
-        closeMenu.addActionListener(new java.awt.event.ActionListener() {
-            public void actionPerformed(java.awt.event.ActionEvent evt) {
-                closeMenuActionPerformed(evt);
-            }
-        });
-        jMenu1.add(closeMenu);
         jMenu1.add(jSeparator2);
 
         inportNewEraMenuItem.setText("Import from SOR2 New Era");
@@ -2767,15 +2712,6 @@ TheListener {
         jMenu2.add(hexIdsMenu);
         jMenu2.add(jSeparator3);
 
-        resizeAnimsMenu.setText("Resize Animations");
-        resizeAnimsMenu.setEnabled(false);
-        resizeAnimsMenu.addActionListener(new java.awt.event.ActionListener() {
-            public void actionPerformed(java.awt.event.ActionEvent evt) {
-                resizeAnimsMenuActionPerformed(evt);
-            }
-        });
-        jMenu2.add(resizeAnimsMenu);
-
         nameMenu.setText("Properties");
         nameMenu.setEnabled(false);
         nameMenu.addActionListener(new java.awt.event.ActionListener() {
@@ -2784,48 +2720,6 @@ TheListener {
             }
         });
         jMenu2.add(nameMenu);
-        jMenu2.add(jSeparator4);
-
-        copyMenu.setAccelerator(javax.swing.KeyStroke.getKeyStroke(java.awt.event.KeyEvent.VK_F5, 0));
-        copyMenu.setText("Copy Frame");
-        copyMenu.setEnabled(false);
-        copyMenu.addActionListener(new java.awt.event.ActionListener() {
-            public void actionPerformed(java.awt.event.ActionEvent evt) {
-                copyMenuActionPerformed(evt);
-            }
-        });
-        jMenu2.add(copyMenu);
-
-        pasteMenu.setAccelerator(javax.swing.KeyStroke.getKeyStroke(java.awt.event.KeyEvent.VK_F6, 0));
-        pasteMenu.setText("Paste Frame");
-        pasteMenu.setEnabled(false);
-        pasteMenu.addActionListener(new java.awt.event.ActionListener() {
-            public void actionPerformed(java.awt.event.ActionEvent evt) {
-                pasteMenuActionPerformed(evt);
-            }
-        });
-        jMenu2.add(pasteMenu);
-        jMenu2.add(jSeparator6);
-
-        pasteMenu1.setText("Decompress Art");
-        pasteMenu1.setEnabled(false);
-        pasteMenu1.addActionListener(new java.awt.event.ActionListener() {
-            public void actionPerformed(java.awt.event.ActionEvent evt) {
-                pasteMenu1ActionPerformed(evt);
-            }
-        });
-        jMenu2.add(pasteMenu1);
-        jMenu2.add(jSeparator7);
-
-        pasteMenu2.setText("Delete Character !!");
-        pasteMenu2.setActionCommand("Delete Character");
-        pasteMenu2.setEnabled(false);
-        pasteMenu2.addActionListener(new java.awt.event.ActionListener() {
-            public void actionPerformed(java.awt.event.ActionEvent evt) {
-                pasteMenu2ActionPerformed(evt);
-            }
-        });
-        jMenu2.add(pasteMenu2);
 
         jMenuBar1.add(jMenu2);
 
@@ -2952,10 +2846,6 @@ TheListener {
         }
     }//GEN-LAST:event_openRomMenuActionPerformed
 
-    private void closeMenuActionPerformed(ActionEvent evt) {//GEN-FIRST:event_closeMenuActionPerformed
-        this.closeRom();
-    }//GEN-LAST:event_closeMenuActionPerformed
-
     private void jMenuItem4ActionPerformed(ActionEvent evt) {//GEN-FIRST:event_jMenuItem4ActionPerformed
         Guide oldGuide = this.guide;
         if (this.openCustomGuide()) {
@@ -2968,10 +2858,7 @@ TheListener {
     }//GEN-LAST:event_jMenuItem4ActionPerformed
 
     private void jMenuItem5ActionPerformed(ActionEvent evt) {//GEN-FIRST:event_jMenuItem5ActionPerformed
-        if (this.askSaveRom()) {
-            this.closeRom();
-            System.exit(0);
-        }
+        this.quitConfirmation();
     }//GEN-LAST:event_jMenuItem5ActionPerformed
 
     private void jButton3ActionPerformed(ActionEvent evt) {//GEN-FIRST:event_jButton3ActionPerformed
@@ -3078,10 +2965,7 @@ TheListener {
     }//GEN-LAST:event_koCheckActionPerformed
 
     private void formWindowClosing(WindowEvent evt) {//GEN-FIRST:event_formWindowClosing
-        if (this.askSaveRom()) {
-            this.closeRom();
-            System.exit(0);
-        }
+        quitConfirmation();
     }//GEN-LAST:event_formWindowClosing
 
     private void softReplaceButtonActionPerformed(ActionEvent evt) {//GEN-FIRST:event_softReplaceButtonActionPerformed
@@ -3250,145 +3134,6 @@ TheListener {
         return null;
     }
 
-    private void copyMenuActionPerformed(ActionEvent evt) {//GEN-FIRST:event_copyMenuActionPerformed
-
-        this.copiedHasHit = this.hitCheck.isSelected();
-        this.copiedKnockDown = this.koCheck.isSelected();
-        this.copiedHasWeapon = this.weaponCheck.isSelected();
-        this.copiedWpShowBehind = this.behindCheck.isSelected();
-        this.copiedHitX = this.getIntFromField(this.xField);
-        this.copiedHitY = this.getIntFromField(this.yField);
-        this.copiedHitSound = this.getIntFromField(this.soundField);
-        this.copiedHitDamage = this.getIntFromField(this.damageField);
-        this.copiedWpX = this.getIntFromField(this.wXField);
-        this.copiedWpY = this.getIntFromField(this.wYField);
-        this.copiedWpRotation = this.getIntFromField(this.angleField);
-        this.pasteMenu.setEnabled(true);
-    }//GEN-LAST:event_copyMenuActionPerformed
-
-    private void pasteMenuActionPerformed(ActionEvent evt) {//GEN-FIRST:event_pasteMenuActionPerformed
-
-        if (this.hitCheck.isEnabled()) {
-            this.hitCheck.setSelected(this.copiedHasHit);
-            this.hitCheckActionPerformed(null);
-            this.koCheck.setSelected(this.copiedKnockDown);
-            this.koCheckActionPerformed(null);
-            this.setField(this.xField, this.copiedHitX);
-            this.hitXChanged();
-            this.setField(this.yField, this.copiedHitY);
-            this.hitYChanged();
-            this.setField(this.soundField, this.copiedHitSound);
-            this.hitSoundChanged();
-            this.setField(this.damageField, this.copiedHitDamage);
-            this.hitDamageChanged();
-        }
-        if (this.weaponCheck.isEnabled()) {
-            this.weaponCheck.setSelected(this.copiedHasWeapon);
-            this.weaponCheckActionPerformed(null);
-            this.behindCheck.setSelected(this.copiedWpShowBehind);
-            this.behindCheckActionPerformed(null);
-            this.setField(this.wXField, this.copiedWpX);
-            this.weaponXChanged();
-            this.setField(this.wYField, this.copiedWpY);
-            this.weaponYChanged();
-            this.setField(this.angleField, this.copiedWpRotation);
-            this.weaponAngleChanged();
-        }
-    }//GEN-LAST:event_pasteMenuActionPerformed
-
-    private void resizeAnimsMenuActionPerformed(ActionEvent evt) {//GEN-FIRST:event_resizeAnimsMenuActionPerformed
-        Scanner sc;
-        int charId = this.manager.getCurrentCharacterId();
-        Character c = this.manager.getCharacter();
-        HashSet<Animation> processed = new HashSet<Animation>();
-        int totalFrames = 0;
-        for (int i = 0; i < c.getNumAnimations(); ++i) {
-            Animation anim = c.getAnimation(i);
-            if (processed.contains(anim)) continue;
-            totalFrames += anim.getMaxNumFrames();
-            processed.add(anim);
-        }
-        int returnVal = this.resizerChooser.showOpenDialog(this);
-        if (returnVal != 0) {
-            return;
-        }
-        File file = this.resizerChooser.getSelectedFile();
-        try {
-            sc = new Scanner(file);
-        }
-        catch (Exception e) {
-            e.printStackTrace();
-            this.showError("Unable to open file " + file.getName());
-            return;
-        }
-        ArrayList<Integer> sizes = new ArrayList<Integer>(c.getNumAnimations());
-        ArrayList<Integer> wps = new ArrayList<Integer>(c.getNumAnimations());
-        ArrayList<Boolean> hit = new ArrayList<Boolean>(c.getNumAnimations() - 24);
-        int totalProvided = 0;
-        int totalHits = 0;
-        int totalWps = 0;
-        while (sc.hasNext()) {
-            try {
-                int s = sc.nextInt();
-                sizes.add(s);
-                int hasWp = sc.nextInt();
-                wps.add(hasWp);
-                boolean hasHit = false;
-                if (sizes.size() - 1 >= 24) {
-                    if (hasWp < 2) {
-                        hasHit = sc.nextInt() != 0;
-                    }
-                    hit.add(hasHit);
-                }
-                if (s > 0) {
-                    totalProvided += s;
-                    if (hasWp == 1) {
-                        totalWps += s;
-                    }
-                    if (!hasHit) continue;
-                    totalHits += s;
-                    continue;
-                }
-                if (s >= 0) continue;
-            }
-            catch (Exception e) {
-                this.showError("Invalid size values");
-                e.printStackTrace();
-                return;
-            }
-        }
-        int numAnims = c.getNumAnimations();
-        int numHits = c.getHitsSize();
-        int numWeapons = c.getWeaponsSize();
-        System.out.println("" + totalProvided + "-" + totalFrames + ", " + totalHits + "-" + numHits + ", " + totalWps + "-" + numWeapons);
-        boolean hasGlobalColl = this.manager.hasGlobalCollision();
-        boolean hasGlobalWeap = this.manager.hasGlobalWeapons();
-        if (sizes.isEmpty()) {
-            this.showError("Empty input");
-            return;
-        }
-        if (sizes.size() != numAnims) {
-            this.showError("Number of animations mismatch, \nGot " + sizes.size() + ", expected " + numAnims);
-            return;
-        }
-        if (totalProvided > totalFrames && !hasGlobalColl && !hasGlobalWeap) {
-            this.showError("Total number of frames exceeds the available space\nGot " + totalProvided + ", max allowed " + totalFrames);
-            return;
-        }
-        if (totalHits > numHits && !hasGlobalColl) {
-            this.showError("Total number of frames with collision exceeds the available space\nGot " + totalHits + ", max allowed " + numHits);
-            return;
-        }
-        if (totalWps > numWeapons && !hasGlobalWeap) {
-            this.showError("Total number of frames with weapons exceeds the available space\nGot " + totalWps + ", max allowed " + numWeapons);
-            return;
-        }
-        if (this.timer.isRunning()) {
-            this.playToggleActionPerformed(null);
-        }
-        this.resizeAnimations(sizes, wps, hit, totalProvided > totalFrames, totalHits > numHits, totalWps > numWeapons);
-    }//GEN-LAST:event_resizeAnimsMenuActionPerformed
-
     private void characterComboKeyPressed(KeyEvent evt) {//GEN-FIRST:event_characterComboKeyPressed
         switch (evt.getKeyCode()) {
             case 81: {
@@ -3400,39 +3145,6 @@ TheListener {
             }
         }
     }//GEN-LAST:event_characterComboKeyPressed
-
-    private void pasteMenu1ActionPerformed(ActionEvent evt) {//GEN-FIRST:event_pasteMenu1ActionPerformed
-        JTextField field = new JTextField();
-        field.setText("0");
-        JTextField nameField = new JTextField();
-        nameField.setText("decompressed.bin");
-        JComponent[] inputs = new JComponent[]{new JLabel("Compressed art address:"), field, new JLabel("Output filename:"), nameField};
-        int res = JOptionPane.showConfirmDialog(null, inputs, "Decompress SOR2 art", 2);
-        if (res == 0) {
-            long address = this.getHexFromField(field);
-            if (address == Long.MIN_VALUE) {
-                this.showError("Invalid address");
-                return;
-            }
-            String fileName = nameField.getText();
-            try {
-                FileOutputStream fos = new FileOutputStream(fileName);
-            }
-            catch (Exception e) {
-                this.showError("Unable to save to file \"" + fileName + "\"");
-                return;
-            }
-            try {
-                this.manager.decompressArt(fileName, address);
-            }
-            catch (IOException e) {
-                e.printStackTrace();
-                this.showError("Invalid data");
-                return;
-            }
-            Toolkit.getDefaultToolkit().beep();
-        }
-    }//GEN-LAST:event_pasteMenu1ActionPerformed
 
     private void hexIdsMenuActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_hexIdsMenuActionPerformed
         this.setupCharacterCombo();
@@ -3506,14 +3218,6 @@ TheListener {
             }
         }
     }//GEN-LAST:event_portraitMenuActionPerformed
-
-    private void pasteMenu2ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_pasteMenu2ActionPerformed
-        String characterName = this.guide.getCharName(this.guide.getFakeCharId(this.manager.getCurrentCharacterId()));
-        int option = JOptionPane.showConfirmDialog(this, "Are you sure you want to DELETE the character " + characterName, "Delete " + characterName, 1);
-        if (option == 0) {
-            deleteCharacterArtAndMaps();
-        }
-    }//GEN-LAST:event_pasteMenu2ActionPerformed
 
     private void exportNewEraMenuItemActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_exportNewEraMenuItemActionPerformed
         int characterId = manager.getCurrentCharacterId();
@@ -3596,6 +3300,7 @@ TheListener {
         importSpritesAndPivots(charPath);
         
         this.refresh();
+        characterCombo.setEnabled(false);
     }//GEN-LAST:event_inportNewEraMenuItemActionPerformed
     
     

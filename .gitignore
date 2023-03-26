@@ -19,3 +19,5 @@ hs_err_pid*
 *.bin
 pk2/SOR2 New Era exports
 .DS_Store
+pk2/AI Output/
+pk2/Test NE/

@@ -77,6 +77,7 @@ public class WeaponFrame {
         weapon.y = positionJson.getInt("y");
         weapon.angle = weaponJson.getInt("direction");
         weapon.showBehind = weaponJson.getBoolean("showBehind");
+        weapon.isEnabled = true;
         return weapon;
     }
 }
