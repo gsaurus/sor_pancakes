@@ -8,6 +8,7 @@ import java.io.RandomAccessFile;
 import org.json.JSONObject;
 
 public class HitFrame {
+
     public int x;
     public int y;
     public int sound;
@@ -60,6 +61,18 @@ public class HitFrame {
         res.put("knockDown", knockDown);
         res.put("soundId", sound);
         return res;
+    }
+    
+    static HitFrame fromJson(JSONObject hitJson) {
+        HitFrame hitFrame = new HitFrame();
+        JSONObject hitBox = hitJson.getJSONObject("hitBox");
+        hitFrame.x = hitBox.getInt("width") / 2;
+        hitFrame.y = hitBox.getInt("height");
+        hitFrame.sound = hitJson.getInt("soundId");
+        hitFrame.damage = hitJson.getInt("damage");
+        hitFrame.knockDown = hitJson.getBoolean("knockDown");
+        hitFrame.enabled = true;
+        return hitFrame;
     }
 }
 

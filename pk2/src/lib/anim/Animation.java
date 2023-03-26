@@ -23,6 +23,9 @@ public class Animation {
     private int type;
     private ArrayList<BufferedImage> bufferedFrames;
     private ArrayList<Point> bufferedPivots;
+    
+    public ArrayList<Integer> bufferedFrameIndexes;
+    
     private boolean wasArtModified;
     private ArrayList<Boolean> spritesModified;
 
@@ -34,6 +37,7 @@ public class Animation {
         this.type = type;
         this.frames = new ArrayList(numFrames);
         this.spritesModified = new ArrayList<Boolean>(numFrames);
+        bufferedFrameIndexes = new ArrayList<Integer>(numFrames);
         this.numFrames = numFrames;
     }
 

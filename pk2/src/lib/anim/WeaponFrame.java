@@ -69,5 +69,15 @@ public class WeaponFrame {
         res.put("showBehind", showBehind);
         return res;
     }
+    
+    static WeaponFrame fromJson(JSONObject weaponJson) {
+        WeaponFrame weapon = new WeaponFrame();
+        JSONObject positionJson = weaponJson.getJSONObject("position");
+        weapon.x = positionJson.getInt("x");
+        weapon.y = positionJson.getInt("y");
+        weapon.angle = weaponJson.getInt("direction");
+        weapon.showBehind = weaponJson.getBoolean("showBehind");
+        return weapon;
+    }
 }
 

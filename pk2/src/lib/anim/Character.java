@@ -23,8 +23,7 @@ public class Character {
     private ArrayList<WeaponFramesSet> animWeapons;
     private boolean modified;
     private boolean spritesModified;
-    static boolean DEBUG_RESIZERS = false;
-    static boolean DEBUG_RESIZERS_FIX = false;
+    public boolean isNewEra = false;
 
     public void setModified(boolean modified) {
         this.modified = modified;
@@ -40,7 +39,8 @@ public class Character {
 
     public Character(int numAnimations) {
         this.animations = new ArrayList(numAnimations);
-        this.animHits = numAnimations > FIRST_HIT_ANIM ? new ArrayList(numAnimations - FIRST_HIT_ANIM) : new ArrayList(0);
+        int numHitFrames = isNewEra ? numAnimations : numAnimations > FIRST_HIT_ANIM ? numAnimations - FIRST_HIT_ANIM : 0;
+        this.animHits = new ArrayList(numHitFrames);
         this.animWeapons = new ArrayList(numAnimations);
     }
 
@@ -49,14 +49,20 @@ public class Character {
     }
 
     public AnimFrame getAnimFrame(int animId, int frameId) {
-        return this.animations.get(animId).getFrame(frameId);
+        if (animId < 0 || animId >= animations.size())
+            return null;
+        Animation animation = animations.get(animId);
+        if (frameId < 0 || frameId >= animation.getNumFrames())
+            return null;
+        return animation.getFrame(frameId);
     }
 
     public HitFrame getHitFrame(int animId, int frameId) {
-        if (animId < FIRST_HIT_ANIM || animId - FIRST_HIT_ANIM >= this.animHits.size()) {
+        int index = isNewEra ? animId : animId - FIRST_HIT_ANIM;
+        if (index < 0 || index >= this.animHits.size()) {
             return null;
         }
-        HitFramesSet hits = this.animHits.get(animId - FIRST_HIT_ANIM);
+        HitFramesSet hits = this.animHits.get(index);
         if (hits == null) {
             return null;
         }
@@ -90,65 +96,12 @@ public class Character {
         return Character.read(rom, animListAddress, hitsListAddress, weaponsListAddress, id, count, -1, globalCol, globalWeap, numPlayableChars);
     }
 
-    private static void reorderFiles() throws IOException {
-        for (int i = 1; i < 23; ++i) {
-            String s;
-            Scanner sc = new Scanner(new File("" + i + ".txt"));
-            ArrayList<Integer> anims = new ArrayList<Integer>();
-            ArrayList<Integer> hits = new ArrayList<Integer>();
-            ArrayList<Integer> weapons = new ArrayList<Integer>();
-            while (sc.hasNextLine() && !(s = sc.nextLine()).isEmpty()) {
-                anims.add(Integer.parseInt(s));
-            }
-            while (sc.hasNextLine() && !(s = sc.nextLine()).isEmpty()) {
-                if (s.equalsIgnoreCase("#")) {
-                    s = "0";
-                }
-                hits.add(Integer.parseInt(s));
-            }
-            while (sc.hasNextLine() && !(s = sc.nextLine()).isEmpty()) {
-                if (s.equalsIgnoreCase("#")) {
-                    s = "0";
-                }
-                weapons.add(Integer.parseInt(s));
-            }
-            sc.close();
-            PrintWriter dos = new PrintWriter("" + i + " - .txt");
-            for (int j = 0; j < anims.size(); ++j) {
-                int first = (Integer)anims.get(j);
-                int second = (Integer)weapons.get(j);
-                if (first < 0) {
-                    second = second < 0 ? 1 : 0;
-                }
-                dos.print("" + first + "\t" + second);
-                if (j >= FIRST_HIT_ANIM) {
-                    int third = (Integer)hits.get(j - FIRST_HIT_ANIM);
-                    if (first < 0) {
-                        third = third < 0 ? 1 : 0;
-                    }
-                    dos.print("\t" + third);
-                }
-                if (j >= anims.size() - 1) continue;
-                dos.println();
-            }
-            dos.close();
-        }
-    }
-
     public static Character read(RandomAccessFile rom, long animListAddress, long hitsListAddress, long weaponsListAddress, int charId, int count, int animsType, boolean globalCol, boolean globalWeap, int numPlayableChars) throws IOException {
         short offset;
         Character c = new Character(count);
-        if (DEBUG_RESIZERS_FIX) {
-            Character.reorderFiles();
-        }
-        PrintWriter dos = null;
+      
         TreeMap<Long, Integer> animIds = null;
-        if (DEBUG_RESIZERS) {
-            dos = new PrintWriter("" + (charId + 1) + ".txt");
-        }
-        if (DEBUG_RESIZERS) {
-            animIds = new TreeMap<Long, Integer>();
-        }
+        
         rom.seek(animListAddress + (long)(charId * 4));
         long address = rom.readInt();
         for (int i = 0; i < count; ++i) {
@@ -158,24 +111,11 @@ public class Character {
             localAddress += (long)offset;
             Animation anim;
             anim = Animation.read(rom, localAddress, animsType);
-            if (DEBUG_RESIZERS) {
-                animIds.put(localAddress, i);
-            }
-            if (DEBUG_RESIZERS) {
-                dos.println(anim.getNumFrames());
-            }
+            
             c.animations.add(anim);
         }
-        if (DEBUG_RESIZERS) {
-            dos.println();
-        }
-        if (DEBUG_RESIZERS) {
-            animIds = new TreeMap();
-        }
+        
         if (charId > 25 && charId > numPlayableChars) {
-            if (DEBUG_RESIZERS) {
-                dos.close();
-            }
             return c;
         }
         if (globalCol) {
@@ -200,19 +140,11 @@ public class Character {
             } else {
                 set = new HitFramesSet(0);
                 c.animHits.add(set);
-                if (DEBUG_RESIZERS) {
-                    dos.println(0);
-                }
             }
             // Have no idea what the following line meant to be, just know that it's broken
             //if (charId == 24 && numPlayableChars < 24 || charId == numPlayableChars - 1) break;
         }
-        if (DEBUG_RESIZERS) {
-            dos.println();
-        }
-        if (DEBUG_RESIZERS) {
-            animIds = new TreeMap();
-        }
+        
         if (globalWeap) {
             rom.seek(weaponsListAddress + (long)(charId * 4));
             address = rom.readInt();
@@ -235,11 +167,6 @@ public class Character {
             }
             set = new WeaponFramesSet(0);
             c.animWeapons.add(set);
-            if (!DEBUG_RESIZERS) continue;
-            dos.println(0);
-        }
-        if (DEBUG_RESIZERS) {
-            dos.close();
         }
         return c;
     }
@@ -255,246 +182,15 @@ public class Character {
     }
 
     public void write(RandomAccessFile rom, long animListAddress, long hitsListAddress, long weaponsListAddress, int id, boolean globalCol, boolean globalWeap, int numPlayableChars) throws IOException {
-        Animation anim;
-        short offset;
-        int i;
-        rom.seek(animListAddress + (long)(id * 4));
-        long address = rom.readInt();
-        int count = this.animations.size();
-        HashSet<Animation> processed = new HashSet<Animation>();
-        for (i = count - 1; i >= 0; --i) {
-            Animation anim2 = this.animations.get(i);
-            if (processed.contains(anim2)) continue;
-            processed.add(anim2);
-            long localAddress = address + (long)(i * 2);
-            rom.seek(localAddress);
-            offset = rom.readShort();
-            anim2.write(rom, localAddress + (long)offset);
-        }
-        if (globalCol) {
-            rom.seek(hitsListAddress + (long)(id * 4));
-            address = rom.readInt();
-        } else {
-            rom.seek(hitsListAddress + (long)(id * 2));
-            offset = rom.readShort();
-            address = hitsListAddress + (long)(id * 2) + (long)offset;
-        }
-        for (i = count - 24 - 1; i >= 0; --i) {
-            // Have no idea what the following line meant to be, just know that it's broken
-//            if (id == 24 && numPlayableChars < 24 || id == numPlayableChars - 1) {
-//                i = 0;
-//            }
-            long localAddress = address + (long)(i * 2);
-            rom.seek(localAddress);
-            offset = rom.readShort();
-            if (offset == 0) continue;
-            anim = this.animations.get(i + FIRST_HIT_ANIM);
-            this.animHits.get(i).write(rom, localAddress + (long)offset, anim.getNumFrames());
-        }
-        // Have no idea what the following line meant to be, just know that it's broken
-//        if (id == 24 && numPlayableChars < 24 || id == numPlayableChars - 1) {
-//            return;
-//        }
-        if (globalWeap) {
-            rom.seek(weaponsListAddress + (long)(id * 4));
-            address = rom.readInt();
-        } else {
-            rom.seek(weaponsListAddress + (long)(id * 2));
-            offset = rom.readShort();
-            address = weaponsListAddress + (long)(id * 2) + (long)offset;
-        }
-        for (i = count - 1; i >= 0; --i) {
-            long localAddress = address + (long)(i * 2);
-            rom.seek(localAddress);
-            offset = rom.readShort();
-            if (offset == 0) continue;
-            anim = this.animations.get(i);
-            this.animWeapons.get(i).write(rom, localAddress + (long)offset, anim.getNumFrames());
-        }
+        
     }
 
     public void writeNewAnimations(RandomAccessFile rom, long animListAddress, long newAnimsAddress, int id, int type) throws IOException {
-        rom.seek(animListAddress + (long)(id * 4));
-        rom.writeInt((int)newAnimsAddress);
-        int count = this.animations.size();
-        long writeAddress = newAnimsAddress + (long)(count * 2);
-        for (int i = count - 1; i >= 0; --i) {
-            long pointerAddress = newAnimsAddress + (long)(i * 2);
-            rom.seek(pointerAddress);
-            rom.writeShort((short)(writeAddress - pointerAddress));
-            int size = this.animations.get(i).write(rom, writeAddress, type);
-            writeAddress += (long)size;
-        }
+        
     }
 
     public void writeNewScripts(RandomAccessFile rom, long animListAddress, long hitsListAddress, long weaponsListAddress, int id, int type, boolean globalCol, boolean globalWeap, long newAddress, boolean newHits, boolean newWeapons) throws IOException {
-        long address;
-        Animation anim;
-        Animation anim2;
-        int i;
-        int offset;
-        HitFramesSet hits;
-        long pointerAddress;
-        long writeAddress;
-        int i2;
-        rom.seek(animListAddress + (long)(id * 4));
-        int count = this.animations.size();
-        HashMap<Animation, Long> processed = new HashMap<Animation, Long>();
-        if (newAddress > 0L) {
-            pointerAddress = newAddress;
-            rom.writeInt((int)newAddress);
-            writeAddress = pointerAddress + (long)(count * 2);
-            for (i2 = 0; i2 < count; ++i2) {
-                anim2 = this.animations.get(i2);
-                if (!processed.containsKey(anim2)) {
-                    processed.put(anim2, writeAddress);
-                    rom.seek(pointerAddress);
-                    offset = (int)(writeAddress - pointerAddress);
-                    rom.writeShort(offset);
-                    anim2.write(rom, writeAddress);
-                    writeAddress += (long)anim2.getSizeInBytes(type);
-                } else {
-                    rom.seek(pointerAddress);
-                    offset = (int)((Long)processed.get(anim2) - pointerAddress);
-                    rom.writeShort(offset);
-                }
-                pointerAddress += 2L;
-            }
-        } else {
-            writeAddress = pointerAddress = (long)rom.readInt();
-            for (i2 = 0; i2 < count; ++i2) {
-                anim2 = this.animations.get(i2);
-                if (!processed.containsKey(anim2)) {
-                    processed.put(anim2, writeAddress -= (long)anim2.getSizeInBytes(type));
-                    rom.seek(pointerAddress);
-                    offset = (int)(writeAddress - pointerAddress);
-                    rom.writeShort(offset);
-                    anim2.write(rom, writeAddress, type);
-                } else {
-                    rom.seek(pointerAddress);
-                    offset = (int)((Long)processed.get(anim2) - pointerAddress);
-                    rom.writeShort(offset);
-                }
-                pointerAddress += 2L;
-            }
-        }
-        HashMap<HitFramesSet, Long> processedHits = new HashMap<HitFramesSet, Long>();
-        HashSet<HitFrame> processedSingleHits = new HashSet<HitFrame>();
-        int max = this.getHitsSize();
-        int frameCount = 0;
-        if (globalCol) {
-            rom.seek(hitsListAddress + (long)(id * 4));
-            if (newHits) {
-                rom.writeInt((int)writeAddress);
-                pointerAddress = writeAddress;
-            } else {
-                pointerAddress = rom.readInt();
-            }
-        } else {
-            rom.seek(hitsListAddress + (long)(id * 2));
-            offset = rom.readShort();
-            pointerAddress = hitsListAddress + (long)(id * 2) + (long)offset;
-        }
-        if (newHits) {
-            writeAddress = pointerAddress + (long)((count - FIRST_HIT_ANIM) * 2);
-            for (i = 0; i < count - FIRST_HIT_ANIM; ++i) {
-                anim = this.animations.get(FIRST_HIT_ANIM + i);
-                hits = this.animHits.get(i);
-                if (!processedHits.containsKey(hits) && hits.process(processedSingleHits)) {
-                    rom.seek(pointerAddress);
-                    if (hits.frames.isEmpty()) {
-                        rom.writeShort(0);
-                        processedHits.put(hits, new Long(0L));
-                    } else {
-                        processedHits.put(hits, writeAddress);
-                        offset = (int)(writeAddress - pointerAddress);
-                        rom.writeShort(offset);
-                        hits.write(rom, writeAddress, anim.getNumFrames());
-                        writeAddress += (long)(anim.getNumFrames() * 4);
-                        frameCount += anim.getNumFrames();
-                    }
-                } else {
-                    rom.seek(pointerAddress);
-                    address = processedHits.containsKey(hits) ? ((Long)processedHits.get(hits)).longValue() : ((Long)processed.values().iterator().next()).longValue();
-                    if (address != 0L) {
-                        address -= pointerAddress;
-                    }
-                    rom.writeShort((int)address);
-                }
-                pointerAddress += 2L;
-            }
-        } else {
-            writeAddress = pointerAddress;
-            for (i = 0; i < count - FIRST_HIT_ANIM; ++i) {
-                anim = this.animations.get(FIRST_HIT_ANIM + i);
-                hits = this.animHits.get(i);
-                if (!processedHits.containsKey(hits) && hits.process(processedSingleHits)) {
-                    rom.seek(pointerAddress);
-                    if (hits.frames.isEmpty()) {
-                        rom.writeShort(0);
-                        processedHits.put(hits, new Long(0L));
-                    } else {
-                        processedHits.put(hits, writeAddress -= (long)(anim.getNumFrames() * 4));
-                        offset = (int)(writeAddress - pointerAddress);
-                        rom.writeShort(offset);
-                        hits.write(rom, writeAddress, anim.getNumFrames());
-                        frameCount += anim.getNumFrames();
-                    }
-                } else {
-                    rom.seek(pointerAddress);
-                    address = processedHits.containsKey(hits) ? ((Long)processedHits.get(hits)).longValue() : ((Long)processed.values().iterator().next()).longValue();
-                    if (address != 0L) {
-                        address -= pointerAddress;
-                    }
-                    rom.writeShort((int)address);
-                }
-                pointerAddress += 2L;
-            }
-        }
-        System.out.println("Wrote: " + frameCount + " of max " + max);
-        if (globalWeap) {
-            rom.seek(weaponsListAddress + (long)(id * 4));
-            if (newWeapons) {
-                rom.writeInt((int)writeAddress);
-                pointerAddress = writeAddress;
-            } else {
-                pointerAddress = rom.readInt();
-            }
-        } else {
-            rom.seek(weaponsListAddress + (long)(id * 2));
-            offset = rom.readShort();
-            pointerAddress = weaponsListAddress + (long)(id * 2) + (long)offset;
-        }
-        writeAddress = pointerAddress + (long)(count * 2);
-        HashMap<WeaponFramesSet, Long> processedWeapons = new HashMap<WeaponFramesSet, Long>();
-        HashSet<WeaponFrame> processedSingleWeapons = new HashSet<WeaponFrame>();
-        for (int i3 = 0; i3 < count; ++i3) {
-            Animation anim3 = this.animations.get(i3);
-            WeaponFramesSet wps = this.animWeapons.get(i3);
-            if (!processedWeapons.containsKey(wps) && wps.process(processedSingleWeapons)) {
-                if (wps.frames.isEmpty()) {
-                    rom.seek(pointerAddress);
-                    rom.writeShort(0);
-                    processedWeapons.put(wps, new Long(0L));
-                } else {
-                    processedWeapons.put(wps, writeAddress);
-                    rom.seek(pointerAddress);
-                    offset = (int)(writeAddress - pointerAddress);
-                    rom.writeShort(offset);
-                    wps.write(rom, writeAddress, anim3.getNumFrames());
-                    writeAddress += (long)(anim3.getNumFrames() * 4);
-                }
-            } else {
-                rom.seek(pointerAddress);
-                long address2 = processedWeapons.containsKey(wps) ? (Long)processedWeapons.get(wps) : 0L;
-                if (address2 == 0L) {
-                    rom.writeShort(0);
-                } else {
-                    rom.writeShort((int)(address2 - pointerAddress));
-                }
-            }
-            pointerAddress += 2L;
-        }
+        
     }
 
     public boolean wasSpritesModified() {
@@ -664,6 +360,7 @@ public class Character {
         return jsonObj;
     }
     
+    
     private boolean isFrontThrow(int characterId, int animId)
     {
         // #D460
@@ -788,6 +485,69 @@ public class Character {
                 jsonArray.put(i, obj);
             }
         }
+    }
+
+    public static Character fromJson(JSONObject jsonCharacter) {
+        JSONArray jsonAnims = (JSONArray) jsonCharacter.get("animations");
+        JSONArray jsonAnimationsLogic = (JSONArray) jsonCharacter.get("animationsLogic");
+        
+        Character character = new Character(jsonAnims.length());
+        character.isNewEra = true;
+        ArrayList<Animation> animations = character.animations;
+        ArrayList<HitFramesSet> animHits = character.animHits;
+        ArrayList<WeaponFramesSet> animWeapons = character.animWeapons;
+        
+        for (int animId = 0; animId < jsonAnims.length(); ++animId){
+            JSONObject framesObject = jsonAnims.getJSONObject(animId);
+            JSONArray jsonFrames = (JSONArray)framesObject.get("frames");
+            JSONObject animationLogicJson = jsonAnimationsLogic.getJSONObject(animId);
+            JSONArray jsonHits = animationLogicJson.optJSONArray("hitboxes");
+            
+            int numFrames = jsonFrames.length();
+            Animation animation = new Animation(numFrames, 0);
+            HitFramesSet hitFrames = new HitFramesSet(numFrames);
+            WeaponFramesSet weaponFrames = new WeaponFramesSet(numFrames);
+            
+            int screenFramesCount = 0;
+            int currentHitIndex = 0;
+            
+            for (int frameId = 0; frameId < numFrames; ++frameId) {
+                JSONObject frameJson = jsonFrames.getJSONObject(frameId);
+                        
+                int duration = frameJson.getInt("duration");
+                animation.bufferedFrameIndexes.add(frameJson.getInt("imageId"));
+                
+                screenFramesCount += duration;
+                
+                AnimFrame animFrame = new AnimFrame();
+                animation.addFrame(animFrame);
+                animFrame.delay = duration;
+                HitFrame hitFrame = new HitFrame();
+                if (jsonHits != null && currentHitIndex < jsonHits.length())
+                {
+                    JSONObject currentHit = jsonHits.getJSONObject(currentHitIndex);
+                    if (currentHit.getInt("frame") == screenFramesCount)
+                    {
+                        hitFrame = HitFrame.fromJson(currentHit);
+                        ++currentHitIndex;
+                    }
+                }
+                hitFrames.frames.add(hitFrame);
+                
+                WeaponFrame weapFrame = new WeaponFrame();
+                JSONObject weaponJson = frameJson.optJSONObject(WEAPON_FRAME_KEY);
+                if (weaponJson != null)
+                {
+                    weapFrame = WeaponFrame.fromJson(weaponJson);
+                }
+                weaponFrames.frames.add(weapFrame);
+                
+                animations.add(animation);
+                animHits.add(hitFrames);
+                animWeapons.add(weaponFrames);
+            }
+        }
+        return character;
     }
     
 }

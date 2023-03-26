@@ -22,6 +22,7 @@ import java.awt.image.RenderedImage;
 import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
+import java.io.FileReader;
 import java.io.FileWriter;
 import java.io.IOException;
 import java.util.AbstractMap.SimpleEntry;
@@ -72,6 +73,7 @@ import lib.map.SpritePiece;
 import lib.map.Tile;
 import org.json.JSONArray;
 import org.json.JSONObject;
+import org.json.JSONTokener;
 
 public class Gui
 extends JFrame
@@ -87,6 +89,7 @@ TheListener {
     private static final int JSON_EXPORT_SPACES = 2;
     private String romName;
     private String currentDirectory;
+    private JFileChooser newEraPackChooser;
     private JFileChooser romChooser;
     private JFileChooser guideChooser;
     public JFileChooser imageChooser;
@@ -164,7 +167,6 @@ TheListener {
     private javax.swing.JRadioButton dragImageRadio;
     private javax.swing.JRadioButtonMenuItem dragSpriteMenu;
     private javax.swing.JRadioButton dragSpriteRadio;
-    private javax.swing.JMenu exportMenu;
     private javax.swing.JMenuItem exportNewEraMenuItem;
     private javax.swing.JPanel framePanel;
     private javax.swing.JButton frontBut;
@@ -172,7 +174,7 @@ TheListener {
     private javax.swing.JCheckBoxMenuItem hexIdsMenu;
     private javax.swing.JCheckBox hitCheck;
     private javax.swing.JPanel hitPanel;
-    private javax.swing.JMenu inportMenu;
+    private javax.swing.JMenuItem inportNewEraMenuItem;
     private javax.swing.JButton jButton2;
     private javax.swing.JButton jButton3;
     private javax.swing.JLabel jLabel1;
@@ -195,11 +197,8 @@ TheListener {
     private javax.swing.JMenu jMenu5;
     private javax.swing.JMenu jMenu6;
     private javax.swing.JMenuBar jMenuBar1;
-    private javax.swing.JMenuItem jMenuItem1;
     private javax.swing.JMenuItem jMenuItem10;
     private javax.swing.JMenuItem jMenuItem11;
-    private javax.swing.JMenuItem jMenuItem2;
-    private javax.swing.JMenuItem jMenuItem3;
     private javax.swing.JMenuItem jMenuItem4;
     private javax.swing.JMenuItem jMenuItem5;
     private javax.swing.JMenuItem jMenuItem6;
@@ -209,10 +208,9 @@ TheListener {
     private javax.swing.JPopupMenu.Separator jSeparator2;
     private javax.swing.JPopupMenu.Separator jSeparator3;
     private javax.swing.JPopupMenu.Separator jSeparator4;
-    private javax.swing.JPopupMenu.Separator jSeparator5;
     private javax.swing.JPopupMenu.Separator jSeparator6;
     private javax.swing.JPopupMenu.Separator jSeparator7;
-    private javax.swing.JPopupMenu.Separator jSeparator8;
+    private javax.swing.JPopupMenu.Separator jSeparator9;
     private javax.swing.JCheckBox koCheck;
     private javax.swing.JPanel mainPanel;
     private javax.swing.JMenuItem nameMenu;
@@ -243,8 +241,6 @@ TheListener {
     private javax.swing.JRadioButtonMenuItem sizeRadioMenu3;
     private javax.swing.JButton softReplaceButton;
     private javax.swing.JTextField soundField;
-    private javax.swing.JMenuItem spriteSheetMenu;
-    private javax.swing.JMenuItem spriteSheetMenu1;
     private javax.swing.JPanel toolsPanel;
     private javax.swing.JTextField wXField;
     private javax.swing.JTextField wYField;
@@ -406,7 +402,6 @@ TheListener {
         Gui.setEnable(this.toolsPanel, !isCompressed);
         Gui.setEnable(this.overridePanel, !isCompressed);
         Gui.setEnable(this.generatePanel, !isCompressed);
-        this.inportMenu.setEnabled(!isCompressed);
         this.resizeAnimsMenu.setEnabled(!isCompressed);
         if (isCompressed) {
             this.imagePanel.setMode(Mode.none);
@@ -637,8 +632,8 @@ TheListener {
     private void updateEnablings() {
         Gui.setEnable(this.mainPanel, this.manager != null && this.guide != null);
         this.closeMenu.setEnabled(this.manager != null);
-        this.inportMenu.setEnabled(this.manager != null);
-        this.exportMenu.setEnabled(this.manager != null);
+        this.inportNewEraMenuItem.setEnabled(this.manager != null);
+        this.exportNewEraMenuItem.setEnabled(this.manager != null);
         this.resizeAnimsMenu.setEnabled(this.manager != null);
         this.copyMenu.setEnabled(this.manager != null);
         this.pasteMenu.setEnabled(this.manager != null && this.copiedMap != 0L);
@@ -1121,6 +1116,13 @@ TheListener {
         this.imageSaver.setDialogTitle("Save image");
         this.resizerChooser = new JFileChooser(this.currentDirectory);
         this.resizerChooser.setDialogTitle("Open resizing script");
+        
+        this.newEraPackChooser = new JFileChooser(this.currentDirectory);
+        newEraPackChooser.setFileSelectionMode(JFileChooser.DIRECTORIES_ONLY);
+        newEraPackChooser.setAcceptAllFileFilterUsed(false);
+        this.newEraPackChooser.setDialogTitle("Open a 'SOR2 New Era character folder'");
+        
+        
         try {
             BufferedImage icon = ImageIO.read(new File("images/icon.png"));
             this.setIconImage(icon);
@@ -1401,16 +1403,9 @@ TheListener {
         jMenuItem4 = new javax.swing.JMenuItem();
         closeMenu = new javax.swing.JMenuItem();
         jSeparator2 = new javax.swing.JPopupMenu.Separator();
-        inportMenu = new javax.swing.JMenu();
-        jMenuItem1 = new javax.swing.JMenuItem();
-        jMenuItem2 = new javax.swing.JMenuItem();
-        jSeparator5 = new javax.swing.JPopupMenu.Separator();
-        jMenuItem3 = new javax.swing.JMenuItem();
-        exportMenu = new javax.swing.JMenu();
+        inportNewEraMenuItem = new javax.swing.JMenuItem();
+        jSeparator9 = new javax.swing.JPopupMenu.Separator();
         exportNewEraMenuItem = new javax.swing.JMenuItem();
-        jSeparator8 = new javax.swing.JPopupMenu.Separator();
-        spriteSheetMenu1 = new javax.swing.JMenuItem();
-        spriteSheetMenu = new javax.swing.JMenuItem();
         jSeparator1 = new javax.swing.JPopupMenu.Separator();
         jMenuItem5 = new javax.swing.JMenuItem();
         jMenu2 = new javax.swing.JMenu();
@@ -2600,63 +2595,22 @@ TheListener {
         jMenu1.add(closeMenu);
         jMenu1.add(jSeparator2);
 
-        inportMenu.setText("Inport Character...");
-
-        jMenuItem1.setText("Replace from Spritesheet");
-        jMenuItem1.addActionListener(new java.awt.event.ActionListener() {
+        inportNewEraMenuItem.setText("Import from SOR2 New Era");
+        inportNewEraMenuItem.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
-                jMenuItem1ActionPerformed(evt);
+                inportNewEraMenuItemActionPerformed(evt);
             }
         });
-        inportMenu.add(jMenuItem1);
+        jMenu1.add(inportNewEraMenuItem);
+        jMenu1.add(jSeparator9);
 
-        jMenuItem2.setText("Generate from Spritesheet");
-        jMenuItem2.addActionListener(new java.awt.event.ActionListener() {
-            public void actionPerformed(java.awt.event.ActionEvent evt) {
-                jMenuItem2ActionPerformed(evt);
-            }
-        });
-        inportMenu.add(jMenuItem2);
-        inportMenu.add(jSeparator5);
-
-        jMenuItem3.setText("Import from other ROM");
-        jMenuItem3.addActionListener(new java.awt.event.ActionListener() {
-            public void actionPerformed(java.awt.event.ActionEvent evt) {
-                jMenuItem3ActionPerformed(evt);
-            }
-        });
-        inportMenu.add(jMenuItem3);
-
-        jMenu1.add(inportMenu);
-
-        exportMenu.setText("Export Character...");
-
-        exportNewEraMenuItem.setText("SOR2 New Era");
+        exportNewEraMenuItem.setText("Export to SOR2 New Era");
         exportNewEraMenuItem.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 exportNewEraMenuItemActionPerformed(evt);
             }
         });
-        exportMenu.add(exportNewEraMenuItem);
-        exportMenu.add(jSeparator8);
-
-        spriteSheetMenu1.setText("Individual Frames");
-        spriteSheetMenu1.addActionListener(new java.awt.event.ActionListener() {
-            public void actionPerformed(java.awt.event.ActionEvent evt) {
-                spriteSheetMenu1ActionPerformed(evt);
-            }
-        });
-        exportMenu.add(spriteSheetMenu1);
-
-        spriteSheetMenu.setText("Spritesheet");
-        spriteSheetMenu.addActionListener(new java.awt.event.ActionListener() {
-            public void actionPerformed(java.awt.event.ActionEvent evt) {
-                spriteSheetMenuActionPerformed(evt);
-            }
-        });
-        exportMenu.add(spriteSheetMenu);
-
-        jMenu1.add(exportMenu);
+        jMenu1.add(exportNewEraMenuItem);
         jMenu1.add(jSeparator1);
 
         jMenuItem5.setAccelerator(javax.swing.KeyStroke.getKeyStroke(java.awt.event.KeyEvent.VK_F4, java.awt.event.InputEvent.ALT_DOWN_MASK));
@@ -3269,94 +3223,6 @@ TheListener {
         JOptionPane.showMessageDialog(this, TITLE + "\n\u00a9 gsaurus 2012-" + YEAR + "\n\nAcknowledgment on derived work\nwould be appreciated but is not required\n\nPk2 is free software. The author can not be held responsible\nfor any illicit use of this program.\n", "About", 1);
     }//GEN-LAST:event_jMenuItem6ActionPerformed
 
-    private void spriteSheetMenuActionPerformed(ActionEvent evt) {//GEN-FIRST:event_spriteSheetMenuActionPerformed
-        this.exportSpriteSheet();
-    }//GEN-LAST:event_spriteSheetMenuActionPerformed
-
-    private void jMenuItem1ActionPerformed(ActionEvent evt) {//GEN-FIRST:event_jMenuItem1ActionPerformed
-        BufferedImage replaceImg;
-        int charId = this.manager.getCurrentCharacterId();
-        String charName = this.guide.getCharName(this.guide.getFakeCharId(charId));
-        int returnVal = this.imageChooser.showOpenDialog(this);
-        if (returnVal == 0) {
-            File file = this.imageChooser.getSelectedFile();
-            try {
-                replaceImg = ImageIO.read(file);
-                replaceImg = this.processReplaceImg(replaceImg);
-            }
-            catch (IOException e) {
-                e.printStackTrace();
-                this.showError("Unable to read image " + file.getName());
-                return;
-            }
-        } else {
-            return;
-        }
-        JTextField columnsField = new JTextField();
-        JTextField rowsField = new JTextField();
-        JTextField cxField = new JTextField();
-        JTextField cyField = new JTextField();
-        JComponent[] inputs = new JComponent[]{new JLabel("Number of columns:"), columnsField, new JLabel("Number of rows:"), rowsField, new JLabel("Sprite center X:"), cxField, new JLabel("Sprite center Y:"), cyField};
-        int res = JOptionPane.showConfirmDialog(null, inputs, charName + "art replacer", 2);
-        if (res != 0) {
-            return;
-        }
-        int columns = this.getIntFromField(columnsField, 1, 9999);
-        int rows = this.getIntFromField(rowsField, 1, 9999);
-        int cx = this.getIntFromField(cxField, 0, 256);
-        int cy = this.getIntFromField(cyField, 0, 256);
-        if (columns == Integer.MIN_VALUE || rows == Integer.MIN_VALUE || cx == Integer.MIN_VALUE || cy == Integer.MIN_VALUE) {
-            this.showError("Invalid columns/rows/center");
-            return;
-        }
-        if (this.timer.isRunning()) {
-            this.playToggleActionPerformed(null);
-        }
-        this.importSpriteReplacer(replaceImg, columns, rows, cx, cy);
-    }//GEN-LAST:event_jMenuItem1ActionPerformed
-
-    private void jMenuItem2ActionPerformed(ActionEvent evt) {//GEN-FIRST:event_jMenuItem2ActionPerformed
-        BufferedImage replaceImg;
-        int charId = this.manager.getCurrentCharacterId();
-        String charName = this.guide.getCharName(this.guide.getFakeCharId(charId));
-        int returnVal = this.imageChooser.showOpenDialog(this);
-        if (returnVal == 0) {
-            File file = this.imageChooser.getSelectedFile();
-            try {
-                replaceImg = ImageIO.read(file);
-                replaceImg = this.processReplaceImg(replaceImg);
-            }
-            catch (IOException e) {
-                e.printStackTrace();
-                this.showError("Unable to read image " + file.getName());
-                return;
-            }
-        } else {
-            return;
-        }
-        JTextField columnsField = new JTextField();
-        JTextField rowsField = new JTextField();
-        JTextField cxField = new JTextField();
-        JTextField cyField = new JTextField();
-        JComponent[] inputs = new JComponent[]{new JLabel("Number of columns:"), columnsField, new JLabel("Number of rows:"), rowsField, new JLabel("Sprite center X:"), cxField, new JLabel("Sprite center Y:"), cyField};
-        int res = JOptionPane.showConfirmDialog(null, inputs, charName + "art replacer", 2);
-        if (res != 0) {
-            return;
-        }
-        int columns = this.getIntFromField(columnsField, 1, 9999);
-        int rows = this.getIntFromField(rowsField, 1, 9999);
-        int cx = this.getIntFromField(cxField, 0, 256);
-        int cy = this.getIntFromField(cyField, 0, 256);
-        if (columns == Integer.MIN_VALUE || rows == Integer.MIN_VALUE || cx == Integer.MIN_VALUE || cy == Integer.MIN_VALUE) {
-            this.showError("Invalid columns/rows/center");
-            return;
-        }
-        if (this.timer.isRunning()) {
-            this.playToggleActionPerformed(null);
-        }
-        this.importSpriteGenerator(replaceImg, columns, rows, cx, cy);
-    }//GEN-LAST:event_jMenuItem2ActionPerformed
-
     private void nameMenuActionPerformed(ActionEvent evt) {//GEN-FIRST:event_nameMenuActionPerformed
         new PropertiesDialog(this, this.manager).setVisible(true);
     }//GEN-LAST:event_nameMenuActionPerformed
@@ -3429,10 +3295,6 @@ TheListener {
             this.weaponAngleChanged();
         }
     }//GEN-LAST:event_pasteMenuActionPerformed
-
-    private void spriteSheetMenu1ActionPerformed(ActionEvent evt) {//GEN-FIRST:event_spriteSheetMenu1ActionPerformed
-        this.exportIndividualFrames();
-    }//GEN-LAST:event_spriteSheetMenu1ActionPerformed
 
     private void resizeAnimsMenuActionPerformed(ActionEvent evt) {//GEN-FIRST:event_resizeAnimsMenuActionPerformed
         Scanner sc;
@@ -3572,12 +3434,6 @@ TheListener {
         }
     }//GEN-LAST:event_pasteMenu1ActionPerformed
 
-    private void jMenuItem3ActionPerformed(ActionEvent evt) {//GEN-FIRST:event_jMenuItem3ActionPerformed
-        this.portRom();
-        this.hardRefresh();
-        JOptionPane.showMessageDialog(this, "Character sucessfully imported", "Done!", 1);
-    }//GEN-LAST:event_jMenuItem3ActionPerformed
-
     private void hexIdsMenuActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_hexIdsMenuActionPerformed
         this.setupCharacterCombo();
         this.setupAnimationCombo();
@@ -3713,6 +3569,34 @@ TheListener {
     private void sizeFieldActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_sizeFieldActionPerformed
         // TODO add your handling code here:
     }//GEN-LAST:event_sizeFieldActionPerformed
+
+    private void inportNewEraMenuItemActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_inportNewEraMenuItemActionPerformed
+        int returnVal = this.newEraPackChooser.showOpenDialog(this);
+        if (returnVal != 0) {
+            return;
+        }
+        File folderFile = this.newEraPackChooser.getSelectedFile();
+        
+        String charPath = folderFile.getAbsolutePath();
+        
+        JSONObject logicJson = readJson(new File(charPath, "logic.json"));
+        JSONObject animationsJson = readJson(new File(charPath, "animations.json"));
+
+        manager.currCharacterId = logicJson.optInt("codeId");
+
+        JSONObject jsonCharacter = new JSONObject();
+        jsonCharacter.put("animationsLogic", logicJson.get("animationsLogic"));
+        
+        JSONArray animationsArray = (JSONArray)animationsJson.get("animations"); 
+        jsonCharacter.put("animations", animationsArray);  
+        
+        manager.currCharacter = Character.fromJson(jsonCharacter);
+        
+        // Skip portrait
+        importSpritesAndPivots(charPath);
+        
+        this.refresh();
+    }//GEN-LAST:event_inportNewEraMenuItemActionPerformed
     
     
     private static String capitalizeString(String string) {
@@ -3761,6 +3645,12 @@ TheListener {
         }
         Character ch = this.manager.getCharacter();
         AnimFrame animFrame = ch.getAnimFrame(this.currAnimation, this.currFrame);
+        if (animFrame == null)
+        {
+            currAnimation = 0;
+            currFrame = 0;
+            return;
+        }
         if (this.frameDelayCount++ >= animFrame.delay) {
             this.frameDelayCount = 0;
             this.setNextFrame();
@@ -4892,6 +4782,20 @@ TheListener {
             return;
         }
     }
+    
+    
+    private JSONObject readJson(File file) {
+        FileReader reader;
+        JSONObject jsonObject;
+        try {
+            reader = new FileReader(file);
+            return new JSONObject(new JSONTokener(reader));
+        } catch (IOException ex) {
+            showError("Unable to parse file: " + file.getPath() + "\n" + ex.getMessage());
+        }
+        return null;
+    }
+    
 
     private void exportPortraitIcon(String charPath) {
         BufferedImage portrait = readPortrait();
@@ -4975,95 +4879,7 @@ TheListener {
             logicJson.put("thrownQuakeEffect", (float)(thrownQuake) / 0x3F);
         }
     }
-
     
-    // Unused
-    /*
-    private void uncompressChar(final int type) {
-        final Character ch = this.manager.getCharacter();
-        final int numAnims = ch.getNumAnimations();
-        final ProgressMonitor progressMonitor = new ProgressMonitor(this, "Uncompressing Character", "", 0, numAnims + 1);
-        progressMonitor.setMillisToDecideToPopup(50);
-        progressMonitor.setMillisToPopup(100);
-        new Thread(new Runnable(){
-
-            private void finish() {
-                ch.setModified(true);
-                ch.setSpritesModified(true);
-                Gui.this.hardRefresh();
-                progressMonitor.setProgress(999999);
-                Gui.this.setEnabled(true);
-                Gui.this.requestFocus();
-            }
-
-            @Override
-            public void run() {
-                Gui.this.setEnabled(false);
-                int index = 0;
-                long newAnimsAddress = getRomSize();
-                int animsSyzeInBytes = ch.getAnimsSize(type);
-                TreeMap<Long, AddressesPair> maps = new TreeMap<Long, AddressesPair>();
-                for (int i = 0; i < numAnims; ++i) {
-                    Animation anim = ch.getAnimation(i);
-                    try {
-                        Gui.this.manager.bufferAnimation(i);
-                    }
-                    catch (IOException e) {
-                        this.finish();
-                        e.printStackTrace();
-                        Gui.this.showError("Failed to buffer animations");
-                        return;
-                    }
-                    int animSize = anim.getNumFrames();
-                    for (int j = 0; j < animSize; ++j) {
-                        anim.setSpritesModified(j, true);
-                        ch.setModified(true);
-                        ch.setSpritesModified(true);
-                        long mapAddress = anim.getFrame((int)j).mapAddress;
-                        if (maps.containsKey(mapAddress)) {
-                            AddressesPair p = (AddressesPair)maps.get(mapAddress);
-                            anim.getFrame((int)j).mapAddress = p.a;
-                            anim.getFrame((int)j).artAddress = p.b;
-                            anim.setImage(j, p.img);
-                            anim.setAnimType(type);
-                            continue;
-                        }
-                        BufferedImage img = anim.getImage(j);
-                        anim.setAnimType(type);
-                        long newAddress = Gui.this.regenerateSprite(img, i, j, 128, 128);
-                        if (newAddress == Long.MIN_VALUE) {
-                            this.finish();
-                            Gui.this.showError("Unable to replace the compressed sprites");
-                            return;
-                        }
-                        maps.put(mapAddress, new AddressesPair(anim.getFrame((int)j).mapAddress, anim.getFrame((int)j).artAddress, anim.getImage(j)));
-                        ++index;
-                    }
-                    progressMonitor.setNote("Converting sprites: " + (int)((double)i * 1.0 / (double)numAnims * 100.0) + "%");
-                    progressMonitor.setProgress(i);
-                    if (!progressMonitor.isCanceled()) continue;
-                    this.finish();
-                    return;
-                }
-                progressMonitor.setNote("Converting animations script");
-                progressMonitor.setProgress(numAnims);
-                try {
-                    Gui.this.manager.writeNewAnimations(newAnimsAddress);
-                }
-                catch (IOException e) {
-                    this.finish();
-                    e.printStackTrace();
-                    Gui.this.showError("Failed to convert the animations script");
-                    return;
-                }
-                Gui.this.guide.setAnimType(Gui.this.guide.getFakeCharId(Gui.this.manager.getCurrentCharacterId()), type);
-                Gui.this.hardRefresh();
-                this.finish();
-                Toolkit.getDefaultToolkit().beep();
-            }
-        }).start();
-    }
-*/
 
     class AddressesPair {
         public BufferedImage img;
@@ -5075,6 +4891,40 @@ TheListener {
             this.b = b;
             this.img = img;
         }
+    }
+    
+    private void importSpritesAndPivots(String charPath)
+    {
+        Character ch = this.manager.getCharacter();
+        
+        JSONObject artSettings = readJson(new File(charPath, "spriteSettings.json"));
+        sizeField1.setText(artSettings.getFloat("scale") + "");
+        final JSONArray pivots = (JSONArray) artSettings.get("pivots");
+        
+        for (int i = 0; i < ch.getNumAnimations(); ++i) {
+            Animation anim = ch.getAnimation(i);
+            int animSize = anim.getNumFrames();
+            for (int j = 0; j < animSize; ++j) {
+                int spriteId = anim.bufferedFrameIndexes.get(j);
+                JSONObject pivotJson = pivots.getJSONObject(spriteId);
+                Point pivot = new Point();
+                pivot.x = pivotJson.getInt("x");
+                pivot.y = pivotJson.getInt("y");
+                anim.addPivot(j, pivot);
+                
+                // TODO: buffer?...
+                BufferedImage image;
+                File imageFile = new File(charPath, spriteId + ".png");
+                try {
+                    image = ImageIO.read(imageFile);
+                } catch (IOException ex) {
+                    showError("Unable to read sprite image file: " + imageFile.getName());
+                    continue;
+                }
+                anim.setImage(j, image);
+            }
+        }
+        
     }
 
 }

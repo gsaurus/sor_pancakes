@@ -43,8 +43,8 @@ public class Manager {
     private ArrayList<Long> paletteAddresses;
     private boolean globalCollisions;
     private boolean globalWeapons;
-    private Character currCharacter;
-    private int currCharacterId;
+    public Character currCharacter;
+    public int currCharacterId;
     private long currPaletteAddress;
 
     public Manager(String romFileName, Guide guide) throws IOException {
