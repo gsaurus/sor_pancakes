@@ -32,6 +32,8 @@ import java.util.List;
 import java.util.Map;
 import java.util.Map.Entry;
 import java.util.Scanner;
+import java.util.Timer;
+import java.util.TimerTask;
 import java.util.TreeMap;
 import java.util.TreeSet;
 import java.util.logging.Level;
@@ -49,7 +51,6 @@ import javax.swing.JPanel;
 import javax.swing.JScrollBar;
 import javax.swing.JTextField;
 import javax.swing.ProgressMonitor;
-import javax.swing.Timer;
 import javax.swing.UIManager;
 import javax.swing.border.Border;
 import javax.swing.border.LineBorder;
@@ -77,7 +78,7 @@ import org.json.JSONTokener;
 
 public class Gui
 extends JFrame
-implements ActionListener,
+implements
 TheListener {
     private static final String VERSION = "1.8.0.B";
     private static final String YEAR = "2023";
@@ -1089,7 +1090,28 @@ TheListener {
         catch (IOException ex) {
             // empty catch block
         }
-        this.timer = new Timer(16, this);
+    }
+    
+    private void startTimer()
+    {
+        if (timer != null)
+            return;
+        timer = new Timer();
+        timer.scheduleAtFixedRate(new TimerTask() {
+            @Override
+            public void run() {
+                // Call a method from the caller's class
+                timerAction();
+            }
+        }, 0, 16);
+    }
+    
+    private void stopTimer()
+    {
+        if (timer == null)
+            return;
+        timer.cancel();
+        timer = null;
     }
 
     private void postInitComponents() {
@@ -2919,10 +2941,10 @@ TheListener {
 
     private void playToggleActionPerformed(ActionEvent evt) {//GEN-FIRST:event_playToggleActionPerformed
         if (this.playToggle.isSelected()) {
-            this.timer.start();
+            startTimer();
             this.playToggle.setText("[]");
         } else {
-            this.timer.stop();
+            stopTimer();
             this.playToggle.setText(">");
         }
     }//GEN-LAST:event_playToggleActionPerformed
@@ -3340,8 +3362,7 @@ TheListener {
         });
     }
 
-    @Override
-    public void actionPerformed(ActionEvent e) {
+    public void timerAction() {
         if (this.guide == null || this.manager == null || this.currAnimation < 0) {
             return;
         }
