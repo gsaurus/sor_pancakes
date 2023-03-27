@@ -77,7 +77,7 @@ public class Gui
 extends JFrame
 implements ActionListener,
 TheListener {
-    private static final String VERSION = "1.8.0";
+    private static final String VERSION = "1.8.0.A";
     private static final String YEAR = "2021";
     private static final String TITLE = "Pancake 2 v" + VERSION;
     private  static String NEW_ERA_DIR = "SOR2 New Era exports";
