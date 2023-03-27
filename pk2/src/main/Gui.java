@@ -1103,7 +1103,7 @@ TheListener {
                 // Call a method from the caller's class
                 timerAction();
             }
-        }, 0, 16);
+        }, 0, 17);
     }
     
     private void stopTimer()
@@ -1781,6 +1781,7 @@ TheListener {
         );
 
         scrollPanel.setBackground(new java.awt.Color(0, 0, 0));
+        scrollPanel.setDoubleBuffered(true);
         scrollPanel.setFocusable(false);
 
         backBut.setBackground(new java.awt.Color(241, 241, 171));
