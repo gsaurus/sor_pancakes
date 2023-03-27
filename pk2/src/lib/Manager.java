@@ -260,57 +260,6 @@ public class Manager {
         this.currCharacter.setSpritesModified(false);
     }
 
-    public void replaceCharacterFromManager(Manager otherManager) throws IOException {
-        Rom rom = new Rom(new File(this.romFileName));
-        long romSize = rom.length();
-        rom.close();
-        boolean newHits = this.currCharacter.getHitsSize() < otherManager.currCharacter.getHitsSize();
-        boolean newWeapons = this.currCharacter.getWeaponsSize() < otherManager.currCharacter.getWeaponsSize();
-        boolean newAnimationScripts = newHits || newWeapons;
-        int newType = this.currCharacter.getAnimation((int)0).getFrame((int)0).type;
-        if (!newAnimationScripts) {
-            for (int i = 0; i < this.currCharacter.getNumAnimations(); ++i) {
-                if (this.currCharacter.getAnimation(i).getMaxNumFrames() >= otherManager.currCharacter.getAnimation(i).getNumFrames()) continue;
-                newAnimationScripts = true;
-                break;
-            }
-        }
-        this.currCharacter = otherManager.currCharacter;
-        if (newAnimationScripts) {
-            this.writeNewScripts(romSize, newHits, newWeapons);
-        }
-        rom = new Rom(new File(otherManager.romFileName));
-        try {
-            this.importSprites(this.currCharacter, rom);
-        }
-        catch (IOException e) {
-            rom.close();
-            throw e;
-        }
-        rom.close();
-        this.currCharacter.setModified(true);
-        this.save();
-        String name = otherManager.readName();
-        if (name.length() > this.namesSize) {
-            name = name.substring(0, this.namesSize);
-        }
-        this.writeName(name);
-        int speed = otherManager.readSpeed();
-        this.writeSpeed(speed);
-        BufferedImage icon = otherManager.readPortrait();
-        this.writePortrait(icon);
-        int val = otherManager.readPowerStats();
-        this.writePowerStats(val);
-        val = otherManager.readTechniqueStats();
-        this.writeTechniqueStats(val);
-        val = otherManager.readSpeedStats();
-        this.writeSpeedStats(val);
-        val = otherManager.readJumpStats();
-        this.writeJumpStats(val);
-        val = otherManager.readStaminaStats();
-        this.writeStaminaStats(val);
-    }
-
     private void importSprites(Character otherCharacter, Rom otherRom) throws IOException {
         Rom ourRom = new Rom(new File(this.romFileName));
         try {

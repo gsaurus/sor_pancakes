@@ -86,10 +86,6 @@ public class Rom {
         return AnimFrame.read(this.rom, address, animsType);
     }
 
-    public Animation readAnimation(long address, int animsType) throws IOException {
-        return Animation.read(this.rom, address, animsType);
-    }
-
     public Character readCharacter(long animsAddress, long hitsAddress, long weaponsAddress, int id, int count, int animsType, boolean globalCol, boolean globalWeap, int numPlayableChars) throws IOException {
         return Character.read(this.rom, animsAddress, hitsAddress, weaponsAddress, id, count, animsType, globalCol, globalWeap, numPlayableChars);
     }

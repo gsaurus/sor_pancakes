@@ -49,10 +49,6 @@ public class Animation {
         return this.numFrames;
     }
 
-    public int getMaxNumFrames() {
-        return this.frames.size();
-    }
-
     public void setNumFrames(int num) {
         resize(num);
     }
@@ -228,7 +224,7 @@ public class Animation {
         int dif = size - ondSize;
         for (int i = 0; i < dif; ++i) {
             AnimFrame f1 = this.frames.get(i % ondSize);
-            this.frames.add(f1);
+            this.frames.add(new AnimFrame(f1));
             spritesModified.add(true);
         }
     }

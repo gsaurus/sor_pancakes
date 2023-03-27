@@ -126,7 +126,16 @@ TheListener {
     
     public float getScale()
     {
-        return Float.parseFloat(sizeField1.getText());
+        float value = 0;
+        try
+        {
+            value = Float.parseFloat(scaleField.getText());
+            scaleField.setBackground(Color.white);
+        } catch (Exception e)
+        {
+            scaleField.setBackground(Color.red);
+        }
+        return value;
     }
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
@@ -221,13 +230,12 @@ TheListener {
     private javax.swing.JPanel playerPanel;
     private javax.swing.JPanel previewPanel;
     private javax.swing.JButton previousBut;
+    private javax.swing.JTextField scaleField;
     private javax.swing.JScrollPane scrollPanel;
     private javax.swing.JCheckBox showCenterCheck;
     private javax.swing.JCheckBox showHitsCheck;
-    private javax.swing.JCheckBox showTileCheck;
     private javax.swing.JCheckBox showWeaponCheck;
     private javax.swing.JTextField sizeField;
-    private javax.swing.JTextField sizeField1;
     private javax.swing.JRadioButtonMenuItem sizeRadioMenu1;
     private javax.swing.JRadioButtonMenuItem sizeRadioMenu2;
     private javax.swing.JRadioButtonMenuItem sizeRadioMenu3;
@@ -612,18 +620,13 @@ TheListener {
         }
         this.inUse.add(this.sizeField);
         Character ch = this.manager.getCharacter();
-        Animation anim = ch.getAnimation(this.currAnimation);
-        int maxSize = anim.getMaxNumFrames();
         int newSize = this.getIntFromField(this.sizeField, 1, Integer.MAX_VALUE);
         if (newSize == Integer.MIN_VALUE) {
             this.sizeField.setBackground(Color.red);
         } else {
             this.sizeField.setBackground(Color.white);
-            if (newSize != anim.getNumFrames()) {
-                anim.setNumFrames(newSize);
-                ch.setModified(true);
-                this.changeAnimation(this.currAnimation);
-            }
+            ch.resizeAnim(this.currAnimation, newSize, true, true);
+            this.changeAnimation(this.currAnimation);
         }
         this.inUse.remove(this.sizeField);
     }
@@ -816,6 +819,23 @@ TheListener {
             @Override
             public void insertUpdate(DocumentEvent e) {
                 Gui.this.sizeChanged();
+            }
+        });
+        this.scaleField.getDocument().addDocumentListener(new DocumentListener(){
+
+            @Override
+            public void changedUpdate(DocumentEvent e) {
+                imagePanel.repaint();
+            }
+
+            @Override
+            public void removeUpdate(DocumentEvent e) {
+                imagePanel.repaint();
+            }
+
+            @Override
+            public void insertUpdate(DocumentEvent e) {
+                imagePanel.repaint();
             }
         });
         this.delayField.getDocument().addDocumentListener(new DocumentListener(){
@@ -1363,7 +1383,6 @@ TheListener {
         showHitsCheck = new javax.swing.JCheckBox();
         showWeaponCheck = new javax.swing.JCheckBox();
         weaponCombo = new javax.swing.JComboBox();
-        showTileCheck = new javax.swing.JCheckBox();
         showCenterCheck = new javax.swing.JCheckBox();
         toolsPanel = new javax.swing.JPanel();
         pencilRadio = new javax.swing.JRadioButton();
@@ -1376,7 +1395,7 @@ TheListener {
         softReplaceButton = new javax.swing.JButton();
         jLabel2 = new javax.swing.JLabel();
         jLabel13 = new javax.swing.JLabel();
-        sizeField1 = new javax.swing.JTextField();
+        scaleField = new javax.swing.JTextField();
         generatePanel = new javax.swing.JPanel();
         jMenuBar1 = new javax.swing.JMenuBar();
         jMenu1 = new javax.swing.JMenu();
@@ -2289,18 +2308,8 @@ TheListener {
             }
         });
 
-        showTileCheck.setBackground(new java.awt.Color(228, 236, 191));
-        showTileCheck.setSelected(true);
-        showTileCheck.setText("Tile Space");
-        showTileCheck.setContentAreaFilled(false);
-        showTileCheck.setFocusable(false);
-        showTileCheck.addActionListener(new java.awt.event.ActionListener() {
-            public void actionPerformed(java.awt.event.ActionEvent evt) {
-                showTileCheckActionPerformed(evt);
-            }
-        });
-
         showCenterCheck.setBackground(new java.awt.Color(228, 236, 191));
+        showCenterCheck.setSelected(true);
         showCenterCheck.setText("Ghost");
         showCenterCheck.setContentAreaFilled(false);
         showCenterCheck.setFocusable(false);
@@ -2315,29 +2324,27 @@ TheListener {
         characterPanel1Layout.setHorizontalGroup(
             characterPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(characterPanel1Layout.createSequentialGroup()
-                .addGroup(characterPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addComponent(showWeaponCheck)
-                    .addComponent(showCenterCheck)
-                    .addComponent(showHitsCheck))
+                .addComponent(showHitsCheck)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addGroup(characterPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addComponent(weaponCombo, javax.swing.GroupLayout.PREFERRED_SIZE, 83, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addComponent(showTileCheck))
-                .addGap(2, 2, 2))
+                .addComponent(showWeaponCheck)
+                .addContainerGap(16, Short.MAX_VALUE))
+            .addGroup(characterPanel1Layout.createSequentialGroup()
+                .addComponent(showCenterCheck)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                .addComponent(weaponCombo, javax.swing.GroupLayout.PREFERRED_SIZE, 83, javax.swing.GroupLayout.PREFERRED_SIZE))
         );
         characterPanel1Layout.setVerticalGroup(
             characterPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
             .addGroup(characterPanel1Layout.createSequentialGroup()
                 .addGap(1, 1, 1)
-                .addComponent(showCenterCheck)
+                .addGroup(characterPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                    .addComponent(showCenterCheck)
+                    .addComponent(weaponCombo, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addGroup(characterPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                    .addComponent(showTileCheck)
-                    .addComponent(showHitsCheck))
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                .addGroup(characterPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                    .addComponent(weaponCombo, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addComponent(showWeaponCheck)))
+                    .addComponent(showHitsCheck)
+                    .addComponent(showWeaponCheck))
+                .addContainerGap(27, Short.MAX_VALUE))
         );
 
         toolsPanel.setBackground(new java.awt.Color(230, 230, 235));
@@ -2455,9 +2462,14 @@ TheListener {
         jLabel13.setHorizontalAlignment(javax.swing.SwingConstants.RIGHT);
         jLabel13.setText("Scale:");
 
-        sizeField1.setFont(new java.awt.Font("Courier New", 0, 14)); // NOI18N
-        sizeField1.setHorizontalAlignment(javax.swing.JTextField.RIGHT);
-        sizeField1.setText("1");
+        scaleField.setFont(new java.awt.Font("Courier New", 0, 14)); // NOI18N
+        scaleField.setHorizontalAlignment(javax.swing.JTextField.RIGHT);
+        scaleField.setText("1");
+        scaleField.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                scaleFieldActionPerformed(evt);
+            }
+        });
 
         javax.swing.GroupLayout overridePanelLayout = new javax.swing.GroupLayout(overridePanel);
         overridePanel.setLayout(overridePanelLayout);
@@ -2478,7 +2490,7 @@ TheListener {
                     .addGroup(overridePanelLayout.createSequentialGroup()
                         .addComponent(jLabel13)
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                        .addComponent(sizeField1, javax.swing.GroupLayout.PREFERRED_SIZE, 37, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addComponent(scaleField, javax.swing.GroupLayout.PREFERRED_SIZE, 37, javax.swing.GroupLayout.PREFERRED_SIZE)
                         .addGap(0, 0, Short.MAX_VALUE))))
         );
         overridePanelLayout.setVerticalGroup(
@@ -2487,7 +2499,7 @@ TheListener {
                 .addComponent(jLabel2)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
                 .addGroup(overridePanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                    .addComponent(sizeField1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(scaleField, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                     .addComponent(jLabel13))
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 11, Short.MAX_VALUE)
                 .addComponent(softReplaceButton))
@@ -2958,10 +2970,6 @@ TheListener {
         this.imagePanel.showGhost(this.showCenterCheck.isSelected());
     }//GEN-LAST:event_showCenterCheckActionPerformed
 
-    private void showTileCheckActionPerformed(ActionEvent evt) {//GEN-FIRST:event_showTileCheckActionPerformed
-        this.imagePanel.showShadow(this.showTileCheck.isSelected());
-    }//GEN-LAST:event_showTileCheckActionPerformed
-
     private void hitCheckActionPerformed(ActionEvent evt) {//GEN-FIRST:event_hitCheckActionPerformed
         Character ch = this.manager.getCharacter();
         HitFrame hitFrame = ch.getHitFrame(this.currAnimation, this.currFrame);
@@ -3322,6 +3330,10 @@ TheListener {
         this.refresh();
         characterCombo.setEnabled(false);
     }//GEN-LAST:event_inportNewEraMenuItemActionPerformed
+
+    private void scaleFieldActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_scaleFieldActionPerformed
+        // TODO add your handling code here:
+    }//GEN-LAST:event_scaleFieldActionPerformed
     
     
     private static String capitalizeString(String string) {
@@ -4086,65 +4098,6 @@ TheListener {
         }).start();
     }
 
-    private void portRom() {
-        int returnVal = this.guideChooser.showOpenDialog(this);
-        Guide guide = null;
-        if (returnVal == 0) {
-            File file = this.guideChooser.getSelectedFile();
-            try {
-                guide = new Guide(file.getAbsolutePath());
-            }
-            catch (FileNotFoundException ex) {
-                ex.printStackTrace();
-                this.showError("Guide file '" + file.getName() + "' not found");
-            }
-            catch (Exception ex) {
-                ex.printStackTrace();
-                this.showError("Unable to open guide '" + file.getName() + "'");
-            }
-        }
-        if (guide == null) {
-            return;
-        }
-        String otherRomName = null;
-        Manager otherManager = null;
-        returnVal = this.romChooser.showOpenDialog(this);
-        if (returnVal == 0) {
-            File file = this.romChooser.getSelectedFile();
-            otherRomName = file.getAbsolutePath();
-            try {
-                otherManager = new Manager(otherRomName, guide);
-            }
-            catch (FileNotFoundException ex) {
-                ex.printStackTrace();
-                this.showError("File '" + otherRomName + "' not found");
-            }
-            catch (IOException ex) {
-                ex.printStackTrace();
-                this.showError("File '" + otherRomName + "' is not a valid Streets of Rage 2 ROM");
-            }
-        }
-        if (otherManager == null) {
-            return;
-        }
-        int charId = this.manager.getCurrentCharacterId();
-        int fakeId = guide.getFakeCharId(charId);
-        try {
-            otherManager.setCharacter(charId, guide.getAnimsCount(fakeId), guide.getType(fakeId));
-        }
-        catch (IOException ex) {
-            ex.printStackTrace();
-            this.showError("Unable to read character #" + charId);
-        }
-        this.deleteCharacterArtAndMaps();
-        try {
-            this.manager.replaceCharacterFromManager(otherManager);
-        }
-        catch (IOException ex) {
-            ex.printStackTrace();
-            this.showError("Unable to port character #" + charId);
-        }
-    }
 
     private void importSpriteGenerator(final BufferedImage sheet, final int columns, int rows, final int cx, final int cy) {
         final Character ch = this.manager.getCharacter();
@@ -4280,14 +4233,9 @@ TheListener {
                         processed.add(anim);
                         int animSize = anim.getNumFrames();
                         for (int j = 0; j < animSize; ++j) {
-                            long address = -1;
-                            if (ch.isNewEra)
-                                if (j < anim.bufferedFrameIndexes.size())
-                                    address = anim.bufferedFrameIndexes.get(j);
-                                else
-                                    address = -1;
-                            else
-                                address = manager.getCharacter().getAnimFrame((int)i, (int)j).mapAddress;
+                            long frameIndex = -1;
+                            assert(j < anim.bufferedFrameIndexes.size());
+                            frameIndex = anim.bufferedFrameIndexes.get(j);
                             try {
                                 Gui.this.manager.bufferAnimation(i);
                             }
@@ -4299,8 +4247,8 @@ TheListener {
                                 Gui.this.requestFocus();
                                 return;
                             }
-                            if (maps.contains(address)) continue;
-                            maps.add(address);
+                            if (maps.contains(frameIndex)) continue;
+                            maps.add(frameIndex);
                             BufferedImage img;
                             
                             // Trim...
@@ -4388,110 +4336,6 @@ TheListener {
         }).start();
     }
 
-    private void exportIndividualFrames() {
-        this.exportSpriteSheet(true);
-    }
-
-    private void resizeAnimations(final ArrayList<Integer> sizes, final ArrayList<Integer> wps, final ArrayList<Boolean> hits, final boolean newArea, final boolean newHits, final boolean newWeapons) {
-        final Character ch = this.manager.getCharacter();
-        final int numAnims = sizes.size();
-        final ProgressMonitor progressMonitor = new ProgressMonitor(this, "Generating resized animations", "", 0, numAnims + 1);
-        progressMonitor.setMillisToDecideToPopup(50);
-        progressMonitor.setMillisToPopup(100);
-        new Thread(new Runnable(){
-
-            private void finish() {
-                ch.setModified(true);
-                Gui.this.hardRefresh();
-                progressMonitor.setProgress(999999);
-                Gui.this.setEnabled(true);
-                Gui.this.requestFocus();
-            }
-
-            @Override
-            public void run() {
-                Gui.this.setEnabled(false);
-                HashSet<Animation> processedAnims = new HashSet<Animation>();
-                for (int i = 0; i < numAnims; ++i) {
-                    int size = (Integer)sizes.get(i);
-                    int wp = (Integer)wps.get(i);
-                    boolean hit = false;
-                    if (i >= 24) {
-                        hit = (Boolean)hits.get(i - 24);
-                    }
-                    if (wp != 2) {
-                        if (size < 0) {
-                            ch.setAnim(i, - size - 1, wp == 1, hit);
-                            processedAnims.add(ch.getAnimation(i));
-                        } else if (size > 0) {
-                            Animation anim = ch.getAnimation(i);
-                            if (processedAnims.contains(anim)) {
-                                ch.doubleAnim(i);
-                            }
-                            ch.resizeAnim(i, size, wp == 1, hit);
-                        } else {
-                            processedAnims.add(ch.getAnimation(i));
-                        }
-                    } else {
-                        processedAnims.add(ch.getAnimation(i));
-                    }
-                    processedAnims.add(ch.getAnimation(i));
-                    progressMonitor.setNote("Resizing animations: " + (int)((double)i * 1.0 / (double)numAnims * 100.0) + "%");
-                    progressMonitor.setProgress(i);
-                    if (!progressMonitor.isCanceled()) continue;
-                    this.finish();
-                    return;
-                }
-                progressMonitor.setNote("Generating new scripts");
-                progressMonitor.setProgress(numAnims);
-                long newAnimsAddress = 0L;
-                if (newArea) {
-                    // TODO: also re-use space here
-                    newAnimsAddress = getRomSize();
-                }
-                try {
-                    Gui.this.manager.writeNewScripts(newAnimsAddress, newHits, newWeapons);
-                }
-                catch (IOException e) {
-                    this.finish();
-                    e.printStackTrace();
-                    Gui.this.showError("Failed to convert the animations script");
-                    return;
-                }
-                Gui.this.hardRefresh();
-                this.finish();
-                Toolkit.getDefaultToolkit().beep();
-            }
-        }).start();
-    }
-    
-    
-    // Delete character!
-    private void deleteCharacterArtAndMaps(){
-        final Character ch = this.manager.getCharacter();
-        final int numAnims = ch.getNumAnimations();            
-        HashSet<Animation> processed = new HashSet<Animation>();
-        for (int i = 0; i < numAnims; ++i) {
-            Animation anim = ch.getAnimation(i);
-            if (!processed.contains(anim)) {
-                processed.add(anim);
-                int animSize = anim.getNumFrames();
-                for (int j = 0; j < animSize; ++j) {
-                    AnimFrame frame = anim.getFrame(j);
-                    Sprite sprite;
-                    try {
-                        sprite = manager.readSprite(i, j);
-                    } catch (IOException ex) {
-                        showError("Failled to free space for anim " + i + ", frame " + j);
-                        return;
-                    }
-                    FreeAddressesManager.freeChunk(frame.mapAddress, sprite.getMappingsSizeInBytes());
-                    FreeAddressesManager.freeChunk(frame.artAddress, sprite.getArtSizeInBytes());
-                }
-            }
-        }        
-    }
-    
     private void writeJson(JSONObject json, File file) {
         writeJson(json, file, JSON_EXPORT_SPACES);
     }
@@ -4629,7 +4473,7 @@ TheListener {
         Character ch = this.manager.getCharacter();
         
         JSONObject artSettings = readJson(new File(charPath, "spriteSettings.json"));
-        sizeField1.setText(artSettings.getFloat("scale") + "");
+        scaleField.setText(artSettings.getFloat("scale") + "");
         final JSONArray pivots = (JSONArray) artSettings.get("pivots");
         
         for (int i = 0; i < ch.getNumAnimations(); ++i) {
@@ -4637,10 +4481,13 @@ TheListener {
             int animSize = anim.getNumFrames();
             for (int j = 0; j < animSize; ++j) {
                 int spriteId = anim.bufferedFrameIndexes.get(j);
-                JSONObject pivotJson = pivots.getJSONObject(spriteId);
                 Point pivot = new Point();
-                pivot.x = pivotJson.getInt("x");
-                pivot.y = pivotJson.getInt("y");
+                JSONObject pivotJson = pivots.optJSONObject(spriteId); 
+                if (pivotJson != null)
+                {
+                    pivot.x = pivotJson.getInt("x");
+                    pivot.y = pivotJson.getInt("y");
+                }
                 anim.addPivot(j, pivot);
                 
                 // TODO: buffer?...
@@ -4649,7 +4496,7 @@ TheListener {
                 try {
                     image = ImageIO.read(imageFile);
                 } catch (IOException ex) {
-                    showError("Unable to read sprite image file: " + imageFile.getName());
+                    System.out.println("Unable to read sprite image file: " + imageFile.getName());
                     continue;
                 }
                 anim.setImage(j, image);

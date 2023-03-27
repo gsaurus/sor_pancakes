@@ -1645,35 +1645,32 @@
             <DimensionLayout dim="0">
               <Group type="103" groupAlignment="0" attributes="0">
                   <Group type="102" alignment="0" attributes="0">
-                      <Group type="103" groupAlignment="0" attributes="0">
-                          <Component id="showWeaponCheck" min="-2" max="-2" attributes="0"/>
-                          <Component id="showCenterCheck" min="-2" max="-2" attributes="0"/>
-                          <Component id="showHitsCheck" alignment="0" min="-2" max="-2" attributes="0"/>
-                      </Group>
+                      <Component id="showHitsCheck" min="-2" max="-2" attributes="0"/>
                       <EmptySpace max="-2" attributes="0"/>
-                      <Group type="103" groupAlignment="0" attributes="0">
-                          <Component id="weaponCombo" min="-2" pref="83" max="-2" attributes="0"/>
-                          <Component id="showTileCheck" alignment="0" min="-2" max="-2" attributes="0"/>
-                      </Group>
-                      <EmptySpace min="-2" pref="2" max="-2" attributes="0"/>
+                      <Component id="showWeaponCheck" min="-2" max="-2" attributes="0"/>
+                      <EmptySpace pref="16" max="32767" attributes="0"/>
+                  </Group>
+                  <Group type="102" attributes="0">
+                      <Component id="showCenterCheck" min="-2" max="-2" attributes="0"/>
+                      <EmptySpace max="32767" attributes="0"/>
+                      <Component id="weaponCombo" min="-2" pref="83" max="-2" attributes="0"/>
                   </Group>
               </Group>
             </DimensionLayout>
             <DimensionLayout dim="1">
               <Group type="103" groupAlignment="1" attributes="0">
-                  <Group type="102" attributes="0">
+                  <Group type="102" alignment="1" attributes="0">
                       <EmptySpace min="-2" pref="1" max="-2" attributes="0"/>
-                      <Component id="showCenterCheck" min="-2" max="-2" attributes="0"/>
+                      <Group type="103" groupAlignment="3" attributes="0">
+                          <Component id="showCenterCheck" alignment="3" min="-2" max="-2" attributes="0"/>
+                          <Component id="weaponCombo" alignment="3" min="-2" max="-2" attributes="0"/>
+                      </Group>
                       <EmptySpace max="-2" attributes="0"/>
                       <Group type="103" groupAlignment="3" attributes="0">
-                          <Component id="showTileCheck" alignment="3" min="-2" max="-2" attributes="0"/>
                           <Component id="showHitsCheck" alignment="3" min="-2" max="-2" attributes="0"/>
-                      </Group>
-                      <EmptySpace max="32767" attributes="0"/>
-                      <Group type="103" groupAlignment="3" attributes="0">
-                          <Component id="weaponCombo" alignment="3" min="-2" max="-2" attributes="0"/>
                           <Component id="showWeaponCheck" alignment="3" min="-2" max="-2" attributes="0"/>
                       </Group>
+                      <EmptySpace pref="27" max="32767" attributes="0"/>
                   </Group>
               </Group>
             </DimensionLayout>
@@ -1720,25 +1717,12 @@
                 <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="weaponComboActionPerformed"/>
               </Events>
             </Component>
-            <Component class="javax.swing.JCheckBox" name="showTileCheck">
-              <Properties>
-                <Property name="background" type="java.awt.Color" editor="org.netbeans.beaninfo.editors.ColorEditor">
-                  <Color blue="bf" green="ec" red="e4" type="rgb"/>
-                </Property>
-                <Property name="selected" type="boolean" value="true"/>
-                <Property name="text" type="java.lang.String" value="Tile Space"/>
-                <Property name="contentAreaFilled" type="boolean" value="false"/>
-                <Property name="focusable" type="boolean" value="false"/>
-              </Properties>
-              <Events>
-                <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="showTileCheckActionPerformed"/>
-              </Events>
-            </Component>
             <Component class="javax.swing.JCheckBox" name="showCenterCheck">
               <Properties>
                 <Property name="background" type="java.awt.Color" editor="org.netbeans.beaninfo.editors.ColorEditor">
                   <Color blue="bf" green="ec" red="e4" type="rgb"/>
                 </Property>
+                <Property name="selected" type="boolean" value="true"/>
                 <Property name="text" type="java.lang.String" value="Ghost"/>
                 <Property name="contentAreaFilled" type="boolean" value="false"/>
                 <Property name="focusable" type="boolean" value="false"/>
@@ -1927,7 +1911,7 @@
                           <Group type="102" alignment="0" attributes="0">
                               <Component id="jLabel13" min="-2" max="-2" attributes="0"/>
                               <EmptySpace max="-2" attributes="0"/>
-                              <Component id="sizeField1" min="-2" pref="37" max="-2" attributes="0"/>
+                              <Component id="scaleField" min="-2" pref="37" max="-2" attributes="0"/>
                               <EmptySpace min="0" pref="0" max="32767" attributes="0"/>
                           </Group>
                       </Group>
@@ -1940,7 +1924,7 @@
                       <Component id="jLabel2" min="-2" max="-2" attributes="0"/>
                       <EmptySpace type="unrelated" max="-2" attributes="0"/>
                       <Group type="103" groupAlignment="3" attributes="0">
-                          <Component id="sizeField1" alignment="3" min="-2" max="-2" attributes="0"/>
+                          <Component id="scaleField" alignment="3" min="-2" max="-2" attributes="0"/>
                           <Component id="jLabel13" alignment="3" min="-2" max="-2" attributes="0"/>
                       </Group>
                       <EmptySpace pref="11" max="32767" attributes="0"/>
@@ -1973,7 +1957,7 @@
                 <Property name="text" type="java.lang.String" value="Scale:"/>
               </Properties>
             </Component>
-            <Component class="javax.swing.JTextField" name="sizeField1">
+            <Component class="javax.swing.JTextField" name="scaleField">
               <Properties>
                 <Property name="font" type="java.awt.Font" editor="org.netbeans.beaninfo.editors.FontEditor">
                   <Font name="Courier New" size="14" style="0"/>
@@ -1981,6 +1965,9 @@
                 <Property name="horizontalAlignment" type="int" value="4"/>
                 <Property name="text" type="java.lang.String" value="1"/>
               </Properties>
+              <Events>
+                <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="scaleFieldActionPerformed"/>
+              </Events>
             </Component>
           </SubComponents>
         </Container>

@@ -3,11 +3,13 @@
  */
 package lib.anim;
 
+import java.awt.image.BufferedImage;
 import java.io.File;
 import java.io.IOException;
 import java.io.PrintWriter;
 import java.io.RandomAccessFile;
 import java.util.ArrayList;
+import java.util.Comparator;
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.Scanner;
@@ -23,7 +25,39 @@ public class Character {
     private ArrayList<WeaponFramesSet> animWeapons;
     private boolean modified;
     private boolean spritesModified;
-    public boolean isNewEra = false;
+    
+    private Comparator<BufferedImage> imageComparator = new Comparator<BufferedImage>() {
+    @Override
+    public int compare(BufferedImage img1, BufferedImage img2) {
+        if (img1 == null && img2 == null)
+            return 0;
+        if (img1 == null)
+            return -1;
+        if (img2 == null)
+            return 1;
+        // Compare the widths and heights of the images
+        int widthDiff = img1.getWidth() - img2.getWidth();
+        if (widthDiff != 0) {
+            return widthDiff;
+        }
+        int heightDiff = img1.getHeight() - img2.getHeight();
+        if (heightDiff != 0) {
+            return heightDiff;
+        }
+        // If the widths and heights are the same, compare the images pixel by pixel
+        for (int y = 0; y < img1.getHeight(); y++) {
+            for (int x = 0; x < img1.getWidth(); x++) {
+                int rgb1 = img1.getRGB(x, y);
+                int rgb2 = img2.getRGB(x, y);
+                if (rgb1 != rgb2) {
+                    return rgb1 - rgb2;
+                }
+            }
+        }
+        // If the images are identical, return 0
+        return 0;
+    }
+};
 
     public void setModified(boolean modified) {
         this.modified = modified;
@@ -39,7 +73,7 @@ public class Character {
 
     public Character(int numAnimations) {
         this.animations = new ArrayList(numAnimations);
-        int numHitFrames = isNewEra ? numAnimations : numAnimations > FIRST_HIT_ANIM ? numAnimations - FIRST_HIT_ANIM : 0;
+        int numHitFrames = numAnimations;
         this.animHits = new ArrayList(numHitFrames);
         this.animWeapons = new ArrayList(numAnimations);
     }
@@ -58,7 +92,7 @@ public class Character {
     }
 
     public HitFrame getHitFrame(int animId, int frameId) {
-        int index = isNewEra ? animId : animId - FIRST_HIT_ANIM;
+        int index = animId;
         if (index < 0 || index >= this.animHits.size()) {
             return null;
         }
@@ -125,6 +159,10 @@ public class Character {
             rom.seek(hitsListAddress + (long)(charId * 2));
             offset = rom.readShort();
             address = hitsListAddress + (long)(charId * 2) + (long)offset;
+        }
+        for (int i = 0; i < FIRST_HIT_ANIM; ++i)
+        {
+            c.animHits.add(new HitFramesSet(c.animations.get(i).getNumFrames()));
         }
         for (int i = 0; i < count - FIRST_HIT_ANIM; ++i) {
             HitFramesSet set;
@@ -275,12 +313,11 @@ public class Character {
         }
     }
 
-    public void resizeAnim(int i, int size, boolean hasWp, boolean hasHit) {
-        this.setWp(i, hasWp, size);
+    public void resizeAnim(int i, int size, boolean hasWp, boolean hasHit) {        
         this.animations.get(i).resize(size);
-        if (i >= FIRST_HIT_ANIM) {
-            this.setHit(i - FIRST_HIT_ANIM, hasHit, size);
-        }
+        this.setHit(i, hasHit, size);
+        this.setWp(i, hasWp, size);
+        setModified(true);
     }
     
     
@@ -288,7 +325,7 @@ public class Character {
         JSONObject jsonObj = new JSONObject();
         JSONArray jsonAnims = new JSONArray();
         JSONArray jsonAnimationsLogic = new JSONArray();
-        TreeMap<Long, Integer> maps = new TreeMap<Long, Integer>();
+        TreeMap<BufferedImage, Integer> maps = new TreeMap<BufferedImage, Integer>(imageComparator);
         HashMap<Animation, Integer> processed = new HashMap<Animation, Integer>();
         int artFrame = 0;
         for (int animId = 0; animId < animations.size(); ++animId){
@@ -305,17 +342,20 @@ public class Character {
             processed.put(animation, animId);
             int numFrames = animation.getNumFrames();
             int screenFramesCount = 0;
+            animation.bufferedFrameIndexes = new ArrayList<Integer>();
             for (int frameId = 0; frameId < numFrames; ++frameId) {
                 AnimFrame animFrame = animation.getFrame(frameId);
                 HitFrame hitFrame = getHitFrame(animId, frameId);
-                WeaponFrame weapFrame = getWeaponFrame(animId, frameId);                
-                framePointer = maps.get(animFrame.mapAddress);
+                WeaponFrame weapFrame = getWeaponFrame(animId, frameId);
+                BufferedImage image = animation.getImage(frameId);
+                framePointer = maps.get(image);
                 if (framePointer == null) {
                     // Frame pointer
                     framePointer = artFrame++;
-                    maps.put(animFrame.mapAddress, framePointer);
+                    maps.put(image, framePointer);
                 }
                 JSONObject jsonFrame = animFrame.toJson(framePointer);
+                animation.bufferedFrameIndexes.add(framePointer);
                 if (hitFrame != null) {
                     JSONObject obj = hitFrame.toJson();                    
                     if (obj != null) {
@@ -490,7 +530,6 @@ public class Character {
         JSONArray jsonAnimationsLogic = (JSONArray) jsonCharacter.get("animationsLogic");
         
         Character character = new Character(jsonAnims.length());
-        character.isNewEra = true;
         ArrayList<Animation> animations = character.animations;
         ArrayList<HitFramesSet> animHits = character.animHits;
         ArrayList<WeaponFramesSet> animWeapons = character.animWeapons;

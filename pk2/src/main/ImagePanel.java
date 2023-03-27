@@ -32,8 +32,6 @@ extends JLabel {
     private static final int Y_TRANSFORMER = -1;
     private BufferedImage image;
     private BufferedImage ghostImage;
-    private BufferedImage ghostShadow;
-    private BufferedImage shadow;
     private BufferedImage hitImage;
     private BufferedImage overHitImage;
     private BufferedImage replaceImage;
@@ -57,7 +55,6 @@ extends JLabel {
     private boolean showCenter;
     private boolean showGhost;
     private boolean showImage;
-    private boolean showShadow;
     private TheListener listener;
     private boolean mouseOverHit;
     private boolean mouseOverWeapon;
@@ -77,6 +74,7 @@ extends JLabel {
     private Cursor dragCursor;
     private int brushSize;
     private Point pivot;
+    private Point ghostPivot;
     private int dragSpriteX;
     private int dragSpriteY;
     private int dragShiftMode;
@@ -93,9 +91,8 @@ extends JLabel {
         this.showWeapon = true;
         this.showCenter = true;
         this.showImage = true;
-        this.showShadow = true;
         this.facedRight = true;
-        this.showGhost = false;
+        this.showGhost = true;
         this.paintColor = null;
         this.brushSize = 3;
         this.imgY = Integer.MIN_VALUE;
@@ -161,11 +158,6 @@ extends JLabel {
         this.repaint();
     }
 
-    public void showShadow(boolean show) {
-        this.showShadow = show;
-        this.repaint();
-    }
-
     public void removeHit() {
         this.hasHit = false;
         this.repaint();
@@ -215,7 +207,7 @@ extends JLabel {
 
     public void updateGhost() {
         this.ghostImage = this.image;
-        this.ghostShadow = this.shadow;
+        this.ghostPivot = new Point(pivot);
     }
 
     public void setImage(BufferedImage image, Point pivot) {
@@ -227,10 +219,8 @@ extends JLabel {
         this.pivot = pivot != null ? pivot : new Point();
         if (image == null) {
             this.ghostImage = null;
-            this.ghostShadow = null;
         }
         this.image = image;
-        this.shadow = shadow;
         this.setScale(this.scale);
         if (this.mode == Mode.dragImage) {
             this.changeMode(this.lastMode);
@@ -414,6 +404,17 @@ extends JLabel {
                 this.weapon.draw(g2d, this.weaponX, this.weaponY, this.weaponAngle, this.scale);
             }
         }
+        if (this.ghostImage != null && this.replaceImage == null && this.showGhost) {
+            scaledX = this.scale(128, false) - this.scale(ghostPivot.x, true);
+            scaledY = this.scale(128, false) + this.scale(ghostPivot.y, true);
+            int scaledW = this.scale(this.ghostImage.getWidth(), true);
+            scaledH = this.scale(this.ghostImage.getHeight(), true);
+
+            Composite originalComposite = g2d.getComposite();
+            g2d.setComposite(AlphaComposite.getInstance(AlphaComposite.SRC_OVER, 0.5f));
+            g2d.drawImage(this.ghostImage, scaledX, scaledY - scaledH, scaledW, scaledH, null);
+            g2d.setComposite(originalComposite);
+        }
         if (this.image != null && this.replaceImage == null && this.showImage) {
             scaledX = this.scale(128, false) - this.scale(pivot.x + this.dragSpriteX, true);
             scaledY = this.scale(128, false) + this.scale(pivot.y + this.dragSpriteY, true);
@@ -558,7 +559,7 @@ extends JLabel {
         if (this.facedRight) {
             x = 255 - x;
         }
-        if (x >= 0 && y >= 0 && x <= 255 && y <= 255 && this.shadow != null && this.shadow.getRGB(x, y) != 0) {
+        if (x >= 0 && y >= 0 && x <= 255 && y <= 255) {
             this.imgModified = true;
             Graphics2D g2d = this.image.createGraphics();
             if (this.paintColor == null) {
@@ -630,7 +631,7 @@ extends JLabel {
                         x = 255 - x;
                         oldX = 255 - oldX;
                     }
-                    if (x >= 0 && y >= 0 && x <= 255 && y <= 255 && oldX >= 0 && oldY >= 0 && oldX <= 255 && oldY <= 255 && shadow != null && this.shadow.getRGB(x, y) != 0 && this.shadow.getRGB(oldX, oldY) != 0) {
+                    if (x >= 0 && y >= 0 && x <= 255 && y <= 255 && oldX >= 0 && oldY >= 0 && oldX <= 255 && oldY <= 255) {
                         this.imgModified = true;
                         Graphics2D g2d = this.image.createGraphics();
                         if (this.paintColor == null) {
