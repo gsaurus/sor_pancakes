@@ -3,6 +3,7 @@
  */
 package lib.anim;
 
+import java.awt.Point;
 import java.awt.image.BufferedImage;
 import java.io.File;
 import java.io.IOException;
@@ -26,9 +27,21 @@ public class Character {
     private boolean modified;
     private boolean spritesModified;
     
-    private Comparator<BufferedImage> imageComparator = new Comparator<BufferedImage>() {
+    private class ImagePivotPair
+    {
+        public BufferedImage image;
+        public Point pivot;
+    }
+    
+    private Comparator<ImagePivotPair> imageComparator = new Comparator<ImagePivotPair>() {
     @Override
-    public int compare(BufferedImage img1, BufferedImage img2) {
+    public int compare(ImagePivotPair img1Pair, ImagePivotPair img2Pair) {
+        if (img1Pair.pivot.x != img2Pair.pivot.x)
+            return img1Pair.pivot.x - img2Pair.pivot.x;
+        if (img1Pair.pivot.y != img2Pair.pivot.y)
+            return img1Pair.pivot.y - img2Pair.pivot.y;
+        BufferedImage img1 = img1Pair.image;
+        BufferedImage img2 = img2Pair.image;
         if (img1 == null && img2 == null)
             return 0;
         if (img1 == null)
@@ -325,7 +338,7 @@ public class Character {
         JSONObject jsonObj = new JSONObject();
         JSONArray jsonAnims = new JSONArray();
         JSONArray jsonAnimationsLogic = new JSONArray();
-        TreeMap<BufferedImage, Integer> maps = new TreeMap<BufferedImage, Integer>(imageComparator);
+        TreeMap<ImagePivotPair, Integer> maps = new TreeMap<ImagePivotPair, Integer>(imageComparator);
         HashMap<Animation, Integer> processed = new HashMap<Animation, Integer>();
         int artFrame = 0;
         for (int animId = 0; animId < animations.size(); ++animId){
@@ -348,14 +361,17 @@ public class Character {
                 HitFrame hitFrame = getHitFrame(animId, frameId);
                 WeaponFrame weapFrame = getWeaponFrame(animId, frameId);
                 BufferedImage image = animation.getImage(frameId);
+                ImagePivotPair imgPair = new ImagePivotPair();
+                imgPair.image = image;
+                imgPair.pivot = animation.getPivot(frameId);
                 if (image == null)
                     framePointer = artFrame;
                 else
-                    framePointer = maps.get(image);
+                    framePointer = maps.get(imgPair);
                 if (framePointer == null) {
                     // Frame pointer
-                    framePointer = artFrame++;
-                    maps.put(image, framePointer);
+                    framePointer = artFrame++;                    
+                    maps.put(imgPair, framePointer);
                 }
                 JSONObject jsonFrame = animFrame.toJson(framePointer);
                 animation.bufferedFrameIndexes.add(framePointer);
