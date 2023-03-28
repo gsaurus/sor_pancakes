@@ -3010,7 +3010,7 @@ TheListener {
                 anim.resetPivot(currFrame);
                 this.imagePanel.setReplaceImage(replaceImg);
             }
-            catch (IOException ex) {
+            catch (Exception ex) {
                 ex.printStackTrace();
                 this.showError("Unable to read image file: " + file.getName());
                 this.imagePanel.setReplaceImage(null);
@@ -3302,15 +3302,9 @@ TheListener {
         // TODO add your handling code here:
     }//GEN-LAST:event_sizeFieldActionPerformed
 
-    private void inportNewEraMenuItemActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_inportNewEraMenuItemActionPerformed
-        int returnVal = this.newEraPackChooser.showOpenDialog(this);
-        if (returnVal != 0) {
-            return;
-        }
-        File folderFile = this.newEraPackChooser.getSelectedFile();
-        
-        String charPath = folderFile.getAbsolutePath();
-        
+    
+    private void inportNewEra(String charPath)
+    {
         JSONObject logicJson = readJson(new File(charPath, "logic.json"));
         JSONObject animationsJson = readJson(new File(charPath, "animations.json"));
 
@@ -3329,6 +3323,19 @@ TheListener {
         
         this.refresh();
         characterCombo.setEnabled(false);
+    }
+    
+    
+    private void inportNewEraMenuItemActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_inportNewEraMenuItemActionPerformed
+        int returnVal = this.newEraPackChooser.showOpenDialog(this);
+        if (returnVal != 0) {
+            return;
+        }
+        File folderFile = this.newEraPackChooser.getSelectedFile();
+        
+        String charPath = folderFile.getAbsolutePath();
+        
+        inportNewEra(charPath);
     }//GEN-LAST:event_inportNewEraMenuItemActionPerformed
 
     private void scaleFieldActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_scaleFieldActionPerformed
@@ -4283,8 +4290,8 @@ TheListener {
                             
                             if (left < 0) left = 0;
                             if (top < 0) top = 0;
-                            if (width > originalWidth) width = originalWidth;
-                            if (height > originalHeight) height = originalHeight;
+                            if (width > originalWidth - left) width = originalWidth - left;
+                            if (height > originalHeight - top) height = originalHeight - top;
                             JSONObject pivot = new JSONObject();
                             Point pivotPoint = manager.getPivot(i, j);
                             pivotPoint.x -= left;
@@ -4327,6 +4334,9 @@ TheListener {
                 artSettings.put("scale", getScale());
                 artSettings.put("pivots", pivots);
                 writeJson(artSettings, artSettingsFile);
+                
+                // Reimport to guarantee data consistency...
+                inportNewEra(path);
                 
                 progressMonitor.setProgress(999999);
                 Gui.this.setEnabled(true);

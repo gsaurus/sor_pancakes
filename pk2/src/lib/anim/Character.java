@@ -348,7 +348,10 @@ public class Character {
                 HitFrame hitFrame = getHitFrame(animId, frameId);
                 WeaponFrame weapFrame = getWeaponFrame(animId, frameId);
                 BufferedImage image = animation.getImage(frameId);
-                framePointer = maps.get(image);
+                if (image == null)
+                    framePointer = artFrame;
+                else
+                    framePointer = maps.get(image);
                 if (framePointer == null) {
                     // Frame pointer
                     framePointer = artFrame++;
