@@ -15,6 +15,20 @@ public class HitFrame {
     public int damage;
     public boolean knockDown;
     private boolean enabled;
+    
+    public HitFrame()
+    {
+        // Nothing to do
+    }
+
+    public HitFrame(HitFrame hitFrame) {
+        x = hitFrame.x;
+        y = hitFrame.y;
+        sound = hitFrame.sound;
+        damage = hitFrame.damage;
+        knockDown = hitFrame.knockDown;
+        enabled = hitFrame.enabled;
+    }
 
     public void setEnabled(boolean enabledFlag) {
         this.enabled = enabledFlag;

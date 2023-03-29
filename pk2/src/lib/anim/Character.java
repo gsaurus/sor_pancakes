@@ -119,6 +119,38 @@ public class Character {
         }
         return frames.get(frameId);
     }
+    
+    public void setWeaponFrame(int animId, int frameId, WeaponFrame weaponFrame)
+    {
+        if (animId >= this.animWeapons.size()) {
+            return;
+        }
+        WeaponFramesSet weapon = this.animWeapons.get(animId);
+        if (weapon == null) {
+            return;
+        }
+        ArrayList<WeaponFrame> frames = weapon.frames;
+        if (frames == null || frameId >= frames.size()) {
+            return;
+        }
+        frames.set(frameId, new WeaponFrame(weaponFrame));
+    }
+    
+    public void setHitFrame(int animId, int frameId, HitFrame hitFrame)
+    {
+        if (animId < 0 || animId >= this.animHits.size()) {
+            return;
+        }
+        HitFramesSet hits = this.animHits.get(animId);
+        if (hits == null) {
+            return;
+        }
+        ArrayList<HitFrame> frames = hits.frames;
+        if (frames == null || frames.size() <= frameId) {
+            return;
+        }
+        frames.set(frameId, new HitFrame(hitFrame));
+    }
 
     public WeaponFrame getWeaponFrame(int animId, int frameId) {
         if (animId >= this.animWeapons.size()) {

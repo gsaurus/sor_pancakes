@@ -15,6 +15,20 @@ public class WeaponFrame {
     public int unusedByte;
     private boolean isEnabled;
 
+    public WeaponFrame()
+    {
+        // Nothing to do
+    }
+    
+    public WeaponFrame(WeaponFrame weaponFrame) {
+        x = weaponFrame.x;
+        y = weaponFrame.y;
+        angle = weaponFrame.angle;
+        showBehind = weaponFrame.showBehind;
+        unusedByte = weaponFrame.unusedByte;
+        isEnabled = weaponFrame.isEnabled;
+    }
+
     public boolean isEnabled() {
         return this.isEnabled;
     }

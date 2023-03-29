@@ -87,12 +87,22 @@ public class Animation {
     
     public void resetPivot(int index)
     {
+        setPivot(index, new Point());
+    }
+    
+    public void setPivot(int index, Point point)
+    {
         if (index < this.frames.size()) {
             if (this.bufferedPivots == null) {
                 this.bufferedPivots = new ArrayList<Point>();
             }
+            if (index < bufferedPivots.size())
+                bufferedPivots.set(index, point);
+            else
+            {
             while (bufferedPivots.size() <= index)
-                bufferedPivots.add(new Point());
+                bufferedPivots.add(new Point(point));
+            }
         }
     }
     

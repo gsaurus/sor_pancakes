@@ -107,20 +107,10 @@ TheListener {
     private int currFrame;
     private HashSet<JTextField> inUse;
     private int selectedColor;
-    private long copiedMap;
-    private long copiedArt;
-    private boolean copiedHasHit;
-    private boolean copiedKnockDown;
-    private boolean copiedHasWeapon;
-    private boolean copiedWpShowBehind;
-    private int copiedHitX;
-    private int copiedHitY;
-    private int copiedHitSound;
-    private int copiedHitDamage;
-    private int copiedWpX;
-    private int copiedWpY;
-    private int copiedWpRotation;
-    private boolean wasFrameReplaced;
+    private BufferedImage copiedImage;
+    private Point copiedPivot;
+    private HitFrame copiedHitFrame;
+    private WeaponFrame copiedWeaponFrame;    
     
     public static Gui instance;
     
@@ -169,6 +159,7 @@ TheListener {
     private javax.swing.JPanel colorPanel9;
     private javax.swing.JPanel colorsPanel1;
     private javax.swing.JLabel compressedLabel;
+    private javax.swing.JMenuItem copyMenu;
     private javax.swing.JTextField damageField;
     private javax.swing.JTextField delayField;
     private javax.swing.JRadioButtonMenuItem dragImageMenu;
@@ -215,6 +206,7 @@ TheListener {
     private javax.swing.JPopupMenu.Separator jSeparator1;
     private javax.swing.JPopupMenu.Separator jSeparator2;
     private javax.swing.JPopupMenu.Separator jSeparator3;
+    private javax.swing.JPopupMenu.Separator jSeparator4;
     private javax.swing.JPopupMenu.Separator jSeparator9;
     private javax.swing.JCheckBox koCheck;
     private javax.swing.JPanel mainPanel;
@@ -224,6 +216,7 @@ TheListener {
     private javax.swing.JRadioButton noneRadio;
     private javax.swing.JMenuItem openRomMenu;
     private javax.swing.JPanel overridePanel;
+    private javax.swing.JMenuItem pasteMenu;
     private javax.swing.JRadioButtonMenuItem pencilMenu;
     private javax.swing.JRadioButton pencilRadio;
     private javax.swing.JToggleButton playToggle;
@@ -327,7 +320,6 @@ TheListener {
 
     private void setFrame(int frameId) {
         if (this.currFrame != frameId) {
-            this.wasFrameReplaced = false;
             this.imagePanel.updateGhost();
         }
         this.currFrame = frameId;
@@ -1408,6 +1400,9 @@ TheListener {
         jSeparator1 = new javax.swing.JPopupMenu.Separator();
         jMenuItem5 = new javax.swing.JMenuItem();
         jMenu2 = new javax.swing.JMenu();
+        copyMenu = new javax.swing.JMenuItem();
+        pasteMenu = new javax.swing.JMenuItem();
+        jSeparator3 = new javax.swing.JPopupMenu.Separator();
         jMenu6 = new javax.swing.JMenu();
         pencilMenu = new javax.swing.JRadioButtonMenuItem();
         brushMenu = new javax.swing.JRadioButtonMenuItem();
@@ -1425,7 +1420,7 @@ TheListener {
         jMenuItem9 = new javax.swing.JMenuItem();
         jMenuItem10 = new javax.swing.JMenuItem();
         hexIdsMenu = new javax.swing.JCheckBoxMenuItem();
-        jSeparator3 = new javax.swing.JPopupMenu.Separator();
+        jSeparator4 = new javax.swing.JPopupMenu.Separator();
         nameMenu = new javax.swing.JMenuItem();
         jMenu3 = new javax.swing.JMenu();
         jMenuItem6 = new javax.swing.JMenuItem();
@@ -2603,6 +2598,25 @@ TheListener {
 
         jMenu2.setText("Edit");
 
+        copyMenu.setAccelerator(javax.swing.KeyStroke.getKeyStroke(java.awt.event.KeyEvent.VK_F5, 0));
+        copyMenu.setText("Copy");
+        copyMenu.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                copyMenuActionPerformed(evt);
+            }
+        });
+        jMenu2.add(copyMenu);
+
+        pasteMenu.setAccelerator(javax.swing.KeyStroke.getKeyStroke(java.awt.event.KeyEvent.VK_F6, 0));
+        pasteMenu.setText("Paste");
+        pasteMenu.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                pasteMenuActionPerformed(evt);
+            }
+        });
+        jMenu2.add(pasteMenu);
+        jMenu2.add(jSeparator3);
+
         jMenu6.setText("Tool");
 
         pencilMenu.setAccelerator(javax.swing.KeyStroke.getKeyStroke(java.awt.event.KeyEvent.VK_1, java.awt.event.InputEvent.ALT_DOWN_MASK));
@@ -2742,7 +2756,7 @@ TheListener {
             }
         });
         jMenu2.add(hexIdsMenu);
-        jMenu2.add(jSeparator3);
+        jMenu2.add(jSeparator4);
 
         nameMenu.setText("Properties");
         nameMenu.setEnabled(false);
@@ -3341,6 +3355,25 @@ TheListener {
     private void scaleFieldActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_scaleFieldActionPerformed
         // TODO add your handling code here:
     }//GEN-LAST:event_scaleFieldActionPerformed
+
+    private void copyMenuActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_copyMenuActionPerformed
+        Character ch = this.manager.getCharacter();
+        Animation anim = ch.getAnimation(currAnimation);
+        copiedImage = anim.getImage(currFrame);
+        copiedPivot = anim.getPivot(currFrame);
+        copiedHitFrame = new HitFrame(ch.getHitFrame(currAnimation, currFrame));
+        copiedWeaponFrame = new WeaponFrame(ch.getWeaponFrame(currAnimation, currFrame));
+    }//GEN-LAST:event_copyMenuActionPerformed
+
+    private void pasteMenuActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_pasteMenuActionPerformed
+        Character ch = this.manager.getCharacter();
+        Animation anim = ch.getAnimation(currAnimation);
+        anim.setImage(currFrame, copiedImage);
+        anim.setPivot(currFrame, copiedPivot);
+        ch.setHitFrame(currAnimation, currFrame, copiedHitFrame);
+        ch.setWeaponFrame(currAnimation, currFrame, copiedWeaponFrame);
+        this.setFrame(this.currFrame);
+    }//GEN-LAST:event_pasteMenuActionPerformed
     
     
     private static String capitalizeString(String string) {
