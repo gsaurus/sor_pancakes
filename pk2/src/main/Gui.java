@@ -3551,7 +3551,7 @@ TheListener {
         for (int x = 0; x < replaceImg.getWidth(); ++x) {
             for (int y = 0; y < replaceImg.getHeight(); ++y) {
                 int val = replaceImg.getRGB(x, y);
-                Color c = new Color(val);
+                Color c = new Color(val, true);
                 if (val == transparency || (val >> 24 & 255) == 0) continue;
                 //float[] hsb = Color.RGBtoHSB(c.getRed(), c.getGreen(), c.getBlue(), null);
                 //c = this.nearestColor(hsb, palette);
