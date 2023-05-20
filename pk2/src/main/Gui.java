@@ -5029,6 +5029,8 @@ TheListener {
                         File artSettingsFile = new File(path, "spriteSettings.json");
                         JSONObject artSettings  =new JSONObject();
                         artSettings.put("scale", 1);
+                        artSettings.put("iconScale", 1);
+                        artSettings.put("largeIconScale", 1);
                         artSettings.put("pivots", pivots);
                         writeJson(artSettings, artSettingsFile);
                     }
