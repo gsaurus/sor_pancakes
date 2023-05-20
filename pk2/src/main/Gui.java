@@ -3887,6 +3887,9 @@ TheListener {
         if (isPlayableChar()) {
             logicJson.put("walkSpeed", readSpeed());
         }
+        else{
+            logicJson.put("walkSpeed", 384);
+        }
         addGrabOffsetsToLogicsJson(logicJson, characterId);
         addQuakeForcesToLogicsJson(logicJson, characterId);
         logicJson.put("animationsLogic", jsonCharacter.get("animationsLogic"));
