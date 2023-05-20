@@ -38,8 +38,8 @@ class Weapon {
     }
 
     public void draw(Graphics2D g2d, int x, int y, int angle, float scale) {
-        x += 128;
-        y += 128;
+        x += Gui.CenterPos;
+        y += Gui.CenterPos;
         if (this.imgs[angle %= 8] != null) {
             BufferedImage img = this.imgs[angle];
             g2d.drawImage(img, this.scale(x - this.cX, scale), this.scale(y - this.cY, scale), this.scale(img.getWidth(), scale), this.scale(img.getHeight(), scale), null);
@@ -47,8 +47,8 @@ class Weapon {
     }
 
     void drawOver(Graphics2D g2d, int x, int y, int angle, float scale) {
-        x += 128;
-        y += 128;
+        x += Gui.CenterPos;
+        y += Gui.CenterPos;
         if (this.imgs[angle %= 8] != null) {
             BufferedImage img = this.imgs[angle];
             BufferedImage imgOver = new BufferedImage(img.getWidth(), img.getHeight(), 2);
@@ -65,8 +65,8 @@ class Weapon {
     }
 
     void drawCircleOver(Graphics2D g2d, int x, int y, float scale) {
-        int scaledX = this.scale(x += 128, scale);
-        int scaledY = this.scale(y += 128, scale);
+        int scaledX = this.scale(x += Gui.CenterPos, scale);
+        int scaledY = this.scale(y += Gui.CenterPos, scale);
         int size = 16;
         Composite oldComposite = g2d.getComposite();
         g2d.setColor(Color.red);

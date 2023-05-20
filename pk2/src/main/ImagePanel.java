@@ -302,8 +302,8 @@ extends JLabel {
         this.replaceImage = img;
         float scale = Gui.instance.getScale();
         if (this.imgX == Integer.MIN_VALUE) {
-            this.imgX = 128 - (int)((double)img.getWidth() * scale * 0.6);
-            this.imgY = 128 - (int)((double)img.getHeight() * scale * 1.0);
+            this.imgX = Gui.CenterPos - (int)((double)img.getWidth() * scale * 0.6);
+            this.imgY = Gui.CenterPos - (int)((double)img.getHeight() * scale * 1.0);
         }
         this.setImage(img, null);
         this.changeMode(Mode.dragSprite);
@@ -333,7 +333,7 @@ extends JLabel {
     public void setScale(float scale) {
         if (scale > 0.0f && this.image != null) {
             this.scale = scale;
-            this.setBounds(0, 0, (int)((float)this.image.getWidth() * scale), (int)((float)this.image.getHeight() * scale));
+            this.setSize((int)(Gui.CenterSize * scale), (int)(Gui.CenterSize * scale));
             this.repaint();
         }
     }
@@ -359,28 +359,6 @@ extends JLabel {
 
     private BufferedImage genPreviewImage() {
         return replaceImage;
-        /*
-        int minX = Math.max(this.imgX, 0);
-        int minY = Math.max(this.imgY, 0);
-        int width = this.replaceImage.getWidth();
-        int height = this.replaceImage.getHeight();
-        BufferedImage theShadow = this.shadow;
-        if (this.facedRight) {
-            theShadow = ImagePanel.flipImage(theShadow);
-        }
-        int maxX = Math.min(this.imgX + width, theShadow.getWidth());
-        int maxY = Math.min(this.imgY + height, theShadow.getHeight());
-        BufferedImage res = new BufferedImage(theShadow.getWidth(), theShadow.getHeight(), 2);
-        for (int x = minX; x < maxX; ++x) {
-            for (int y = minY; y < maxY; ++y) {
-                int val = theShadow.getRGB(x, y);
-                if (val == 0) continue;
-                val = this.replaceImage.getRGB(x - this.imgX, y - this.imgY);
-                res.setRGB(x, y, val);
-            }
-        }
-        return res;
-        */
     }
 
     @Override
@@ -389,8 +367,8 @@ extends JLabel {
         int scaledX;
         int scaledH;
         Graphics2D g2d = (Graphics2D)g;
-        int scaledCenter = this.scale(128, false);
-        int scaledBounds = this.scale(256, false);
+        int scaledCenter = this.scale(Gui.CenterPos, false);
+        int scaledBounds = this.scale(Gui.CenterSize, false);
         if (this.showCenter) {
             g2d.setColor(Color.black);
             g2d.drawLine(scaledCenter, 0, scaledCenter, scaledBounds);
@@ -405,8 +383,8 @@ extends JLabel {
             }
         }
         if (this.ghostImage != null && this.replaceImage == null && this.showGhost) {
-            scaledX = this.scale(128, false) - this.scale(ghostPivot.x, true);
-            scaledY = this.scale(128, false) + this.scale(ghostPivot.y, true);
+            scaledX = this.scale(Gui.CenterPos, false) - this.scale(ghostPivot.x, true);
+            scaledY = this.scale(Gui.CenterPos, false) + this.scale(ghostPivot.y, true);
             int scaledW = this.scale(this.ghostImage.getWidth(), true);
             scaledH = this.scale(this.ghostImage.getHeight(), true);
 
@@ -416,8 +394,8 @@ extends JLabel {
             g2d.setComposite(originalComposite);
         }
         if (this.image != null && this.replaceImage == null && this.showImage) {
-            scaledX = this.scale(128, false) - this.scale(pivot.x + this.dragSpriteX, true);
-            scaledY = this.scale(128, false) + this.scale(pivot.y + this.dragSpriteY, true);
+            scaledX = this.scale(Gui.CenterPos, false) - this.scale(pivot.x + this.dragSpriteX, true);
+            scaledY = this.scale(Gui.CenterPos, false) + this.scale(pivot.y + this.dragSpriteY, true);
             int scaledW = this.scale(this.image.getWidth(), true);
             scaledH = this.scale(this.image.getHeight(), true);
 
@@ -473,10 +451,7 @@ extends JLabel {
 
     @Override
     public Dimension getPreferredSize() {
-        if (this.image != null) {
-            return new Dimension((int)((float)this.image.getWidth() * this.scale), (int)((float)this.image.getHeight() * this.scale));
-        }
-        return super.getPreferredSize();
+        return new Dimension((int)(Gui.CenterSize * this.scale), (int)(Gui.CenterSize * this.scale));
     }
 
 
@@ -488,28 +463,21 @@ extends JLabel {
     @SuppressWarnings("unchecked")
     // <editor-fold defaultstate="collapsed" desc="Generated Code">//GEN-BEGIN:initComponents
     private void initComponents() {
-        this.addMouseListener(new MouseAdapter(){
 
-            @Override
-            public void mousePressed(MouseEvent evt) {
-                ImagePanel.this.formMousePressed(evt);
+        addMouseListener(new java.awt.event.MouseAdapter() {
+            public void mousePressed(java.awt.event.MouseEvent evt) {
+                formMousePressed(evt);
             }
-
-            @Override
-            public void mouseReleased(MouseEvent evt) {
-                ImagePanel.this.formMouseReleased(evt);
+            public void mouseReleased(java.awt.event.MouseEvent evt) {
+                formMouseReleased(evt);
             }
         });
-        this.addMouseMotionListener(new MouseMotionAdapter(){
-
-            @Override
-            public void mouseDragged(MouseEvent evt) {
-                ImagePanel.this.formMouseDragged(evt);
+        addMouseMotionListener(new java.awt.event.MouseMotionAdapter() {
+            public void mouseDragged(java.awt.event.MouseEvent evt) {
+                formMouseDragged(evt);
             }
-
-            @Override
-            public void mouseMoved(MouseEvent evt) {
-                ImagePanel.this.formMouseMoved(evt);
+            public void mouseMoved(java.awt.event.MouseEvent evt) {
+                formMouseMoved(evt);
             }
         });
     }// </editor-fold>//GEN-END:initComponents
@@ -520,8 +488,8 @@ extends JLabel {
         if (this.showHit && this.hasHit && !this.mouseOverWeapon) {
             int centerX = (int)((double)this.hitImage.getWidth() * 0.7);
             int centerY = (int)((double)this.hitImage.getWidth() * 0.7);
-            int scaledHitX = this.scale(128 + this.hitX);
-            int scaledHitY = this.scale(128 + this.hitY);
+            int scaledHitX = this.scale(Gui.CenterPos + this.hitX);
+            int scaledHitY = this.scale(Gui.CenterPos + this.hitY);
             int left = scaledHitX - centerX;
             int right = scaledHitX + centerX;
             int top = scaledHitY - centerY;
@@ -534,8 +502,8 @@ extends JLabel {
             }
         }
         if (this.showWeapon && this.hasWeapon && !this.mouseOverHit) {
-            int scaledWeaponX = this.scale(128 + this.weaponX);
-            int scaledWeaponY = this.scale(128 + this.weaponY);
+            int scaledWeaponX = this.scale(Gui.CenterPos + this.weaponX);
+            int scaledWeaponY = this.scale(Gui.CenterPos + this.weaponY);
             int left = scaledWeaponX - 16;
             int right = scaledWeaponX + 16;
             int top = scaledWeaponY - 16;
@@ -557,9 +525,9 @@ extends JLabel {
         int x = (int)((float)evt.getX() / this.scale);
         int y = (int)((float)evt.getY() / this.scale);
         if (this.facedRight) {
-            x = 255 - x;
+            x = Gui.CenterSize - x;
         }
-        if (x >= 0 && y >= 0 && x <= 255 && y <= 255) {
+        if (image != null && x >= 0 && y >= 0 && x <= Gui.CenterSize && y <= Gui.CenterSize) {
             this.imgModified = true;
             Graphics2D g2d = this.image.createGraphics();
             if (this.paintColor == null) {
@@ -587,14 +555,16 @@ extends JLabel {
     }//GEN-LAST:event_formMousePressed
 
     private void formMouseDragged(MouseEvent evt) {//GEN-FIRST:event_formMouseDragged
+        if (image == null)
+            return;
         float scale = Gui.instance.getScale();
         scale *= this.scale;
         if (this.isLeftButtonPressed) {
             if (this.showHit && this.hasHit && this.listener != null && this.mouseOverHit) {
-                int center = this.scale(128);
+                int center = this.scale(Gui.CenterPos);
                 this.listener.hitPositionChanged((int)((float)((evt.getX() - center) / -2) / this.scale), (int)((float)((evt.getY() - center) / -1) / this.scale));
             } else if (this.showWeapon && this.hasWeapon && this.listener != null && this.mouseOverWeapon) {
-                int center = this.scale(128);
+                int center = this.scale(Gui.CenterPos);
                 this.listener.weaponPositionChanged((int)((float)(evt.getX() - center) / this.scale), - (int)((float)(evt.getY() - center) / this.scale));
             } else {
                 int x = (int)((float)evt.getX() / scale);
@@ -628,10 +598,10 @@ extends JLabel {
                     this.repaint();
                 } else {
                     if (this.facedRight) {
-                        x = 255 - x;
-                        oldX = 255 - oldX;
+                        x = Gui.CenterSize - x;
+                        oldX = Gui.CenterSize - oldX;
                     }
-                    if (x >= 0 && y >= 0 && x <= 255 && y <= 255 && oldX >= 0 && oldY >= 0 && oldX <= 255 && oldY <= 255) {
+                    if (x >= 0 && y >= 0 && x <= Gui.CenterSize && y <= Gui.CenterSize && oldX >= 0 && oldY >= 0 && oldX <= Gui.CenterSize && oldY <= Gui.CenterSize) {
                         this.imgModified = true;
                         Graphics2D g2d = this.image.createGraphics();
                         if (this.paintColor == null) {
@@ -657,7 +627,7 @@ extends JLabel {
             Point p = vp.getViewPosition();
             p.x += this.originalMouseX - evt.getX();
             p.y += this.originalMouseY - evt.getY();
-            int size = this.scale(255);
+            int size = this.scale(Gui.CenterSize);
             if (p.x + vp.getWidth() > size) {
                 p.x = size - vp.getWidth();
             }

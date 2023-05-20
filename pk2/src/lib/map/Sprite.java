@@ -14,6 +14,7 @@ import java.io.RandomAccessFile;
 import java.util.ArrayList;
 import lib.RandomDataStream;
 import lib.Renderable;
+import main.Gui;
 
 public class Sprite
 implements Renderable {
@@ -62,7 +63,7 @@ implements Renderable {
 
     @Override
     public BufferedImage asImage(Palette Pal) {
-        BufferedImage res = new BufferedImage(256, 256, 2);
+        BufferedImage res = new BufferedImage(Gui.CenterPos * 2, Gui.CenterPos * 2, 2);
         Graphics2D g2d = res.createGraphics();
         for (int i = this.pieces.size() - 1; i >= 0; --i) {
             SpritePiece piece = this.pieces.get(i);
@@ -71,14 +72,14 @@ implements Renderable {
             if (piece.xFliped || piece.yFliped) {
                 pieceImg = Sprite.flip(pieceImg, piece.xFliped, piece.yFliped);
             }
-            g2d.drawImage(pieceImg, 128 + piece.xL, 128 + piece.y, null);
+            g2d.drawImage(pieceImg, Gui.CenterPos + piece.xL, Gui.CenterPos + piece.y, null);
         }
         return res;
     }
 
     @Override
     public BufferedImage asShadow(Color color) {
-        BufferedImage res = new BufferedImage(256, 256, 2);
+        BufferedImage res = new BufferedImage(Gui.CenterPos * 2, Gui.CenterPos * 2, 2);
         Graphics2D g2d = res.createGraphics();
         for (int i = this.pieces.size() - 1; i >= 0; --i) {
             SpritePiece piece = this.pieces.get(i);
@@ -87,7 +88,7 @@ implements Renderable {
             if (piece.xFliped || piece.yFliped) {
                 pieceImg = Sprite.flip(pieceImg, piece.xFliped, piece.yFliped);
             }
-            g2d.drawImage(pieceImg, 128 + piece.xL, 128 + piece.y, null);
+            g2d.drawImage(pieceImg, Gui.CenterPos + piece.xL, Gui.CenterPos + piece.y, null);
         }
         return res;
     }
@@ -227,8 +228,8 @@ implements Renderable {
         int numPieces = this.pieces.size();
         for (int i = 0; i < numPieces; ++i) {
             SpritePiece p = this.pieces.get(i);
-            int x = 128 + p.xL;
-            int y = 128 + p.y;
+            int x = Gui.CenterPos + p.xL;
+            int y = Gui.CenterPos + p.y;
             Piece tp = this.tiledPieces.get(i);
             int width = tp.getWidth() * 8;
             int height = tp.getHeight() * 8;
@@ -268,8 +269,8 @@ implements Renderable {
         int right = Integer.MIN_VALUE;
         int bottom = Integer.MIN_VALUE;
         for (SpritePiece piece : this.pieces) {
-            int x = piece.xL + 128;
-            int y = piece.y + 128;
+            int x = piece.xL + Gui.CenterPos;
+            int y = piece.y + Gui.CenterPos;
             int r = x + (piece.width + 1) * 8;
             int b = y + (piece.height + 1) * 8;
             if (x < res.x) {

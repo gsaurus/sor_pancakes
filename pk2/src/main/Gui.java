@@ -80,6 +80,8 @@ public class Gui
 extends JFrame
 implements
 TheListener {
+    public static int CenterPos = 256;
+    public static int CenterSize = CenterPos * 2;
     private static final String VERSION = "1.8.0.B";
     private static final String YEAR = "2023";
     private static final String TITLE = "Pancake 2 v" + VERSION;
@@ -1428,6 +1430,7 @@ TheListener {
         setDefaultCloseOperation(javax.swing.WindowConstants.DO_NOTHING_ON_CLOSE);
         setTitle(TITLE);
         setLocationByPlatform(true);
+        setPreferredSize(new java.awt.Dimension(1280, 768));
         addMouseWheelListener(new java.awt.event.MouseWheelListener() {
             public void mouseWheelMoved(java.awt.event.MouseWheelEvent evt) {
                 formMouseWheelMoved(evt);
@@ -1793,6 +1796,8 @@ TheListener {
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addComponent(animationPanel, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
         );
+
+        previewPanel.setPreferredSize(new java.awt.Dimension(256, 151));
 
         scrollPanel.setBackground(new java.awt.Color(0, 0, 0));
         scrollPanel.setDoubleBuffered(true);
@@ -2530,7 +2535,7 @@ TheListener {
                             .addComponent(generatePanel, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)))
                     .addComponent(characterPanel, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addComponent(previewPanel, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+                .addComponent(previewPanel, javax.swing.GroupLayout.DEFAULT_SIZE, 478, Short.MAX_VALUE))
         );
         mainPanelLayout.setVerticalGroup(
             mainPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
@@ -2544,7 +2549,7 @@ TheListener {
                 .addGroup(mainPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                     .addComponent(overridePanel, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                     .addComponent(generatePanel, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)))
-            .addComponent(previewPanel, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+            .addComponent(previewPanel, javax.swing.GroupLayout.DEFAULT_SIZE, 579, Short.MAX_VALUE)
         );
 
         jMenu1.setText("File");
@@ -3277,7 +3282,8 @@ TheListener {
         Character character = this.manager.getCharacter();
         JSONObject jsonCharacter = character.toJson(characterId, this.romName);
         JSONObject logicJson = new JSONObject();
-        logicJson.put("codeId", characterId); // TODO: LUA? AI script? as a new entry in json, never use same for multiple things        
+        logicJson.put("referencePackName", "Classic");
+        logicJson.put("referenceType", characterId); // TODO: LUA? AI script? as a new entry in json, never use same for multiple things        
         if (isPlayableChar()) {
             logicJson.put("isPlayable", true);
             logicJson.put("walkSpeed", readSpeed());
@@ -4058,11 +4064,11 @@ TheListener {
     }
 
     private BufferedImage expandImage(BufferedImage img, int cx, int cy) {
-        BufferedImage extended = new BufferedImage(256, 256, 2);
+        BufferedImage extended = new BufferedImage(Gui.CenterPos * 2, 256, 2);
         for (int i = 0; i < img.getWidth(); ++i) {
             for (int j = 0; j < img.getHeight(); ++j) {
-                int x = i + 128 - cx;
-                int y = j + 128 - cy;
+                int x = i + Gui.CenterPos - cx;
+                int y = j + Gui.CenterPos - cy;
                 int rgbVal = img.getRGB(i, j);
                 if ((rgbVal >> 24 & 255) == 0 || x <= 0 || x >= 256 || y <= 0 || y >= 256) continue;
                 extended.setRGB(x, y, rgbVal);
