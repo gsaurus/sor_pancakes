@@ -3286,6 +3286,7 @@ TheListener {
         logicJson.put("referenceType", characterId); // TODO: LUA? AI script? as a new entry in json, never use same for multiple things        
         if (isPlayableChar()) {
             logicJson.put("isPlayable", true);
+            logicJson.put("canUseWeapons", true);
             logicJson.put("walkSpeed", readSpeed());
         }
         addGrabOffsetsToLogicsJson(logicJson, characterId);
