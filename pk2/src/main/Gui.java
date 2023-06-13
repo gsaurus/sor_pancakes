@@ -3881,7 +3881,7 @@ TheListener {
         for (int x = 0; x < img.getWidth(); ++x) {
             for (int y = 0; y < img.getHeight(); ++y) {
                 int rgbVal = img.getRGB(x, y);
-                if ((rgbVal >> 24 & 255) == 0) continue;
+                if ((rgbVal >> 24 & 255) < 5) continue;
                 return x;
             }
         }
@@ -3892,7 +3892,7 @@ TheListener {
         for (int x = img.getWidth() - 1; x >= 0; --x) {
             for (int y = 0; y < img.getHeight(); ++y) {
                 int rgbVal = img.getRGB(x, y);
-                if ((rgbVal >> 24 & 255) == 0) continue;
+                if ((rgbVal >> 24 & 255) < 5) continue;
                 return x + 1;
             }
         }
@@ -3903,7 +3903,7 @@ TheListener {
         for (int y = 0; y < img.getHeight(); ++y) {
             for (int x = 0; x < img.getWidth(); ++x) {
                 int rgbVal = img.getRGB(x, y);
-                if ((rgbVal >> 24 & 255) == 0) continue;
+                if ((rgbVal >> 24 & 255) < 5) continue;
                 return y;
             }
         }
@@ -3914,7 +3914,7 @@ TheListener {
         for (int y = img.getHeight() - 1; y >= 0; --y) {
             for (int x = 0; x < img.getWidth(); ++x) {
                 int rgbVal = img.getRGB(x, y);
-                if ((rgbVal >> 24 & 255) == 0) continue;
+                if ((rgbVal >> 24 & 255) < 5) continue;
                 return y + 1;
             }
         }
