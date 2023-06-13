@@ -363,7 +363,7 @@
                       <Component id="characterPanel" max="32767" attributes="0"/>
                   </Group>
                   <EmptySpace min="-2" max="-2" attributes="0"/>
-                  <Component id="previewPanel" pref="478" max="32767" attributes="0"/>
+                  <Component id="previewPanel" pref="899" max="32767" attributes="0"/>
               </Group>
           </Group>
         </DimensionLayout>
@@ -382,7 +382,7 @@
                       <Component id="generatePanel" min="-2" max="-2" attributes="0"/>
                   </Group>
               </Group>
-              <Component id="previewPanel" alignment="0" pref="579" max="32767" attributes="0"/>
+              <Component id="previewPanel" alignment="0" pref="745" max="32767" attributes="0"/>
           </Group>
         </DimensionLayout>
       </Layout>
@@ -979,7 +979,7 @@
             <DimensionLayout dim="0">
               <Group type="103" groupAlignment="0" attributes="0">
                   <Component id="playerPanel" alignment="1" max="32767" attributes="0"/>
-                  <Component id="colorsPanel1" alignment="0" pref="478" max="32767" attributes="0"/>
+                  <Component id="colorsPanel1" alignment="0" pref="899" max="32767" attributes="0"/>
                   <Component id="scrollPanel" alignment="1" max="32767" attributes="0"/>
               </Group>
             </DimensionLayout>
@@ -1016,15 +1016,15 @@
                 <DimensionLayout dim="0">
                   <Group type="103" groupAlignment="0" attributes="0">
                       <Group type="102" alignment="1" attributes="0">
-                          <Component id="backBut" pref="87" max="32767" attributes="0"/>
+                          <Component id="backBut" pref="192" max="32767" attributes="0"/>
                           <EmptySpace min="-2" max="-2" attributes="0"/>
-                          <Component id="previousBut" pref="87" max="32767" attributes="0"/>
+                          <Component id="previousBut" pref="192" max="32767" attributes="0"/>
                           <EmptySpace max="-2" attributes="0"/>
                           <Component id="playToggle" min="-2" pref="105" max="-2" attributes="0"/>
                           <EmptySpace max="-2" attributes="0"/>
-                          <Component id="nextBut" pref="87" max="32767" attributes="0"/>
+                          <Component id="nextBut" pref="193" max="32767" attributes="0"/>
                           <EmptySpace min="-2" max="-2" attributes="0"/>
-                          <Component id="frontBut" pref="88" max="32767" attributes="0"/>
+                          <Component id="frontBut" pref="193" max="32767" attributes="0"/>
                       </Group>
                   </Group>
                 </DimensionLayout>
@@ -1121,43 +1121,43 @@
                       <Group type="102" alignment="1" attributes="0">
                           <EmptySpace min="-2" pref="0" max="-2" attributes="0"/>
                           <Group type="103" groupAlignment="0" attributes="0">
-                              <Component id="colorPanel1" pref="52" max="32767" attributes="0"/>
-                              <Component id="colorPanel9" pref="52" max="32767" attributes="0"/>
+                              <Component id="colorPanel1" pref="104" max="32767" attributes="0"/>
+                              <Component id="colorPanel9" pref="104" max="32767" attributes="0"/>
                           </Group>
                           <EmptySpace min="-2" max="-2" attributes="0"/>
                           <Group type="103" groupAlignment="0" attributes="0">
-                              <Component id="colorPanel2" pref="52" max="32767" attributes="0"/>
-                              <Component id="colorPanel10" pref="52" max="32767" attributes="0"/>
+                              <Component id="colorPanel2" pref="104" max="32767" attributes="0"/>
+                              <Component id="colorPanel10" pref="104" max="32767" attributes="0"/>
                           </Group>
                           <EmptySpace min="-2" max="-2" attributes="0"/>
                           <Group type="103" groupAlignment="0" attributes="0">
-                              <Component id="colorPanel3" pref="54" max="32767" attributes="0"/>
-                              <Component id="colorPanel11" pref="54" max="32767" attributes="0"/>
+                              <Component id="colorPanel3" pref="106" max="32767" attributes="0"/>
+                              <Component id="colorPanel11" pref="106" max="32767" attributes="0"/>
                           </Group>
                           <EmptySpace min="-2" max="-2" attributes="0"/>
                           <Group type="103" groupAlignment="0" attributes="0">
-                              <Component id="colorPanel4" pref="52" max="32767" attributes="0"/>
-                              <Component id="colorPanel12" pref="52" max="32767" attributes="0"/>
+                              <Component id="colorPanel4" pref="107" max="32767" attributes="0"/>
+                              <Component id="colorPanel12" pref="107" max="32767" attributes="0"/>
                           </Group>
                           <EmptySpace min="-2" max="-2" attributes="0"/>
                           <Group type="103" groupAlignment="0" attributes="0">
-                              <Component id="colorPanel5" pref="54" max="32767" attributes="0"/>
-                              <Component id="colorPanel13" pref="54" max="32767" attributes="0"/>
+                              <Component id="colorPanel5" pref="106" max="32767" attributes="0"/>
+                              <Component id="colorPanel13" pref="106" max="32767" attributes="0"/>
                           </Group>
                           <EmptySpace min="-2" max="-2" attributes="0"/>
                           <Group type="103" groupAlignment="0" attributes="0">
-                              <Component id="colorPanel6" pref="52" max="32767" attributes="0"/>
-                              <Component id="colorPanel14" pref="52" max="32767" attributes="0"/>
+                              <Component id="colorPanel6" pref="106" max="32767" attributes="0"/>
+                              <Component id="colorPanel14" pref="106" max="32767" attributes="0"/>
                           </Group>
                           <EmptySpace min="-2" max="-2" attributes="0"/>
                           <Group type="103" groupAlignment="0" attributes="0">
-                              <Component id="colorPanel7" pref="54" max="32767" attributes="0"/>
-                              <Component id="colorPanel15" pref="54" max="32767" attributes="0"/>
+                              <Component id="colorPanel7" pref="106" max="32767" attributes="0"/>
+                              <Component id="colorPanel15" pref="106" max="32767" attributes="0"/>
                           </Group>
                           <EmptySpace min="-2" max="-2" attributes="0"/>
                           <Group type="103" groupAlignment="0" attributes="0">
-                              <Component id="colorPanel8" pref="56" max="32767" attributes="0"/>
-                              <Component id="colorPanel16" pref="56" max="32767" attributes="0"/>
+                              <Component id="colorPanel8" pref="108" max="32767" attributes="0"/>
+                              <Component id="colorPanel16" pref="108" max="32767" attributes="0"/>
                           </Group>
                       </Group>
                   </Group>
@@ -1943,7 +1943,7 @@
                           <Group type="102" alignment="0" attributes="0">
                               <Component id="jLabel13" min="-2" max="-2" attributes="0"/>
                               <EmptySpace max="-2" attributes="0"/>
-                              <Component id="scaleField" min="-2" pref="37" max="-2" attributes="0"/>
+                              <Component id="scaleField" min="-2" pref="51" max="-2" attributes="0"/>
                               <EmptySpace min="0" pref="0" max="32767" attributes="0"/>
                           </Group>
                       </Group>
@@ -2020,15 +2020,33 @@
           <Layout>
             <DimensionLayout dim="0">
               <Group type="103" groupAlignment="0" attributes="0">
-                  <EmptySpace min="0" pref="0" max="32767" attributes="0"/>
+                  <Group type="102" alignment="0" attributes="0">
+                      <EmptySpace max="-2" attributes="0"/>
+                      <Component id="softReplaceButton1" max="32767" attributes="0"/>
+                      <EmptySpace max="-2" attributes="0"/>
+                  </Group>
               </Group>
             </DimensionLayout>
             <DimensionLayout dim="1">
               <Group type="103" groupAlignment="0" attributes="0">
-                  <EmptySpace min="0" pref="85" max="32767" attributes="0"/>
+                  <Group type="102" alignment="1" attributes="0">
+                      <EmptySpace min="0" pref="62" max="32767" attributes="0"/>
+                      <Component id="softReplaceButton1" min="-2" max="-2" attributes="0"/>
+                  </Group>
               </Group>
             </DimensionLayout>
           </Layout>
+          <SubComponents>
+            <Component class="javax.swing.JButton" name="softReplaceButton1">
+              <Properties>
+                <Property name="text" type="java.lang.String" value="Replace from Spritesheet"/>
+                <Property name="focusable" type="boolean" value="false"/>
+              </Properties>
+              <Events>
+                <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="softReplaceButton1ActionPerformed"/>
+              </Events>
+            </Component>
+          </SubComponents>
         </Container>
       </SubComponents>
     </Container>
