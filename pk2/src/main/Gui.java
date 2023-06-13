@@ -3403,7 +3403,42 @@ TheListener {
     }//GEN-LAST:event_pasteMenuActionPerformed
 
     private void softReplaceButton1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_softReplaceButton1ActionPerformed
-        // TODO add your handling code here:
+        BufferedImage replaceImg;
+        int charId = this.manager.getCurrentCharacterId();
+        String charName = this.guide.getCharName(this.guide.getFakeCharId(charId));
+        int returnVal = this.imageChooser.showOpenDialog(this);
+        if (returnVal == 0) {
+            File file = this.imageChooser.getSelectedFile();
+            try {
+                replaceImg = ImageIO.read(file);
+                replaceImg = this.processReplaceImg(replaceImg);
+            }
+            catch (IOException e) {
+                e.printStackTrace();
+                this.showError("Unable to read image " + file.getName());
+                return;
+            }
+        } else {
+            return;
+        }
+        JTextField columnsField = new JTextField();
+        JTextField rowsField = new JTextField();
+        JTextField cxField = new JTextField();
+        JTextField cyField = new JTextField();
+        JComponent[] inputs = new JComponent[]{new JLabel("Number of columns:"), columnsField, new JLabel("Number of rows:"), rowsField, new JLabel("Sprite center X:"), cxField, new JLabel("Sprite center Y:"), cyField};
+        int res = JOptionPane.showConfirmDialog(null, inputs, charName + "art replacer", 2);
+        if (res != 0) {
+            return;
+        }
+        int columns = this.getIntFromField(columnsField, 1, 9999);
+        int rows = this.getIntFromField(rowsField, 1, 9999);
+        int cx = this.getIntFromField(cxField, 0, 99999);
+        int cy = this.getIntFromField(cyField, 0, 99999);
+        if (columns == Integer.MIN_VALUE || rows == Integer.MIN_VALUE || cx == Integer.MIN_VALUE || cy == Integer.MIN_VALUE) {
+            this.showError("Invalid columns/rows/center");
+            return;
+        }
+        this.importSpriteReplacer(replaceImg, columns, rows, cx, cy);
     }//GEN-LAST:event_softReplaceButton1ActionPerformed
     
     
@@ -3969,9 +4004,10 @@ TheListener {
             return false;
         }
         frame.artAddress = artAddress;
-        BufferedImage extended = this.expandImage(img, cx, cy);
+        //BufferedImage extended = this.expandImage(img, cx, cy);
         Animation anim = this.manager.getCharacter().getAnimation(animId);
-        anim.setImage(frameId, extended);
+        //anim.setImage(frameId, extended);
+        anim.setImage(frameId, img);
         try {
             this.manager.save();
         }
@@ -4088,19 +4124,6 @@ TheListener {
         this.weaponYChanged();
     }
 
-    private BufferedImage expandImage(BufferedImage img, int cx, int cy) {
-        BufferedImage extended = new BufferedImage(Gui.CenterPos * 2, 256, 2);
-        for (int i = 0; i < img.getWidth(); ++i) {
-            for (int j = 0; j < img.getHeight(); ++j) {
-                int x = i + Gui.CenterPos - cx;
-                int y = j + Gui.CenterPos - cy;
-                int rgbVal = img.getRGB(i, j);
-                if ((rgbVal >> 24 & 255) == 0 || x <= 0 || x >= 256 || y <= 0 || y >= 256) continue;
-                extended.setRGB(x, y, rgbVal);
-            }
-        }
-        return extended;
-    }
 
     private void importSpriteReplacer(final BufferedImage sheet, final int columns, int rows, final int cx, final int cy) {
         final Character ch = this.manager.getCharacter();
@@ -4114,27 +4137,30 @@ TheListener {
         new Thread(new Runnable(){
 
             private void finish() {
-                ch.setModified(true);
-                ch.setSpritesModified(true);
+                //ch.setModified(true);
+                //ch.setSpritesModified(true);
+                /*
                 try {
-                    Gui.this.manager.save();
+                    //Gui.this.manager.save();
                     Gui.this.setCharacter(Gui.this.manager.getCurrentCharacterId());
                 }
                 catch (IOException ex) {
                     ex.printStackTrace();
                     Gui.this.showError("Unable to save the sprites");
-                }
+                }*/
                 progressMonitor.setProgress(999999);
                 Gui.this.setEnabled(true);
                 Gui.this.requestFocus();
+                Gui.this.refresh();
             }
 
             @Override
             public void run() {
                 Gui.this.setEnabled(false);
                 int index = 0;
-                TreeSet<Long> maps = new TreeSet<Long>();
+                TreeMap<Long, BufferedImage> maps = new TreeMap<Long, BufferedImage>();
                 HashSet<Animation> processed = new HashSet<Animation>();
+                Point pivot = new Point(cx, cy);
                 for (int i = 0; i < numAnims; ++i) {
                     Animation anim = ch.getAnimation(i);
                     if (!processed.contains(anim)) {
@@ -4142,15 +4168,22 @@ TheListener {
                         int animSize = anim.getNumFrames();
                         for (int j = 0; j < animSize; ++j) {
                             long mapAddress = ch.getAnimFrame((int)i, (int)j).mapAddress;
-                            if (maps.contains(mapAddress)) continue;
-                            maps.add(mapAddress);
+                            BufferedImage img = maps.get(mapAddress);
+                            if (img != null)
+                            {
+                                anim.setImage(j, img);
+                                anim.setPivot(j, pivot);
+                                continue;
+                            }
                             int x = index % columns * frameWidth;
                             int y = index / columns * frameHeight;
-                            BufferedImage img = sheet.getSubimage(x, y, frameWidth, frameHeight);
+                            img = sheet.getSubimage(x, y, frameWidth, frameHeight);
+                            maps.put(mapAddress, img);
   
-                            img = Gui.this.expandImage(img, cx, cy);
+                            //img = Gui.this.expandImage(img, cx, cy);
                             anim.setImage(j, img);
-                            anim.setSpritesModified(j, true);
+                            anim.setPivot(j, pivot);
+                            //anim.setSpritesModified(j, true);
                             if (++index != maxId) continue;
                             this.finish();
                             Toolkit.getDefaultToolkit().beep();
@@ -4343,8 +4376,8 @@ TheListener {
                             int originalHeight = img.getHeight();
                             bounds.x = trunkLeft(img);
                             bounds.y = trunkTop(img);
-                            bounds.width = trunkRight(img);
-                            bounds.height = trunkBottom(img);
+                            bounds.width = trunkRight(img) - bounds.x;
+                            bounds.height = trunkBottom(img) - bounds.y;
                             
                             // 1 pixel margin to avoid texture artifact glitches on edges
                             left = bounds.x - 1;
@@ -4359,7 +4392,7 @@ TheListener {
                             JSONObject pivot = new JSONObject();
                             Point pivotPoint = manager.getPivot(i, j);
                             pivotPoint.x -= left;
-                            pivotPoint.y -= originalHeight - height;
+                            pivotPoint.y -= originalHeight - (top + height);
                             pivot.put("x", pivotPoint.x);
                             pivot.put("y", pivotPoint.y);
                             pivots.put(pivot);
