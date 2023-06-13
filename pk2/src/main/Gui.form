@@ -1252,43 +1252,43 @@
                       <Group type="102" alignment="1" attributes="0">
                           <EmptySpace min="-2" pref="0" max="-2" attributes="0"/>
                           <Group type="103" groupAlignment="0" attributes="0">
-                              <Component id="colorPanel1" pref="50" max="32767" attributes="0"/>
-                              <Component id="colorPanel9" pref="50" max="32767" attributes="0"/>
+                              <Component id="colorPanel1" pref="52" max="32767" attributes="0"/>
+                              <Component id="colorPanel9" pref="52" max="32767" attributes="0"/>
                           </Group>
                           <EmptySpace min="-2" max="-2" attributes="0"/>
                           <Group type="103" groupAlignment="0" attributes="0">
-                              <Component id="colorPanel2" pref="50" max="32767" attributes="0"/>
-                              <Component id="colorPanel10" pref="50" max="32767" attributes="0"/>
+                              <Component id="colorPanel2" pref="52" max="32767" attributes="0"/>
+                              <Component id="colorPanel10" pref="52" max="32767" attributes="0"/>
                           </Group>
                           <EmptySpace min="-2" max="-2" attributes="0"/>
                           <Group type="103" groupAlignment="0" attributes="0">
-                              <Component id="colorPanel3" pref="52" max="32767" attributes="0"/>
-                              <Component id="colorPanel11" pref="52" max="32767" attributes="0"/>
+                              <Component id="colorPanel3" pref="54" max="32767" attributes="0"/>
+                              <Component id="colorPanel11" pref="54" max="32767" attributes="0"/>
                           </Group>
                           <EmptySpace min="-2" max="-2" attributes="0"/>
                           <Group type="103" groupAlignment="0" attributes="0">
-                              <Component id="colorPanel4" pref="50" max="32767" attributes="0"/>
-                              <Component id="colorPanel12" pref="50" max="32767" attributes="0"/>
+                              <Component id="colorPanel4" pref="52" max="32767" attributes="0"/>
+                              <Component id="colorPanel12" pref="52" max="32767" attributes="0"/>
                           </Group>
                           <EmptySpace min="-2" max="-2" attributes="0"/>
                           <Group type="103" groupAlignment="0" attributes="0">
-                              <Component id="colorPanel5" pref="52" max="32767" attributes="0"/>
-                              <Component id="colorPanel13" pref="52" max="32767" attributes="0"/>
+                              <Component id="colorPanel5" pref="54" max="32767" attributes="0"/>
+                              <Component id="colorPanel13" pref="54" max="32767" attributes="0"/>
                           </Group>
                           <EmptySpace min="-2" max="-2" attributes="0"/>
                           <Group type="103" groupAlignment="0" attributes="0">
-                              <Component id="colorPanel6" pref="50" max="32767" attributes="0"/>
-                              <Component id="colorPanel14" pref="50" max="32767" attributes="0"/>
+                              <Component id="colorPanel6" pref="52" max="32767" attributes="0"/>
+                              <Component id="colorPanel14" pref="52" max="32767" attributes="0"/>
                           </Group>
                           <EmptySpace min="-2" max="-2" attributes="0"/>
                           <Group type="103" groupAlignment="0" attributes="0">
-                              <Component id="colorPanel7" pref="50" max="32767" attributes="0"/>
-                              <Component id="colorPanel15" pref="50" max="32767" attributes="0"/>
+                              <Component id="colorPanel7" pref="54" max="32767" attributes="0"/>
+                              <Component id="colorPanel15" pref="54" max="32767" attributes="0"/>
                           </Group>
                           <EmptySpace min="-2" max="-2" attributes="0"/>
                           <Group type="103" groupAlignment="0" attributes="0">
-                              <Component id="colorPanel8" pref="54" max="32767" attributes="0"/>
-                              <Component id="colorPanel16" pref="54" max="32767" attributes="0"/>
+                              <Component id="colorPanel8" pref="56" max="32767" attributes="0"/>
+                              <Component id="colorPanel16" pref="56" max="32767" attributes="0"/>
                           </Group>
                       </Group>
                   </Group>
@@ -1306,7 +1306,7 @@
                               <Component id="colorPanel8" alignment="0" min="-2" max="-2" attributes="0"/>
                               <Component id="colorPanel1" min="-2" max="-2" attributes="0"/>
                           </Group>
-                          <EmptySpace max="32767" attributes="0"/>
+                          <EmptySpace pref="13" max="32767" attributes="0"/>
                           <Group type="103" groupAlignment="0" attributes="0">
                               <Component id="colorPanel10" alignment="1" min="-2" max="-2" attributes="0"/>
                               <Component id="colorPanel11" alignment="1" min="-2" max="-2" attributes="0"/>

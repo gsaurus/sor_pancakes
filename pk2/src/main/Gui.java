@@ -119,6 +119,7 @@ TheListener {
     private int lastcX;
     private int lastcY;
     private boolean wasFrameReplaced;
+    public static Gui instance;
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JTextField angleField;
@@ -1238,8 +1239,14 @@ TheListener {
         this.initColorPanels();
         this.updateEnablings();        
     }
+    
+    public String getAnimName(int charId, int animId)
+    {
+        return guide.getAnimName(charId, animId);
+    }
 
     public Gui() {
+        this.instance = this;
         this.preInitComponents();
         this.initComponents();
         this.setVisible(true);

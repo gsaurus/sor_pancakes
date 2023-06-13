@@ -13,6 +13,7 @@ import java.util.HashSet;
 import java.util.Scanner;
 import java.util.TreeMap;
 import lib.Rom;
+import main.Gui;
 import org.json.JSONArray;
 import org.json.JSONObject;
 
@@ -678,9 +679,11 @@ public class Character {
                 
             }
             JSONObject framesObject = new JSONObject();
+            framesObject.put("name", Gui.instance.getAnimName(characterId, animId));
             framesObject.put("frames", jsonFrames);
             jsonAnims.put(framesObject);
             JSONObject animationLogicJson = new JSONObject();
+            animationLogicJson.put("name", Gui.instance.getAnimName(characterId, animId));
             animationLogicJson.put("duration", screenFramesCount);
             if (jsonHits.length() > 0) {
                 animationLogicJson.put("hitboxes", jsonHits);
