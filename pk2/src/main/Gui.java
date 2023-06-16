@@ -198,8 +198,10 @@ TheListener {
     private javax.swing.JMenu jMenu5;
     private javax.swing.JMenu jMenu6;
     private javax.swing.JMenuBar jMenuBar1;
+    private javax.swing.JMenuItem jMenuItem1;
     private javax.swing.JMenuItem jMenuItem10;
     private javax.swing.JMenuItem jMenuItem11;
+    private javax.swing.JMenuItem jMenuItem2;
     private javax.swing.JMenuItem jMenuItem4;
     private javax.swing.JMenuItem jMenuItem5;
     private javax.swing.JMenuItem jMenuItem6;
@@ -235,7 +237,6 @@ TheListener {
     private javax.swing.JRadioButtonMenuItem sizeRadioMenu2;
     private javax.swing.JRadioButtonMenuItem sizeRadioMenu3;
     private javax.swing.JButton softReplaceButton;
-    private javax.swing.JButton softReplaceButton1;
     private javax.swing.JTextField soundField;
     private javax.swing.JPanel toolsPanel;
     private javax.swing.JTextField wXField;
@@ -599,7 +600,7 @@ TheListener {
 
     private void updateEnablings() {
         Gui.setEnable(this.mainPanel, this.manager != null && this.guide != null);
-        this.inportNewEraMenuItem.setEnabled(this.manager != null);
+        this.importNewEraMenuItem.setEnabled(this.manager != null);
         this.exportNewEraMenuItem.setEnabled(this.manager != null);
         
         this.hexIdsMenu.setEnabled(this.manager != null);
@@ -1397,15 +1398,16 @@ TheListener {
         jLabel13 = new javax.swing.JLabel();
         scaleField = new javax.swing.JTextField();
         generatePanel = new javax.swing.JPanel();
-        softReplaceButton1 = new javax.swing.JButton();
         jMenuBar1 = new javax.swing.JMenuBar();
         jMenu1 = new javax.swing.JMenu();
         openRomMenu = new javax.swing.JMenuItem();
         jMenuItem4 = new javax.swing.JMenuItem();
         jSeparator2 = new javax.swing.JPopupMenu.Separator();
         inportNewEraMenuItem = new javax.swing.JMenuItem();
-        jSeparator9 = new javax.swing.JPopupMenu.Separator();
         exportNewEraMenuItem = new javax.swing.JMenuItem();
+        jSeparator9 = new javax.swing.JPopupMenu.Separator();
+        jMenuItem2 = new javax.swing.JMenuItem();
+        jMenuItem1 = new javax.swing.JMenuItem();
         jSeparator1 = new javax.swing.JPopupMenu.Separator();
         jMenuItem5 = new javax.swing.JMenuItem();
         jMenu2 = new javax.swing.JMenu();
@@ -2515,28 +2517,15 @@ TheListener {
         generatePanel.setBackground(new java.awt.Color(240, 221, 221));
         generatePanel.setBorder(javax.swing.BorderFactory.createTitledBorder(null, "Generate Sprite", javax.swing.border.TitledBorder.DEFAULT_JUSTIFICATION, javax.swing.border.TitledBorder.DEFAULT_POSITION, new java.awt.Font("Tahoma", 0, 14))); // NOI18N
 
-        softReplaceButton1.setText("Replace from Spritesheet");
-        softReplaceButton1.setFocusable(false);
-        softReplaceButton1.addActionListener(new java.awt.event.ActionListener() {
-            public void actionPerformed(java.awt.event.ActionEvent evt) {
-                softReplaceButton1ActionPerformed(evt);
-            }
-        });
-
         javax.swing.GroupLayout generatePanelLayout = new javax.swing.GroupLayout(generatePanel);
         generatePanel.setLayout(generatePanelLayout);
         generatePanelLayout.setHorizontalGroup(
             generatePanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGroup(generatePanelLayout.createSequentialGroup()
-                .addContainerGap()
-                .addComponent(softReplaceButton1, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                .addContainerGap())
+            .addGap(0, 0, Short.MAX_VALUE)
         );
         generatePanelLayout.setVerticalGroup(
             generatePanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, generatePanelLayout.createSequentialGroup()
-                .addGap(0, 62, Short.MAX_VALUE)
-                .addComponent(softReplaceButton1))
+            .addGap(0, 85, Short.MAX_VALUE)
         );
 
         javax.swing.GroupLayout mainPanelLayout = new javax.swing.GroupLayout(mainPanel);
@@ -2599,7 +2588,6 @@ TheListener {
             }
         });
         jMenu1.add(inportNewEraMenuItem);
-        jMenu1.add(jSeparator9);
 
         exportNewEraMenuItem.setText("Export to SOR2 New Era");
         exportNewEraMenuItem.addActionListener(new java.awt.event.ActionListener() {
@@ -2608,6 +2596,23 @@ TheListener {
             }
         });
         jMenu1.add(exportNewEraMenuItem);
+        jMenu1.add(jSeparator9);
+
+        jMenuItem2.setText("Import Spritesheet");
+        jMenuItem2.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                jMenuItem2ActionPerformed(evt);
+            }
+        });
+        jMenu1.add(jMenuItem2);
+
+        jMenuItem1.setText("Export Spritesheet");
+        jMenuItem1.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                jMenuItem1ActionPerformed(evt);
+            }
+        });
+        jMenu1.add(jMenuItem1);
         jMenu1.add(jSeparator1);
 
         jMenuItem5.setAccelerator(javax.swing.KeyStroke.getKeyStroke(java.awt.event.KeyEvent.VK_F4, java.awt.event.InputEvent.ALT_DOWN_MASK));
@@ -3344,7 +3349,7 @@ TheListener {
     }//GEN-LAST:event_sizeFieldActionPerformed
 
     
-    private void inportNewEra(String charPath)
+    private void importNewEra(String charPath)
     {
         JSONObject logicJson = readJson(new File(charPath, "logic.json"));
         JSONObject animationsJson = readJson(new File(charPath, "animations.json"));
@@ -3376,7 +3381,7 @@ TheListener {
         
         String charPath = folderFile.getAbsolutePath();
         
-        inportNewEra(charPath);
+        importNewEra(charPath);
     }//GEN-LAST:event_inportNewEraMenuItemActionPerformed
 
     private void scaleFieldActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_scaleFieldActionPerformed
@@ -3402,7 +3407,17 @@ TheListener {
         this.setFrame(this.currFrame);
     }//GEN-LAST:event_pasteMenuActionPerformed
 
-    private void softReplaceButton1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_softReplaceButton1ActionPerformed
+    private void jMenuItem1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jMenuItem1ActionPerformed
+        exportSpriteSheet(false);
+    }//GEN-LAST:event_jMenuItem1ActionPerformed
+
+    private void jMenuItem2ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jMenuItem2ActionPerformed
+        importSpriteSheet();
+    }//GEN-LAST:event_jMenuItem2ActionPerformed
+    
+    
+    private void importSpriteSheet()
+    {
         BufferedImage replaceImg;
         int charId = this.manager.getCurrentCharacterId();
         String charName = this.guide.getCharName(this.guide.getFakeCharId(charId));
@@ -3439,8 +3454,7 @@ TheListener {
             return;
         }
         this.importSpriteReplacer(replaceImg, columns, rows, cx, cy);
-    }//GEN-LAST:event_softReplaceButton1ActionPerformed
-    
+    }
     
     private static String capitalizeString(String string) {
         char[] chars = string.toLowerCase().toCharArray();
@@ -4125,7 +4139,7 @@ TheListener {
     }
 
 
-    private void importSpriteReplacer(final BufferedImage sheet, final int columns, int rows, final int cx, final int cy) {
+    private void importSpriteReplacer(final BufferedImage sheet, final int columns, int rows, final int cx, final int inverseCy) {
         final Character ch = this.manager.getCharacter();
         final int numAnims = ch.getNumAnimations();
         final ProgressMonitor progressMonitor = new ProgressMonitor(this, "Importing spritesheet", "", 0, numAnims);
@@ -4133,6 +4147,7 @@ TheListener {
         progressMonitor.setMillisToPopup(100);
         final int frameWidth = sheet.getWidth() / columns;
         final int frameHeight = sheet.getHeight() / rows;
+        final int cy = frameHeight - inverseCy;
         final int maxId = columns * rows;
         new Thread(new Runnable(){
 
@@ -4167,7 +4182,14 @@ TheListener {
                         processed.add(anim);
                         int animSize = anim.getNumFrames();
                         for (int j = 0; j < animSize; ++j) {
-                            long mapAddress = ch.getAnimFrame((int)i, (int)j).mapAddress;
+                            
+                            long frameIndex = -1;
+                            if (anim.bufferedFrameIndexes != null && j < anim.bufferedFrameIndexes.size())
+                            {
+                                frameIndex = anim.bufferedFrameIndexes.get(j);
+                            }
+                            
+                            long mapAddress = frameIndex == -1 ? ch.getAnimFrame((int)i, (int)j).mapAddress : frameIndex;
                             BufferedImage img = maps.get(mapAddress);
                             if (img != null)
                             {
@@ -4286,13 +4308,228 @@ TheListener {
         }).start();
     }
 
-    private void exportSpriteSheet() {
-        this.exportSpriteSheet(false);
-    }
-
     private void exportSpriteSheet(final boolean single) {
-        
+        final String charName = this.guide.getCharName(this.guide.getFakeCharId(this.manager.getCurrentCharacterId()));
+        File tmpFile = null;
+        if (!single) {
+            this.imageSaver.setSelectedFile(new File(charName + ".png"));
+            int returnOption = this.imageSaver.showSaveDialog(this);
+            if (returnOption != 0) {
+                return;
+            }
+            tmpFile = this.imageSaver.getSelectedFile();
+            if (tmpFile == null) {
+                return;
+            }
+        }
+        final File outputFile = tmpFile;
+        final Character ch = this.manager.getCharacter();
+        final int numAnims = ch.getNumAnimations();
+        final ProgressMonitor progressMonitor = new ProgressMonitor(this, single ? "Exporting sprites" : "Exporting spritesheet", "", 0, numAnims * 2);
+        progressMonitor.setMillisToDecideToPopup(50);
+        progressMonitor.setMillisToPopup(100);
+        new Thread(new Runnable(){
+
+            @Override
+            public void run() {
+                Gui.this.setEnabled(false);
+                int left = Integer.MAX_VALUE;
+                int right = Integer.MIN_VALUE;
+                int top = Integer.MAX_VALUE;
+                int bottom = Integer.MIN_VALUE;
+                TreeSet<Long> maps = new TreeSet<Long>();
+                HashSet<Animation> processed = new HashSet<Animation>();
+                for (int i = 0; i < ch.getNumAnimations(); ++i) {
+                    Animation anim = ch.getAnimation(i);
+                    if (!processed.contains(anim)) {
+                        processed.add(anim);
+                        int animSize = anim.getNumFrames();
+                        for (int j = 0; j < animSize; ++j) {
+                            
+                            long frameIndex = -1;
+                            assert(j < anim.bufferedFrameIndexes.size());
+                            frameIndex = anim.bufferedFrameIndexes.get(j);
+                            try {
+                                Gui.this.manager.bufferAnimation(i);
+                            }
+                            catch (IOException ex) {
+                                ex.printStackTrace();
+                                Gui.this.showError("Unable to access sprites");
+                                progressMonitor.setProgress(999999);
+                                Gui.this.setEnabled(true);
+                                Gui.this.requestFocus();
+                                return;
+                            }
+                            if (maps.contains(frameIndex)) continue;
+                            maps.add(frameIndex);
+                            
+                            BufferedImage img;
+                            
+                            img = Gui.this.manager.getImage(i, j);
+                            if (img == null)
+                                continue;
+                            
+                            Point pivotPoint = manager.getPivot(i, j);
+                            
+                            Rectangle bounds = new Rectangle();
+                            int originalWidth = img.getWidth();
+                            int originalHeight = img.getHeight();
+                            bounds.x = -pivotPoint.x;
+                            bounds.y = -pivotPoint.y;
+                            bounds.width = originalWidth;
+                            bounds.height = originalHeight;
+                            
+                            if (bounds.x < left) {
+                                left = bounds.x;
+                            }
+                            if (bounds.y < top) {
+                                top = bounds.y;
+                            }
+                            int r = bounds.x + bounds.width;
+                            int b = bounds.y + bounds.height;
+                            if (r > right) {
+                                right = r;
+                            }
+                            if (b <= bottom) continue;
+                            bottom = b;
+                        }
+                    }
+                    if (progressMonitor.isCanceled()) {
+                        Gui.this.setEnabled(true);
+                        Gui.this.requestFocus();
+                        return;
+                    }
+                    progressMonitor.setNote("Computing space: " + (int)((float)i * 1.0f / (float)numAnims * 100.0f) + "%");
+                    progressMonitor.setProgress(i);
+                }
+                int numMaps = maps.size() + 1;
+                int width = right - left;
+                int height = bottom - top;
+                int columns = (int)Math.sqrt(numMaps);
+                int rows = numMaps / columns;
+                if (numMaps % columns != 0) {
+                    ++rows;
+                }
+                BufferedImage res = null;
+                Graphics2D g2d = null;
+                if (!single) {
+                    res = new BufferedImage(columns * width, rows * height, 2);
+                    g2d = res.createGraphics();
+                }
+                maps.clear();
+                processed.clear();
+                int index = 0;
+                for (int i = 0; i < ch.getNumAnimations(); ++i) {
+                    Animation anim = ch.getAnimation(i);
+                    if (!processed.contains(anim)) {
+                        processed.add(anim);
+                        int animSize = anim.getNumFrames();
+                        for (int j = 0; j < animSize; ++j) {
+                            
+                            long frameIndex = -1;
+                            assert(j < anim.bufferedFrameIndexes.size());
+                            frameIndex = anim.bufferedFrameIndexes.get(j);
+                            try {
+                                Gui.this.manager.bufferAnimation(i);
+                            }
+                            catch (IOException ex) {
+                                ex.printStackTrace();
+                                Gui.this.showError("Unable to access sprites");
+                                progressMonitor.setProgress(999999);
+                                Gui.this.setEnabled(true);
+                                Gui.this.requestFocus();
+                                return;
+                            }
+                            if (maps.contains(frameIndex)) continue;
+                            maps.add(frameIndex);
+                            
+                            BufferedImage img = Gui.this.manager.getImage(i, j);
+                            if (single) {
+                                try {
+                                    File outputFile2 = new File(Gui.this.currentDirectory + "/" + charName + " " + i + "." + j + ".png");
+                                    if (Gui.this.imagePanel.isFacedRight()) {
+                                        img = ImagePanel.flipImage(img);
+                                    }
+                                    ImageIO.write((RenderedImage)img, "png", outputFile2);
+                                }
+                                catch (IOException ex) {
+                                    ex.printStackTrace();
+                                    Gui.this.showError("Unable to save image");
+                                    progressMonitor.setProgress(999999);
+                                    Gui.this.setEnabled(true);
+                                    Gui.this.requestFocus();
+                                    return;
+                                }
+                            } else {
+                                int x = index % columns * width;
+                                int y = index / columns * height;
+                                
+                                Point pivotPoint = manager.getPivot(i, j);
+                                
+                                g2d.drawImage(img, x - left - pivotPoint.x, y + bottom - (img.getHeight() - pivotPoint.y), null);
+                            }
+                            ++index;
+                        }
+                    }
+                    progressMonitor.setNote("Rendering sprites: " + (int)((float)i * 1.0f / (float)numAnims * 100.0f) + "%");
+                    progressMonitor.setProgress(numAnims + i);
+                    if (!progressMonitor.isCanceled()) continue;
+                    Gui.this.setEnabled(true);
+                    Gui.this.requestFocus();
+                    return;
+                }
+                if (!single) {
+                    int x = index % columns * width;
+                    int y = index / columns * height;
+                    String cs = (columns / 10 == 0 ? " " : "") + (columns / 100 == 0 ? " " : "");
+                    String watermark0a = "Columns:  " + cs + columns;
+                    cs = (rows / 10 == 0 ? " " : "") + (rows / 100 == 0 ? " " : "");
+                    String watermark0b = "Rows:     " + cs + rows;
+                    int cx = -left;
+                    int cy = bottom;
+                    cs = (cx / 10 == 0 ? " " : "") + (cx / 100 == 0 ? " " : "");
+                    String watermark0c = "Center X: " + cs + cx;
+                    cs = (cy / 10 == 0 ? " " : "") + (cy / 100 == 0 ? " " : "");
+                    String watermark0d = "Center Y: " + cs + cy;
+                    String watermark1 = "Generated by";
+                    String watermark2 = Gui.TITLE;
+                    g2d.setColor(Color.red);
+                    g2d.setFont(new Font("Courier New", 0, 12));
+                    g2d.drawChars(watermark0a.toCharArray(), 0, watermark0a.length(), x + 4, y + 0);
+                    g2d.drawChars(watermark0b.toCharArray(), 0, watermark0b.length(), x + 4, y + 10);
+                    g2d.drawChars(watermark0c.toCharArray(), 0, watermark0c.length(), x + 4, y + 20);
+                    g2d.drawChars(watermark0d.toCharArray(), 0, watermark0d.length(), x + 4, y + 30);
+                    g2d.drawChars(watermark1.toCharArray(), 0, watermark1.length(), x + 4, y + 45);
+                    g2d.drawChars(watermark2.toCharArray(), 0, watermark2.length(), x + 4, y + 55);
+                    Palette pal = Gui.this.manager.getPalette();
+                    int rc = 12;
+                    for (int i = 0; i < 16; ++i) {
+                        int c = pal.getColor(i);
+                        g2d.setColor(new Color(c));
+                        g2d.fillRect(x + 4 + i % 8 * rc, y + 60 + i / 8 * rc, rc, rc);
+                    }
+                    g2d.dispose();
+                    try {
+                        ImageIO.write((RenderedImage)res, "png", outputFile);
+                    }
+                    catch (IOException ex) {
+                        ex.printStackTrace();
+                        Gui.this.showError("Unable to save spritesheet");
+                        progressMonitor.setProgress(999999);
+                        Gui.this.setEnabled(true);
+                        Gui.this.requestFocus();
+                        return;
+                    }
+                }
+                progressMonitor.setProgress(999999);
+                Gui.this.setEnabled(true);
+                Gui.this.requestFocus();
+                Toolkit.getDefaultToolkit().beep();
+            }
+        }).start();
     }
+    
+    
     private void exportSpriteSheet(final String path) {        
         final String charName = this.guide.getCharName(this.guide.getFakeCharId(this.manager.getCurrentCharacterId()));
         File tmpFile = null;
@@ -4356,18 +4593,6 @@ TheListener {
                             BufferedImage img;
                             
                             // Trim...
-                            Sprite sp;
-                            try {
-                                sp = Gui.this.manager.readSprite(i, j);
-                            }
-                            catch (IOException ex) {
-                                ex.printStackTrace();
-                                Gui.this.showError("Unable to access sprites");
-                                progressMonitor.setProgress(999999);
-                                Gui.this.setEnabled(true);
-                                Gui.this.requestFocus();
-                                return;
-                            }
                             img = Gui.this.manager.getImage(i, j);
                             if (img == null)
                                 continue;
@@ -4400,6 +4625,7 @@ TheListener {
                              
                             // Draw
                             img = img.getSubimage(left, top, width, height);
+                            anim.setImage(j, img);
                             try {
                                 String fileName;
                                 fileName = path + "/" + index + ".png";
@@ -4433,7 +4659,7 @@ TheListener {
                 writeJson(artSettings, artSettingsFile);
                 
                 // Reimport to guarantee data consistency...
-                inportNewEra(path);
+                importNewEra(path);
                 
                 progressMonitor.setProgress(999999);
                 Gui.this.setEnabled(true);

@@ -74,7 +74,6 @@ public class Animation {
 
     public void setImage(int index, BufferedImage img) {
         if (index < this.frames.size()) {
-            long address = this.frames.get((int)index).mapAddress;
             if (this.bufferedFrames == null) {
                 this.bufferedFrames = new ArrayList<BufferedImage>();
             }
@@ -97,7 +96,7 @@ public class Animation {
                 this.bufferedPivots = new ArrayList<Point>();
             }
             if (index < bufferedPivots.size())
-                bufferedPivots.set(index, point);
+                bufferedPivots.set(index, new Point(point));
             else
             {
             while (bufferedPivots.size() <= index)
