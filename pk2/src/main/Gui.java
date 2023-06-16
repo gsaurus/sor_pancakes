@@ -175,7 +175,7 @@ TheListener {
     private javax.swing.JCheckBoxMenuItem hexIdsMenu;
     private javax.swing.JCheckBox hitCheck;
     private javax.swing.JPanel hitPanel;
-    private javax.swing.JMenuItem inportNewEraMenuItem;
+    private javax.swing.JMenuItem importNewEraMenuItem;
     private javax.swing.JButton jButton2;
     private javax.swing.JButton jButton3;
     private javax.swing.JLabel jLabel1;
@@ -1403,7 +1403,7 @@ TheListener {
         openRomMenu = new javax.swing.JMenuItem();
         jMenuItem4 = new javax.swing.JMenuItem();
         jSeparator2 = new javax.swing.JPopupMenu.Separator();
-        inportNewEraMenuItem = new javax.swing.JMenuItem();
+        importNewEraMenuItem = new javax.swing.JMenuItem();
         exportNewEraMenuItem = new javax.swing.JMenuItem();
         jSeparator9 = new javax.swing.JPopupMenu.Separator();
         jMenuItem2 = new javax.swing.JMenuItem();
@@ -2581,13 +2581,13 @@ TheListener {
         jMenu1.add(jMenuItem4);
         jMenu1.add(jSeparator2);
 
-        inportNewEraMenuItem.setText("Import from SOR2 New Era");
-        inportNewEraMenuItem.addActionListener(new java.awt.event.ActionListener() {
+        importNewEraMenuItem.setText("Import from SOR2 New Era");
+        importNewEraMenuItem.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
-                inportNewEraMenuItemActionPerformed(evt);
+                importNewEraMenuItemActionPerformed(evt);
             }
         });
-        jMenu1.add(inportNewEraMenuItem);
+        jMenu1.add(importNewEraMenuItem);
 
         exportNewEraMenuItem.setText("Export to SOR2 New Era");
         exportNewEraMenuItem.addActionListener(new java.awt.event.ActionListener() {
@@ -3372,7 +3372,7 @@ TheListener {
     }
     
     
-    private void inportNewEraMenuItemActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_inportNewEraMenuItemActionPerformed
+    private void importNewEraMenuItemActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_importNewEraMenuItemActionPerformed
         int returnVal = this.newEraPackChooser.showOpenDialog(this);
         if (returnVal != 0) {
             return;
@@ -3382,7 +3382,7 @@ TheListener {
         String charPath = folderFile.getAbsolutePath();
         
         importNewEra(charPath);
-    }//GEN-LAST:event_inportNewEraMenuItemActionPerformed
+    }//GEN-LAST:event_importNewEraMenuItemActionPerformed
 
     private void scaleFieldActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_scaleFieldActionPerformed
         // TODO add your handling code here:
