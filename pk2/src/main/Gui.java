@@ -329,6 +329,8 @@ TheListener {
         this.currFrame = frameId;
         Character ch = this.manager.getCharacter();
         AnimFrame animFrame = ch.getAnimFrame(this.currAnimation, this.currFrame);
+        if (animFrame == null)
+            return;
         HitFrame hitFrame = ch.getHitFrame(this.currAnimation, this.currFrame);
         WeaponFrame weaponFrame = ch.getWeaponFrame(this.currAnimation, this.currFrame);
         TitledBorder border = (TitledBorder)this.framePanel.getBorder();
@@ -3293,55 +3295,42 @@ TheListener {
 
     private void exportNewEraMenuItemActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_exportNewEraMenuItemActionPerformed
         int characterId = manager.getCurrentCharacterId();
-        String currentCharName;
-        if (isPlayableChar()) {
-            currentCharName = readName();
-        } else {
-            currentCharName = this.guide.getCharName(this.guide.getFakeCharId(characterId));
-        }
-            currentCharName = capitalizeString(currentCharName);
-        if (currentCharName == null) return;
-        
-        currentCharName = currentCharName.trim();
-        
         Character character = this.manager.getCharacter();
-        JSONObject jsonCharacter = character.toJson(characterId, this.romName);
-        JSONObject logicJson = new JSONObject();
-        logicJson.put("referencePackName", "Classic");
-        logicJson.put("referenceType", characterId); // TODO: LUA? AI script? as a new entry in json, never use same for multiple things        
-        if (isPlayableChar()) {
-            logicJson.put("isPlayable", true);
-            logicJson.put("canUseWeapons", true);
-            logicJson.put("walkSpeed", readSpeed());
-        }
-        addGrabOffsetsToLogicsJson(logicJson, characterId);
-        addQuakeForcesToLogicsJson(logicJson, characterId);
-        logicJson.put("animationsLogic", jsonCharacter.get("animationsLogic"));
-        JSONArray animationsArray = (JSONArray) jsonCharacter.get("animations");        
-        JSONObject animationsJson = new JSONObject();
-        animationsJson.put("animations", animationsArray);
-        
-        File newEraDir = new File(NEW_ERA_CHARS_DIR);
-        if (!newEraDir.exists()) {
-            newEraDir.mkdirs();
-        }        
+        String currentCharName = capitalizeString(readName()).trim();
+
         File characterDir = new File(NEW_ERA_CHARS_DIR, currentCharName);
-        if (!characterDir.exists()) {
-            characterDir.mkdir();
-        } else {        
-            // Delete everything first
-            String[]entries = characterDir.list();
-            for(String s: entries){
-                File currentFile = new File(characterDir.getPath(),s);
-                currentFile.delete();
-            }
+        if (!characterDir.exists()) characterDir.mkdirs();
+
+        // 1. Prepare Logic JSON
+        JSONObject newLogic = character.toLogicJson(characterId, this.romName);
+        newLogic.put("referencePackName", "Classic");
+        newLogic.put("isPlayable", isPlayableChar());
+        if (isPlayableChar()) {
+            newLogic.put("canUseWeapons", true);
+            newLogic.put("walkSpeed", readSpeed());
         }
-        String charPath = NEW_ERA_CHARS_DIR + File.separator + currentCharName;
-        writeJson(logicJson, new File(charPath, "logic.json"));
-        writeJson(animationsJson, new File(charPath, "animations.json"));
-        
-        exportPortraitIcon(charPath);
-        exportSpriteSheet(charPath);
+        addGrabOffsetsToLogicsJson(newLogic, characterId);
+        addQuakeForcesToLogicsJson(newLogic, characterId);
+
+        // MERGE LOGIC: Load existing if it exists
+        File logicFile = new File(characterDir, "logic.json");
+        if (logicFile.exists()) {
+            JSONObject existingLogic = readJson(logicFile);
+            mergeJson(existingLogic, newLogic);
+            newLogic = existingLogic;
+        }
+
+        // 2. Prepare Animations JSON
+        JSONObject newAnims = character.toAnimationsJson();
+        File animFile = new File(characterDir, "animations.json");
+        // (Optional: Merge animations too if you manually add custom fields there)
+
+        // 3. Write Files
+        writeJson(newLogic, logicFile);
+        writeJson(newAnims, animFile);
+
+        exportPortraitIcon(characterDir.getPath());
+        exportSpriteSheet(characterDir.getPath());
     }//GEN-LAST:event_exportNewEraMenuItemActionPerformed
 
     private void sizeFieldActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_sizeFieldActionPerformed
@@ -3354,15 +3343,7 @@ TheListener {
         JSONObject logicJson = readJson(new File(charPath, "logic.json"));
         JSONObject animationsJson = readJson(new File(charPath, "animations.json"));
 
-        //manager.currCharacterId = logicJson.optInt("codeId");
-
-        JSONObject jsonCharacter = new JSONObject();
-        jsonCharacter.put("animationsLogic", logicJson.get("animationsLogic"));
-        
-        JSONArray animationsArray = (JSONArray)animationsJson.get("animations"); 
-        jsonCharacter.put("animations", animationsArray);  
-        
-        manager.currCharacter = Character.fromJson(jsonCharacter);
+        manager.currCharacter = Character.fromJson(logicJson, animationsJson);
         
         // Skip portrait
         importSpritesAndPivots(charPath);
@@ -4493,20 +4474,23 @@ TheListener {
                     String watermark0d = "Center Y: " + cs + cy;
                     String watermark1 = "Generated by";
                     String watermark2 = Gui.TITLE;
-                    g2d.setColor(Color.red);
-                    g2d.setFont(new Font("Courier New", 0, 12));
-                    g2d.drawChars(watermark0a.toCharArray(), 0, watermark0a.length(), x + 4, y + 0);
-                    g2d.drawChars(watermark0b.toCharArray(), 0, watermark0b.length(), x + 4, y + 10);
-                    g2d.drawChars(watermark0c.toCharArray(), 0, watermark0c.length(), x + 4, y + 20);
-                    g2d.drawChars(watermark0d.toCharArray(), 0, watermark0d.length(), x + 4, y + 30);
-                    g2d.drawChars(watermark1.toCharArray(), 0, watermark1.length(), x + 4, y + 45);
-                    g2d.drawChars(watermark2.toCharArray(), 0, watermark2.length(), x + 4, y + 55);
-                    Palette pal = Gui.this.manager.getPalette();
-                    int rc = 12;
-                    for (int i = 0; i < 16; ++i) {
-                        int c = pal.getColor(i);
-                        g2d.setColor(new Color(c));
-                        g2d.fillRect(x + 4 + i % 8 * rc, y + 60 + i / 8 * rc, rc, rc);
+                    if (true)
+                    {
+                        g2d.setColor(Color.red);
+                        g2d.setFont(new Font("Courier New", 0, 12));
+                        g2d.drawChars(watermark0a.toCharArray(), 0, watermark0a.length(), x + 4, y + 0);
+                        g2d.drawChars(watermark0b.toCharArray(), 0, watermark0b.length(), x + 4, y + 10);
+                        g2d.drawChars(watermark0c.toCharArray(), 0, watermark0c.length(), x + 4, y + 20);
+                        g2d.drawChars(watermark0d.toCharArray(), 0, watermark0d.length(), x + 4, y + 30);
+                        g2d.drawChars(watermark1.toCharArray(), 0, watermark1.length(), x + 4, y + 45);
+                        g2d.drawChars(watermark2.toCharArray(), 0, watermark2.length(), x + 4, y + 55);
+                        Palette pal = Gui.this.manager.getPalette();
+                        int rc = 12;
+                        for (int i = 0; i < 16; ++i) {
+                            int c = pal.getColor(i);
+                            g2d.setColor(new Color(c));
+                            g2d.fillRect(x + 4 + i % 8 * rc, y + 60 + i / 8 * rc, rc, rc);
+                        }
                     }
                     g2d.dispose();
                     try {
@@ -4818,8 +4802,8 @@ TheListener {
                 JSONObject pivotJson = pivots.optJSONObject(spriteId); 
                 if (pivotJson != null)
                 {
-                    pivot.x = pivotJson.getInt("x");
-                    pivot.y = pivotJson.getInt("y");
+                    pivot.x = pivotJson.optInt("x", 0);
+                    pivot.y = pivotJson.optInt("y", 0);
                 }
                 anim.addPivot(j, pivot);
                 
@@ -4836,6 +4820,17 @@ TheListener {
             }
         }
         
+    }
+    
+    private void mergeJson(JSONObject destination, JSONObject source) {
+        for (String key : source.keySet()) {
+            Object value = source.get(key);
+            if (value instanceof JSONObject && destination.has(key)) {
+                mergeJson(destination.getJSONObject(key), (JSONObject) value);
+            } else {
+                destination.put(key, value);
+            }
+        }
     }
 
 }

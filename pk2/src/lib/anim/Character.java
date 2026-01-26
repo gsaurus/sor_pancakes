@@ -367,89 +367,65 @@ public class Character {
     }
     
     
-    public JSONObject toJson(int characterId, String romName){
-        JSONObject jsonObj = new JSONObject();
-        JSONArray jsonAnims = new JSONArray();
+    public JSONObject toLogicJson(int characterId, String romName) {
+        JSONObject logicJson = new JSONObject();
         JSONArray jsonAnimationsLogic = new JSONArray();
-        TreeMap<ImagePivotPair, Integer> maps = new TreeMap<ImagePivotPair, Integer>(imageComparator);
-        HashMap<Animation, Integer> processed = new HashMap<Animation, Integer>();
-        int artFrame = 0;
-        for (int animId = 0; animId < animations.size(); ++animId){
-            JSONArray jsonFrames = new JSONArray();
-            JSONArray jsonHits = new JSONArray();
+
+        for (int animId = 0; animId < animations.size(); ++animId) {
             Animation animation = animations.get(animId);
-            Integer framePointer = processed.get(animation);
-            if (framePointer != null) {
-                // Animation pointer
-                jsonAnims.put(framePointer);
-                jsonAnimationsLogic.put(framePointer);
-                continue;
-            }
-            processed.put(animation, animId);
-            int numFrames = animation.getNumFrames();
-            int screenFramesCount = 0;
-            animation.bufferedFrameIndexes = new ArrayList<Integer>();
-            for (int frameId = 0; frameId < numFrames; ++frameId) {
-                AnimFrame animFrame = animation.getFrame(frameId);
-                HitFrame hitFrame = getHitFrame(animId, frameId);
-                WeaponFrame weapFrame = getWeaponFrame(animId, frameId);
-                BufferedImage image = animation.getImage(frameId);
-                ImagePivotPair imgPair = new ImagePivotPair();
-                imgPair.image = image;
-                imgPair.pivot = animation.getPivot(frameId);
-                if (image == null)
-                    framePointer = artFrame;
-                else
-                    framePointer = maps.get(imgPair);
-                if (framePointer == null) {
-                    // Frame pointer
-                    framePointer = artFrame++;                    
-                    maps.put(imgPair, framePointer);
+            JSONObject animLogic = new JSONObject();
+
+            int totalDuration = 0;
+            JSONArray hitboxes = new JSONArray();
+
+            for (int frameId = 0; frameId < animation.getNumFrames(); ++frameId) {
+                AnimFrame frame = animation.getFrame(frameId);
+                HitFrame hit = getHitFrame(animId, frameId);
+
+                if (hit != null && hit.isEnabled()) {
+                    hitboxes.put(hit.toJson(totalDuration, frame.delay));
                 }
-                JSONObject jsonFrame = animFrame.toJson(framePointer);
-                animation.bufferedFrameIndexes.add(framePointer);
-                if (hitFrame != null) {
-                    JSONObject obj = hitFrame.toJson();                    
-                    if (obj != null) {
-                        obj.put("frame", screenFramesCount);
-                        obj.put("duration", animFrame.delay);
-                        jsonHits.put(obj);
-                    }                    
-                }
-                if (weapFrame != null) {
-                    JSONObject obj = weapFrame.toJson();
-                    if (obj != null) jsonFrame.put("weapon", obj);
-                }
-                jsonFrames.put(jsonFrame);
-                screenFramesCount += animFrame.delay;
-                
+                totalDuration += frame.delay;
             }
-            JSONObject framesObject = new JSONObject();
-            framesObject.put("name", Gui.instance.getAnimName(characterId, animId));
-            framesObject.put("frames", jsonFrames);
-            jsonAnims.put(framesObject);
-            JSONObject animationLogicJson = new JSONObject();
-            animationLogicJson.put("name", Gui.instance.getAnimName(characterId, animId));
-            animationLogicJson.put("duration", screenFramesCount);
-            if (jsonHits.length() > 0) {
-                animationLogicJson.put("hitboxes", jsonHits);
-            }
-            addThrowLogic(animationLogicJson, characterId, animId, romName);
-            jsonAnimationsLogic.put(animationLogicJson);
+
+            animLogic.put("duration", totalDuration);
+            if (hitboxes.length() > 0) animLogic.put("hitboxes", hitboxes);
+
+            // This handles the SEGA ROM throw data extraction
+            addThrowLogic(animLogic, characterId, animId, romName);
+
+            jsonAnimationsLogic.put(animLogic);
         }
-        clonePointers(jsonAnims);
-        clonePointers(jsonAnimationsLogic);
-        // Max back slam is a clone of front slam, but throw data is different. This should be done differently, but let's just get it done quick
-        if (characterId == 0) {
-            JSONObject animationLogicJson = (JSONObject) jsonAnimationsLogic.get(25);
-            animationLogicJson = new JSONObject(animationLogicJson.toString());
-            addThrowLogic(animationLogicJson, characterId, 25, romName);
-            jsonAnimationsLogic.put(25, animationLogicJson);
+
+        logicJson.put("animationsLogic", jsonAnimationsLogic);
+        return logicJson;
+    }
+
+    public JSONObject toAnimationsJson() {
+        JSONArray jsonAnims = new JSONArray();
+        for (int animId = 0; animId < animations.size(); ++animId) {
+            Animation anim = animations.get(animId);
+            JSONObject animObj = new JSONObject();
+            JSONArray framesArray = new JSONArray();
+
+            for (int f = 0; f < anim.getNumFrames(); f++) {
+                AnimFrame frame = anim.getFrame(f);
+                JSONObject fObj = new JSONObject();
+                fObj.put("duration", frame.delay);
+                fObj.put("imageId", anim.bufferedFrameIndexes.get(f));
+
+                WeaponFrame wf = getWeaponFrame(animId, f);
+                if (wf != null && wf.isEnabled()) fObj.put("weapon", wf.toJson());
+
+                framesArray.put(fObj);
+            }
+            animObj.put("name", Gui.instance.getAnimName(0, animId)); // Adjust ID as needed
+            animObj.put("frames", framesArray);
+            jsonAnims.put(animObj);
         }
-        
-        jsonObj.put("animations", jsonAnims);
-        jsonObj.put("animationsLogic", jsonAnimationsLogic);
-        return jsonObj;
+        JSONObject res = new JSONObject();
+        res.put("animations", jsonAnims);
+        return res;
     }
     
     
@@ -579,65 +555,45 @@ public class Character {
         }
     }
 
-    public static Character fromJson(JSONObject jsonCharacter) {
-        JSONArray jsonAnims = (JSONArray) jsonCharacter.get("animations");
-        JSONArray jsonAnimationsLogic = (JSONArray) jsonCharacter.get("animationsLogic");
-        
-        Character character = new Character(jsonAnims.length());
-        ArrayList<Animation> animations = character.animations;
-        ArrayList<HitFramesSet> animHits = character.animHits;
-        ArrayList<WeaponFramesSet> animWeapons = character.animWeapons;
-        
-        for (int animId = 0; animId < jsonAnims.length(); ++animId){
-            JSONObject framesObject = jsonAnims.getJSONObject(animId);
-            JSONArray jsonFrames = (JSONArray)framesObject.get("frames");
-            JSONObject animationLogicJson = jsonAnimationsLogic.getJSONObject(animId);
-            JSONArray jsonHits = animationLogicJson.optJSONArray("hitboxes");
-            
-            int numFrames = jsonFrames.length();
-            Animation animation = new Animation(numFrames, 0);
-            HitFramesSet hitFrames = new HitFramesSet(numFrames);
-            WeaponFramesSet weaponFrames = new WeaponFramesSet(numFrames);
-            
-            int screenFramesCount = 0;
-            int currentHitIndex = 0;
-            
-            for (int frameId = 0; frameId < numFrames; ++frameId) {
-                JSONObject frameJson = jsonFrames.getJSONObject(frameId);
-                        
-                int duration = frameJson.getInt("duration");
-                animation.bufferedFrameIndexes.add(frameJson.getInt("imageId"));
-                
-                AnimFrame animFrame = new AnimFrame();
-                animation.addFrame(animFrame);
-                animFrame.delay = duration;
-                HitFrame hitFrame = new HitFrame();
-                if (jsonHits != null && currentHitIndex < jsonHits.length())
-                {
-                    JSONObject currentHit = jsonHits.getJSONObject(currentHitIndex);
-                    if (currentHit.getInt("frame") == screenFramesCount)
-                    {
-                        hitFrame = HitFrame.fromJson(currentHit);
-                        ++currentHitIndex;
+    public static Character fromJson(JSONObject logicJson, JSONObject animsJson) {
+        JSONArray animsArray = animsJson.getJSONArray("animations");
+        JSONArray logicArray = logicJson.getJSONArray("animationsLogic");
+
+        Character character = new Character(animsArray.length());
+
+        for (int i = 0; i < animsArray.length(); i++) {
+            JSONObject animArt = animsArray.getJSONObject(i);
+            JSONObject animLog = logicArray.optJSONObject(i);
+            JSONArray framesArt = animArt.getJSONArray("frames");
+
+            Animation animation = new Animation(framesArt.length(), 0);
+            HitFramesSet hSet = new HitFramesSet(framesArt.length());
+
+            int currentTime = 0;
+            for (int f = 0; f < framesArt.length(); f++) {
+                hSet.frames.add(new HitFrame());
+                JSONObject fArt = framesArt.getJSONObject(f);
+                AnimFrame frame = new AnimFrame();
+                frame.delay = fArt.getInt("duration");
+                animation.bufferedFrameIndexes.add(fArt.optInt("imageId", 0));
+                animation.addFrame(frame);
+
+                // Look for hitboxes starting at this timestamp
+                JSONArray hitboxes = animLog != null ? animLog.optJSONArray("hitboxes") : null;
+                if (hitboxes != null) {
+                    for (int h = 0; h < hitboxes.length(); h++) {
+                        JSONObject hJson = hitboxes.getJSONObject(h);
+                        if (hJson.optInt("frame", 0) == currentTime) {
+                            hSet.frames.set(f, HitFrame.fromJson(hJson));
+                        }
                     }
                 }
-                WeaponFrame weapFrame = new WeaponFrame();
-                JSONObject weaponJson = frameJson.optJSONObject("weapon");
-                if (weaponJson != null)
-                {
-                    weapFrame = WeaponFrame.fromJson(weaponJson);
-                }
-                
-                hitFrames.frames.add(hitFrame);
-                weaponFrames.frames.add(weapFrame);
-                screenFramesCount += duration;
+                currentTime += frame.delay;
             }
-            animations.add(animation);
-            animHits.add(hitFrames);
-            animWeapons.add(weaponFrames);
+            character.animations.add(animation);
+            character.animHits.add(hSet);
         }
         return character;
     }
-    
 }
 

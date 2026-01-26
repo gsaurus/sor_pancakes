@@ -72,25 +72,28 @@ public class WeaponFrame {
         rom.writeByte(frame.unusedByte);
     }
     
-    public JSONObject toJson(){
+    public JSONObject toJson() {
         if (!isEnabled) return null;
         JSONObject res = new JSONObject();
         JSONObject pos = new JSONObject();
         pos.put("x", x);
         pos.put("y", y);
         res.put("position", pos);
-        res.put("direction", angle);
+        res.put("direction", angle); // C# expects 'direction' (enum int)
         res.put("showBehind", showBehind);
         return res;
     }
     
     static WeaponFrame fromJson(JSONObject weaponJson) {
         WeaponFrame weapon = new WeaponFrame();
-        JSONObject positionJson = weaponJson.getJSONObject("position");
-        weapon.x = positionJson.getInt("x");
-        weapon.y = positionJson.getInt("y");
-        weapon.angle = weaponJson.getInt("direction");
-        weapon.showBehind = weaponJson.getBoolean("showBehind");
+        JSONObject positionJson = weaponJson.optJSONObject("position");
+        if (positionJson != null)
+        {
+            weapon.x = positionJson.optInt("x", 0);
+            weapon.y = positionJson.optInt("y", 0);
+        }
+        weapon.angle = weaponJson.optInt("direction", 0);
+        weapon.showBehind = weaponJson.optBoolean("showBehind", false);
         weapon.isEnabled = true;
         return weapon;
     }

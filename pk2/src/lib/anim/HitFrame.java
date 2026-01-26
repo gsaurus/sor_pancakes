@@ -64,16 +64,20 @@ public class HitFrame {
         rom.writeByte(frame.sound);
     }
     
-    public JSONObject toJson(){
+    public JSONObject toJson(int startFrame, int duration) {
         if (!enabled) return null;
         JSONObject res = new JSONObject();
+        res.put("frame", startFrame);
+        res.put("duration", duration);
+
         JSONObject hitBox = new JSONObject();
         hitBox.put("width", x * 2);
         hitBox.put("height", y);
+
         res.put("hitBox", hitBox);
         res.put("damage", damage);
         res.put("knockDown", knockDown);
-        res.put("soundId", sound);
+        res.put("soundId", sound); // Matches C# soundId
         return res;
     }
     
@@ -82,9 +86,8 @@ public class HitFrame {
         JSONObject hitBox = hitJson.getJSONObject("hitBox");
         hitFrame.x = hitBox.getInt("width") / 2;
         hitFrame.y = hitBox.getInt("height");
-        hitFrame.sound = hitJson.getInt("soundId");
-        hitFrame.damage = hitJson.getInt("damage");
-        hitFrame.knockDown = hitJson.getBoolean("knockDown");
+        hitFrame.damage = hitJson.optInt("damage", 0);
+        hitFrame.knockDown = hitJson.optBoolean("knockDown", false);
         hitFrame.enabled = true;
         return hitFrame;
     }
