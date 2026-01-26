@@ -1,0 +1,19 @@
+diff a/pk2/src/main/Gui.java b/pk2/src/main/Gui.java	(rejected hunks)
+@@ -1500,13 +1500,17 @@
+          overridePanel = new javax.swing.JPanel();
+          softReplaceButton = new javax.swing.JButton();
+          jLabel2 = new javax.swing.JLabel();
+ -        jLabel13 = new javax.swing.JLabel();
+ -        scaleField = new javax.swing.JTextField();
+          generatePanel = new javax.swing.JPanel();
+++<<<<<<< HEAD
+ +        hardReplaceButton = new javax.swing.JButton();
+ +        jLabel14 = new javax.swing.JLabel();
+ +        genPaletteField = new javax.swing.JTextField();
+ +        jLabel4 = new javax.swing.JLabel();
+++=======
++         softReplaceButton1 = new javax.swing.JButton();
+++>>>>>>> e2b5583 (output animations names)
+          jMenuBar1 = new javax.swing.JMenuBar();
+          jMenu1 = new javax.swing.JMenu();
+          openRomMenu = new javax.swing.JMenuItem();
