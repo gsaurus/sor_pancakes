@@ -27,11 +27,13 @@ import java.io.FileWriter;
 import java.io.IOException;
 import java.util.AbstractMap.SimpleEntry;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
 import java.util.Map.Entry;
 import java.util.Scanner;
+import java.util.Set;
 import java.util.Timer;
 import java.util.TimerTask;
 import java.util.TreeMap;
@@ -3320,22 +3322,11 @@ TheListener {
 
         int characterId = manager.getCurrentCharacterId();
         Character character = this.manager.getCharacter();
-        String currentCharName = capitalizeString(readName()).trim();
 
 
         // Prepare Logic JSON
         JSONObject newLogic = character.toLogicJson(characterId, this.romName);
-        newLogic.put("referencePackName", "Classic");
-        newLogic.put("referenceEntityName", currentCharName);
-        newLogic.put("isPlayable", isPlayableChar());
-        //newLogic.put("isCommoner", false);
-
-        if (isPlayableChar()) {
-            newLogic.put("canUseWeapons", true);
-            newLogic.put("walkSpeed", readSpeed());
-        }
-        addGrabOffsetsToLogicsJson(newLogic, characterId);
-        addQuakeForcesToLogicsJson(newLogic, characterId);
+        populateDefaults(newLogic);
 
         // MERGE WITH EXISTING FILE
         File logicFile = new File(characterDir, "logic.json");
@@ -4855,13 +4846,46 @@ TheListener {
         
     }
     
+    private void populateDefaults(JSONObject newLogic) {   
+        int characterId = manager.getCurrentCharacterId();
+        Character character = this.manager.getCharacter();
+        String currentCharName = capitalizeString(readName()).trim();
+        
+        newLogic.put("referencePackName", "Classic");
+        newLogic.put("referenceEntityName", currentCharName);
+        newLogic.put("isPlayable", isPlayableChar());
+        // TODO: the other defaults as zero etc
+        //newLogic.put("isCommoner", false);
+
+        if (isPlayableChar()) {
+            newLogic.put("canUseWeapons", true);
+            newLogic.put("walkSpeed", readSpeed());
+        }
+        addGrabOffsetsToLogicsJson(newLogic, characterId);
+        addQuakeForcesToLogicsJson(newLogic, characterId);
+        
+    }
+    
+    // Define keys that, once they exist in JSON, should NEVER be overwritten by the ROM exporter
+    private static final Set<String> PROTECTED_KEYS = new HashSet<>(Arrays.asList(
+        "throwLogic", "releaseVelocity", "releaseDamage", "offsets", "aiData",
+        "referencePackName", "referenceEntityName", "isPlayable", "canUseWeapons", "walkSpeed",
+        "frontGrabOffset", "backGrabOffset", "knockedDownQuakeEffect", "thrownQuakeEffect",
+        "globalBodyBox", "isCommoner", "runSpeed", "jumpForce", "jumpDelayFrames", "comboRepetitions",
+        "grabComboRepetitions", "chargeDelay", "grabRange"
+    ));
+
     private void mergeJson(JSONObject destination, JSONObject source, String path) {
         for (String key : source.keySet()) {
+            // PROTECTION CHECK: If the destination already has this key and it's protected, skip it
+            if (destination.has(key) && PROTECTED_KEYS.contains(key)) {
+                continue; 
+            }
+
             String currentPath = path.isEmpty() ? key : path + "." + key;
             Object newValue = source.get(key);
 
             if (!destination.has(key)) {
-                System.out.println("[JSON] Added: " + currentPath + " -> " + newValue);
                 destination.put(key, newValue);
                 continue;
             }
@@ -4870,14 +4894,10 @@ TheListener {
 
             if (newValue instanceof JSONObject && oldValue instanceof JSONObject) {
                 mergeJson((JSONObject) oldValue, (JSONObject) newValue, currentPath);
-            } 
-            else if (newValue instanceof JSONArray && oldValue instanceof JSONArray) {
+            } else if (newValue instanceof JSONArray && oldValue instanceof JSONArray) {
                 mergeArray((JSONArray) oldValue, (JSONArray) newValue, currentPath);
-            } 
-            else {
-                // Only log and update if the values are actually different
+            } else {
                 if (!java.util.Objects.equals(oldValue, newValue)) {
-                    System.out.println("[JSON] Updated: " + currentPath + ": " + oldValue + " -> " + newValue);
                     destination.put(key, newValue);
                 }
             }

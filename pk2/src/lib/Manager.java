@@ -53,6 +53,10 @@ public class Manager {
         this.providedArtAddresses = new TreeMap();
         this.paletteAddresses = new ArrayList(numChars);
         this.romFileName = romFileName;
+        if (romFileName == null || !new File(romFileName).exists()) {
+            System.out.println("Manager with no ROM");
+            return;
+        }
         Rom rom = new Rom(new File(romFileName));
         try {
             int i;
@@ -372,8 +376,13 @@ public class Manager {
         rom.close();
         return res;
     }
+    
+    private boolean hasRom() {
+        return romFileName != null && new File(romFileName).exists();
+    }
 
     public int readSpeed() throws IOException {
+        if (!hasRom()) return 0;
         int res;
         Rom rom = new Rom(new File(this.romFileName));
         try {
@@ -388,6 +397,7 @@ public class Manager {
     }
 
     public void decompressArt(String outName, long address) throws IOException {
+        if (!hasRom()) return;
         Rom rom = new Rom(new File(this.romFileName));
         try {
             RandomDataStream data = rom.decompressArt(address);
@@ -404,6 +414,7 @@ public class Manager {
     }
 
     public void writeSpeed(int newSpeed) throws IOException {
+        if (!hasRom()) return;
         Rom rom = new Rom(new File(this.romFileName));
         try {
             rom.writeSpeed(this.speedListAddress + (long)(this.currCharacterId * 2), newSpeed);
@@ -416,6 +427,7 @@ public class Manager {
     }
 
     public String readName() throws IOException {
+        if (!hasRom()) return "";
         String res;
         Rom rom = new Rom(new File(this.romFileName));
         try {
@@ -430,6 +442,7 @@ public class Manager {
     }
 
     public void writeName(String newName) throws IOException {
+        if (!hasRom()) return;
         Rom rom = new Rom(new File(this.romFileName));
         try {
             String fullyName = newName;
@@ -458,6 +471,7 @@ public class Manager {
     }
 
     public void writePortrait(BufferedImage img) throws IOException {
+        if (!hasRom()) return;
         Rom rom = new Rom(new File(this.romFileName));
         long paletteAddress = this.paletteAddresses.get(0);
         try {            
@@ -472,6 +486,7 @@ public class Manager {
     }
 
     public BufferedImage readPortrait() throws IOException {
+        if (!hasRom()) return null;
         Rom rom = new Rom(new File(this.romFileName));
         BufferedImage ret = null;
         long paletteAddress = this.paletteAddresses.get(0);
@@ -492,6 +507,7 @@ public class Manager {
     }
 
     private int readStats(int id) throws IOException {
+        if (!hasRom()) return 0;
         Rom rom = new Rom(new File(this.romFileName));
         int ret = 0;
         try {
@@ -506,6 +522,7 @@ public class Manager {
     }
 
     private void writeStats(int id, int stats) throws IOException {
+        if (!hasRom()) return;
         Rom rom = new Rom(new File(this.romFileName));
         try {
             rom.writeStats(this.statsListAddress, this.currCharacterId, id, stats);
