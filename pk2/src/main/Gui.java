@@ -84,7 +84,7 @@ TheListener {
     public static int CenterSize = CenterPos * 2;
     private static final String VERSION = "1.8.0.B";
     private static final String YEAR = "2023";
-    private static final String TITLE = "Pancake 2 v" + VERSION;
+    private static final String TITLE = "Pancake 2 - New Era Character Editor v" + VERSION;
     private  static String NEW_ERA_DIR = "SOR2 New Era exports";
     private  static String NEW_ERA_CHARS_DIR = NEW_ERA_DIR + File.separator + "Entities";
     private static final int INVALID_INT = Integer.MIN_VALUE;
@@ -113,6 +113,8 @@ TheListener {
     private Point copiedPivot;
     private HitFrame copiedHitFrame;
     private WeaponFrame copiedWeaponFrame;    
+    
+    private File lastNewEraFolder = null; // Tracks the folder for this session
     
     public static Gui instance;
     
@@ -3294,17 +3296,40 @@ TheListener {
     }//GEN-LAST:event_portraitMenuActionPerformed
 
     private void exportNewEraMenuItemActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_exportNewEraMenuItemActionPerformed
+        // Default the chooser to the last used folder if available
+        if (lastNewEraFolder != null) {
+            newEraPackChooser.setSelectedFile(lastNewEraFolder);
+        } else {
+            // Fallback to default directory with character name as suggestion
+            String currentCharName = capitalizeString(readName()).trim();
+            newEraPackChooser.setSelectedFile(new File(NEW_ERA_CHARS_DIR, currentCharName));
+        }
+
+        newEraPackChooser.setDialogTitle("Export Character: " + readName());
+        int returnVal = newEraPackChooser.showSaveDialog(this);
+
+        if (returnVal == JFileChooser.APPROVE_OPTION) {
+            this.lastNewEraFolder = newEraPackChooser.getSelectedFile();
+            exportNewEra(this.lastNewEraFolder.getAbsolutePath());
+        }
+    }//GEN-LAST:event_exportNewEraMenuItemActionPerformed
+
+    private void exportNewEra(String charPath) {
+        File characterDir = new File(charPath);
+        if (!characterDir.exists()) characterDir.mkdirs();
+
         int characterId = manager.getCurrentCharacterId();
         Character character = this.manager.getCharacter();
         String currentCharName = capitalizeString(readName()).trim();
 
-        File characterDir = new File(NEW_ERA_CHARS_DIR, currentCharName);
-        if (!characterDir.exists()) characterDir.mkdirs();
 
-        // 1. Prepare Logic JSON
+        // Prepare Logic JSON
         JSONObject newLogic = character.toLogicJson(characterId, this.romName);
         newLogic.put("referencePackName", "Classic");
+        newLogic.put("referenceEntityName", currentCharName);
         newLogic.put("isPlayable", isPlayableChar());
+        //newLogic.put("isCommoner", false);
+
         if (isPlayableChar()) {
             newLogic.put("canUseWeapons", true);
             newLogic.put("walkSpeed", readSpeed());
@@ -3312,27 +3337,39 @@ TheListener {
         addGrabOffsetsToLogicsJson(newLogic, characterId);
         addQuakeForcesToLogicsJson(newLogic, characterId);
 
-        // MERGE LOGIC: Load existing if it exists
+        // MERGE WITH EXISTING FILE
         File logicFile = new File(characterDir, "logic.json");
-        if (logicFile.exists()) {
-            JSONObject existingLogic = readJson(logicFile);
-            mergeJson(existingLogic, newLogic);
-            newLogic = existingLogic;
-        }
+        newLogic = mergeWithFile(logicFile, newLogic);
+        newLogic = reorderLogic(newLogic);
 
-        // 2. Prepare Animations JSON
+        // Animations
         JSONObject newAnims = character.toAnimationsJson();
         File animFile = new File(characterDir, "animations.json");
-        // (Optional: Merge animations too if you manually add custom fields there)
+        newAnims = mergeWithFile(animFile, newAnims);
 
-        // 3. Write Files
+        // Write Files
         writeJson(newLogic, logicFile);
         writeJson(newAnims, animFile);
 
-        exportPortraitIcon(characterDir.getPath());
-        exportSpriteSheet(characterDir.getPath());
-    }//GEN-LAST:event_exportNewEraMenuItemActionPerformed
+        // Export Assets
+        exportPortraitIcon(charPath);
+        exportSpriteSheet(charPath);
 
+        System.out.println("Export completed for: " + charPath);
+    }
+    
+    private JSONObject mergeWithFile(File file, JSONObject newData) {
+        if (file.exists()) {
+            JSONObject existingData = readJson(file);
+            if (existingData != null) {
+                // We pass the filename as the root path for clearer logging
+                mergeJson(existingData, newData, file.getName());
+                return existingData;
+            }
+        }
+        return newData;
+    }
+    
     private void sizeFieldActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_sizeFieldActionPerformed
         // TODO add your handling code here:
     }//GEN-LAST:event_sizeFieldActionPerformed
@@ -3355,14 +3392,10 @@ TheListener {
     
     private void importNewEraMenuItemActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_importNewEraMenuItemActionPerformed
         int returnVal = this.newEraPackChooser.showOpenDialog(this);
-        if (returnVal != 0) {
-            return;
-        }
-        File folderFile = this.newEraPackChooser.getSelectedFile();
-        
-        String charPath = folderFile.getAbsolutePath();
-        
-        importNewEra(charPath);
+        if (returnVal != JFileChooser.APPROVE_OPTION) return;
+
+        this.lastNewEraFolder = this.newEraPackChooser.getSelectedFile();
+        importNewEra(this.lastNewEraFolder.getAbsolutePath());
     }//GEN-LAST:event_importNewEraMenuItemActionPerformed
 
     private void scaleFieldActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_scaleFieldActionPerformed
@@ -4822,15 +4855,99 @@ TheListener {
         
     }
     
-    private void mergeJson(JSONObject destination, JSONObject source) {
+    private void mergeJson(JSONObject destination, JSONObject source, String path) {
         for (String key : source.keySet()) {
-            Object value = source.get(key);
-            if (value instanceof JSONObject && destination.has(key)) {
-                mergeJson(destination.getJSONObject(key), (JSONObject) value);
-            } else {
-                destination.put(key, value);
+            String currentPath = path.isEmpty() ? key : path + "." + key;
+            Object newValue = source.get(key);
+
+            if (!destination.has(key)) {
+                System.out.println("[JSON] Added: " + currentPath + " -> " + newValue);
+                destination.put(key, newValue);
+                continue;
+            }
+
+            Object oldValue = destination.get(key);
+
+            if (newValue instanceof JSONObject && oldValue instanceof JSONObject) {
+                mergeJson((JSONObject) oldValue, (JSONObject) newValue, currentPath);
+            } 
+            else if (newValue instanceof JSONArray && oldValue instanceof JSONArray) {
+                mergeArray((JSONArray) oldValue, (JSONArray) newValue, currentPath);
+            } 
+            else {
+                // Only log and update if the values are actually different
+                if (!java.util.Objects.equals(oldValue, newValue)) {
+                    System.out.println("[JSON] Updated: " + currentPath + ": " + oldValue + " -> " + newValue);
+                    destination.put(key, newValue);
+                }
             }
         }
+    }
+
+    private void mergeArray(JSONArray destination, JSONArray source, String path) {
+        for (int i = 0; i < source.length(); i++) {
+            String currentPath = path + "[" + i + "]";
+            Object newItem = source.get(i);
+
+            if (i >= destination.length()) {
+                System.out.println("[JSON] Added Array Item: " + currentPath + " -> " + newItem);
+                destination.put(newItem);
+                continue;
+            }
+
+            Object oldItem = destination.get(i);
+
+            if (newItem instanceof JSONObject && oldItem instanceof JSONObject) {
+                mergeJson((JSONObject) oldItem, (JSONObject) newItem, currentPath);
+            } else {
+                if (!java.util.Objects.equals(oldItem, newItem)) {
+                    System.out.println("[JSON] Updated Array Item: " + currentPath + ": " + oldItem + " -> " + newItem);
+                    destination.put(i, newItem);
+                }
+            }
+        }
+    }
+    
+    private JSONObject reorderLogic(JSONObject unordered) {
+        JSONObject ordered = createOrderedJSONObject();
+
+        // 1. Define the mandatory order for the C# deserializer
+        String[] priorityKeys = {
+            "referencePackName", 
+            "referenceEntityName", 
+            "isPlayable", 
+            "isCommoner"
+        };
+
+        // 2. Put priority keys first (if they exist)
+        for (String key : priorityKeys) {
+            if (unordered.has(key)) {
+                ordered.put(key, unordered.get(key));
+            }
+        }
+
+        // 3. Put everything else
+        for (String key : unordered.keySet()) {
+            if (!ordered.has(key)) {
+                ordered.put(key, unordered.get(key));
+            }
+        }
+
+        return ordered;
+    }
+    
+    public static JSONObject createOrderedJSONObject() {
+        JSONObject json = new JSONObject();
+        try {
+            // Standard org.json uses a private field named "map"
+            java.lang.reflect.Field mapField = JSONObject.class.getDeclaredField("map");
+            mapField.setAccessible(true);
+            mapField.set(json, new java.util.LinkedHashMap<>());
+        } catch (Exception e) {
+            // If reflection fails, it just behaves like a normal JSONObject
+            System.err.println("Could not create ordered JSONObject, defaulting to unordered.");
+        }
+        return json;
     }
 
 }
