@@ -28,6 +28,16 @@ public class Animation {
     
     private boolean wasArtModified;
     private ArrayList<Boolean> spritesModified;
+    
+    private boolean enabled = true;
+
+    public boolean isEnabled() {
+        return enabled;
+    }
+
+    public void setEnabled(boolean enabled) {
+        this.enabled = enabled;
+    }
 
     public boolean isCompressed() {
         return this.type == 1;
@@ -39,6 +49,7 @@ public class Animation {
         this.spritesModified = new ArrayList<Boolean>(numFrames);
         bufferedFrameIndexes = new ArrayList<Integer>(numFrames);
         this.numFrames = numFrames;
+        this.enabled = true;
     }
 
     public AnimFrame getFrame(int index) {

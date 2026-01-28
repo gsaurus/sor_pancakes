@@ -46,18 +46,21 @@ public class Manager {
     public Character currCharacter;
     public int currCharacterId;
     private long currPaletteAddress;
+    private Guide guide;
 
     public Manager(String romFileName, Guide guide) throws IOException {
+        this.guide = guide;
         int numChars = guide.getNumChars();
         numChars = guide.getRealCharId(numChars);
         this.providedArtAddresses = new TreeMap();
         this.paletteAddresses = new ArrayList(numChars);
-        this.romFileName = romFileName;
-        if (romFileName == null || !new File(romFileName).exists()) {
+        this.romFileName = romFileName;        
+        if (romFileName == null) {
             System.out.println("Manager with no ROM");
             return;
         }
-        Rom rom = new Rom(new File(romFileName));
+        File romFile = new File(romFileName);
+        Rom rom = new Rom(romFile);
         try {
             int i;
             this.animsListAddress = guide.getAnimsListAddress();
@@ -163,6 +166,12 @@ public class Manager {
     }
 
     public void setCharacter(int charId, int animsCount, int animsType) throws IOException {
+        if (romFileName == null) {
+            int animCount = guide.getAnimsCount(charId);
+            int type = guide.getType(charId);
+            this.currCharacter = new Character(charId, animCount, type);
+            return;
+        }
         long paletteAddress = this.paletteAddresses.get(charId);
         Long subArt = this.providedArtAddresses.get(charId);
         AnimFrame.providedArtAddress = subArt != null ? subArt : 0L;

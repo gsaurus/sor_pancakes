@@ -343,5 +343,27 @@ public class Guide {
     public int getPlayableCharsWithSkips() {
         return this.playableChars + this.skips.size();
     }
+    
+    public int getCharacterIdByName(String name) {
+        for (int i = 0; i < charNames.size(); i++) {
+            if (charNames.get(i).equalsIgnoreCase(name)) {
+                return i;
+            }
+        }
+        return -1; // Not found
+    }
+    
+    public void setAnimName(int charId, int animId, String name) {
+        if (charId < 0 || charId >= this.animNames.size()) return;
+
+        ArrayList<String> charAnimNames = this.animNames.get(charId);
+
+        // Ensure the list is large enough to reach the desired animId
+        while (charAnimNames.size() <= animId) {
+            charAnimNames.add("Unknown " + charAnimNames.size());
+        }
+
+        charAnimNames.set(animId, name);
+    }
 }
 

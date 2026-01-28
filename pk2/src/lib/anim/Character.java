@@ -91,6 +91,23 @@ public class Character {
         this.animHits = new ArrayList(numHitFrames);
         this.animWeapons = new ArrayList(numAnimations);
     }
+    
+    public Character(int charId, int numAnimations, int type) {
+        this.animations = new ArrayList<>(numAnimations);
+        this.animHits = new ArrayList<>(numAnimations);
+        this.animWeapons = new ArrayList<>(numAnimations);
+
+        for (int i = 0; i < numAnimations; i++) {
+            // Create a blank, disabled animation
+            Animation anim = new Animation(0, type);
+            anim.setEnabled(false); 
+            this.animations.add(anim);
+
+            // Initialize empty sets to prevent NullPointerExceptions
+            this.animHits.add(new HitFramesSet(0));
+            this.animWeapons.add(new WeaponFramesSet(0));
+        }
+    }
 
     public Animation getAnimation(int index) {
         return this.animations.get(index);
@@ -373,7 +390,16 @@ public class Character {
 
         for (int animId = 0; animId < animations.size(); ++animId) {
             Animation animation = animations.get(animId);
+            
+            if (animation == null || !animation.isEnabled()) {
+                jsonAnimationsLogic.put(JSONObject.NULL);
+                continue;
+            }
+            
             JSONObject animLogic = new JSONObject();
+            // Cosmetic
+            animLogic.put("id", animId);
+            animLogic.put("name", Gui.instance.getAnimName(characterId, animId));
 
             int totalDuration = 0;
             JSONArray hitboxes = new JSONArray();
@@ -555,43 +581,74 @@ public class Character {
         }
     }
 
-    public static Character fromJson(JSONObject logicJson, JSONObject animsJson) {
+    public static Character fromJson(int characterId, JSONObject logicJson, JSONObject animsJson) {
         JSONArray animsArray = animsJson.getJSONArray("animations");
-        JSONArray logicArray = logicJson.getJSONArray("animationsLogic");
+        JSONArray logicArray = logicJson.optJSONArray("animationsLogic");
 
         Character character = new Character(animsArray.length());
 
         for (int i = 0; i < animsArray.length(); i++) {
+            // Handle Disabled Animations (null in JSON)
+            if (animsArray.isNull(i)) {
+                Animation disabledAnim = new Animation(0, 0);
+                disabledAnim.setEnabled(false);
+                character.animations.add(disabledAnim);
+                character.animHits.add(new HitFramesSet(0));
+                character.animWeapons.add(new WeaponFramesSet(0));
+                continue;
+            }
+
             JSONObject animArt = animsArray.getJSONObject(i);
-            JSONObject animLog = logicArray.optJSONObject(i);
+
+            // If the JSON contains a name, update the Guide so export stays consistent
+            String customName = animArt.optString("name", "");
+            if (!customName.isEmpty()) {
+                Gui.instance.guide.setAnimName(characterId, i, customName);
+            }
+
+            JSONObject animLog = (logicArray != null && !logicArray.isNull(i)) ? logicArray.optJSONObject(i) : null;
             JSONArray framesArt = animArt.getJSONArray("frames");
 
             Animation animation = new Animation(framesArt.length(), 0);
+            animation.setEnabled(true);
             HitFramesSet hSet = new HitFramesSet(framesArt.length());
+            WeaponFramesSet wSet = new WeaponFramesSet(framesArt.length());
 
             int currentTime = 0;
             for (int f = 0; f < framesArt.length(); f++) {
                 hSet.frames.add(new HitFrame());
+                wSet.frames.add(new WeaponFrame());
+
                 JSONObject fArt = framesArt.getJSONObject(f);
                 AnimFrame frame = new AnimFrame();
                 frame.delay = fArt.getInt("duration");
                 animation.bufferedFrameIndexes.add(fArt.optInt("imageId", 0));
                 animation.addFrame(frame);
 
-                // Look for hitboxes starting at this timestamp
-                JSONArray hitboxes = animLog != null ? animLog.optJSONArray("hitboxes") : null;
-                if (hitboxes != null) {
-                    for (int h = 0; h < hitboxes.length(); h++) {
-                        JSONObject hJson = hitboxes.getJSONObject(h);
-                        if (hJson.optInt("frame", 0) == currentTime) {
-                            hSet.frames.set(f, HitFrame.fromJson(hJson));
+                // Import Weapon Data (if exists in art JSON)
+                JSONObject weaponJson = fArt.optJSONObject("weapon");
+                if (weaponJson != null) {
+                    wSet.frames.set(f, WeaponFrame.fromJson(weaponJson));
+                }
+
+                // Import Hitbox Data (from logic JSON)
+                if (animLog != null) {
+                    JSONArray hitboxes = animLog.optJSONArray("hitboxes");
+                    if (hitboxes != null) {
+                        for (int h = 0; h < hitboxes.length(); h++) {
+                            JSONObject hJson = hitboxes.getJSONObject(h);
+                            if (hJson.optInt("frame", 0) == currentTime) {
+                                hSet.frames.set(f, HitFrame.fromJson(hJson));
+                            }
                         }
                     }
                 }
                 currentTime += frame.delay;
             }
+
             character.animations.add(animation);
             character.animHits.add(hSet);
+            character.animWeapons.add(wSet);
         }
         return character;
     }

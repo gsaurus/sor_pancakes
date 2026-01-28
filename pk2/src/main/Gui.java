@@ -102,7 +102,7 @@ TheListener {
     private JFileChooser resizerChooser;
     private ImagePanel imagePanel;
     public Manager manager;
-    private Guide guide;
+    public Guide guide;
     private JPanel[] colorPanels;
     private Border selectionBorder;
     private Timer timer;
@@ -287,10 +287,11 @@ TheListener {
 
     private void updateTitle() {
         Character ch = this.manager.getCharacter();
+        String title = this.romName != null ? new File(this.romName).getName() : guide.getCharName(manager.getCurrentCharacterId());
         if (ch.wasModified()) {
-            this.setTitle(TITLE + " - " + new File(this.romName).getName() + "*");
+            this.setTitle(TITLE + " - " + title + "*");
         } else {
-            this.setTitle(TITLE + " - " + new File(this.romName).getName());
+            this.setTitle(TITLE + " - " + title);
         }
     }
 
@@ -606,7 +607,7 @@ TheListener {
 
     private void updateEnablings() {
         Gui.setEnable(this.mainPanel, this.manager != null && this.guide != null);
-        this.importNewEraMenuItem.setEnabled(this.manager != null);
+        this.importNewEraMenuItem.setEnabled(true);
         this.exportNewEraMenuItem.setEnabled(this.manager != null);
         
         this.hexIdsMenu.setEnabled(this.manager != null);
@@ -3366,17 +3367,45 @@ TheListener {
     }//GEN-LAST:event_sizeFieldActionPerformed
 
     
-    private void importNewEra(String charPath)
-    {
-        JSONObject logicJson = readJson(new File(charPath, "logic.json"));
-        JSONObject animationsJson = readJson(new File(charPath, "animations.json"));
+    private void importNewEra(String charPath) {
+        File logicFile = new File(charPath, "logic.json");
+        File animsFile = new File(charPath, "animations.json");
 
-        manager.currCharacter = Character.fromJson(logicJson, animationsJson);
+        JSONObject logicJson = readJson(logicFile);
+        JSONObject animationsJson = readJson(animsFile);
         
-        // Skip portrait
+        if (this.guide == null)
+        {
+            openDefaultGuide();
+        }
+        
+        setupManager(null);
+
+        // 1. Determine the character ID based on the "referenceEntityName" field
+        // We check both files in case the metadata is only in one of them
+        String refName = logicJson.optString("referenceEntityName", "");
+
+        int charId = this.guide.getCharacterIdByName(refName);
+
+        // Fallback: If name not found or missing, use the currently selected index in the UI
+        if (charId == -1) {
+            charId = characterCombo.getSelectedIndex();
+            System.out.println("Warning: referenceEntityName '" + refName + "' not found in Guide. Using index: " + charId);
+        } else {
+            // Sync the UI combo box to match the detected character
+            characterCombo.setSelectedIndex(charId);
+        }
+
+        // 2. Call the updated fromJson (which now handles Guide name syncing)
+        manager.currCharacter = Character.fromJson(charId, logicJson, animationsJson);
+
+        // 3. Import sprites (ROM-independent as it loads from the folder)
         importSpritesAndPivots(charPath);
-        
+
+        // 4. Refresh UI
         this.refresh();
+
+        // Disable character switching to prevent accidental data mismatch during edit
         characterCombo.setEnabled(false);
     }
     
